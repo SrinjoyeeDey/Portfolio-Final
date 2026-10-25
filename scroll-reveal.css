@@ -1,0 +1,149 @@
+/* ==========================================================================
+   CINEMATIC SCROLL REVEAL & VIEWPORT STAGING SYSTEM
+   Implements layered scroll-driven storytelling with:
+   - Outgoing layer: filter: blur(0px) -> blur(10px) + depth scale
+   - Incoming layer: clipPath: inset(0% 50% 0% 50%) -> inset(0% 0% 0% 0%)
+   ========================================================================== */
+
+/* Prevent horizontal overflow during scaling and transitions */
+html, body {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Staged Story Layers with Seamless Melt & Merge Edges */
+.story-layer {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
+  transform-origin: center center;
+  will-change: transform, filter, opacity;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  background-color: var(--color-bg-light, #ECECE7);
+  background-image: var(--color-bg-studio, linear-gradient(135deg, #f0f0eb 0%, #e2e3dd 50%, #e9e8e3 100%));
+}
+
+/* Feathered Melt Mask on incoming layers: completely eliminates harsh straight cut lines */
+.story-layer:not(#story-layer-hero) {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.05) 15px, rgba(0, 0, 0, 0.45) 55px, rgba(0, 0, 0, 0.9) 100px, black 140px);
+  mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.05) 15px, rgba(0, 0, 0, 0.45) 55px, rgba(0, 0, 0, 0.9) 100px, black 140px);
+}
+
+/* Explicit Z-Index Stacking Hierarchy with Authentic Studio Backgrounds */
+#story-layer-hero {
+  z-index: 10;
+  background-color: var(--color-bg-light, #ECECE7);
+  background-image: var(--color-bg-studio, linear-gradient(135deg, #f0f0eb 0%, #e2e3dd 50%, #e9e8e3 100%));
+}
+
+#story-layer-about {
+  z-index: 20;
+  background-color: var(--color-bg-light, #ECECE7);
+  background-image: var(--color-bg-studio, linear-gradient(135deg, #f0f0eb 0%, #e2e3dd 50%, #e9e8e3 100%));
+  box-shadow: 0 -20px 50px rgba(34, 36, 40, 0.08);
+}
+
+#story-layer-flight {
+  z-index: 25;
+  background-color: var(--color-bg-light, #ECECE7);
+  background-image: var(--color-bg-studio, linear-gradient(135deg, #f0f0eb 0%, #e2e3dd 50%, #e9e8e3 100%));
+  box-shadow: 0 -20px 50px rgba(34, 36, 40, 0.08);
+  height: 100vh;
+  min-height: 100vh;
+  width: 100%;
+  position: relative;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+.flying-button-stage-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+#flying-button-root {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* Featured Creations & Beyond Locked State until Rocket Take Off */
+.story-layer.featured-creations-locked {
+  display: none !important;
+}
+
+#story-layer-projects {
+  z-index: 30;
+  background-color: var(--color-bg-light, #ECECE7);
+  background-image: var(--color-bg-studio, linear-gradient(135deg, #f0f0eb 0%, #e2e3dd 50%, #e9e8e3 100%));
+  box-shadow: 0 -20px 50px rgba(34, 36, 40, 0.08);
+}
+
+#story-layer-skills {
+  z-index: 40;
+  background-color: var(--color-bg-light, #ECECE7);
+  background-image: var(--color-bg-studio, linear-gradient(135deg, #f0f0eb 0%, #e2e3dd 50%, #e9e8e3 100%));
+  box-shadow: 0 -20px 50px rgba(34, 36, 40, 0.08);
+}
+
+#story-layer-experience {
+  z-index: 50;
+  background-color: var(--color-bg-light, #ECECE7);
+  background-image: var(--color-bg-studio, linear-gradient(135deg, #f0f0eb 0%, #e2e3dd 50%, #e9e8e3 100%));
+  box-shadow: 0 -20px 50px rgba(34, 36, 40, 0.08);
+}
+
+#story-layer-terminal {
+  z-index: 60;
+  background-color: var(--color-bg-light, #ECECE7);
+  background-image: var(--color-bg-studio, linear-gradient(135deg, #f0f0eb 0%, #e2e3dd 50%, #e9e8e3 100%));
+  box-shadow: 0 -20px 50px rgba(34, 36, 40, 0.08);
+}
+
+#story-layer-contact {
+  z-index: 70;
+  background-color: var(--color-bg-light, #ECECE7);
+  background-image: var(--color-bg-studio, linear-gradient(135deg, #f0f0eb 0%, #e2e3dd 50%, #e9e8e3 100%));
+  box-shadow: 0 -20px 50px rgba(34, 36, 40, 0.08);
+}
+
+/* Fix GSAP Pin Spacers */
+.pin-spacer {
+  overflow: visible !important;
+}
+
+/* Ensure all interactive buttons inside blurred or unblurred layers are crisp */
+.story-layer a,
+.story-layer button,
+.story-layer input,
+.story-layer textarea {
+  pointer-events: auto;
+}
+
+/* Lock scrolling strictly while initial preloader overlay is active */
+body.preloader-locked {
+  overflow: hidden !important;
+  height: 100vh !important;
+}
+
+/* Accessibility: Respect Reduced Motion Preferences */
+@media (prefers-reduced-motion: reduce) {
+  .story-layer {
+    filter: none !important;
+    clip-path: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}

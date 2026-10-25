@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creative Visual Portfolio</title>
+  <meta name="description"
+    content="A premium creative visual portfolio featuring brand identity, UI/UX design, and digital art with high-impact typography.">
+
+  <!-- Google Fonts: Fredoka, Plus Jakarta Sans, Caveat, Gochi Hand, Architects Daughter & Patrick Hand -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@600;700&family=Fredoka:wght@500;600;700;800&family=Gochi+Hand&family=Patrick+Hand&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+    rel="stylesheet">
+
+  <!-- FontAwesome Icons for UI & Doodles -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Three.js & GLTF Loader for 3D Character Model -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+
+  <!-- Custom Stylesheet -->
+  <link rel="stylesheet" href="styles.css?v=38">
+  <link rel="stylesheet" href="journey-timeline.css?v=2">
+  <link rel="stylesheet" href="grid-scan-bundle.css">
+  <link rel="stylesheet" href="projects-swap-bundle.css">
+  <link rel="stylesheet" href="flying-button-bundle.css">
+  <link rel="stylesheet" href="scroll-reveal.css?v=1">
+</head>
+
+<body>
+
+  <!-- Background Decorative Tech & Studio Elements (Matches User Image) -->
+  <div class="bg-gradient-container">
+
+    <!-- Stacked Hollow Outline Typography Watermark -->
+    <div class="bg-typography-watermark">
+      <div class="watermark-line text-solid">PORTO</div>
+      <div class="watermark-line text-stroke">PORTO</div>
+      <div class="watermark-line text-stroke">FOLIO</div>
+    </div>
+
+    <!-- Tech Circuit Lines SVG Traces -->
+    <svg class="bg-circuit-svg" viewBox="0 0 1000 1000" preserveAspectRatio="none">
+      <path d="M50 0 V300 L120 370 H400 L450 420 V700" fill="none" stroke="currentColor" stroke-width="2"
+        stroke-dasharray="6 6" />
+      <path d="M950 100 V400 L880 470 H600 L550 520 V1000" fill="none" stroke="currentColor" stroke-width="2" />
+      <circle cx="120" cy="370" r="5" fill="currentColor" />
+      <circle cx="450" cy="420" r="5" fill="currentColor" />
+      <circle cx="880" cy="470" r="5" fill="currentColor" />
+      <circle cx="550" cy="520" r="5" fill="currentColor" />
+    </svg>
+
+    <div class="bg-circle-doodle hero-circle-right"></div>
+    <div class="bg-circle-doodle bg-circle-accent"></div>
+    <div class="bg-noise"></div>
+  </div>
+
+  <!-- Header / Navigation -->
+  <header class="navbar-header" id="navbar">
+    <div class="container nav-container">
+
+      <!-- Brand Logo -->
+
+      <a href="#hero" class="brand-logo">
+        <span class="logo-text">PORTO<span class="logo-dot">.</span></span>
+      </a>
+
+      <nav class="nav-menu" id="nav-menu">
+        <ul class="nav-list">
+          <li><a href="#hero" class="nav-link active">Home</a></li>
+          <li><a href="#about" class="nav-link">About</a></li>
+          <li><a href="#projects" class="nav-link">Works</a></li>
+          <li><a href="#skills" class="nav-link">Skills</a></li>
+          <li><a href="#experience" class="nav-link">Experience</a></li>
+          <li><a href="#contact" class="nav-link">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <a href="#contact" class="btn btn-pill-dark interactive-hover-btn">
+          <span class="btn-text-initial">
+            <span>Let's Connect</span>
+            <i class="fa-solid fa-arrow-right-long"></i>
+          </span>
+          <span class="btn-hover-reveal">
+            <span>Let's Connect</span>
+            <svg class="lucide-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
+          </span>
+          <span class="btn-expanding-dot" aria-hidden="true"></span>
+        </a>
+        <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle Navigation Menu">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- FLOATING SIDE GRADIENT COLOR REGULATOR DOCK (Matches User Reference Image) -->
+  <div class="side-regulator-dock" id="side-regulator-dock">
+    <button class="dock-toggle-btn" id="dock-toggle-btn" aria-label="Toggle Color Regulator">
+      <i class="fa-solid fa-palette"></i>
+    </button>
+
+    <div class="side-regulator-card" id="side-regulator-card">
+      <span class="vertical-label">COLOR</span>
+
+      <!-- Vertical Regulator Track Outer -->
+      <div class="vertical-track-outer" id="regulator-track-outer">
+
+        <!-- Floating Tooltip Indicator (Percentage Only + Pointer Arrow) -->
+        <div class="vertical-tooltip" id="regulator-tooltip">
+          <span id="tooltip-value-percent" class="tooltip-badge">52%</span>
+          <div class="tooltip-pointer-arrow"></div>
+        </div>
+
+        <!-- Vertical Track Background -->
+        <div class="vertical-track" id="regulator-track">
+          <div class="vertical-gradient-fill"></div>
+        </div>
+
+        <!-- Glowing Circular Thumb -->
+        <div class="vertical-thumb" id="regulator-thumb" tabindex="0" role="slider" aria-label="Color Energy Regulator">
+          <div class="thumb-inner-core" id="thumb-inner-core"></div>
+          <div class="thumb-pulse-ring" id="thumb-pulse-ring"></div>
+        </div>
+
+        <!-- Canvas for Sparkles -->
+        <canvas id="particle-canvas" class="vertical-particle-canvas"></canvas>
+      </div>
+
+      <div class="side-dock-footer">
+        <i class="fa-solid fa-sparkles"></i>
+      </div>
+    </div>
+  </div>
+
+  <main id="story-stage-main">
+
+    <!-- LAYER 1: HERO VIEWPORT STAGE -->
+    <div class="story-layer" id="story-layer-hero" data-layer-id="hero">
+      <!-- HERO SECTION (Directly matching user reference design with 3D Perspective Room & Model) -->
+      <section class="hero-section" id="hero">
+      <!-- 3D Perspective Room Wireframe Grid Background (Fine Technical Studio Room with Light Gradient) -->
+      <!-- Dynamic 3D Perspective Room Wireframe Grid (<GridScan /> from React Bits) -->
+      <div class="hero-room-perspective-grid" id="hero-room-perspective-grid" aria-hidden="true"></div>
+
+      <div class="container hero-container">
+        <!-- Top Metadata Status Header Row (Reference Match) -->
+        <div class="hero-ref-top-bar">
+          <div class="top-bar-left">
+            <span class="meta-tag-pill">PORTFOLIO</span>
+            <span class="meta-sub-tag">SRINJOYEE DEY</span>
+          </div>
+          <div class="top-bar-center">
+            <span class="meta-chinese-badge">〔 SD / 2026 〕</span>
+          </div>
+          <div class="top-bar-right">
+            <div class="status-live-pill">
+              <span class="status-indicator-dot"></span>
+              <span>AVAILABLE FOR NEW OPPORTUNITIES</span>
+            </div>
+            <button class="hero-ref-menu-btn" aria-label="Quick Actions" title="Actions">
+              <span></span><span></span><span></span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Floating Neumorphic App Notification Badges -->
+        <div class="hero-notif-column" data-speed="1.4">
+          <a href="mailto:deysrinjoyee28@gmail.com" class="neumorph-icon-badge"
+            title="Send Email (deysrinjoyee28@gmail.com)" aria-label="Send Email">
+            <i class="fa-solid fa-envelope"></i>
+            <span class="count-badge-black">99+</span>
+          </a>
+          <a href="https://github.com/SrinjoyeeDey" target="_blank" rel="noopener noreferrer"
+            class="neumorph-icon-badge" title="GitHub (SrinjoyeeDey)" aria-label="GitHub Profile">
+            <i class="fa-brands fa-github"></i>
+          </a>
+          <a href="https://www.linkedin.com/in/srinjoyee-dey/" target="_blank" rel="noopener noreferrer"
+            class="neumorph-icon-badge" title="LinkedIn (srinjoyee-dey)" aria-label="LinkedIn Profile">
+            <i class="fa-brands fa-linkedin-in"></i>
+            <span class="count-badge-black">99+</span>
+          </a>
+        </div>
+
+        <!-- Main Left Content Area (Reference Typography & Badges) -->
+        <div class="hero-ref-content">
+          <!-- Edition & Year Tag -->
+          <div class="hero-edition-row">
+            <span class="hero-year-code">2026↘SD</span>
+            <span class="hero-stamp-badge">FOLIO®</span>
+          </div>
+
+          <!-- Bold Reference Typography — My Name Must Dominate -->
+          <div class="hero-display-typography">
+            <div class="display-row row-portfolio">SRINJOYEE</div>
+            <div class="display-row row-design">
+              <span class="highlight-yellow-text">DEY</span>
+
+            </div>
+            <div class="display-row row-kanji-star">
+              <span class="kanji-main">CODE. CREATE. CONNECT.*</span>
+            </div>
+          </div>
+
+          <!-- Role Pill & Hand-Drawn Floral Doodle (Reference Match) -->
+          <div class="hero-badge-interaction-row">
+            <div class="hero-dual-role-pill">
+              <span class="role-pill-label">ENGINEER × BUILDER</span>
+              <span class="role-pill-val">COMMUNITY LEADER</span>
+            </div>
+
+            <!-- Hand-drawn Flower Doodle (Reference Match) -->
+            <div class="hero-flower-doodle" aria-hidden="true">
+              <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M24 8 C18 8, 18 16, 24 18 C30 16, 30 8, 24 8 Z" fill="#FFFFFF" stroke="#111111"
+                  stroke-width="2.5" />
+                <path d="M24 40 C18 40, 18 32, 24 30 C30 32, 30 40, 24 40 Z" fill="#FFFFFF" stroke="#111111"
+                  stroke-width="2.5" />
+                <path d="M8 24 C8 18, 16 18, 18 24 C16 30, 8 30, 8 24 Z" fill="#FFFFFF" stroke="#111111"
+                  stroke-width="2.5" />
+                <path d="M40 24 C40 18, 32 18, 30 24 C32 30, 40 30, 40 24 Z" fill="#FFFFFF" stroke="#111111"
+                  stroke-width="2.5" />
+                <circle cx="24" cy="24" r="5" fill="#FFFFFF" stroke="#111111" stroke-width="2.5" />
+              </svg>
+            </div>
+
+            <!-- Hand-drawn Curved Arrow Pointing to the 3D Character (Reference Match) -->
+            <div class="hero-curved-arrow" aria-hidden="true">
+              <svg viewBox="0 0 120 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 55 C40 50, 75 35, 100 12" stroke="#111111" stroke-width="2.8" stroke-linecap="round"
+                  fill="none" />
+                <path d="M85 8 L102 10 L98 26" stroke="#111111" stroke-width="2.8" stroke-linecap="round"
+                  stroke-linejoin="round" />
+              </svg>
+            </div>
+          </div>
+
+          <!-- Supporting Description -->
+          <p class="hero-supporting-desc">Building intelligent products and communities that turn ideas into impact.</p>
+
+          <!-- CTAs -->
+          <div class="hero-cta-group">
+            <a href="#projects" class="btn btn-pill-dark btn-lg interactive-hover-btn">
+              <span class="btn-text-initial">
+                <span>Explore My Work</span>
+                <i class="fa-solid fa-arrow-down"></i>
+              </span>
+              <span class="btn-hover-reveal">
+                <span>Explore My Work</span>
+                <svg class="lucide-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 5v14" />
+                  <path d="m19 12-7 7-7-7" />
+                </svg>
+              </span>
+              <span class="btn-expanding-dot" aria-hidden="true"></span>
+            </a>
+            <a href="#contact" class="btn btn-pill-outline btn-lg interactive-hover-btn">
+              <span class="btn-text-initial">
+                <span>Get In Touch</span>
+                <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.85em; margin-left: 4px;"></i>
+              </span>
+              <span class="btn-hover-reveal">
+                <span>Get In Touch</span>
+                <svg class="lucide-icon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"
+                  fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M7 17 17 7" />
+                  <path d="M7 7h10v10" />
+                </svg>
+              </span>
+              <span class="btn-expanding-dot" aria-hidden="true"></span>
+            </a>
+          </div>
+
+          <!-- Disciplines Row (Reference Match) -->
+          <div class="hero-disciplines-footer">
+            <span class="disc-item">AI / ML</span>
+            <span class="disc-divider">/</span>
+            <span class="disc-item">SOFTWARE ENGINEERING</span>
+            <span class="disc-divider">/</span>
+            <span class="disc-item">OPEN SOURCE</span>
+            <span class="disc-divider">/</span>
+            <span class="disc-item">COMMUNITY</span>
+          </div>
+        </div>
+
+        <!-- 3D Model Stage (Exact Reference Placement, Clean 3D Character Without Circular Mask) -->
+        <div class="hero-3d-model-stage" id="hero-3d-model-stage">
+          <div class="hero-3d-loading-indicator" id="hero-3d-loading-indicator">
+            <span class="indicator-spinner"></span>
+            <span class="indicator-text">Loading 3D Character...</span>
+          </div>
+          <canvas id="hero-3d-canvas" class="hero-3d-canvas"></canvas>
+          <div class="hero-3d-corner-stamp">
+            <span class="stamp-dot"></span>
+            <span class="stamp-title">SRINJOYEE 3D AVATAR</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TORN PAPER SECTION DIVIDER (Attached to Hero Stage) -->
+    <div class="torn-paper-divider">
+      <div class="doodle-star-burst">
+        <svg viewBox="0 0 40 40" class="star-svg">
+          <polygon points="20,0 24,14 38,8 28,18 40,28 25,28 26,40 18,30 8,38 12,24 0,20 14,16 6,4 18,10" fill="#F97316"
+            stroke="#222428" stroke-width="2" />
+        </svg>
+      </div>
+      <svg class="torn-edge-svg" viewBox="0 0 1200 120" preserveAspectRatio="none">
+        <path
+          d="M0 0 C40 25, 90 10, 140 30 C190 50, 240 15, 290 20 C340 25, 390 55, 440 60 C490 65, 540 95, 590 100 C640 105, 690 70, 740 65 C790 60, 840 85, 890 80 C940 75, 990 65, 1040 70 C1090 75, 1140 60, 1200 65 L1200 120 L0 120 Z"
+          fill="rgba(0,0,0,0.12)" transform="translate(0, 4)" />
+        <path
+          d="M0 0 C40 25, 90 10, 140 30 C190 50, 240 15, 290 20 C340 25, 390 55, 440 60 C490 65, 540 95, 590 100 C640 105, 690 70, 740 65 C790 60, 840 85, 890 80 C940 75, 990 65, 1040 70 C1090 75, 1140 60, 1200 65 L1200 120 L0 120 Z"
+          fill="var(--color-charcoal)" />
+      </svg>
+    </div>
+
+    <!-- QUICK STATS BAR (Attached to Hero Stage) -->
+    <section class="stats-bar-section">
+      <div class="container">
+        <div class="stats-grid">
+          <div class="stat-card">
+            <h3 class="stat-number" data-target="3" data-suffix="+">03+</h3>
+            <p class="stat-label">Years Building</p>
+          </div>
+          <div class="stat-card">
+            <h3 class="stat-number" data-target="20" data-suffix="+">20+</h3>
+            <p class="stat-label">Projects & Builds</p>
+          </div>
+          <div class="stat-card">
+            <h3 class="stat-number" data-target="5" data-suffix="+">05+</h3>
+            <p class="stat-label">Awards & Recognitions</p>
+          </div>
+          <div class="stat-card">
+            <h3 class="stat-number" data-target="20" data-suffix="+">20+</h3>
+            <p class="stat-label">Open-Source Contributions</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div><!-- /story-layer-hero -->
+
+  <!-- LAYER 2: ABOUT VIEWPORT STAGE -->
+  <div class="story-layer" id="story-layer-about" data-layer-id="about">
+    <!-- ABOUT SECTION (Matching User Reference Design Exactly) -->
+    <section class="about-section section-padding" id="about">
+      <div class="container">
+
+        <!-- Section Header with Line and Circle Arrow -->
+        <div class="about-header-bar">
+          <span class="about-header-text">About</span>
+          <div class="about-header-line"></div>
+          <button class="circle-arrow-btn" aria-label="Next Section">
+            <i class="fa-solid fa-chevron-right"></i>
+          </button>
+        </div>
+
+        <div class="about-main-grid">
+
+          <!-- LEFT COLUMN: Avatar & Work Together Box -->
+          <div class="about-left-col">
+
+            <!-- Photo/Avatar Frosted Glass Card Wrapper (Person Bigger Than Card) -->
+            <div class="glass-card-wrapper">
+              <div class="glass-post-card">
+
+                <!-- Glass Card Header -->
+                <div class="glass-card-header">
+                  <div class="glass-user-info">
+                    <div class="user-avatar-mini"><i class="fa-solid fa-code"></i></div>
+                    <span class="user-handle">srinjoyee.dev</span>
+                  </div>
+                  <i class="fa-solid fa-ellipsis glass-menu-icon"></i>
+                </div>
+
+                <!-- Glass Card Body -->
+                <div class="glass-card-body">
+
+                  <!-- Person Portrait Cutout (Bigger Than Card & Extends Outside Top/Left) -->
+                  <div class="glass-portrait-wrapper">
+                    <div class="portrait-sticker">
+                      <img src="images/srinjoyee-about-portrait.png" alt="Srinjoyee Dey" class="about-portrait-img"
+                        id="about-portrait-img" />
+                    </div>
+                  </div>
+
+                  <!-- Text Overlay inside Glass Card -->
+                  <div class="glass-info-text">
+                    <h4 class="glass-user-name">Srinjoyee</h4>
+                    <p class="glass-user-role">Developer • AI/ML • Creative Technologist</p>
+                    <p class="glass-user-tag">Web • Android • GenAI • Game Dev</p>
+                    <p class="glass-personality-quote">“I build things, design things, and occasionally wonder why I
+                      decided to build them.”</p>
+                    <a href="mailto:deysrinjoyee28@gmail.com" class="glass-user-link">deysrinjoyee28@gmail.com</a>
+                  </div>
+
+                  <!-- Floating Pink Heart Reaction Bubbles (Reference Match) -->
+                  <div class="heart-bubble bubble-1"><i class="fa-solid fa-heart"></i></div>
+                  <div class="heart-bubble bubble-2"><i class="fa-solid fa-heart"></i></div>
+                  <div class="heart-bubble bubble-3"><i class="fa-solid fa-heart"></i></div>
+                  <div class="heart-bubble bubble-4"><i class="fa-solid fa-heart"></i></div>
+
+                </div>
+
+                <!-- Glass Card Footer Bar -->
+                <div class="glass-card-footer">
+                  <div class="footer-left-icons">
+                    <button class="glass-icon-btn heart-btn active" aria-label="Like"><i
+                        class="fa-solid fa-heart"></i></button>
+                    <button class="glass-icon-btn" aria-label="Comment"><i class="fa-regular fa-comment"></i></button>
+                    <button class="glass-icon-btn" aria-label="Share"><i class="fa-regular fa-paper-plane"></i></button>
+                  </div>
+                  <button class="glass-icon-btn" aria-label="Bookmark"><i class="fa-regular fa-bookmark"></i></button>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- "Let's Build Something?" Card -->
+            <div class="work-together-card">
+              <div class="qr-code-box">
+                <div class="qr-code-inner">
+                  <!-- Vector QR Code Pattern -->
+                  <svg viewBox="0 0 100 100" class="qr-svg">
+                    <rect width="100" height="100" fill="#FFBD12" />
+                    <!-- QR Corner Blocks -->
+                    <rect x="10" y="10" width="26" height="26" fill="#222428" />
+                    <rect x="14" y="14" width="18" height="18" fill="#FFBD12" />
+                    <rect x="18" y="18" width="10" height="10" fill="#222428" />
+
+                    <rect x="64" y="10" width="26" height="26" fill="#222428" />
+                    <rect x="68" y="14" width="18" height="18" fill="#FFBD12" />
+                    <rect x="72" y="18" width="10" height="10" fill="#222428" />
+
+                    <rect x="10" y="64" width="26" height="26" fill="#222428" />
+                    <rect x="14" y="68" width="18" height="18" fill="#FFBD12" />
+                    <rect x="18" y="72" width="10" height="10" fill="#222428" />
+
+                    <!-- QR Data Dots -->
+                    <rect x="42" y="12" width="8" height="8" fill="#222428" />
+                    <rect x="42" y="28" width="14" height="8" fill="#222428" />
+                    <rect x="12" y="44" width="8" height="12" fill="#222428" />
+                    <rect x="28" y="44" width="12" height="8" fill="#222428" />
+                    <rect x="48" y="44" width="16" height="16" fill="#222428" />
+                    <rect x="70" y="44" width="18" height="8" fill="#222428" />
+                    <rect x="44" y="68" width="8" height="18" fill="#222428" />
+                    <rect x="60" y="68" width="12" height="12" fill="#222428" />
+                    <rect x="78" y="64" width="10" height="22" fill="#222428" />
+                  </svg>
+                </div>
+              </div>
+
+              <div class="work-together-info">
+                <h4 class="yellow-underline-title">Let's Build Something?</h4>
+                <ul class="contact-mini-list">
+                  <li><i class="fa-solid fa-envelope"></i> <a
+                      href="mailto:deysrinjoyee28@gmail.com">deysrinjoyee28@gmail.com</a></li>
+                  <li><i class="fa-brands fa-linkedin-in"></i> <a href="https://www.linkedin.com/in/srinjoyee-dey/"
+                      target="_blank" rel="noopener noreferrer">srinjoyee-dey</a></li>
+                  <li><i class="fa-brands fa-github"></i> <a href="https://github.com/SrinjoyeeDey" target="_blank"
+                      rel="noopener noreferrer">SrinjoyeeDey</a></li>
+                  <li><i class="fa-solid fa-location-dot"></i> Kolkata, India</li>
+                </ul>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT COLUMN: Hello, Bio, Education, Software Skills, Experience -->
+          <div class="about-right-col">
+
+            <!-- Tilted Hello Heading with Yellow Accent -->
+            <div class="tilted-hello-wrap">
+              <span class="yellow-quote">”</span>
+              <h2 class="tilted-hello-text">HELLO<span class="yellow-dot">.</span></h2>
+            </div>
+
+            <p class="about-bio-text">
+              Hello, I'm <strong>Srinjoyee</strong>, a Computer Science undergraduate who likes turning ideas into
+              things people can actually interact with. I build across web & Android development, AI/ML, Generative AI,
+              game development, 3D modeling, and creative technology.
+            </p>
+            <p class="about-bio-text">
+              From building AI products and practical ML models to crafting interactive 3D in Unity and Blender, I love
+              working where code meets design. Still learning, still building, and occasionally debugging something that
+              was working perfectly five minutes ago.
+            </p>
+
+            <!-- Education & Software Skills Row -->
+            <div class="about-sub-grid">
+
+              <!-- Education Box -->
+              <div class="sub-section-box">
+                <h3 class="yellow-underline-title">Education</h3>
+                <div class="education-item">
+                  <div class="edu-year">2024–2028</div>
+                  <div class="edu-info">
+                    <h4>B.Tech in Computer Science & Eng.</h4>
+                    <p class="edu-univ">Academy of Technology, Hooghly</p>
+                    <div class="edu-cgpa-pill"><i class="fa-solid fa-graduation-cap"></i> CGPA: <strong>8.95 /
+                        10</strong></div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Software Skill Box -->
+              <div class="sub-section-box">
+                <h3 class="yellow-underline-title">What I Build With</h3>
+                <div class="software-skills-grid">
+                  <div class="software-badge" title="Python"><i class="fa-brands fa-python"></i><span>Python</span>
+                  </div>
+                  <div class="software-badge" title="Java"><i class="fa-brands fa-java"></i><span>Java</span></div>
+                  <div class="software-badge" title="JavaScript"><i class="fa-brands fa-js"></i><span>JavaScript</span>
+                  </div>
+                  <div class="software-badge" title="React"><i class="fa-brands fa-react"></i><span>React</span></div>
+                  <div class="software-badge" title="React Native"><i class="fa-brands fa-android"></i><span>React
+                      Native</span></div>
+                  <div class="software-badge" title="Node.js"><i class="fa-brands fa-node-js"></i><span>Node.js</span>
+                  </div>
+                  <div class="software-badge" title="Unity"><i class="fa-brands fa-unity"></i><span>Unity</span></div>
+                  <div class="software-badge" title="Blender"><i class="fa-solid fa-cube"></i><span>Blender</span></div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Working Experience Section -->
+            <div class="sub-section-box margin-top-sm">
+              <h3 class="yellow-underline-title">What I've Been Building</h3>
+
+              <div class="experience-two-col">
+                <div class="exp-column">
+                  <div class="exp-entry">
+                    <span class="exp-role">Technical Associate</span>
+                    <span class="exp-company">GDG On Campus AOT</span>
+                    <span class="exp-dates">2025 – Present</span>
+                  </div>
+                  <div class="exp-entry">
+                    <span class="exp-role">Product & System Builder</span>
+                    <span class="exp-company">VANI (Elderly Care)</span>
+                    <span class="exp-dates">2025 – Present</span>
+                  </div>
+                </div>
+
+                <div class="exp-column">
+                  <div class="exp-entry">
+                    <span class="exp-role">Technical Team</span>
+                    <span class="exp-company">SCCSE</span>
+                    <span class="exp-dates">2025 – Present</span>
+                  </div>
+                  <div class="exp-entry">
+                    <span class="exp-role">Open Source Contributor</span>
+                    <span class="exp-company">Hacktoberfest • GSSoC</span>
+                    <span class="exp-dates">2025 – Present</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  </div><!-- /story-layer-about -->
+
+  <!-- LAYER 2.5: INTERACTIVE FLIGHT LAUNCHPAD STAGE -->
+  <div class="story-layer" id="story-layer-flight" data-layer-id="flight">
+    <section class="flying-button-stage-section" id="launchpad" aria-label="Interactive Thruster Lift-Off">
+      <div id="flying-button-root"></div>
+    </section>
+  </div><!-- /story-layer-flight -->
+
+  <!-- LAYER 3: PROJECTS / WORKS VIEWPORT STAGE -->
+  <div class="story-layer featured-creations-locked" id="story-layer-projects" data-layer-id="projects">
+    <section class="projects-section section-padding" id="projects" style="position: relative;">
+      <div class="container" style="position: relative; z-index: 2;">
+        <div class="section-header flex-header">
+          <div>
+            <div class="selected-work-title-wrap">
+              <span class="title-watermark-ghost" aria-hidden="true">“ FEATURED CREATIONS. ”</span>
+              <h2 class="selected-work-title">
+                <span class="title-first-word">
+                  <span>FEATURED</span>
+                  <span class="title-floating-quote">”</span>
+                </span>
+                <span class="title-tilted-badge">CREATIONS</span><span class="title-yellow-dot">.</span>
+              </h2>
+            </div>
+          </div>
+
+          <!-- Category Filter Buttons -->
+          <div class="filter-btn-group" id="filter-btn-group">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="ai">AI • Healthcare</button>
+            <button class="filter-btn" data-filter="uiux">UI/UX</button>
+            <button class="filter-btn" data-filter="web">Web Dev</button>
+            <button class="filter-btn" data-filter="visual">Visual &amp; 3D</button>
+            <button class="filter-btn" data-filter="branding">Branding</button>
+          </div>
+        </div>
+
+        <!-- CardSwap 3D Interactive Project Showcase Root -->
+        <div id="projects-card-swap-root"></div>
+      </div>
+    </section>
+  </div><!-- /story-layer-projects -->
+
+  <!-- LAYER 4: GLOBAL REACH & SKILLS VIEWPORT STAGE -->
+  <div class="story-layer featured-creations-locked" id="story-layer-skills" data-layer-id="skills">
+    <!-- ==========================================================================
+         STANDALONE INTERACTIVE GLOBE (Right-Aligned, Independent, No Card)
+         ========================================================================== -->
+    <section class="globe-standalone-section" id="global-reach-stage" aria-label="Interactive Globe">
+      <div class="container globe-standalone-container">
+        <div class="globe-standalone-wrapper">
+          <canvas id="cobe-globe-canvas" class="cobe-globe-canvas" aria-label="Interactive 3D World Globe"></canvas>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- SKILLS & TOOLS SECTION -->
+    <section class="skills-section light-theme-skills" id="skills">
+
+      <!-- Interactive WebGL DotField Background Canvas -->
+      <div id="skills-dotfield-root" class="skills-dotfield-bg" aria-hidden="true"></div>
+
+      <!-- Top Canvas Frame Meta -->
+      <div class="skills-frame-meta container">
+        <div class="frame-meta-left">SRINJOYEE DEY <span class="meta-dash">—</span></div>
+        <div class="frame-meta-right">PORTFOLIO © 2026</div>
+      </div>
+
+      <!-- Watermark Background Layer: TECH, ARSENAL & Hand-Drawn Doodles -->
+      <div class="skills-watermark-layer" aria-hidden="true">
+        <!-- Giant Chalk Typography Watermarks -->
+        <span class="watermark-word watermark-tech">TECH</span>
+        <span class="watermark-word watermark-arsenal">ARSENAL</span>
+
+        <!-- Doodles -->
+        <svg class="doodle-top-arrow" viewBox="0 0 60 30" fill="none" stroke="currentColor">
+          <path d="M8 20 Q 30 6 52 14" stroke-width="2.2" stroke-linecap="round" />
+          <path d="M42 8 L 54 14 L 46 24" stroke-width="2.2" stroke-linecap="round" />
+        </svg>
+
+        <svg class="doodle-crown-left" viewBox="0 0 45 35" fill="none" stroke="currentColor">
+          <path d="M5 28 L 5 12 L 15 20 L 22.5 6 L 30 20 L 40 12 L 40 28 Z" stroke-width="2.2" stroke-linecap="round"
+            stroke-linejoin="round" />
+        </svg>
+
+        <div class="doodle-sparkle-mid">✦</div>
+        <div class="doodle-sparkle-bottom">✦</div>
+
+        <!-- Node.js Burst Lines -->
+        <svg class="doodle-node-burst" viewBox="0 0 50 30" fill="none" stroke="currentColor">
+          <line x1="8" y1="24" x2="16" y2="10" stroke-width="2.2" stroke-linecap="round" />
+          <line x1="25" y1="26" x2="25" y2="6" stroke-width="2.2" stroke-linecap="round" />
+          <line x1="42" y1="24" x2="34" y2="10" stroke-width="2.2" stroke-linecap="round" />
+        </svg>
+
+        <!-- Bottom Right Butterfly Doodle -->
+        <svg class="doodle-butterfly-exact" viewBox="0 0 60 60" fill="none" stroke="currentColor">
+          <path d="M28 20 C20 8 4 12 12 28 C16 36 28 32 28 32" stroke-width="2" stroke-linecap="round" />
+          <path d="M32 20 C40 8 56 12 48 28 C44 36 32 32 32 32" stroke-width="2" stroke-linecap="round" />
+          <path d="M28 32 C18 34 10 46 22 52 C28 56 30 40 30 32" stroke-width="2" stroke-linecap="round" />
+          <path d="M32 32 C42 34 50 46 38 52 C32 56 30 40 30 32" stroke-width="2" stroke-linecap="round" />
+          <line x1="30" y1="14" x2="30" y2="46" stroke-width="2.2" stroke-linecap="round" />
+        </svg>
+      </div>
+
+      <div class="container relative-z skills-main-container">
+
+        <!-- Left Floating Social Tiles Stack (GitHub, LinkedIn, Email) -->
+        <aside class="left-social-stack" aria-label="Social notifications">
+          <!-- 1. GitHub -->
+          <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="social-notif-tile"
+            title="GitHub">
+            <i class="fa-brands fa-github"></i>
+            <span class="notif-badge">99+</span>
+          </a>
+
+          <!-- 2. LinkedIn -->
+          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="social-notif-tile"
+            title="LinkedIn">
+            <i class="fa-brands fa-linkedin-in"></i>
+            <span class="notif-badge">99+</span>
+          </a>
+
+          <!-- 3. Email -->
+          <a href="#contact" class="social-notif-tile" title="Contact Email">
+            <i class="fa-solid fa-envelope"></i>
+            <span class="notif-badge">99+</span>
+          </a>
+
+          <!-- Curved Arrow Doodle beneath social stack -->
+          <svg class="stack-curve-arrow" viewBox="0 0 60 50" fill="none" stroke="currentColor">
+            <path d="M12 8 Q 12 36 44 36" stroke-width="2.2" stroke-linecap="round" />
+            <path d="M35 27 L 46 36 L 35 45" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
+          </svg>
+        </aside>
+
+        <!-- Central Showcase Content -->
+        <div class="skills-showcase-center">
+
+          <!-- Top Category Filter Pills Bar -->
+          <div class="clean-filter-bar" id="techFilterPills">
+            <button class="filter-tab active" data-filter="all">All Tools</button>
+            <button class="filter-tab" data-filter="web">Web & UI</button>
+            <span class="tab-divider">|</span>
+            <button class="filter-tab" data-filter="3d">3D & Creative</button>
+            <span class="tab-divider">|</span>
+            <button class="filter-tab" data-filter="ai">AI & Neural</button>
+            <span class="tab-divider">|</span>
+            <button class="filter-tab" data-filter="cloud">Cloud & DevOps</button>
+          </div>
+
+          <!-- Title Area with 14 ACTIVE STACKS badge to the right -->
+          <div class="skills-title-row">
+            <div class="skills-title-left">
+              <h2 class="light-hero-heading">
+                TOOLS &<br>
+                CREATIVE TECH<span class="yellow-dot">.</span>
+              </h2>
+              <p class="light-hero-sub">Tactile, interactive arsenal of frameworks, 3D engines, and neural networks.</p>
+            </div>
+
+            <!-- 14 Active Stacks Badge with Hand-Drawn Bursts -->
+            <div class="active-stacks-badge-box">
+              <div class="badge-burst-lines burst-left">
+                <span></span><span></span><span></span>
+              </div>
+              <div class="active-stacks-pill">
+                <span class="pill-green-dot">●</span> 14 ACTIVE STACKS
+              </div>
+              <div class="badge-burst-lines burst-right">
+                <span></span><span></span><span></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Exact 14 App Icon Tiles in 2 Rows (Directly on canvas) -->
+          <div class="exact-app-tiles-dock" id="playfulTilesTray">
+
+            <!-- ROW 1 (8 Icons) -->
+            <div class="tiles-flex-row row-top">
+
+              <!-- 1. Python -->
+              <div class="canvas-app-tile tile-python" data-tech="Python" data-cat="ai"
+                data-desc="Core Python engineering for neural network architectures, data science, and autonomous agent orchestration."
+                role="button" tabindex="0" aria-label="Python">
+                <svg viewBox="0 0 128 128" width="44" height="44">
+                  <path fill="#387EB8"
+                    d="M63.5 12.8c-26.6 0-25 11.5-25 11.5l.03 11.9h25.4v3.6H28.4S12 37.9 12 64.7c0 26.7 14.3 25.8 14.3 25.8h8.5v-12s-.5-14.3 14-14.3h24.1s13.5.2 13.5-13.2V26.3s1.7-13.5-22.9-13.5zm-13.7 7.7a3.8 3.8 0 1 1 0 7.7 3.8 3.8 0 0 1 0-7.7z" />
+                  <path fill="#FFE873"
+                    d="M64.5 115.2c26.6 0 25-11.5 25-11.5l-.03-11.9H64.07v-3.6h35.53s16.4 1.9 16.4-24.9c0-26.7-14.3-25.8-14.3-25.8h-8.5v12s.5 14.3-14 14.3H55.1s-13.5-.2-13.5 13.2v24.7s-1.7 13.5 22.9 13.5zm13.7-7.7a3.8 3.8 0 1 1 0-7.7 3.8 3.8 0 0 1 0 7.7z" />
+                </svg>
+              </div>
+
+              <!-- 2. React -->
+              <div class="canvas-app-tile tile-react" data-tech="React" data-cat="web"
+                data-desc="Component-driven reactive UI architecture, state machines, custom hooks, and dynamic design token synchronization."
+                role="button" tabindex="0" aria-label="React">
+                <svg viewBox="0 0 115.3 100" width="42" height="42" fill="none">
+                  <ellipse cx="57.65" cy="50" rx="16.5" ry="46" transform="rotate(30 57.65 50)" stroke="#FFFFFF"
+                    stroke-width="4.8" />
+                  <ellipse cx="57.65" cy="50" rx="16.5" ry="46" transform="rotate(90 57.65 50)" stroke="#FFFFFF"
+                    stroke-width="4.8" />
+                  <ellipse cx="57.65" cy="50" rx="16.5" ry="46" transform="rotate(150 57.65 50)" stroke="#FFFFFF"
+                    stroke-width="4.8" />
+                  <circle cx="57.65" cy="50" r="8" fill="#FFFFFF" />
+                </svg>
+              </div>
+
+              <!-- 3. Blender -->
+              <div class="canvas-app-tile tile-blender" data-tech="Blender" data-cat="3d"
+                data-desc="Hard-surface 3D modeling, procedural shaders, PBR materials, character rigging, and cinematic scene lighting."
+                role="button" tabindex="0" aria-label="Blender">
+                <svg viewBox="0 0 24 24" width="42" height="42" fill="#FFFFFF">
+                  <path
+                    d="M12.5 7.5a4.5 4.5 0 1 1-4.5 4.5 4.5 4.5 0 0 1 4.5-4.5m0-2a6.5 6.5 0 1 0 6.5 6.5 6.5 6.5 0 0 0-6.5-6.5zm-5.8 5.2L1.8 7.3a1 1 0 0 1 1.4-1.4l4.9 3.4a6.5 6.5 0 0 0-1.4 1.4zm6.8-6.8L12.5 1a1 1 0 0 1 1.4 0l.9 2.9a6.5 6.5 0 0 0-1.3 0zm4.5 2.1l4.9-3.4a1 1 0 0 1 1.4 1.4l-4.9 3.4a6.5 6.5 0 0 0-1.4-1.4z" />
+                  <circle cx="12.5" cy="12" r="2.2" fill="#EA7600" />
+                </svg>
+              </div>
+
+              <!-- 4. Figma -->
+              <div class="canvas-app-tile tile-figma" data-tech="Figma" data-cat="3d"
+                data-desc="Design token architecture, multi-platform component systems, micro-interaction prototypes, and collaborative UX specs."
+                role="button" tabindex="0" aria-label="Figma">
+                <svg viewBox="0 0 38 57" width="28" height="42">
+                  <path d="M19 28.5a9.5 9.5 0 1 1 19 0 9.5 9.5 0 0 1-19 0z" fill="#1ABCFE" />
+                  <path d="M0 47.5A9.5 9.5 0 0 1 9.5 38H19v9.5a9.5 9.5 0 1 1-19 0z" fill="#0ACF83" />
+                  <path d="M19 0v19h9.5a9.5 9.5 0 1 0 0-19H19z" fill="#FF7262" />
+                  <path d="M0 9.5A9.5 9.5 0 0 0 9.5 19H19V0H9.5A9.5 9.5 0 0 0 0 9.5z" fill="#F24E1E" />
+                  <path d="M0 28.5A9.5 9.5 0 0 0 9.5 38H19V19H9.5A9.5 9.5 0 0 0 0 28.5z" fill="#A259FF" />
+                </svg>
+              </div>
+
+              <!-- 5. PyTorch -->
+              <div class="canvas-app-tile tile-pytorch" data-tech="PyTorch" data-cat="ai"
+                data-desc="Deep learning model training, custom loss functions, transformer attention heads, and GPU tensor acceleration."
+                role="button" tabindex="0" aria-label="PyTorch">
+                <svg viewBox="0 0 24 24" width="40" height="40" fill="#FFFFFF">
+                  <path
+                    d="M13.5 2.1a1 1 0 0 0-1.5.2L10.3 4.5l2.4 2.4 1.5-1.8a1 1 0 0 0-.7-3zM19 12a7 7 0 1 1-13-3.6l1.5 1.5A5 5 0 1 0 17 12h2z" />
+                </svg>
+              </div>
+
+              <!-- 6. Next.js -->
+              <div class="canvas-app-tile tile-nextjs" data-tech="Next.js" data-cat="web"
+                data-desc="Production App Router architecture, server-side rendering, streaming edge hydration, and zero-bundle performance."
+                role="button" tabindex="0" aria-label="Next.js">
+                <svg viewBox="0 0 180 180" width="40" height="40" fill="#FFFFFF">
+                  <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M90 180c49.706 0 90-40.294 90-90S139.706 0 90 0 0 40.294 0 90s40.294 90 90 90zm36.562-48.473L69.837 54.4H54.4v71.2h12.56V72.088l50.05 64.912c3.197-1.748 6.22-3.805 9.012-6.133l.54-.34zM113.6 54.4h12V108h-12V54.4z" />
+                </svg>
+              </div>
+
+              <!-- 7. Docker -->
+              <div class="canvas-app-tile tile-docker" data-tech="Docker" data-cat="cloud"
+                data-desc="Multi-stage container builds, Docker Compose local environments, reproducible deployment images, and cloud orchestration."
+                role="button" tabindex="0" aria-label="Docker">
+                <svg viewBox="0 0 24 24" width="40" height="40" fill="#FFFFFF">
+                  <path
+                    d="M13 3h2v2h-2zm-3 0h2v2h-2zm-3 3h2v2H7zm3 0h2v2h-2zm3 0h2v2h-2zm3 0h2v2h-2zm-9 3h2v2H4zm3 0h2v2H7zm3 0h2v2h-2zm3 0h2v2h-2zm3 0h2v2h-2zm3 0h2v2h-2zM1 12c.5 3 2.5 5 6 6 5.5 1.5 11 0 14-4 .5-.8 1-1.8 1-2.8v-.2H1v1z" />
+                </svg>
+              </div>
+
+              <!-- 8. Node.js -->
+              <div class="canvas-app-tile tile-nodejs" data-tech="Node.js" data-cat="cloud"
+                data-desc="Asynchronous non-blocking runtime, event-driven RESTful APIs, WebSocket servers, and backend microservices."
+                role="button" tabindex="0" aria-label="Node.js">
+                <svg viewBox="0 0 24 24" width="42" height="42" fill="#FFFFFF">
+                  <path
+                    d="M12 2L3 7.2v10.4L12 22.8l9-5.2V7.2L12 2zm-1.2 14.8c-.8 0-1.4-.4-1.8-1.1l1.1-.7c.2.4.4.6.7.6.4 0 .7-.2.7-.6 0-.9-1.9-.4-1.9-1.8 0-.8.6-1.4 1.5-1.4.7 0 1.2.3 1.5.8l-1 .7c-.2-.3-.3-.4-.5-.4-.3 0-.5.2-.5.4 0 .8 1.9.4 1.9 1.8 0 .9-.6 1.6-1.7 1.6zm4.8 0c-.8 0-1.4-.5-1.5-1.2h1.2c.1.3.2.4.4.4.3 0 .4-.2.4-.6v-3.8h1.2v3.8c0 1-.7 1.4-1.7 1.4z" />
+                </svg>
+              </div>
+
+            </div>
+
+            <!-- ROW 2 (6 Icons, Centered) -->
+            <div class="tiles-flex-row row-bottom">
+
+              <!-- 9. Tailwind CSS -->
+              <div class="canvas-app-tile tile-tailwind" data-tech="Tailwind CSS" data-cat="web"
+                data-desc="Utility-first styling systems, custom design system tokens, responsive breakpoints, and dark mode themes."
+                role="button" tabindex="0" aria-label="Tailwind CSS">
+                <svg viewBox="0 0 24 24" width="40" height="40" fill="#FFFFFF">
+                  <path
+                    d="M12.001 4.8c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624C13.666 10.618 15.027 12 18.001 12c3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C16.336 6.182 14.975 4.8 12.001 4.8zm-6 7.2c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624 1.177 1.194 2.538 2.576 5.512 2.576 3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C10.336 13.382 8.975 12 6.001 12z" />
+                </svg>
+              </div>
+
+              <!-- 10. GitHub -->
+              <div class="canvas-app-tile tile-github" data-tech="GitHub" data-cat="cloud"
+                data-desc="Git version control, collaborative PR workflows, GitHub Actions CI/CD pipelines, and semantic release governance."
+                role="button" tabindex="0" aria-label="GitHub">
+                <svg viewBox="0 0 24 24" width="42" height="42" fill="#FFFFFF">
+                  <path
+                    d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+                </svg>
+              </div>
+
+              <!-- 11. JavaScript -->
+              <div class="canvas-app-tile tile-js" data-tech="JavaScript" data-cat="web"
+                data-desc="Modern ECMAScript (ES6+), functional paradigms, asynchronous events, DOM animations, and performant web APIs."
+                role="button" tabindex="0" aria-label="JavaScript">
+                <span class="js-bold-glyph">JS</span>
+              </div>
+
+              <!-- 12. Unity -->
+              <div class="canvas-app-tile tile-unity" data-tech="Unity" data-cat="3d"
+                data-desc="Real-time interactive 3D simulations, C# gameplay scripting, particle systems, and multiplatform rendering."
+                role="button" tabindex="0" aria-label="Unity">
+                <i class="fa-brands fa-unity" style="font-size: 42px; color: #FFFFFF;"></i>
+              </div>
+
+              <!-- 13. AI / LLM Robot -->
+              <div class="canvas-app-tile tile-robot" data-tech="AI / LLM" data-cat="ai"
+                data-desc="Autonomous agent workflows, LangChain / LangGraph, retrieval-augmented generation (RAG), and agentic reasoning."
+                role="button" tabindex="0" aria-label="AI / LLM">
+                <svg viewBox="0 0 24 24" width="40" height="40" fill="#FFFFFF">
+                  <path
+                    d="M12 2a1 1 0 0 1 1 1v1h2a5 5 0 0 1 5 5v5a5 5 0 0 1-5 5h-1v1a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-1H5a5 5 0 0 1-5-5V9a5 5 0 0 1 5-5h2V3a1 1 0 0 1 1-1h4zm-4 7a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm8 0a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3zm-5.5 5a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3z" />
+                </svg>
+              </div>
+
+              <!-- 14. Neural Network / Brain -->
+              <div class="canvas-app-tile tile-neural" data-tech="Neural AI" data-cat="ai"
+                data-desc="Deep neural networks, PyTorch tensors, transformer attention maps, and cognitive machine intelligence."
+                role="button" tabindex="0" aria-label="Neural AI">
+                <i class="fa-solid fa-brain" style="font-size: 38px; color: #FFFFFF;"></i>
+              </div>
+
+            </div>
+          </div>
+
+          <!-- Exact Bottom Inspection Capsule Bar -->
+          <div class="canvas-inspector-capsule" id="playfulInspectorBar">
+            <div class="inspect-ready-pill" id="inspectorReadyTag">
+              <span class="inspect-pulse-dot">●</span>
+              <span id="inspectorReadyLabel">READY</span>
+            </div>
+            <span class="inspect-pipe">|</span>
+            <div class="inspect-message" id="inspectorStatusText">
+              Hover to preview • Click to inspect
+            </div>
+
+            <!-- Curved Smile Double-Ended Arrow Doodle -->
+            <svg class="inspect-smile-doodle" viewBox="0 0 50 20" fill="none" stroke="currentColor">
+              <path d="M6 7 Q 25 18 44 7" stroke-width="2.2" stroke-linecap="round" />
+              <path d="M13 4 L 6 7 L 10 14" stroke-width="2.2" stroke-linecap="round" />
+              <path d="M37 4 L 44 7 L 40 14" stroke-width="2.2" stroke-linecap="round" />
+            </svg>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+  </div><!-- /story-layer-skills -->
+
+  <!-- LAYER 5: JOURNEY & EXPERIENCE VIEWPORT STAGE -->
+  <div class="story-layer featured-creations-locked" id="story-layer-experience" data-layer-id="experience">
+    <!-- ==========================================================================
+         THE JOURNEY SO FAR (Interactive Scroll-Driven Timeline 2024 - Present)
+         ========================================================================== -->
+    <section class="experience-showcase-section journey-timeline-section section-padding" id="experience" style="position: relative;">
+      
+      <!-- Ambient Blueprint / Grid Decorative Watermark -->
+      <div class="journey-ambient-layer" aria-hidden="true">
+        <span class="journey-ghost-bg-watermark">JOURNEY</span>
+        <svg class="journey-circuit-tracer" viewBox="0 0 1200 1600" fill="none" preserveAspectRatio="none">
+          <path d="M100 50 L100 450 L180 530 L550 530" stroke="rgba(34, 36, 40, 0.06)" stroke-width="2" stroke-dasharray="6 6" />
+          <path d="M1100 200 L1100 800 L980 920 L650 920" stroke="rgba(34, 36, 40, 0.06)" stroke-width="2" stroke-dasharray="6 6" />
+          <circle cx="180" cy="530" r="4" fill="rgba(34, 36, 40, 0.15)" />
+          <circle cx="980" cy="920" r="4" fill="rgba(34, 36, 40, 0.15)" />
+        </svg>
+      </div>
+
+      <div class="container journey-main-container" style="position: relative; z-index: 2;">
+        
+        <!-- Header Section -->
+        <div class="section-header journey-header-wrap">
+          <div class="journey-header-content">
+            <span class="section-subtitle-tag"><i class="fa-solid fa-compass-drafting"></i> 2024 — Present</span>
+            
+            <div class="selected-work-title-wrap">
+              <span class="title-watermark-ghost" aria-hidden="true">“ THE JOURNEY SO FAR. ”</span>
+              <h2 class="selected-work-title">
+                <span class="title-first-word">
+                  <span>THE</span>
+                  <span class="title-floating-quote">”</span>
+                  <span style="margin-left: 0.28em;">JOURNEY</span>
+                </span>
+                <span class="title-tilted-badge">SO FAR</span><span class="title-yellow-dot">.</span>
+              </h2>
+            </div>
+            
+            <div class="journey-headlines">
+              <h3 class="journey-headline-bold">Growing. Building. Leading.</h3>
+              <p class="section-subtitle journey-headline-desc">
+                From curious beginnings to building products, contributing to communities, and turning ideas into reality.
+              </p>
+            </div>
+          </div>
+
+          <!-- Quick Timeline Navigation Jump Bar -->
+          <div class="journey-jump-bar" aria-label="Timeline Jump Links">
+            <a href="#milestone-2024" class="journey-jump-pill"><span>'24</span> Foundation</a>
+            <a href="#milestone-2025-build" class="journey-jump-pill"><span>'25</span> Building</a>
+            <a href="#milestone-2025-hack" class="journey-jump-pill"><span>'25</span> Impact</a>
+            <a href="#milestone-2026-lead" class="journey-jump-pill"><span>'26</span> Leadership</a>
+            <a href="#milestone-present" class="journey-jump-pill"><span>Now</span> Horizon</a>
+          </div>
+        </div>
+
+        <!-- Central Timeline Track & Alternating Cards -->
+                <!-- Central Timeline Track & Alternating Cards -->
+        <div class="journey-timeline-flow" id="journeyTimelineFlow">
+          
+          <!-- Central Spine -->
+          <div class="timeline-central-spine" aria-hidden="true">
+            <div class="timeline-spine-track"></div>
+            <div class="timeline-spine-fill" id="timelineSpineFill"></div>
+          </div>
+
+          <!-- MILESTONE 01: 2024 — The Foundation (Writing on Left, Visual on Right) -->
+          <div class="timeline-milestone-row milestone-pair-row" id="milestone-2024" data-milestone="1">
+            <div class="milestone-spine-marker" aria-hidden="true">
+              <div class="spine-dot-ring"></div>
+              <div class="spine-dot-core"></div>
+              <span class="spine-year-pill">2024</span>
+            </div>
+
+            <!-- Left: Writing & Story -->
+            <div class="milestone-col-text">
+              <article class="milestone-card card-writing">
+                <div class="milestone-card-header">
+                  <div class="milestone-badge-pill">
+                    <span class="pill-dot"></span>
+                    <span class="pill-year">2024</span>
+                    <span class="pill-divider">•</span>
+                    <span class="pill-track">Academic Inception</span>
+                  </div>
+                  <span class="milestone-number-tag">01</span>
+                </div>
+
+                <div class="milestone-title-block">
+                  <h3 class="milestone-title">The Foundation</h3>
+                  <div class="milestone-role-tag">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <span>B.Tech in Computer Science &amp; Engineering • Academy of Technology</span>
+                  </div>
+                </div>
+
+                <p class="milestone-narrative">
+                  Began my journey in Computer Science and Engineering at Academy of Technology, Hooghly. 
+                  Immersed in programming fundamentals, computational logic, and problem-solving, 
+                  forging an unshakeable base in data structures and object-oriented paradigms.
+                </p>
+
+                <!-- Focus Areas & Technology Tags -->
+                <div class="milestone-pills-cluster">
+                  <span class="tech-tag-pill"><i class="fa-brands fa-cuttlefish"></i> C / C++</span>
+                  <span class="tech-tag-pill"><i class="fa-brands fa-python"></i> Python</span>
+                  <span class="tech-tag-pill"><i class="fa-brands fa-java"></i> Java</span>
+                  <span class="tech-tag-pill"><i class="fa-solid fa-network-wired"></i> Data Structures &amp; Algorithms</span>
+                  <span class="tech-tag-pill"><i class="fa-solid fa-cubes"></i> OOP Principles</span>
+                  <span class="tech-tag-pill"><i class="fa-solid fa-code"></i> Web Foundations</span>
+                </div>
+
+                <div class="milestone-hand-note note-left">
+                  <span class="hand-note-text">First line of code, endless curiosity ✨</span>
+                  <svg class="hand-note-arrow" viewBox="0 0 45 20" aria-hidden="true">
+                    <path d="M4 16 Q 22 2 38 12" fill="none" stroke="#222428" stroke-width="2" stroke-linecap="round"/>
+                    <path d="M30 15 L 38 12 L 34 5" fill="none" stroke="#222428" stroke-width="2" stroke-linecap="round"/>
+                  </svg>
+                </div>
+              </article>
+            </div>
+
+            <!-- Right (Opposite Side): Image & Code Snippet Visuals -->
+            <div class="milestone-col-visual">
+              <div class="milestone-card card-visual">
+                <div class="foundation-bento-grid">
+                  <div class="bento-photo-frame">
+                    <img src="images/milestone-foundation.jpg" alt="Developer workstation with DSA notebook and code" class="milestone-photo-img" loading="lazy">
+                    <div class="bento-photo-overlay">
+                      <span class="photo-caption-tag"><i class="fa-solid fa-code"></i> Engineering Desk</span>
+                    </div>
+                  </div>
+
+                  <div class="bento-code-snippet">
+                    <div class="code-editor-header">
+                      <span class="editor-dot red"></span>
+                      <span class="editor-dot yellow"></span>
+                      <span class="editor-dot green"></span>
+                      <span class="editor-filename">DataStructures.cpp</span>
+                    </div>
+                    <pre class="code-editor-body"><code><span class="ck">template</span> &lt;<span class="ck">typename</span> <span class="ct">T</span>&gt;
+<span class="ck">class</span> <span class="cn">BinarySearchTree</span> {
+  <span class="ct">Node</span>* root;
+<span class="ck">public</span>:
+  <span class="ct">void</span> <span class="cf">insert</span>(<span class="ct">T</span> val);
+  <span class="ct">bool</span> <span class="cf">search</span>(<span class="ct">T</span> key); <span class="cc">// O(log n)</span>
+};</code></pre>
+                  </div>
+                </div>
+
+                <div class="visual-footer-badge">
+                  <span class="visual-tag-item"><i class="fa-solid fa-terminal"></i> Algorithmic Problem Solving</span>
+                  <span class="visual-tag-item"><i class="fa-solid fa-laptop-code"></i> Discrete Paradigms</span>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+  </div><!-- /story-layer-experience -->
+
+  <!-- LAYER 6: CLI TERMINAL VIEWPORT STAGE -->
+  <div class="story-layer featured-creations-locked" id="story-layer-terminal" data-layer-id="cli-terminal">
+    <!-- ==========================================================================
+         MONOCHROMATIC CLAY TERMINAL INTERFACE SECTION
+         ========================================================================== -->
+    <section class="clay-terminal-section section-padding" id="cli-terminal">
+      <div class="container">
+
+        <!-- Super Graphic Section Header -->
+        <div class="super-graphic-header">
+          <span class="ghost-bg-text">" CLI TERMINAL. "</span>
+          <h2 class="main-graphic-title">
+            <span class="doodle-quotes-left">"</span>
+            INTERACTIVE <span class="tilted-box-word">CLI</span> TERMINAL<span class="yellow-dot">.</span>
+          </h2>
+        </div>
+
+        <!-- Clay Terminal Interface Outer Container -->
+        <div class="clay-terminal-wrapper">
+
+          <!-- Main 3D Clay Screen Frame Window -->
+          <div class="clay-screen-window">
+
+            <!-- Window Header Traffic Lights & Status -->
+            <div class="clay-screen-header">
+              <div class="clay-traffic-lights">
+                <span class="light red"></span>
+                <span class="light yellow"></span>
+                <span class="light green"></span>
+              </div>
+              <span class="clay-window-title">PORTO-SHELL -- zsh -- 80x24</span>
+              <div class="clay-sys-status">
+                <span class="status-indicator"></span>
+                <span>ONLINE</span>
+              </div>
+            </div>
+
+            <!-- Terminal Screen Content / Output Body Wrapped with Live Radar Pattern Background -->
+            <div class="clay-screen-body-wrap">
+              <div class="radar-pattern" aria-hidden="true">
+                <div class="radar-crosshair-x"></div>
+                <div class="radar-crosshair-y"></div>
+                <div class="radar-center"></div>
+                <div class="radar-blip blip-1" title="Node: Portfolio Engine"></div>
+                <div class="radar-blip blip-2" title="Node: AI & System Dev"></div>
+                <div class="radar-blip blip-3" title="Node: Creative UI/UX"></div>
+                <div class="radar-hud-tag-tl">SCAN: SECTOR-07 [ACTIVE]</div>
+                <div class="radar-hud-tag-tr">AZ: 360° // 9.4 GHz</div>
+              </div>
+              <div class="clay-screen-body" id="clay-terminal-output">
+                <div class="term-line sys-welcome">
+                  <span class="term-green">LIVE_TERMINAL</span>
+                </div>
+                <div class="term-line">
+                  <span class="term-muted">--------------------------------------------------------------------------</span>
+                </div>
+                <div class="term-line">
+                  <span>$ Welcome to the <strong class="term-yellow">TERMINAL</strong></span>
+                </div>
+                <div class="term-line">
+                  <span class="term-muted">Type <strong class="term-yellow">'help'</strong> for available commands</span>
+                </div>
+                <div class="term-line prompt-line" style="margin-top: 12px;">
+                  <span class="term-prompt">$</span> <span class="typed-cmd">help</span>
+                </div>
+                <div class="term-line output-block">
+                  <p><strong class="term-yellow">Available Commands:</strong></p>
+                  <p>&nbsp;&nbsp;<strong class="term-green">about</strong> - Learn about Srinjoyee</p>
+                  <p>&nbsp;&nbsp;<strong class="term-green">skills</strong> - View technical skills</p>
+                  <p>&nbsp;&nbsp;<strong class="term-green">projects</strong> - List featured projects</p>
+                  <p>&nbsp;&nbsp;<strong class="term-green">contact</strong> - Get contact information</p>
+                  <p>&nbsp;&nbsp;<strong class="term-green">radar</strong> - Scan sector & surveillance</p>
+                  <p>&nbsp;&nbsp;<strong class="term-green">joke</strong> - Get a dev joke</p>
+                  <p>&nbsp;&nbsp;<strong class="term-green">resume</strong> - Get my resume</p>
+                  <p>&nbsp;&nbsp;<strong class="term-green">hack</strong> - Simulate system breach</p>
+                  <p>&nbsp;&nbsp;<strong class="term-green">coffee</strong> - Caffeine boost</p>
+                  <p>&nbsp;&nbsp;<strong class="term-green">clear</strong> - Clear terminal</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Terminal Interactive Input Bar -->
+            <div class="clay-terminal-input-bar">
+              <span class="term-input-prompt">$</span>
+              <input type="text" id="clay-terminal-input" class="clay-terminal-input" placeholder="Type a command (try 'help', 'skills', 'about')..." autocomplete="off" spellcheck="false">
+              <button id="run-clay-cmd-btn" class="clay-bar-icon-right" title="Run Command">
+                <i class="fa-solid fa-arrow-turn-down fa-rotate-90"></i>
+              </button>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+  </div><!-- /story-layer-terminal -->
+
+  <!-- LAYER 7: CONTACT & FOOTER VIEWPORT STAGE -->
+  <div class="story-layer featured-creations-locked" id="story-layer-contact" data-layer-id="contact">
+    <!-- ==========================================================================
+         CONTACT SECTION
+         ========================================================================== -->
+    <section class="contact-section section-padding" id="contact">
+      <div class="container">
+        <div class="contact-card-wrapper">
+          <div class="contact-grid">
+            
+            <!-- Left Info Column -->
+            <div class="contact-info-col">
+              <h2 class="contact-title">Let's Create Something Extraordinary<span class="yellow-dot">.</span></h2>
+              <p class="contact-subtext">
+                Have an ambitious project, an AI system in mind, or just want to discuss innovative technology? Feel free to reach out anytime.
+              </p>
+
+              <div class="contact-details-list">
+                <div class="contact-detail-item">
+                  <div class="contact-icon">
+                    <i class="fa-solid fa-envelope"></i>
+                  </div>
+                  <div>
+                    <span class="contact-label">Email Me</span>
+                    <a href="mailto:srinjoyeedey@gmail.com" class="contact-value">srinjoyeedey@gmail.com</a>
+                  </div>
+                </div>
+
+                <div class="contact-detail-item">
+                  <div class="contact-icon">
+                    <i class="fa-solid fa-location-dot"></i>
+                  </div>
+                  <div>
+                    <span class="contact-label">Location</span>
+                    <span class="contact-value">Kolkata, India • Open to Global / Remote</span>
+                  </div>
+                </div>
+
+                <div class="contact-detail-item">
+                  <div class="contact-icon">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                  </div>
+                  <div>
+                    <span class="contact-label">Education</span>
+                    <span class="contact-value">Academy of Technology • Computer Science &amp; Engineering</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Social Links -->
+              <div class="social-links-group">
+                <a href="https://github.com/SrinjoyeeDey" target="_blank" rel="noopener noreferrer" class="social-link-btn" title="GitHub">
+                  <i class="fa-brands fa-github"></i>
+                </a>
+                <a href="https://linkedin.com/in/srinjoyee-dey" target="_blank" rel="noopener noreferrer" class="social-link-btn" title="LinkedIn">
+                  <i class="fa-brands fa-linkedin-in"></i>
+                </a>
+                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" class="social-link-btn" title="Twitter / X">
+                  <i class="fa-brands fa-x-twitter"></i>
+                </a>
+                <a href="mailto:srinjoyeedey@gmail.com" class="social-link-btn" title="Email">
+                  <i class="fa-solid fa-envelope"></i>
+                </a>
+              </div>
+            </div>
+
+            <!-- Right Form Column -->
+            <div class="contact-form-col">
+              <form class="contact-form" id="contact-form">
+                <div class="form-group">
+                  <label for="contact-name" class="form-label">Your Name</label>
+                  <input type="text" id="contact-name" class="form-input" placeholder="e.g. Alex Morgan" required>
+                </div>
+
+                <div class="form-group">
+                  <label for="contact-email" class="form-label">Your Email</label>
+                  <input type="email" id="contact-email" class="form-input" placeholder="e.g. alex@example.com" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Project Type</label>
+                  <div class="project-type-pills">
+                    <label class="type-pill-option">
+                      <input type="radio" name="project_type" value="ai" checked>
+                      <span>AI &amp; Neural Systems</span>
+                    </label>
+                    <label class="type-pill-option">
+                      <input type="radio" name="project_type" value="web">
+                      <span>Web Architecture</span>
+                    </label>
+                    <label class="type-pill-option">
+                      <input type="radio" name="project_type" value="3d">
+                      <span>3D &amp; Creative UI</span>
+                    </label>
+                    <label class="type-pill-option">
+                      <input type="radio" name="project_type" value="other">
+                      <span>Collaboration</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="form-group">
+                  <label for="contact-message" class="form-label">Your Message</label>
+                  <textarea id="contact-message" class="form-input form-textarea" rows="4" placeholder="Tell me about your project, goals, or ideas..." required></textarea>
+                </div>
+
+                <button type="submit" id="submit-btn" class="btn btn-pill-dark btn-block btn-lg interactive-hover-btn">
+                  <span class="btn-text-initial">
+                    <span>Send Message</span>
+                    <i class="fa-solid fa-paper-plane"></i>
+                  </span>
+                  <span class="btn-hover-reveal">
+                    <span>Send Message</span>
+                    <i class="fa-solid fa-arrow-right"></i>
+                  </span>
+                  <span class="btn-expanding-dot" aria-hidden="true"></span>
+                </button>
+              </form>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==========================================================================
+         FOOTER
+         ========================================================================== -->
+    <footer class="footer-section">
+      <div class="container footer-container">
+        <div class="footer-left">
+          <a href="#hero" class="brand-logo">
+            <span class="logo-text">PORTO<span class="logo-dot">.</span></span>
+          </a>
+          <p class="footer-tagline">Crafting thoughtful digital experiences, intelligent systems, and interactive creative web applications.</p>
+        </div>
+        <div class="footer-center">
+          <span class="copyright-text">© 2026 Srinjoyee Dey. All rights reserved.</span>
+        </div>
+        <div class="footer-right">
+          <a href="#hero" class="back-to-top-btn" aria-label="Back to Top">
+            <i class="fa-solid fa-arrow-up"></i>
+          </a>
+        </div>
+      </div>
+    </footer>
+  </div><!-- /story-layer-contact -->
+</main>
+
+    <!-- Project Detail Modal Popup -->
+    <div class="modal-overlay" id="project-modal" aria-hidden="true">
+      <div class="modal-card">
+        <button class="modal-close-btn" id="modal-close-btn" aria-label="Close Modal">&times;</button>
+        <div class="modal-body" id="modal-body-content"></div>
+      </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-notification" id="toast"></div>
+
+    <!-- Custom Pixel Cursor & Follower Ring -->
+    <div class="custom-pixel-cursor" id="custom-cursor">
+      <svg viewBox="0 0 32 32" class="cursor-pixel-svg">
+        <path d="M2 2 L2 26 L8 20 L13 29 L17 27 L12 18 L20 18 Z" class="cursor-glass-fill" stroke-linejoin="miter" stroke-linecap="square" />
+      </svg>
+    </div>
+    <div class="cursor-follower-ring" id="cursor-follower-ring"></div>
+
+    <!-- Floating Mac Dock -->
+    <div class="dock-outer" id="mac-dock">
+      <div class="dock-panel">
+        <div class="dock-item" data-label="Selected Works" data-href="#projects" tabindex="0" role="button"
+          aria-label="Selected Works">
+          <div class="dock-icon"><i class="fa-solid fa-briefcase"></i></div>
+          <div class="dock-label">Selected Works</div>
+        </div>
+        <div class="dock-item" data-label="Skills & Tools" data-href="#skills" tabindex="0" role="button"
+          aria-label="Skills & Tools">
+          <div class="dock-icon"><i class="fa-solid fa-bolt"></i></div>
+          <div class="dock-label">Skills & Tools</div>
+        </div>
+        <div class="dock-item" data-label="Get In Touch" data-href="#contact" tabindex="0" role="button"
+          aria-label="Get In Touch">
+          <div class="dock-icon"><i class="fa-solid fa-paper-plane"></i></div>
+          <div class="dock-label">Get In Touch</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mimo Robot AI Assistant Chatbot -->
+    <div id="mimo-chatbot-container" class="mimo-chatbot-container">
+      <button id="mimo-chatbot-trigger" class="mimo-trigger-btn" aria-label="Open Mimo AI Assistant">
+        <div class="mimo-robot-avatar">
+          <svg viewBox="0 0 100 100" class="mimo-robot-svg">
+            <rect x="25" y="6" width="50" height="7" rx="3" fill="#18181B" />
+            <circle cx="50" cy="5" r="5" fill="#FFBD12" />
+            <rect x="15" y="15" width="70" height="64" rx="26" fill="#FFC300" />
+            <rect x="7" y="36" width="10" height="22" rx="5" fill="#18181B" />
+            <rect x="83" y="36" width="10" height="22" rx="5" fill="#18181B" />
+            <circle cx="12" cy="47" r="3" fill="#FFBD12" />
+            <circle cx="88" cy="47" r="3" fill="#FFBD12" />
+            <rect x="24" y="27" width="52" height="40" rx="14" fill="#18181B" />
+            <path d="M28 31 L68 31 Q72 31, 70 35 L30 35 Q26 31, 28 31 Z" fill="rgba(255,255,255,0.15)" />
+            <ellipse cx="40" cy="42" rx="4.5" ry="6" fill="#FEF08A" class="mimo-eye left" />
+            <ellipse cx="60" cy="42" rx="4.5" ry="6" fill="#FEF08A" class="mimo-eye right" />
+            <path d="M 43 53 Q 50 59, 57 53" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" />
+          </svg>
+        </div>
+        <span class="mimo-tooltip-label">Chat with Mimo! 🤖</span>
+      </button>
+
+      <div id="mimo-chatbot-modal" class="mimo-chat-modal hidden" role="dialog" aria-labelledby="mimo-chat-title">
+        <div class="mimo-modal-header">
+          <div class="mimo-header-info">
+            <div class="mimo-header-avatar">
+              <svg viewBox="0 0 100 100" class="mimo-robot-mini-svg">
+                <rect x="15" y="15" width="70" height="64" rx="26" fill="#FFC300" />
+                <rect x="24" y="27" width="52" height="40" rx="14" fill="#18181B" />
+                <ellipse cx="40" cy="42" rx="4" ry="5.5" fill="#FEF08A" />
+                <ellipse cx="60" cy="42" rx="4" ry="5.5" fill="#FEF08A" />
+                <path d="M 43 53 Q 50 58, 57 53" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" />
+              </svg>
+              <span class="header-status-dot"></span>
+            </div>
+            <div class="mimo-header-text">
+              <h3 id="mimo-chat-title" class="mimo-robot-name">Mimo <span class="badge-ai">AI Companion</span></h3>
+              <span class="mimo-status-subtitle">Online & Ready to Help</span>
+            </div>
+          </div>
+          <button id="mimo-close-btn" class="mimo-close-btn" aria-label="Close Chat">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+
+        <div id="mimo-messages-body" class="mimo-messages-body">
+          <div class="mimo-msg bot-msg">
+            <div class="msg-avatar-icon">🤖</div>
+            <div class="msg-bubble">
+              <p>Hi there! 👋 I'm <strong>Mimo</strong>, Srinjoyee's AI assistant companion!</p>
+              <p>How can I help you explore today?</p>
+            </div>
+          </div>
+          <div class="mimo-quick-pills" id="mimo-quick-pills">
+            <button class="quick-pill-btn" data-query="show works">🎨 Show Selected Works</button>
+            <button class="quick-pill-btn" data-query="skills">🛠️ What tools do you use?</button>
+            <button class="quick-pill-btn" data-query="hire">📩 How can I hire you?</button>
+            <button class="quick-pill-btn" data-query="experience">⚡ Tell me about yourself</button>
+          </div>
+        </div>
+
+        <div class="mimo-modal-footer">
+          <form id="mimo-chat-form" class="mimo-chat-form">
+            <input type="text" id="mimo-input-field" class="mimo-input-field" placeholder="Ask Mimo a question..." autocomplete="off" required />
+            <button type="submit" class="mimo-send-btn" aria-label="Send Message">
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==========================================================================
+         INITIAL PAGE & SECTION LOADER OVERLAY
+         ========================================================================== -->
+    <div class="section-loader-overlay active" id="section-loader-overlay">
+      <div class="loader-overlay-content">
+        <div class="boxes-loader-wrapper">
+          <div class="boxes">
+            <div class="box">
+              <div></div><div></div><div></div><div></div>
+            </div>
+            <div class="box">
+              <div></div><div></div><div></div><div></div>
+            </div>
+            <div class="box">
+              <div></div><div></div><div></div><div></div>
+            </div>
+            <div class="box">
+              <div></div><div></div><div></div><div></div>
+            </div>
+          </div>
+        </div>
+        <div class="loader-status-container">
+          <div class="loader-percentage-display">
+            <span class="loader-percentage-num" id="loader-percentage">0</span><span class="loader-percentage-symbol">%</span>
+          </div>
+          <div class="loader-progress-track">
+            <div class="loader-progress-bar" id="loader-progress-bar"></div>
+          </div>
+          <span class="loader-section-tag" id="loader-section-name">INITIALIZING STUDIO...</span>
+        </div>
+        <div class="loader-error-actions" id="loader-error-actions" style="display: none;">
+          <button class="btn btn-pill-dark" onclick="window.location.reload()">
+            <span>Retry</span>
+            <i class="fa-solid fa-rotate-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Magic UI Interactive Globe & DotField Bundles -->
+    <script src="grid-scan-bundle.js"></script>
+    <script src="globe-bundle.js"></script>
+    <script src="projects-swap-bundle.js"></script>
+    <script src="dot-field-bundle.js"></script>
+    <script src="flying-button-bundle.js"></script>
+
+    <!-- GSAP & ScrollTrigger Animation Libraries -->
+    <script src="lib/gsap.min.js"></script>
+    <script src="lib/ScrollTrigger.min.js"></script>
+
+    <!-- Main Interactive Scripts -->
+    <script src="script.js?v=11"></script>
+    <script src="hero-3d-model.js?v=8"></script>
+    <script src="scroll-reveal.js?v=1"></script>
+  </body>
+</html>

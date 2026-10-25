@@ -1,0 +1,1431 @@
+/* ==========================================================================
+   SOCIAL MEDIA DESIGN SHOWCASE SECTION
+   Fidelity replica of the Graphic Design / Social Media Portfolio Section
+   Completely coded with pure HTML, CSS, SVG, and interactive components.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Section Root & Layout
+   -------------------------------------------------------------------------- */
+.social-media-design-section {
+  position: relative;
+  width: 100%;
+  background: #EAE8E3;
+  color: #1F2024;
+  padding: 110px 0 140px;
+  scroll-margin-top: 90px;
+  overflow: hidden;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  border-top: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Ambient Graphic Design Watermark in Background */
+.social-ambient-watermark {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.social-ambient-watermark .faint-circle-arc {
+  position: absolute;
+  border-radius: 50%;
+  border: 1.5px solid rgba(31, 32, 36, 0.05);
+}
+
+.social-ambient-watermark .arc-1 {
+  width: 620px;
+  height: 620px;
+  bottom: -220px;
+  left: -120px;
+}
+
+.social-ambient-watermark .arc-2 {
+  width: 440px;
+  height: 440px;
+  bottom: -100px;
+  left: -20px;
+}
+
+.social-ambient-watermark .arc-3 {
+  width: 800px;
+  height: 800px;
+  top: -300px;
+  right: -250px;
+  border-style: dashed;
+}
+
+.social-ambient-watermark .faint-number-01 {
+  position: absolute;
+  bottom: -30px;
+  left: 20px;
+  font-size: 180px;
+  font-family: 'Fredoka', 'Syne', sans-serif;
+  font-weight: 800;
+  color: rgba(31, 32, 36, 0.035);
+  line-height: 1;
+  user-select: none;
+}
+
+/* Container */
+.social-design-container {
+  position: relative;
+  z-index: 2;
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 0 36px;
+}
+
+/* --------------------------------------------------------------------------
+   Top Navigation / Header Bar
+   -------------------------------------------------------------------------- */
+.social-top-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.social-top-left {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.social-pill-badge {
+  font-family: 'Fredoka', 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: -0.2px;
+  color: #1F2024;
+}
+
+.social-nav-arrow-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(31, 32, 36, 0.35);
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #1F2024;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.social-nav-arrow-btn:hover {
+  background: #1F2024;
+  color: #FFFFFF;
+  transform: translateX(3px);
+  border-color: #1F2024;
+}
+
+.social-top-right-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.social-vertical-stamp {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #7D808A;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  position: absolute;
+  right: 28px;
+  top: 140px;
+  user-select: none;
+}
+
+/* --------------------------------------------------------------------------
+   Headline & Editorial Description
+   -------------------------------------------------------------------------- */
+.social-headline-block {
+  margin-bottom: 46px;
+  max-width: 840px;
+  margin-left: auto;
+  margin-right: 40px;
+  position: relative;
+}
+
+.social-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.social-quote-amber {
+  font-family: 'Fredoka', Georgia, serif;
+  font-size: 3rem;
+  line-height: 0.8;
+  color: #E8B949;
+  font-weight: 800;
+  user-select: none;
+}
+
+.social-section-title {
+  font-family: 'Fredoka', 'Syne', 'Plus Jakarta Sans', sans-serif;
+  font-size: clamp(2rem, 3.4vw, 2.75rem);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #1B1D22;
+  text-transform: uppercase;
+  margin: 0;
+  line-height: 1.1;
+}
+
+.social-section-desc {
+  font-size: 0.98rem;
+  line-height: 1.68;
+  color: #4A4D57;
+  max-width: 780px;
+  margin: 0;
+  font-weight: 450;
+}
+
+/* --------------------------------------------------------------------------
+   Main Showcase Grid: Tilted Phone (Left) + Golden Bento Tray (Right)
+   -------------------------------------------------------------------------- */
+.social-showcase-stage {
+  display: grid;
+  grid-template-columns: 330px 1fr;
+  gap: 36px;
+  align-items: center;
+  position: relative;
+  margin-bottom: 30px;
+}
+
+/* --------------------------------------------------------------------------
+   3D Tilted Smartphone Mockup
+   -------------------------------------------------------------------------- */
+.phone-mockup-wrapper {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  perspective: 1200px;
+  z-index: 5;
+}
+
+.social-phone-body {
+  position: relative;
+  width: 310px;
+  background: #111215;
+  border-radius: 44px;
+  padding: 10px;
+  box-shadow: 
+    0 35px 70px -15px rgba(0, 0, 0, 0.4),
+    0 15px 30px -10px rgba(0, 0, 0, 0.25),
+    inset 0 0 0 1.5px rgba(255, 255, 255, 0.15);
+  transform: rotate(-5deg) rotateY(5deg) rotateX(2deg);
+  transform-style: preserve-3d;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.5s ease;
+}
+
+.social-phone-body:hover {
+  transform: rotate(-2deg) rotateY(0deg) scale(1.02);
+  box-shadow: 
+    0 45px 90px -15px rgba(0, 0, 0, 0.45),
+    0 20px 40px -10px rgba(0, 0, 0, 0.3),
+    inset 0 0 0 1.5px rgba(255, 255, 255, 0.25);
+}
+
+/* Phone Screen */
+.phone-screen-canvas {
+  background: #FFFFFF;
+  border-radius: 36px;
+  overflow: hidden;
+  position: relative;
+  color: #1A1A1A;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  user-select: none;
+}
+
+/* Phone Status Bar */
+.phone-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 18px 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #111;
+  background: #FFFFFF;
+}
+
+.phone-dynamic-island {
+  width: 74px;
+  height: 18px;
+  background: #000000;
+  border-radius: 20px;
+  position: absolute;
+  top: 9px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 6px;
+}
+
+.island-camera-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #0d1a2d;
+  box-shadow: inset 0 0 2px #3b82f6;
+}
+
+.status-right-icons {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 10px;
+}
+
+/* Instagram Header */
+.insta-app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 14px 4px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.insta-logo-text {
+  font-family: 'Caveat', cursive, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #111;
+}
+
+.insta-header-actions {
+  display: flex;
+  gap: 12px;
+  font-size: 15px;
+  color: #222;
+}
+
+/* Instagram Stories Carousel */
+.insta-stories-strip {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 12px 10px;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.insta-story-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  cursor: pointer;
+}
+
+.story-ring-gradient {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  padding: 2.2px;
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+}
+
+.insta-story-item:hover .story-ring-gradient {
+  transform: scale(1.05);
+}
+
+.story-inner-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #FFFFFF;
+  border: 2px solid #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  font-size: 16px;
+}
+
+.story-avatar-kpr { background: #FFE8B8; color: #B45309; }
+.story-avatar-house { background: #D1FAE5; color: #047857; }
+.story-avatar-promo { background: #FEE2E2; color: #DC2626; }
+.story-avatar-tips { background: #E0E7FF; color: #4338CA; }
+
+.story-user-label {
+  font-size: 9.5px;
+  font-weight: 500;
+  color: #555;
+  max-width: 52px;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Instagram Post Container */
+.insta-post-container {
+  background: #FFFFFF;
+  position: relative;
+}
+
+.insta-post-user-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 12px;
+}
+
+.insta-author-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.insta-author-thumb {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #18191E;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: #FFBD12;
+}
+
+.insta-author-name {
+  font-size: 11px;
+  font-weight: 700;
+  color: #111;
+  line-height: 1.2;
+}
+
+.insta-author-sub {
+  font-size: 8.5px;
+  color: #888;
+}
+
+.insta-post-dots {
+  font-size: 12px;
+  color: #666;
+}
+
+/* Post Graphic Canvas */
+.insta-post-graphic-canvas {
+  width: 100%;
+  height: 260px;
+  background: linear-gradient(145deg, #FAF9F5 0%, #F0EDE4 100%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 12px 6px;
+  border-top: 1px solid rgba(0,0,0,0.04);
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+/* Hanging Brand Tag */
+.canvas-hanging-brand-tag {
+  position: absolute;
+  top: 0;
+  left: 14px;
+  z-index: 6;
+}
+
+.brand-hanging-pill {
+  width: 22px;
+  height: 28px;
+  background: #FFFFFF;
+  border-bottom-left-radius: 11px;
+  border-bottom-right-radius: 11px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 2px;
+}
+
+.hanging-pill-logo {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FF6B8B, #FF8E53, #FFAA00);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 8px;
+  color: #FFFFFF;
+}
+
+/* Grid overlay & architectural blueprint accents */
+.graphic-blueprint-lines {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.15;
+  background-image: 
+    linear-gradient(#222 1px, transparent 1px),
+    linear-gradient(90deg, #222 1px, transparent 1px);
+  background-size: 18px 18px;
+}
+
+.graphic-house-silhouette {
+  position: absolute;
+  right: -5px;
+  top: 10px;
+  width: 140px;
+  height: 130px;
+  opacity: 0.1;
+  color: #18191E;
+}
+
+.graphic-circle-accent {
+  position: absolute;
+  top: 76px;
+  left: 92px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #18191E;
+  z-index: 3;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+}
+
+.graphic-center-stage {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  position: relative;
+  z-index: 4;
+  height: 195px;
+  margin-top: 10px;
+}
+
+.graphic-model-vector {
+  position: relative;
+  width: 115px;
+  height: 190px;
+  z-index: 2;
+  filter: drop-shadow(4px 6px 14px rgba(0,0,0,0.25));
+  margin-bottom: -5px;
+}
+
+.graphic-typography-card {
+  position: relative;
+  z-index: 3;
+  text-align: right;
+  max-width: 155px;
+  padding-bottom: 12px;
+}
+
+.kpr-black-badge {
+  display: inline-block;
+  background: #18191E;
+  color: #FFFFFF;
+  font-family: 'Fredoka', 'Plus Jakarta Sans', sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  margin-bottom: 2px;
+  letter-spacing: -0.2px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+}
+
+.kpr-bold-dark-title {
+  font-family: 'Fredoka', 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 15px;
+  line-height: 1.1;
+  color: #18191E;
+  margin: 3px 0 1px;
+}
+
+.kpr-subtitle-prose {
+  font-size: 10px;
+  font-weight: 600;
+  color: #4A4D57;
+  margin-bottom: 4px;
+}
+
+.kpr-yellow-banner-accent {
+  display: inline-block;
+  background: #FFBD12;
+  color: #18191E;
+  font-family: 'Fredoka', 'Plus Jakarta Sans', sans-serif;
+  font-weight: 800;
+  font-size: 13.5px;
+  padding: 4px 9px;
+  border-radius: 4px;
+  letter-spacing: -0.2px;
+  box-shadow: 0 3px 8px rgba(255, 189, 18, 0.45);
+}
+
+.canvas-bottom-tags-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+  z-index: 5;
+  font-size: 7px;
+  color: #64748B;
+  padding: 0 2px 2px;
+  font-weight: 600;
+}
+
+.canvas-social-handles {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.canvas-website-url {
+  font-weight: 700;
+  color: #334155;
+}
+
+.graphic-corner-bracket {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: #18191E;
+  border-style: solid;
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.bracket-bottom-right {
+  bottom: 8px;
+  right: 8px;
+  border-width: 0 2.5px 2.5px 0;
+}
+
+/* Instagram Post Actions & Carousel Dots */
+.insta-post-actions-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 12px 5px;
+  position: relative;
+}
+
+.insta-action-icons-left {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  font-size: 15px;
+  color: #222;
+}
+
+.insta-carousel-dots {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.carousel-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #CBD5E1;
+  transition: all 0.2s ease;
+}
+
+.carousel-dot.active {
+  background: #0284C7;
+  transform: scale(1.25);
+}
+
+.floating-like-pill {
+  position: absolute;
+  right: 36px;
+  top: 4px;
+  background: linear-gradient(135deg, #FF3B62, #E61E47);
+  color: #FFFFFF;
+  padding: 3px 9px;
+  border-radius: 14px;
+  font-size: 10.5px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  box-shadow: 0 4px 12px rgba(230, 30, 71, 0.45);
+  animation: pulseLikeBubble 2.5s infinite ease-in-out;
+}
+
+@keyframes pulseLikeBubble {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+.insta-action-bookmark {
+  font-size: 14px;
+  color: #222;
+}
+
+.insta-post-meta {
+  padding: 0 12px 8px;
+  font-size: 10px;
+  color: #222;
+}
+
+.insta-likes-count {
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.insta-caption-text {
+  color: #333;
+  line-height: 1.35;
+  margin-bottom: 3px;
+}
+
+.insta-caption-text strong {
+  color: #111;
+  font-weight: 700;
+}
+
+.insta-comments-link {
+  font-size: 9px;
+  color: #888;
+  cursor: pointer;
+}
+
+.insta-bottom-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 7px 0 9px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  font-size: 14px;
+  color: #222;
+  background: #FFFFFF;
+}
+
+.insta-nav-avatar {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #E8B949;
+  border: 1.5px solid #222;
+}
+
+/* --------------------------------------------------------------------------
+   Floating 3D Social Icons
+   -------------------------------------------------------------------------- */
+.social-floating-3d-badge {
+  position: absolute;
+  z-index: 10;
+  pointer-events: none;
+  filter: drop-shadow(0 12px 24px rgba(0,0,0,0.25));
+}
+
+.badge-fb-sphere {
+  top: 10px;
+  left: -22px;
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 28%, #6BB4FF 0%, #1877F2 48%, #0A4EB3 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-size: 30px;
+  font-weight: 800;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+  box-shadow: 
+    inset 4px 4px 10px rgba(255, 255, 255, 0.7),
+    inset -4px -4px 10px rgba(0, 0, 0, 0.35),
+    0 16px 32px rgba(24, 119, 242, 0.45);
+  animation: floatSocialOrb 4.5s ease-in-out infinite;
+}
+
+.badge-fb-sphere span {
+  transform: translateY(-2px) translateX(2px);
+}
+
+.badge-heart-bubble {
+  top: 55px;
+  right: -16px;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 28%, #FF8FA3 0%, #FF2E56 50%, #B80A2D 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-size: 22px;
+  box-shadow: 
+    inset 3px 3px 8px rgba(255, 255, 255, 0.75),
+    inset -3px -3px 8px rgba(0, 0, 0, 0.35),
+    0 14px 28px rgba(255, 46, 86, 0.45);
+  animation: floatSocialOrb2 5s ease-in-out infinite;
+}
+
+.badge-ig-squircle {
+  bottom: 85px;
+  left: -24px;
+  width: 56px;
+  height: 56px;
+  border-radius: 17px;
+  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #FFFFFF;
+  font-size: 26px;
+  box-shadow: 
+    inset 0 2px 4px rgba(255, 255, 255, 0.6),
+    inset 0 -2px 4px rgba(0, 0, 0, 0.3),
+    0 16px 32px rgba(214, 36, 159, 0.45);
+  animation: floatSocialOrb3 5.5s ease-in-out infinite;
+}
+
+.badge-ig-notify-pill {
+  bottom: 140px;
+  right: -18px;
+  width: 48px;
+  height: 48px;
+  border-radius: 15px;
+  background: radial-gradient(circle at 35% 28%, #FFE57F 0%, #E8B949 55%, #B38612 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #111;
+  font-size: 20px;
+  box-shadow: 
+    inset 2px 2px 5px rgba(255, 255, 255, 0.7),
+    0 12px 24px rgba(232, 185, 73, 0.45);
+  animation: floatSocialOrb 4s ease-in-out infinite;
+}
+
+@keyframes floatSocialOrb {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(3deg); }
+}
+
+@keyframes floatSocialOrb2 {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(-4deg); }
+}
+
+@keyframes floatSocialOrb3 {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(4deg); }
+}
+
+/* --------------------------------------------------------------------------
+   The Golden Bento Tray Container (`#E8B949`)
+   -------------------------------------------------------------------------- */
+.golden-bento-tray {
+  background: #E8B949;
+  border-radius: 28px;
+  padding: 24px 22px;
+  box-shadow: 
+    0 25px 60px rgba(232, 185, 73, 0.35),
+    0 10px 25px rgba(0, 0, 0, 0.06),
+    inset 0 2px 0 rgba(255, 255, 255, 0.35);
+  display: grid;
+  grid-template-columns: 245px 245px 1fr;
+  gap: 16px;
+  align-items: stretch;
+  position: relative;
+  z-index: 4;
+}
+
+/* Shared Card Shell inside Tray */
+.bento-post-card {
+  background: #FFFFFF;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+}
+
+.bento-post-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.14);
+}
+
+.bento-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: #FFFFFF;
+}
+
+.bento-card-user {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bento-user-circle {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #18191E;
+  color: #FFBD12;
+  font-size: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.bento-user-name {
+  font-size: 9.5px;
+  font-weight: 700;
+  color: #111;
+}
+
+.bento-card-actions-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px 4px;
+  font-size: 11px;
+  color: #444;
+  background: #FFFFFF;
+  border-top: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.bento-action-icons {
+  display: flex;
+  gap: 8px;
+}
+
+.bento-post-caption-box {
+  padding: 2px 10px 8px;
+  background: #FFFFFF;
+  font-size: 8px;
+  color: #333;
+}
+
+.bento-likes-label {
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 2px;
+}
+
+.bento-caption-line {
+  line-height: 1.3;
+  margin-bottom: 2px;
+}
+
+.bento-caption-line strong {
+  color: #111;
+}
+
+.bento-comments-link {
+  font-size: 7.5px;
+  color: #888;
+}
+
+/* --------------------------------------------------------------------------
+   Bento Card 1: Checklist Carousel Card
+   -------------------------------------------------------------------------- */
+.bento-checklist-canvas {
+  flex: 1;
+  min-height: 240px;
+  position: relative;
+  overflow: hidden;
+  background: #FAF9F6;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 8px 6px;
+}
+
+.bento-checklist-bg-split {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 145px;
+  height: 100%;
+  background: #18191E;
+  clip-path: polygon(45% 0, 100% 0, 100% 100%, 0% 100%);
+  pointer-events: none;
+}
+
+.bento-checklist-dots {
+  position: absolute;
+  left: 6px;
+  bottom: 24px;
+  width: 48px;
+  height: 48px;
+  background-image: radial-gradient(#FFBD12 2px, transparent 2px);
+  background-size: 8px 8px;
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.bento-checklist-pills {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 12px;
+  max-width: 135px;
+}
+
+.bento-pill-item {
+  background: #FFBD12;
+  color: #18191E;
+  font-family: 'Fredoka', 'Plus Jakarta Sans', sans-serif;
+  font-size: 9.5px;
+  font-weight: 800;
+  padding: 4px 8px;
+  border-radius: 6px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+  white-space: nowrap;
+  letter-spacing: -0.1px;
+}
+
+.bento-advisor-silhouette {
+  position: absolute;
+  right: -5px;
+  bottom: 0;
+  width: 110px;
+  height: 175px;
+  z-index: 2;
+  filter: drop-shadow(-3px 5px 10px rgba(0, 0, 0, 0.3));
+}
+
+/* --------------------------------------------------------------------------
+   Bento Card 2: CTA Advice Card (The User's Zoomed Screenshot)
+   -------------------------------------------------------------------------- */
+.bento-advice-canvas {
+  flex: 1;
+  min-height: 240px;
+  position: relative;
+  overflow: hidden;
+  background: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 8px 6px;
+}
+
+/* Two-tone background: Top 62% Golden Yellow, Bottom 38% White */
+.bento-advice-canvas::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 62%;
+  background: #F0BC42;
+  z-index: 1;
+}
+
+/* Top-Right Concentric Arcs */
+.bento-concentric-arcs-tr {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 80px;
+  height: 80px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Bottom-Left Concentric Arcs */
+.bento-concentric-arcs-bl {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  width: 80px;
+  height: 80px;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Thin vertical white line on left */
+.bento-left-vertical-line {
+  position: absolute;
+  top: 24px;
+  left: 14px;
+  width: 1.5px;
+  height: 70px;
+  background: rgba(255, 255, 255, 0.7);
+  z-index: 2;
+}
+
+/* Text Content on Yellow Canvas */
+.bento-advice-text-block {
+  position: relative;
+  z-index: 4;
+  padding-left: 6px;
+  margin-top: 14px;
+  max-width: 175px;
+}
+
+.bento-advice-teaser {
+  font-size: 8.2px;
+  font-weight: 600;
+  color: #1F2024;
+  line-height: 1.35;
+  margin-bottom: 5px;
+}
+
+.bento-advice-heading {
+  font-family: 'Fredoka', 'Plus Jakarta Sans', sans-serif;
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #111111;
+  line-height: 1.25;
+  margin-bottom: 8px;
+}
+
+/* Dark Contact Pill (Spans Left side) */
+.bento-contact-dark-pill {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 3px;
+  background: #18191E;
+  color: #FFFFFF;
+  padding: 6px 9px;
+  border-radius: 6px;
+  font-size: 7.5px;
+  font-weight: 700;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.contact-row-item {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.contact-row-item i {
+  color: #FFBD12;
+  font-size: 7.5px;
+  width: 9px;
+}
+
+.contact-colon {
+  color: #888;
+}
+
+.contact-number {
+  letter-spacing: 0.2px;
+}
+
+/* Woman on Phone Silhouette Cutout */
+.bento-phone-woman-silhouette {
+  position: absolute;
+  right: -5px;
+  bottom: 0;
+  width: 110px;
+  height: 175px;
+  z-index: 3;
+  filter: drop-shadow(-3px 5px 10px rgba(0, 0, 0, 0.25));
+}
+
+/* --------------------------------------------------------------------------
+   Bento Card 3: 2x3 Grid of 6 Real-Estate Instagram Feed Cards
+   -------------------------------------------------------------------------- */
+.bento-feed-grid-wrapper {
+  background: #FFFFFF;
+  border-radius: 14px;
+  padding: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.feed-six-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 8px;
+  height: 100%;
+}
+
+.feed-mini-tile {
+  background: #F8FAFC;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  aspect-ratio: 1 / 1.15;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.feed-mini-tile:hover {
+  transform: scale(1.05);
+  z-index: 5;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+/* Mini Header inside Feed Post Tile */
+.tile-mini-header {
+  background: #FFFFFF;
+  padding: 3px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 6.5px;
+  color: #555;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+.tile-mini-user {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-weight: 700;
+  color: #111;
+}
+
+.mini-user-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #F59E0B;
+}
+
+.tile-visual-stage {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tile-badge-orange {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: #FF5E36;
+  color: #FFF;
+  font-size: 6px;
+  font-weight: 800;
+  padding: 1.5px 4px;
+  border-radius: 2px;
+  z-index: 3;
+  text-transform: uppercase;
+}
+
+.tile-badge-yellow {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: #FFBD12;
+  color: #18191E;
+  font-size: 6px;
+  font-weight: 800;
+  padding: 1.5px 4px;
+  border-radius: 2px;
+  z-index: 3;
+  text-transform: uppercase;
+}
+
+.tile-badge-blue {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  background: #1877F2;
+  color: #FFF;
+  font-size: 6px;
+  font-weight: 800;
+  padding: 1.5px 4px;
+  border-radius: 2px;
+  z-index: 3;
+  text-transform: uppercase;
+}
+
+.tile-house-svg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.tile-bottom-meta {
+  background: #FFFFFF;
+  padding: 3px 5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 6.5px;
+  color: #555;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.tile-title-text {
+  font-weight: 700;
+  color: #111;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 48px;
+}
+
+.tile-engagements {
+  display: flex;
+  align-items: center;
+  gap: 2.5px;
+  font-size: 6px;
+}
+
+.tile-engagements .fa-heart {
+  color: #E61E47;
+}
+
+/* --------------------------------------------------------------------------
+   Bottom Row: Hashtags (Ps & Ai completely removed)
+   -------------------------------------------------------------------------- */
+.social-bottom-meta-row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 36px;
+  padding: 0 4px;
+}
+
+.social-hashtags-list {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #71737D;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  letter-spacing: -0.2px;
+}
+
+.social-hashtag-item {
+  color: #71737D;
+  transition: color 0.2s ease;
+  cursor: pointer;
+}
+
+.social-hashtag-item:hover {
+  color: #1B1D22;
+}
+
+/* --------------------------------------------------------------------------
+   Responsive Layout & Breakpoints
+   -------------------------------------------------------------------------- */
+@media (max-width: 1200px) {
+  .social-showcase-stage {
+    grid-template-columns: 290px 1fr;
+    gap: 26px;
+  }
+  
+  .golden-bento-tray {
+    grid-template-columns: 215px 215px 1fr;
+    gap: 12px;
+    padding: 20px 16px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .social-headline-block {
+    margin-left: 0;
+    margin-right: 0;
+    max-width: 100%;
+  }
+
+  .social-showcase-stage {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .phone-mockup-wrapper {
+    margin-bottom: 10px;
+  }
+
+  .golden-bento-tray {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .bento-feed-grid-wrapper {
+    grid-column: span 2;
+  }
+}
+
+@media (max-width: 768px) {
+  .social-media-design-section {
+    padding: 70px 0 90px;
+  }
+
+  .social-design-container {
+    padding: 0 20px;
+  }
+
+  .social-vertical-stamp {
+    display: none;
+  }
+
+  .social-section-title {
+    font-size: 1.85rem;
+  }
+
+  .golden-bento-tray {
+    grid-template-columns: 1fr;
+    padding: 16px 14px;
+    border-radius: 20px;
+  }
+
+  .bento-feed-grid-wrapper {
+    grid-column: span 1;
+  }
+
+  .social-phone-body {
+    width: 280px;
+    transform: rotate(-3deg);
+  }
+
+  .badge-fb-sphere {
+    width: 52px;
+    height: 52px;
+    font-size: 24px;
+    left: -12px;
+  }
+
+  .badge-heart-bubble {
+    width: 44px;
+    height: 44px;
+    font-size: 18px;
+    right: -10px;
+  }
+
+  .badge-ig-squircle {
+    width: 46px;
+    height: 46px;
+    font-size: 22px;
+    left: -12px;
+  }
+}

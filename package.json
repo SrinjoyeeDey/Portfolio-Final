@@ -1,0 +1,43 @@
+{
+  "name": "portfolio",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "dev": "npx serve .",
+    "start": "npx serve .",
+    "build": "esbuild src/index.jsx --bundle --outfile=lanyard.bundle.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@react-three/drei": "^10.7.8",
+    "@react-three/fiber": "^9.7.0",
+    "@react-three/rapier": "^2.2.0",
+    "clsx": "^2.1.1",
+    "cobe": "^0.6.5",
+    "esbuild": "^0.28.2",
+    "framer-motion": "^14.0.0",
+    "gsap": "^3.15.0",
+    "lucide-react": "^1.54.0",
+    "meshline": "^3.3.1",
+    "motion": "^14.6.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-pageflip": "^2.0.3",
+    "tailwind-merge": "^3.7.0",
+    "three": "^0.185.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "autoprefixer": "^10.6.1",
+    "postcss": "^8.5.29",
+    "puppeteer-core": "^25.8.0",
+    "tailwindcss": "^3.4.19",
+    "typescript": "^7.0.2"
+  }
+}

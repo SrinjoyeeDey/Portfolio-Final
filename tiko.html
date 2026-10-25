@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TIKO Platform — Collectible Pin Badges & Player Identity</title>
+  <meta name="description" content="Discover your unique cultural identity and collectible 3D pin-back button badges in the TIKO Educational Platform.">
+
+  <!-- Google Fonts: Fredoka (display), Gochi Hand (reference-matched handwritten doodles), Plus Jakarta Sans (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700;800;900&family=Gochi+Hand&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- TIKO Stylesheet -->
+  <link rel="stylesheet" href="tiko.css">
+</head>
+<body>
+
+  <!-- Background Paper Doodle Sketch Texture (Direct Reference Match) -->
+  <div class="tiko-paper-doodle-bg" aria-hidden="true"></div>
+
+  <!-- Top App Navigation Bar -->
+  <header class="tiko-header">
+    <div class="tiko-header-container">
+      <a href="tiko.html" class="tiko-brand-logo" id="tiko-logo">
+        <div class="tiko-logo-icon">
+          <i class="fa-solid fa-compass"></i>
+        </div>
+        <div class="tiko-logo-text">TIKO<span>.badges</span></div>
+      </a>
+
+      <div style="display:flex; align-items:center; gap:16px;">
+        <div class="tiko-player-pill" id="header-player-pill">
+          <div class="player-avatar-mini">
+            <i class="fa-solid fa-user"></i>
+          </div>
+          <span id="header-player-name">Guest Explorer</span>
+        </div>
+
+        <a href="index.html" class="btn-header-action" title="Back to Portfolio">
+          <i class="fa-solid fa-arrow-left"></i> Portfolio
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="tiko-main-wrapper">
+
+    <!-- RETURNING USER WELCOME BANNER (Dynamic & Animated) -->
+    <section class="tiko-welcome-banner" id="tiko-welcome-banner" style="display:none;">
+      <div class="welcome-banner-left">
+        <div class="welcome-icon-disc">
+          <i class="fa-solid fa-hand-sparkles"></i>
+        </div>
+        <div>
+          <h2 class="welcome-banner-title">Welcome back, <span id="welcome-player-name">Explorer</span>!</h2>
+          <p class="welcome-banner-subtitle">Your cultural exploration journey continues right where you left off.</p>
+        </div>
+      </div>
+      <div class="welcome-visit-badge" id="welcome-visit-count">Visit #2</div>
+    </section>
+
+    <!-- ====================================================================
+         HERO SECTION: 3D COLLECTIBLE PIN BADGE & PRESENTATION PACKAGING
+         Directly inspired by the 'tinktica monsters' reference image
+         ==================================================================== -->
+    <section class="tiko-hero-showcase">
+      <!-- Left Column: Packaging Card with 3D Domed Pin-Back Badge -->
+      <div class="badge-packaging-card" id="packaging-card">
+        <div class="packaging-pattern-watermark"></div>
+
+        <!-- Packaging Header (Matching "tinktica monsters" reference) -->
+        <div class="packaging-top-header">
+          <h1 class="packaging-brand-title">tiko monsters</h1>
+          <div class="packaging-ribbon-tag">COLLECTIBLE PIN-BACK BADGE</div>
+          <div class="packaging-subtitle-text">Official Identity Badge Series • 01</div>
+        </div>
+
+        <!-- Card Stage Area: Houses the 3D domed button badge -->
+        <div class="packaging-stage-area" id="hero-stage-area">
+          <div class="packaging-creature-backdrop" id="creature-backdrop">
+            <div class="creature-fur-scallops"></div>
+          </div>
+
+          <!-- THE 3D PIN-BACK BUTTON BADGE -->
+          <div class="tiko-3d-pin-badge" id="hero-pin-badge">
+            <div class="badge-metallic-rim"></div>
+            <div class="badge-domed-surface">
+              <!-- Specular Crescent Curved Highlight -->
+              <div class="badge-specular-gloss" id="badge-specular-gloss"></div>
+              <!-- Character / Motif SVG -->
+              <div class="badge-illustration-svg" id="hero-badge-illustration">
+                <!-- Injected by tiko.js -->
+              </div>
+              <div class="badge-hologram-seal">TIKO ORIGINAL</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stamped Nameplate (Personalized to Player) -->
+        <div class="packaging-nameplate-stamped">
+          <div class="stamped-name-pill">
+            <i class="fa-solid fa-award" style="color:#BE2B26;"></i>
+            <span id="stamped-player-name">Player Explorer</span>
+          </div>
+          <div class="stamped-badge-title" id="stamped-badge-title">Heritage Architect</div>
+        </div>
+      </div>
+
+      <!-- Right Column: Narrative Identity Lore & Action Buttons -->
+      <div class="identity-narrative-card">
+        <div class="badge-family-tag tag-explorer" id="hero-family-tag">
+          🧭 Type 1: Explorer Family
+        </div>
+
+        <h2 class="identity-hero-headline" id="hero-badge-title">
+          Code Explorer <span>Collectibles</span>
+        </h2>
+
+        <p class="identity-lore-description" id="hero-tagline" style="font-weight:700; color:var(--color-crimson); font-size:1.15rem;">
+          Mapping digital constellations through curiosity and logic.
+        </p>
+
+        <p class="identity-lore-description" id="hero-lore-description">
+          Awarded to pioneering minds that navigate complex cultural codebases and chart unknown digital territories with reverence and creativity.
+        </p>
+
+        <!-- Ancestral Wisdom Box -->
+        <div class="cultural-wisdom-box">
+          <span class="wisdom-label"><i class="fa-solid fa-feather"></i> Ancestral Lore & Wisdom</span>
+          <p class="wisdom-quote" id="hero-wisdom-quote">
+            “Not all who wander are lost; some are mapping new frontiers of discovery.”
+          </p>
+        </div>
+
+        <div class="hero-action-row">
+          <a href="#journey" class="btn-primary-action">
+            <i class="fa-solid fa-chart-line"></i> View Your Journey
+          </a>
+          <a href="#badges-vault" class="btn-secondary-action">
+            <i class="fa-solid fa-shapes"></i> Badge Collection
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SECTION 2: "YOUR TIKO JOURNEY" - REAL PROGRESSION DASHBOARD
+         ==================================================================== -->
+    <section class="tiko-journey-section" id="journey">
+      <div class="tiko-section-header">
+        <span class="section-tag-capsule">Live Activity Tracking</span>
+        <h2 class="section-main-heading">Your TIKO Journey</h2>
+        <p class="section-description-text">
+          Track real metrics across games completed, heritage puzzles solved, and world languages explored.
+        </p>
+      </div>
+
+      <!-- Zero-State Encouragement Banner -->
+      <div class="journey-zero-state-box" id="journey-zero-state-box">
+        <div style="display:flex; align-items:center; gap:12px;">
+          <i class="fa-solid fa-seedling" style="color:#16A34A; font-size:1.4rem;"></i>
+          <p class="zero-state-text" id="zero-state-text">
+            Your journey is just beginning! Explore cultural challenges below to unlock new collectible badges.
+          </p>
+        </div>
+        <span style="font-family:var(--font-display); font-size:0.8rem; font-weight:800; color:#16A34A; background:#DCFCE7; padding:4px 12px; border-radius:999px;">LEVEL 1 EXPLORER</span>
+      </div>
+
+      <!-- Metrics Grid -->
+      <div class="journey-metrics-grid">
+        <div class="metric-stat-card">
+          <div class="metric-top-row">
+            <div class="metric-icon-disc icon-visits">
+              <i class="fa-solid fa-shoe-prints"></i>
+            </div>
+            <span style="font-size:0.75rem; font-weight:800; color:#854D0E;">SESSIONS</span>
+          </div>
+          <div class="metric-value-num" id="stat-visits">1</div>
+          <div class="metric-label-text">Visits & Returns</div>
+        </div>
+
+        <div class="metric-stat-card">
+          <div class="metric-top-row">
+            <div class="metric-icon-disc icon-games">
+              <i class="fa-solid fa-gamepad"></i>
+            </div>
+            <span style="font-size:0.75rem; font-weight:800; color:#6D28D9;">ARCADE</span>
+          </div>
+          <div class="metric-value-num" id="stat-games">0</div>
+          <div class="metric-label-text">Games Completed</div>
+        </div>
+
+        <div class="metric-stat-card">
+          <div class="metric-top-row">
+            <div class="metric-icon-disc icon-challenges">
+              <i class="fa-solid fa-landmark"></i>
+            </div>
+            <span style="font-size:0.75rem; font-weight:800; color:#C2410C;">PUZZLES</span>
+          </div>
+          <div class="metric-value-num" id="stat-challenges">0</div>
+          <div class="metric-label-text">Heritage Solved</div>
+        </div>
+
+        <div class="metric-stat-card">
+          <div class="metric-top-row">
+            <div class="metric-icon-disc icon-languages">
+              <i class="fa-solid fa-language"></i>
+            </div>
+            <span style="font-size:0.75rem; font-weight:800; color:#0369A1;">DIALECTS</span>
+          </div>
+          <div class="metric-value-num" id="stat-languages">0</div>
+          <div class="metric-label-text">Languages Explored</div>
+        </div>
+
+        <div class="metric-stat-card">
+          <div class="metric-top-row">
+            <div class="metric-icon-disc icon-badges">
+              <i class="fa-solid fa-trophy"></i>
+            </div>
+            <span style="font-size:0.75rem; font-weight:800; color:#15803D;">UNLOCKED</span>
+          </div>
+          <div class="metric-value-num" id="stat-badges-count">1/12</div>
+          <div class="metric-label-text">Badges Earned</div>
+        </div>
+      </div>
+
+      <!-- Interactive Challenge Simulator / Mini-Activities -->
+      <div class="tiko-interactive-trainer">
+        <div class="trainer-header">
+          <div>
+            <h3 class="trainer-title"><i class="fa-solid fa-bolt" style="color:#EAB308;"></i> Play & Learn: Earn Live Progress</h3>
+            <p style="font-size:0.88rem; color:var(--color-charcoal-muted); margin:0;">
+              Interact with these activities to advance your real metrics and trigger badge unlock ceremonies!
+            </p>
+          </div>
+        </div>
+
+        <div class="trainer-btn-group">
+          <button class="btn-sim-action" id="btn-sim-game">
+            <i class="fa-solid fa-circle-play" style="color:#6D28D9;"></i> Play Quick Minigame (+1 Game)
+          </button>
+          <button class="btn-sim-action" id="btn-sim-challenge">
+            <i class="fa-solid fa-puzzle-piece" style="color:#C2410C;"></i> Solve Heritage Puzzle (+1 Challenge)
+          </button>
+          <button class="btn-sim-action" id="btn-sim-language">
+            <i class="fa-solid fa-book-atlas" style="color:#0369A1;"></i> Explore World Language (+1 Language)
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SECTION 3: "SHOW YOUR PROGRESS" - INTERACTIVE REFLECTIONS
+         ==================================================================== -->
+    <section class="tiko-reflection-section">
+      <div class="tiko-section-header">
+        <span class="section-tag-capsule">Self-Discovery & Feedback</span>
+        <h2 class="section-main-heading">Show Your Progress</h2>
+        <p class="section-description-text">
+          Reflect on what you've unlocked, shared, and learned during your exploration.
+        </p>
+      </div>
+
+      <div class="reflection-card-container">
+        <h3 class="reflection-prompt-title">
+          <i class="fa-solid fa-sparkles" style="color:#EAB308;"></i> How has your journey been with TIKO?
+        </h3>
+
+        <!-- Multi-Select Prompt Chips -->
+        <div class="reflection-chips-cluster">
+          <button class="reflection-chip-btn" data-value="I've explored more languages">
+            <i class="fa-solid fa-earth-americas"></i> I've explored more languages
+          </button>
+          <button class="reflection-chip-btn" data-value="I've learned new cultural facts">
+            <i class="fa-solid fa-lightbulb"></i> I've learned new cultural facts
+          </button>
+          <button class="reflection-chip-btn" data-value="I've become better at solving challenges">
+            <i class="fa-solid fa-brain"></i> I've become better at solving challenges
+          </button>
+          <button class="reflection-chip-btn" data-value="I've discovered something new">
+            <i class="fa-solid fa-compass"></i> I've discovered something new
+          </button>
+          <button class="reflection-chip-btn" data-value="I've shared stories with friends">
+            <i class="fa-solid fa-comment-dots"></i> I've shared stories with friends
+          </button>
+        </div>
+
+        <!-- Optional Personal Thought Input -->
+        <div class="reflection-input-group">
+          <label for="reflection-note-input" class="reflection-input-label">
+            What was your favorite discovery or moment? (Optional)
+          </label>
+          <textarea id="reflection-note-input" class="reflection-text-field" placeholder="e.g. I decoded an ancient Aztec counting puzzle and saw how mathematics united communities..."></textarea>
+        </div>
+
+        <div class="reflection-submit-row">
+          <button class="btn-primary-action" id="btn-submit-reflection">
+            <i class="fa-solid fa-paper-plane"></i> Share & Record Progress
+          </button>
+          <span style="font-size:0.84rem; color:var(--color-charcoal-muted);">
+            ⭐ Sharing unlocks creative and storytelling milestone badges!
+          </span>
+        </div>
+
+        <!-- Reflection Log History -->
+        <div class="reflection-history-log">
+          <h4 style="font-family:var(--font-display); font-size:0.95rem; font-weight:800; margin-bottom:10px;">
+            Your Journey Milestones Log
+          </h4>
+          <div id="reflection-history-list">
+            <!-- Rendered by tiko.js -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         SECTION 4: "MY BADGES" - COLLECTION VAULT
+         12 Distinct Collectible Pin-Back Button Badges
+         ==================================================================== -->
+    <section class="tiko-badges-section" id="badges-vault">
+      <div class="tiko-section-header">
+        <span class="section-tag-capsule">Badge Vault</span>
+        <h2 class="section-main-heading">My Badges & Collectibles</h2>
+        <p class="section-description-text">
+          Explore all 12 physical pin-back badges across the Explorer and Creator families. Click any badge to inspect its lore and 3D details.
+        </p>
+      </div>
+
+      <!-- Filter Controls -->
+      <div class="collection-filter-bar">
+        <button class="btn-filter-pill active" data-filter="all">All Badges (12)</button>
+        <button class="btn-filter-pill" data-filter="explorer">🧭 Explorer Family (6)</button>
+        <button class="btn-filter-pill" data-filter="creator">✨ Creator Family (6)</button>
+      </div>
+
+      <!-- Badges Grid Container -->
+      <div class="badges-collection-grid" id="badges-collection-grid">
+        <!-- Rendered dynamically by tiko.js -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ====================================================================
+       ONBOARDING MODAL: PLAYER NAME ENTRY & ATMOSPHERIC RADAR DISCOVERY
+       ==================================================================== -->
+  <div class="tiko-onboarding-modal-backdrop" id="tiko-onboarding-modal">
+    <div class="onboarding-card-box">
+      <!-- Step 1: Name Input -->
+      <div id="onboarding-step-form">
+        <div class="onboarding-badge-icon">
+          <i class="fa-solid fa-compass"></i>
+        </div>
+
+        <h2 class="onboarding-question-title">Before we begin...<br>what should we call you?</h2>
+        <p class="onboarding-sub-text">
+          Enter your name or adventurer alias. We'll forge your unique 3D collectible pin-back identity badge!
+        </p>
+
+        <div class="onboarding-input-wrap">
+          <input type="text" id="player-name-input" class="onboarding-name-field" placeholder="Enter your name..." maxlength="22" autocomplete="off">
+          <div class="input-feedback-error" id="input-feedback-error">Please enter your name or handle!</div>
+        </div>
+
+        <button type="button" class="btn-onboarding-continue" id="btn-onboarding-submit">
+          <span>Continue & Discover Badge</span> <i class="fa-solid fa-arrow-right"></i>
+        </button>
+      </div>
+
+      <!-- Step 2: Atmospheric Radar Discovery Sequence -->
+      <div id="onboarding-step-radar" class="discovery-stage-view">
+        <div class="discovery-radar-compass">
+          <div class="radar-beam-scanner"></div>
+          <div class="radar-center-core">
+            <i class="fa-solid fa-sparkles"></i>
+          </div>
+        </div>
+
+        <h3 class="discovery-status-text" id="radar-status-text">
+          Reading your cultural compass frequencies...
+        </h3>
+        <p class="discovery-sub-hint">
+          Aligning with the ancient archives to forge your personalized physical badge...
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       BADGE INSPECTION & DETAIL MODAL
+       ==================================================================== -->
+  <div class="tiko-onboarding-modal-backdrop hidden" id="badge-inspect-modal">
+    <div class="onboarding-card-box" style="max-width:480px; padding:32px 28px;">
+      <button id="btn-inspect-close" style="position:absolute; top:16px; right:16px; background:none; border:none; font-size:1.4rem; color:var(--color-charcoal); cursor:pointer;">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <div id="inspect-modal-body">
+        <!-- Rendered by tiko.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ====================================================================
+       FLOATING REVIEWER / TESTER TOOLBAR
+       Allows instructors, judges, and reviewers to instantly test all flows
+       ==================================================================== -->
+  <aside class="tiko-reviewer-toolbar" aria-label="Reviewer Controls">
+    <span class="reviewer-tag"><i class="fa-solid fa-flask"></i> Tester Bar</span>
+    <button class="btn-reviewer-tool" id="btn-reviewer-reset" title="Clear profile to test first-time onboarding">
+      <i class="fa-solid fa-rotate-left"></i> Reset (1st Visit)
+    </button>
+    <button class="btn-reviewer-tool" id="btn-reviewer-returning" title="Increment visit counter and trigger returning banner">
+      <i class="fa-solid fa-person-walking-arrow-right"></i> +1 Visit
+    </button>
+    <button class="btn-reviewer-tool" id="btn-reviewer-challenge" title="Simulate solving a challenge">
+      <i class="fa-solid fa-puzzle-piece"></i> Quick Progress
+    </button>
+    <button class="btn-reviewer-tool" id="btn-reviewer-unlock-all" title="Instantly unlock all 12 collectible badges">
+      <i class="fa-solid fa-unlock-keyhole"></i> Unlock All
+    </button>
+    <button class="btn-reviewer-tool" id="btn-reviewer-cycle" title="Preview all 12 badge designs in the hero display">
+      <i class="fa-solid fa-arrows-rotate"></i> Cycle Hero Pin
+    </button>
+  </aside>
+
+  <!-- Confetti Canvas Particle Layer -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- TIKO Core Logic -->
+  <script src="tiko.js"></script>
+</body>
+</html>
