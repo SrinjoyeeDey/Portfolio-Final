@@ -1,41 +1,41 @@
 /* ==========================================================================
-   CINEMATIC SCROLL REVEAL & VIEWPORT STAGING SYSTEM
-   Implements layered scroll-driven storytelling with:
-   - Outgoing layer: filter: blur(0px) -> blur(10px) + depth scale
-   - Incoming layer: clipPath: inset(0% 50% 0% 50%) -> inset(0% 0% 0% 0%)
+   VIEWPORT STAGING SYSTEM
+   (In-viewport scroll pinning effect removed per user request; standard scrolling flow)
    ========================================================================== */
 
-/* Prevent horizontal overflow during scaling and transitions */
+/* Prevent horizontal overflow */
 html, body {
   overflow-x: hidden;
   width: 100%;
 }
 
-/* Staged Story Layers with Seamless Melt & Merge Edges */
+/* Staged Story Layers in Natural Flow */
 .story-layer {
   position: relative;
   width: 100%;
   min-height: 100vh;
   box-sizing: border-box;
-  transform-origin: center center;
-  will-change: transform, filter, opacity;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
   background-color: var(--color-bg-light, #ECECE7);
   background-image: var(--color-bg-studio, linear-gradient(135deg, #f0f0eb 0%, #e2e3dd 50%, #e9e8e3 100%));
 }
 
-/* Feathered Melt Mask on incoming layers: completely eliminates harsh straight cut lines */
+/* Melt Mask disabled so sections do not get top cutoff during normal scrolling */
 .story-layer:not(#story-layer-hero) {
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.05) 15px, rgba(0, 0, 0, 0.45) 55px, rgba(0, 0, 0, 0.9) 100px, black 140px);
-  mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.05) 15px, rgba(0, 0, 0, 0.45) 55px, rgba(0, 0, 0, 0.9) 100px, black 140px);
+  -webkit-mask-image: none;
+  mask-image: none;
 }
 
-/* Explicit Z-Index Stacking Hierarchy with Authentic Studio Backgrounds */
+/* Explicit Backgrounds and Shadows */
 #story-layer-hero {
   z-index: 10;
   background-color: var(--color-bg-light, #ECECE7);
   background-image: var(--color-bg-studio, linear-gradient(135deg, #f0f0eb 0%, #e2e3dd 50%, #e9e8e3 100%));
+}
+
+#story-layer-spotlight {
+  z-index: 15;
+  background-color: #0c0e12;
+  box-shadow: 0 -20px 50px rgba(0, 0, 0, 0.4);
 }
 
 #story-layer-about {
@@ -79,10 +79,7 @@ html, body {
   overflow: hidden;
 }
 
-/* Featured Creations & Beyond Locked State until Rocket Take Off */
-.story-layer.featured-creations-locked {
-  display: none !important;
-}
+
 
 #story-layer-projects {
   z-index: 30;
@@ -119,12 +116,7 @@ html, body {
   box-shadow: 0 -20px 50px rgba(34, 36, 40, 0.08);
 }
 
-/* Fix GSAP Pin Spacers */
-.pin-spacer {
-  overflow: visible !important;
-}
-
-/* Ensure all interactive buttons inside blurred or unblurred layers are crisp */
+/* Interactive elements stay clickable */
 .story-layer a,
 .story-layer button,
 .story-layer input,
@@ -136,14 +128,4 @@ html, body {
 body.preloader-locked {
   overflow: hidden !important;
   height: 100vh !important;
-}
-
-/* Accessibility: Respect Reduced Motion Preferences */
-@media (prefers-reduced-motion: reduce) {
-  .story-layer {
-    filter: none !important;
-    clip-path: none !important;
-    transform: none !important;
-    opacity: 1 !important;
-  }
 }

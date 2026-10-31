@@ -1,0 +1,139 @@
+.scroll-stack {
+  position: relative;
+  width: 100%;
+}
+
+.scroll-stack--contained {
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  overscroll-behavior-y: auto;
+}
+
+.scroll-stack--contained::-webkit-scrollbar {
+  display: none;
+}
+
+.scroll-stack--window {
+  overflow: visible;
+}
+
+.scroll-stack__inner {
+  position: relative;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding-inline: clamp(1.5rem, 4vw, 4rem);
+  box-sizing: border-box;
+}
+
+.scroll-stack__slot {
+  position: sticky;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.scroll-stack-card {
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  height: calc(100vh - 130px);
+  min-height: 520px;
+  max-height: 720px;
+  padding: clamp(24px, 3.2vw, 38px) clamp(24px, 4vw, 48px);
+  border-radius: 28px;
+  transform-origin: 50% 0;
+  will-change: transform;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.1),
+    0 -14px 40px -16px rgba(0, 0, 0, 0.4),
+    0 30px 60px -20px rgba(0, 0, 0, 0.5);
+  transition: box-shadow 0.3s ease;
+}
+
+/* Card Themes matching React Bits & Portfolio Showcase */
+.scroll-stack-card[data-theme="ivory"] {
+  background: #F4F2E9;
+  color: #242529;
+  box-shadow:
+    0 0 0 1px rgba(36, 37, 41, 0.08),
+    0 -10px 36px -12px rgba(36, 37, 41, 0.12),
+    0 24px 56px -16px rgba(36, 37, 41, 0.18);
+}
+
+.scroll-stack-card[data-theme="charcoal"] {
+  background: #15161A;
+  color: #F3F1E8;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.12),
+    0 -14px 44px -16px rgba(0, 0, 0, 0.5),
+    0 32px 64px -20px rgba(0, 0, 0, 0.65);
+}
+
+.scroll-stack-card[data-theme="sand"] {
+  background: #EAE6D8;
+  color: #222428;
+  box-shadow:
+    0 0 0 1px rgba(34, 36, 40, 0.1),
+    0 -10px 36px -12px rgba(34, 36, 40, 0.12),
+    0 24px 56px -16px rgba(34, 36, 40, 0.18);
+}
+
+.scroll-stack-card[data-theme="slate"] {
+  background: #131418;
+  color: #FFFFFF;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.14),
+    0 -14px 44px -16px rgba(0, 0, 0, 0.5),
+    0 32px 64px -20px rgba(0, 0, 0, 0.65);
+}
+
+.scroll-stack-card[data-theme="lime"] {
+  background: #D5E859;
+  color: #17181C;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.12),
+    0 -10px 36px -12px rgba(0, 0, 0, 0.14),
+    0 24px 56px -16px rgba(0, 0, 0, 0.22);
+}
+
+/* Card Stacking Dim Overlay */
+.scroll-stack-card__shade {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: #000000;
+  opacity: var(--scroll-stack-dim, 0);
+  pointer-events: none;
+  z-index: 50;
+  transition: opacity 0.2s ease;
+}
+
+/* Editorial 2-Column Content Layout inside Stack Card */
+.stack-card-inner {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  gap: clamp(24px, 4vw, 48px);
+  width: 100%;
+}
+
+@media (max-width: 960px) {
+  .stack-card-inner {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .scroll-stack-card {
+    min-height: auto;
+    padding: 24px 20px;
+  }
+}

@@ -33,14 +33,15 @@
   --transition-bounce: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Custom Pixelated Translucent Cursor Setup */
-@media (pointer: fine) {
+/* TargetCursor from React Bits handles cursor across the entire website */
+@media (hover: hover) and (pointer: fine) {
   *, *::before, *::after {
     cursor: none !important;
   }
-  .custom-pixel-cursor, .cursor-follower-ring {
-    display: block !important;
-  }
+}
+
+.custom-pixel-cursor, .cursor-follower-ring {
+  display: none !important;
 }
 
 .custom-pixel-cursor {
@@ -274,8 +275,10 @@ img {
   font-weight: 700;
   letter-spacing: -0.5px;
   color: var(--color-charcoal);
-  display: flex;
+  display: inline-flex;
   align-items: center;
+  gap: 10px;
+  text-decoration: none;
   transition: transform 0.25s ease;
 }
 

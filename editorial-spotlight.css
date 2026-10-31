@@ -1,0 +1,1333 @@
+/* ==========================================================================
+   CINEMATIC FULL-VIEWPORT EDITORIAL SPOTLIGHT
+   - Image fills the ENTIRE viewport (100vw, 100vh, full-bleed edge-to-edge)
+   - Ref 1: Authentic hackathon photograph of Srinjoyee (no small card)
+   - Ref 2: Editorial composition, camera viewfinder bounding reticle, typography
+   - Ref 3: Interactive hotspots, curved SVG connecting arrows, storytelling
+   ========================================================================== */
+
+/* Full Viewport Section Wrapper */
+/* Full Viewport Section Wrapper */
+#story-layer-spotlight {
+  width: 100vw;
+  width: 100%;
+  height: 100vh;
+  min-height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
+/* Hide Floating Color Regulator Dock, Global Navbar, and Mac Dock when in Spotlight Section */
+.side-regulator-dock,
+.navbar-header,
+#mac-dock {
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.side-regulator-dock.section-hidden {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateY(-50%) translateX(120px) !important;
+}
+
+#mac-dock.section-hidden {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateY(40px) !important;
+}
+
+.navbar-header.spotlight-active {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  transform: translateY(-40px) !important;
+}
+
+.editorial-spotlight-section {
+  --phone-w: clamp(270px, 22.5vw, 335px);
+  --phone-h: clamp(500px, 73vh, 630px);
+  --phone-top: 13.5vh;
+  position: relative;
+  width: 100vw;
+  width: 100%;
+  height: 100vh;
+  min-height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+  background-color: #080a0f;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 64px 64px;
+  background-position: center center;
+  color: #ffffff;
+  display: block;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Ambient Monochrome Surroundings (Entire Photo Clearly Visible!) */
+.spotlight-photo-ambient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 25%;
+  display: block;
+  z-index: 1;
+  filter: grayscale(100%) brightness(0.38) contrast(1.15);
+  pointer-events: none;
+}
+
+/* Soft Contrast & Edge Vignette Overlay */
+.spotlight-ambient-overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(8, 10, 15, 0.25) 30%, rgba(8, 10, 15, 0.72) 75%, rgba(8, 10, 15, 0.95) 100%),
+              linear-gradient(to bottom, rgba(8, 10, 15, 0.65) 0%, transparent 20%, transparent 80%, rgba(8, 10, 15, 0.85) 100%);
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* Interactive RippleGrid WebGL Layer (React Bits) */
+.spotlight-ripple-grid {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 3;
+  pointer-events: auto;
+  opacity: 0.65;
+}
+
+/* Crystal Sharp Vibrant Color Focus on Face (Clipped precisely to Smartphone Screen) */
+.spotlight-photo-sharp {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 25%;
+  display: block;
+  z-index: 4;
+  filter: contrast(1.06) saturate(1.15) brightness(1.02);
+  clip-path: inset(
+    var(--phone-top)
+    calc((100% - var(--phone-w)) / 2)
+    calc(100% - var(--phone-top) - var(--phone-h))
+    calc((100% - var(--phone-w)) / 2)
+    round 36px
+  );
+  -webkit-clip-path: inset(
+    var(--phone-top)
+    calc((100% - var(--phone-w)) / 2)
+    calc(100% - var(--phone-top) - var(--phone-h))
+    calc((100% - var(--phone-w)) / 2)
+    round 36px
+  );
+  pointer-events: none;
+}
+
+/* Vertical Smartphone Screen 3D Case & Frame (Exact Match to User Reference) */
+.spotlight-phone-frame {
+  position: absolute;
+  top: var(--phone-top);
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--phone-w);
+  height: var(--phone-h);
+  border-radius: 36px;
+  border: 1.5px solid rgba(255, 255, 255, 0.95);
+  /* 3D Realistic Smartphone Curved Bumper Case (Clean, crisp outer rim without screen haze) */
+  background: transparent !important;
+  box-shadow: 
+    0 0 0 1px rgba(0, 0, 0, 0.75),
+    0 0 0 3.5px #15181e,
+    0 0 0 5.5px #cbd5e1,
+    0 0 0 7.5px #ffffff,
+    0 0 0 9px #475569,
+    0 25px 65px rgba(0, 0, 0, 0.85),
+    0 10px 25px rgba(0, 0, 0, 0.6);
+  pointer-events: none;
+  z-index: 5;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 10px 14px 12px 14px;
+}
+
+/* Remove all fog, haze, and diagonal glare overlays to keep the photo 100% crystal clear */
+.spotlight-phone-frame::before,
+.spotlight-phone-frame::after {
+  display: none !important;
+  content: none !important;
+}
+
+/* Phone Top Status Bar */
+.phone-status-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+  letter-spacing: 0.02em;
+  padding: 2px 4px 0 4px;
+  position: relative;
+  z-index: 3;
+}
+
+.phone-time {
+  font-weight: 700;
+  font-size: 0.86rem;
+  letter-spacing: -0.01em;
+}
+
+.phone-sensor-pill {
+  width: 52px;
+  height: 4.5px;
+  background: #0f1217;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 10px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.9), 0 1px 2px rgba(255, 255, 255, 0.2);
+}
+
+.phone-status-icons {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 0.72rem;
+  color: #ffffff;
+}
+
+/* Floating Vertical Transparent Glass Camera Dock (Authentic Real Mobile Theme) */
+.phone-camera-dock {
+  position: absolute;
+  left: 10px;
+  bottom: 26px;
+  width: 24px;
+  background: rgba(14, 18, 25, 0.48);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  color: #ffffff;
+  border-radius: 20px;
+  padding: 6px 2px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 0 6px rgba(255, 255, 255, 0.1);
+  box-sizing: border-box;
+  pointer-events: auto;
+  user-select: none;
+  z-index: 6;
+}
+
+.dock-top-notch {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.85);
+  padding-bottom: 2px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.dock-item {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 19px;
+  height: 19px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.9);
+  transition: all 0.2s ease;
+  border-radius: 50%;
+}
+
+.dock-item:hover {
+  color: #FFBD12;
+  background: rgba(255, 255, 255, 0.15);
+  transform: scale(1.15);
+}
+
+.dock-svg {
+  display: block;
+}
+
+.dock-badge-icon {
+  width: 12px;
+  height: 12px;
+  border: 1.2px solid currentColor;
+  border-radius: 2px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif;
+  font-size: 8px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* Phone Home Indicator Bar at Bottom */
+.phone-bottom-bar {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.phone-home-line {
+  width: 70px;
+  height: 3.5px;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 4px;
+}
+
+/* ==========================================================================
+   SPOTLIGHT TOP BAR (Reference Match)
+   ========================================================================== */
+.spotlight-top-bar {
+  position: absolute;
+  top: 24px;
+  left: 36px;
+  right: 36px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.spotlight-top-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Plus Jakarta Sans', monospace, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.spotlight-code-icon {
+  color: #FFBD12;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.spotlight-brand-name {
+  color: #ffffff;
+}
+
+.spotlight-top-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: 'Plus Jakarta Sans', monospace, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.spotlight-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #FFBD12;
+  box-shadow: 0 0 10px #FFBD12, 0 0 4px #FFBD12;
+  animation: pulseDot 2s ease-in-out infinite;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.55; transform: scale(0.85); }
+}
+
+.spotlight-top-divider {
+  color: rgba(255, 255, 255, 0.25);
+  margin: 0 2px;
+}
+
+/* ==========================================================================
+   PHONE FOCUS RETICLE OVERLAY (Viewfinder in center of phone)
+   ========================================================================== */
+.phone-focus-reticle {
+  position: absolute;
+  top: 42%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 40px;
+  height: 40px;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.reticle-corner {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-color: #FFBD12;
+  border-style: solid;
+}
+
+.reticle-tl {
+  top: 0;
+  left: 0;
+  border-width: 2px 0 0 2px;
+}
+
+.reticle-tr {
+  top: 0;
+  right: 0;
+  border-width: 2px 2px 0 0;
+}
+
+.reticle-br {
+  bottom: 0;
+  right: 0;
+  border-width: 0 2px 2px 0;
+}
+
+.reticle-bl {
+  bottom: 0;
+  left: 0;
+  border-width: 0 0 2px 2px;
+}
+
+.reticle-dot {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 3.5px;
+  height: 3.5px;
+  border-radius: 50%;
+  background: #FFBD12;
+  box-shadow: 0 0 6px #FFBD12;
+}
+
+/* ==========================================================================
+   EDITORIAL SIDE CONTENT (Reference Match: Left Column & Right Column)
+   ========================================================================== */
+.spotlight-editorial-content {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  pointer-events: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+/* --------------------------------------------------------------------------
+   LEFT COLUMN: Approach Tag, Headline, Narrative & Sub-tags
+   -------------------------------------------------------------------------- */
+.editorial-col-left {
+  position: absolute;
+  right: calc(50% + var(--phone-w) / 2 + clamp(44px, 4.4vw, 78px));
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(280px, 24vw, 360px);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  text-align: left;
+  pointer-events: auto;
+}
+
+.spotlight-approach-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Plus Jakarta Sans', monospace, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  color: #FFBD12;
+}
+
+.spotlight-headline {
+  font-family: 'Plus Jakarta Sans', 'Syne', sans-serif;
+  font-size: clamp(38px, 3.8vw, 54px);
+  font-weight: 900;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.headline-white {
+  color: #ffffff;
+}
+
+.headline-blue {
+  color: #FFBD12;
+  text-shadow: 0 0 25px rgba(255, 189, 18, 0.45);
+}
+
+.spotlight-left-bio {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14.5px;
+  font-weight: 400;
+  line-height: 1.65;
+  color: #9ca3af;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+.spotlight-left-footer-tags {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Plus Jakarta Sans', monospace, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #6b7280;
+  letter-spacing: 0.16em;
+  margin-top: 4px;
+}
+
+.tag-sep {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+/* --------------------------------------------------------------------------
+   RIGHT COLUMN: SRINJOYEE with TechText, Roles, Desc, BUILD WITH ME, Button
+   -------------------------------------------------------------------------- */
+.editorial-col-right {
+  position: absolute;
+  left: calc(50% + var(--phone-w) / 2 + clamp(44px, 4.4vw, 78px));
+  top: 50%;
+  transform: translateY(-50%);
+  width: clamp(300px, 26vw, 385px);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  text-align: left;
+  pointer-events: auto;
+}
+
+.editorial-header-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.editorial-header-title-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 4px;
+}
+
+.tech-text-srinjoyee-wrap {
+  width: auto;
+  min-width: 220px;
+  height: 56px;
+  position: relative;
+}
+
+.editorial-cursor-block {
+  color: #FFBD12;
+  font-family: 'Plus Jakarta Sans', monospace, sans-serif;
+  font-size: 36px;
+  font-weight: 900;
+  line-height: 1;
+  margin-left: 1px;
+  animation: cursorBlink 1.1s step-end infinite;
+  text-shadow: 0 0 14px rgba(255, 189, 18, 0.55);
+}
+
+@keyframes cursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+.editorial-date {
+  font-family: 'Plus Jakarta Sans', monospace, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 0.08em;
+  margin-left: auto;
+  white-space: nowrap;
+}
+
+.spotlight-right-roles {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Plus Jakarta Sans', monospace, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  color: #9ca3af;
+  letter-spacing: 0.13em;
+  flex-wrap: wrap;
+}
+
+.role-bullet {
+  color: #4b5563;
+  font-size: 10px;
+}
+
+.spotlight-right-desc {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 14.5px;
+  font-weight: 400;
+  line-height: 1.65;
+  color: #9ca3af;
+  margin: 0;
+  letter-spacing: 0.01em;
+}
+
+.spotlight-build-with-me {
+  font-family: 'Plus Jakarta Sans', 'Syne', sans-serif;
+  font-size: clamp(40px, 4vw, 56px);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  display: flex;
+  flex-direction: column;
+  margin-top: 2px;
+}
+
+.build-line {
+  color: #ffffff;
+}
+
+.with-me-line {
+  color: #ffffff;
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.me-italic-blue {
+  color: #FFBD12;
+  font-style: italic;
+  font-weight: 900;
+  text-shadow: 0 0 25px rgba(255, 189, 18, 0.45);
+}
+
+.spotlight-btn-wrap {
+  margin-top: 4px;
+}
+
+.spotlight-explore-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 26px;
+  border: 1.5px solid rgba(255, 189, 18, 0.45);
+  background: rgba(13, 17, 23, 0.65);
+  backdrop-filter: blur(8px);
+  color: #ffffff;
+  font-family: 'Plus Jakarta Sans', monospace, sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-decoration: none;
+  border-radius: 4px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+.spotlight-explore-btn:hover {
+  border-color: #FFBD12;
+  background: rgba(255, 189, 18, 0.14);
+  box-shadow: 0 0 25px rgba(255, 189, 18, 0.35);
+  transform: translateY(-2px);
+  color: #ffffff;
+}
+
+.btn-arrow {
+  color: #FFBD12;
+  font-size: 15px;
+  transition: transform 0.2s ease;
+}
+
+.spotlight-explore-btn:hover .btn-arrow {
+  transform: translate(2px, -2px);
+}
+
+/* ==========================================================================
+   BOTTOM SCROLL INDICATOR (Reference Match)
+   ========================================================================== */
+.spotlight-scroll-nav {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.spotlight-scroll-indicator {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #6b7280;
+  font-family: 'Plus Jakarta Sans', monospace, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+}
+
+.scroll-divider-line {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.scroll-mouse-icon {
+  width: 14px;
+  height: 22px;
+  border: 1.5px solid #6b7280;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  padding-top: 3px;
+  box-sizing: border-box;
+}
+
+.scroll-mouse-wheel {
+  width: 2px;
+  height: 4px;
+  background: #6b7280;
+  border-radius: 2px;
+  animation: mouseWheelScroll 1.8s ease-in-out infinite;
+}
+
+@keyframes mouseWheelScroll {
+  0% { transform: translateY(0); opacity: 1; }
+  60% { transform: translateY(5px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 0; }
+}
+
+/* ==========================================================================
+   FAR RIGHT VERTICAL QUICK RAIL & CORNER CROSSHAIRS
+   ========================================================================== */
+.spotlight-vertical-rail {
+  position: absolute;
+  right: 28px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  z-index: 10;
+  color: #6b7280;
+  font-size: 16px;
+}
+
+.rail-icon {
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.rail-icon:hover {
+  color: #FFBD12;
+  transform: scale(1.15);
+}
+
+.spotlight-corner-plus {
+  position: absolute;
+  color: rgba(255, 255, 255, 0.22);
+  font-family: monospace;
+  font-size: 18px;
+  font-weight: 400;
+  z-index: 5;
+  pointer-events: none;
+}
+
+.corner-bl {
+  left: 32px;
+  bottom: 24px;
+}
+
+.corner-br {
+  right: 32px;
+  bottom: 24px;
+}
+
+/* TechText Component CSS (React Bits) */
+.tech-text {
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  touch-action: pan-y;
+  user-select: none;
+  display: block !important;
+}
+
+.tech-text-canvas {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Massive Architectural Display Typography (Ref 3: "ASMIT BISWAS" Full-Screen Style) */
+.spotlight-arch-title {
+  position: absolute;
+  top: 14%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  text-align: center;
+  z-index: 3;
+  pointer-events: none;
+  font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+  font-size: clamp(3.2rem, 9.5vw, 11.5rem);
+  font-weight: 900;
+  letter-spacing: -0.035em;
+  line-height: 0.9;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(255, 255, 255, 0.22);
+  white-space: nowrap;
+  user-select: none;
+  text-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+}
+
+.spotlight-arch-title span {
+  display: block;
+}
+
+.spotlight-arch-title .arch-subtitle-cursive {
+  font-family: 'Caveat', 'Architects Daughter', cursive;
+  font-size: clamp(1.6rem, 3.2vw, 3.6rem);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: #FFBD12;
+  -webkit-text-stroke: 0;
+  opacity: 0.95;
+  text-shadow: 0 4px 20px rgba(255, 189, 18, 0.45);
+  margin-top: -6px;
+}
+
+/* Full-Screen Camera Viewfinder Bounding Reticle (Ref 2 Aesthetic) */
+.spotlight-viewfinder-reticle {
+  position: absolute;
+  inset: 22px;
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  border-radius: 20px;
+  pointer-events: none;
+  z-index: 4;
+  box-sizing: border-box;
+}
+
+/* Corner Crosshairs (+) at Viewport Corners */
+.spotlight-viewfinder-reticle::before,
+.spotlight-viewfinder-reticle::after {
+  content: '';
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  pointer-events: none;
+}
+
+.spotlight-viewfinder-reticle::before {
+  top: -2px;
+  left: -2px;
+  border-top: 3.5px solid #FFBD12;
+  border-left: 3.5px solid #FFBD12;
+  border-top-left-radius: 8px;
+}
+
+.spotlight-viewfinder-reticle::after {
+  bottom: -2px;
+  right: -2px;
+  border-bottom: 3.5px solid #FFBD12;
+  border-right: 3.5px solid #FFBD12;
+  border-bottom-right-radius: 8px;
+}
+
+/* Viewfinder Floating Top Badge */
+.viewfinder-badge-top {
+  position: absolute;
+  top: 14px;
+  left: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(14, 16, 22, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 6px 14px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.viewfinder-badge-top i {
+  color: #FFBD12;
+}
+
+/* Viewfinder Floating Bottom Badge */
+.viewfinder-badge-bottom {
+  position: absolute;
+  bottom: 14px;
+  right: 20px;
+  background: rgba(14, 16, 22, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 6px 14px;
+  border-radius: 30px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  font-family: 'Plus Jakarta Sans', monospace, sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* Technical Camera Watermark Grid & Coordinate Markers (Ref 2) */
+.spotlight-meta-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  padding: 40px 54px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  font-family: 'Plus Jakarta Sans', monospace, sans-serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.spotlight-meta-top,
+.spotlight-meta-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.spotlight-rec-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #ff4757;
+  font-weight: 700;
+}
+
+.spotlight-rec-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: #ff4757;
+  box-shadow: 0 0 10px #ff4757;
+  animation: recBlink 1.4s infinite;
+}
+
+@keyframes recBlink {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.25; transform: scale(0.85); }
+}
+
+.spotlight-coord-tag {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* Floating Subtle Halo Ring near Focal Center (Ref 2) */
+.viewfinder-halo-ring {
+  position: absolute;
+  top: 31%;
+  left: 50%;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(255, 189, 18, 0.38);
+  transform: translate(-50%, -50%) rotate(25deg);
+  pointer-events: none;
+  z-index: 4;
+  animation: haloSpin 32s linear infinite;
+}
+
+@keyframes haloSpin {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+/* ==========================================================================
+   DYNAMIC FULL-VIEWPORT SVG CONNECTING ARROWS (Ref 3)
+   ========================================================================== */
+.spotlight-svg-tracer {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 6;
+}
+
+.spotlight-svg-tracer path {
+  fill: none;
+  stroke: rgba(255, 189, 18, 0.7);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 7 5;
+  animation: lineDash 22s linear infinite;
+  filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.7));
+  transition: stroke 0.3s ease, stroke-width 0.3s ease, opacity 0.3s ease;
+}
+
+.spotlight-svg-tracer.has-focus path {
+  opacity: 0.25;
+}
+
+.spotlight-svg-tracer path.is-highlighted {
+  opacity: 1 !important;
+  stroke: #FFBD12;
+  stroke-width: 3.2;
+  filter: drop-shadow(0 0 12px rgba(255, 189, 18, 0.9));
+}
+
+@keyframes lineDash {
+  to { stroke-dashoffset: -200; }
+}
+
+/* ==========================================================================
+   INTERACTIVE STORYTELLING HOTSPOTS OVERLAID ON FULL PHOTO (Ref 3)
+   ========================================================================== */
+
+/* Pulsing Hotspot Target Node */
+.spotlight-hotspot {
+  position: absolute;
+  z-index: 10;
+  width: 36px;
+  height: 36px;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.spotlight-hotspot:hover,
+.spotlight-hotspot.is-active {
+  transform: translate(-50%, -50%) scale(1.25);
+}
+
+/* Radar Beacon Ripple Rings */
+.hotspot-beacon-ring {
+  position: absolute;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2px solid #FFBD12;
+  box-sizing: border-box;
+  animation: beaconPulse 2.2s cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
+  pointer-events: none;
+}
+
+.spotlight-hotspot:nth-child(2) .hotspot-beacon-ring { animation-delay: 0.5s; }
+.spotlight-hotspot:nth-child(3) .hotspot-beacon-ring { animation-delay: 1.0s; }
+.spotlight-hotspot:nth-child(4) .hotspot-beacon-ring { animation-delay: 1.5s; }
+
+@keyframes beaconPulse {
+  0% { transform: scale(0.65); opacity: 1; }
+  100% { transform: scale(2.6); opacity: 0; }
+}
+
+.hotspot-core-dot {
+  position: relative;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #FFBD12;
+  box-shadow: 0 0 18px rgba(255, 189, 18, 0.95), 0 0 0 3px rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.spotlight-hotspot.is-active .hotspot-core-dot,
+.spotlight-hotspot:hover .hotspot-core-dot {
+  background: #ffffff;
+  box-shadow: 0 0 24px #FFBD12, 0 0 0 4px #FFBD12;
+}
+
+.hotspot-core-dot i {
+  font-size: 7px;
+  color: #111111;
+}
+
+/* ==========================================================================
+   FLOATING EDITORIAL CALLOUTS & NARRATIVE CARDS
+   (Comfortably Spaced Across Viewport Width)
+   ========================================================================== */
+
+.spotlight-callout {
+  position: absolute;
+  z-index: 12;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  width: min(340px, 28vw);
+}
+
+.callout-header-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.callout-category-badge {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #FFBD12;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+}
+
+.callout-script-note {
+  font-family: 'Caveat', 'Architects Daughter', cursive;
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.18;
+  color: #ffffff;
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.85);
+  white-space: pre-line;
+}
+
+/* Glassmorphic Narrative Story Card */
+.callout-story-card {
+  margin-top: 10px;
+  background: rgba(14, 16, 24, 0.88);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 16px;
+  padding: 14px 18px;
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.75),
+              0 0 0 1px rgba(255, 189, 18, 0.18);
+  pointer-events: auto;
+  opacity: 0.94;
+  transform: translateY(0);
+  transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.spotlight-hotspot.is-active ~ .spotlight-callout .callout-story-card,
+.spotlight-callout.is-hovered .callout-story-card {
+  opacity: 1;
+  border-color: rgba(255, 189, 18, 0.55);
+  box-shadow: 0 24px 50px -6px rgba(0, 0, 0, 0.9),
+              0 0 25px rgba(255, 189, 18, 0.3);
+  transform: translateY(-4px) scale(1.02);
+}
+
+.story-card-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.story-card-title i {
+  color: #FFBD12;
+  font-size: 0.82rem;
+}
+
+.story-card-narrative {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.86);
+  margin: 0;
+}
+
+/* ==========================================================================
+   HOTSPOT & CALLOUT VIEWPORT POSITIONS
+   ========================================================================== */
+
+/* 1. EXPLORATION — Eyes / Mind */
+.hotspot-exploration {
+  top: 31%;
+  left: 50.5%;
+}
+
+.callout-exploration {
+  top: 20%;
+  left: 5%;
+}
+
+/* 2. COMMUNITY — Hackathon Event Lanyard */
+.hotspot-community {
+  top: 55%;
+  left: 42%;
+}
+
+.callout-community {
+  top: 48%;
+  left: 5%;
+}
+
+/* 3. CURIOSITY — Yellow Sticky Note in Hand */
+.hotspot-curiosity {
+  top: 76%;
+  left: 46%;
+}
+
+.callout-curiosity {
+  bottom: 8%;
+  left: 6%;
+}
+
+/* 4. CREATION — Laptop Screen with Stickers */
+.hotspot-creation {
+  top: 64%;
+  left: 71%;
+}
+
+.callout-creation {
+  top: 50%;
+  right: 5%;
+}
+
+/* Bottom Quick Exploration Filter Bar */
+.spotlight-bottom-nav {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 15;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(12, 14, 20, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 8px 16px;
+  border-radius: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
+}
+
+.spotlight-nav-btn {
+  background: transparent;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 7px 16px;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spotlight-nav-btn:hover {
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.spotlight-nav-btn.active {
+  background: #FFBD12;
+  color: #111111;
+  box-shadow: 0 4px 16px rgba(255, 189, 18, 0.45);
+}
+
+/* Scroll Glide Button */
+.spotlight-glide-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  cursor: pointer;
+  margin-left: 6px;
+  transition: all 0.25s ease;
+}
+
+.spotlight-glide-btn:hover {
+  background: #FFBD12;
+  color: #111111;
+  transform: translateY(2px);
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+@media (max-width: 1200px) {
+  .spotlight-callout { width: min(300px, 32vw); }
+  .callout-script-note { font-size: 1.25rem; }
+  .story-card-narrative { font-size: 0.78rem; }
+}
+
+@media (max-width: 900px) {
+  .spotlight-arch-title { font-size: 5rem; top: 10%; }
+  .spotlight-meta-layer { padding: 24px; }
+  .callout-exploration { top: 12%; left: 3%; }
+  .callout-community { top: 40%; left: 3%; }
+  .callout-curiosity { bottom: 10%; left: 3%; }
+  .callout-creation { top: 42%; right: 3%; }
+}
+
+@media (max-width: 640px) {
+  .spotlight-arch-title {
+    font-size: 3.4rem;
+    top: 8%;
+  }
+  .spotlight-callout {
+    display: none;
+  }
+  .spotlight-callout.mobile-visible {
+    display: flex;
+    position: fixed;
+    bottom: 84px;
+    left: 16px;
+    right: 16px;
+    width: auto;
+    max-width: none;
+    z-index: 25;
+  }
+  .spotlight-svg-tracer {
+    display: none;
+  }
+  .spotlight-bottom-nav {
+    bottom: 16px;
+    padding: 6px 10px;
+    gap: 6px;
+  }
+  .spotlight-nav-btn {
+    font-size: 0.7rem;
+    padding: 6px 10px;
+  }
+}

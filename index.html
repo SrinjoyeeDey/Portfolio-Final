@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@600;700&family=Fredoka:wght@500;600;700;800&family=Gochi+Hand&family=Patrick+Hand&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@600;700&family=Fredoka:wght@500;600;700;800&family=Gochi+Hand&family=Patrick+Hand&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700;1,800&family=Syne:wght@700;800;900&family=Roboto+Flex:opsz,wdth,wght,slnt@8..144,25..151,100..1000,-10..0&display=swap"
     rel="stylesheet">
 
   <!-- FontAwesome Icons for UI & Doodles -->
@@ -26,9 +26,12 @@
   <link rel="stylesheet" href="styles.css?v=38">
   <link rel="stylesheet" href="journey-timeline.css?v=2">
   <link rel="stylesheet" href="grid-scan-bundle.css">
-  <link rel="stylesheet" href="projects-swap-bundle.css">
-  <link rel="stylesheet" href="flying-button-bundle.css">
-  <link rel="stylesheet" href="scroll-reveal.css?v=1">
+  <link rel="stylesheet" href="projects-showcase-bundle.css?v=18">
+  <link rel="stylesheet" href="ripple-grid-bundle.css">
+  <link rel="stylesheet" href="scroll-reveal.css?v=3">
+  <link rel="stylesheet" href="editorial-spotlight.css?v=27">
+  <link rel="stylesheet" href="circular-text-bundle.css?v=2">
+  <link rel="stylesheet" href="target-cursor-bundle.css">
 </head>
 
 <body>
@@ -63,9 +66,9 @@
   <header class="navbar-header" id="navbar">
     <div class="container nav-container">
 
-      <!-- Brand Logo -->
-
-      <a href="#hero" class="brand-logo">
+      <!-- Brand Logo with CircularText Studio Seal -->
+      <a href="#hero" class="brand-logo cursor-target" aria-label="Srinjoyee Dey - Home" data-cursor-label="Home">
+        <div id="nav-circular-logo-root" class="nav-circular-logo-wrap"></div>
         <span class="logo-text">PORTO<span class="logo-dot">.</span></span>
       </a>
 
@@ -351,6 +354,216 @@
     </section>
   </div><!-- /story-layer-hero -->
 
+  <!-- LAYER 1.5: CINEMATIC EDITORIAL SPOTLIGHT (Full Viewport Hackathon Photograph) -->
+  <div class="story-layer" id="story-layer-spotlight" data-layer-id="spotlight">
+    <section class="editorial-spotlight-section" id="spotlight" aria-label="Hackathon Photograph Spotlight">
+
+      <!-- Top Section Header Bar (Reference Match) -->
+      <div class="spotlight-top-bar">
+        <div class="spotlight-top-left">
+          <span class="spotlight-code-icon">&lt;/&gt;</span>
+          <span class="spotlight-brand-name">SRINJOYEE</span>
+        </div>
+        <div class="spotlight-top-right">
+          <span class="spotlight-status-dot"></span>
+          <span class="spotlight-status-text">OPEN TO OPPORTUNITIES</span>
+          <span class="spotlight-top-divider">|</span>
+          <span class="spotlight-location-icon">📍</span>
+          <span class="spotlight-location-text">BASED IN INDIA</span>
+        </div>
+      </div>
+
+      <!-- Ambient Monochrome Surroundings (Entire Photo Clearly Visible!) -->
+      <img src="images/srinjoyee-hackathon.png" alt="" class="spotlight-photo-ambient" aria-hidden="true" />
+
+      <!-- Soft Vignette & Contrast Overlay -->
+      <div class="spotlight-ambient-overlay" aria-hidden="true"></div>
+
+      <!-- Interactive RippleGrid Stage from React Bits -->
+      <div id="spotlight-ripple-grid" class="spotlight-ripple-grid" aria-hidden="true"></div>
+
+      <!-- Crystal Sharp Vibrant Color Focus on Face (Clipped to Phone Screen) -->
+      <img src="images/srinjoyee-hackathon.png" alt="Srinjoyee Dey at Hackathon" class="spotlight-photo-sharp" id="spotlight-hackathon-img" />
+
+      <!-- Vertical Smartphone Screen Frame (Reference Match) -->
+      <div class="spotlight-phone-frame" aria-hidden="true">
+        <div class="phone-status-bar">
+          <span class="phone-time">18:32</span>
+          <div class="phone-sensor-pill"></div>
+          <div class="phone-status-icons">
+            <i class="fa-solid fa-signal"></i>
+            <i class="fa-solid fa-wifi"></i>
+            <i class="fa-solid fa-battery-full"></i>
+          </div>
+        </div>
+
+        <!-- Camera Viewfinder Focus Reticle Overlay (over face in phone) -->
+        <div class="phone-focus-reticle" aria-hidden="true">
+          <span class="reticle-corner reticle-tl"></span>
+          <span class="reticle-corner reticle-tr"></span>
+          <span class="reticle-corner reticle-br"></span>
+          <span class="reticle-corner reticle-bl"></span>
+          <span class="reticle-dot"></span>
+        </div>
+
+        <!-- Vertical Camera Control Dock (Compact Mobile Real-Theme) -->
+        <div class="phone-camera-dock" aria-label="Camera Controls">
+          <div class="dock-top-notch" title="Camera Flip">
+            <svg viewBox="0 0 24 24" class="dock-svg" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+              <circle cx="12" cy="13" r="3"/>
+            </svg>
+          </div>
+
+          <!-- Item 1: Portrait / Style -->
+          <div class="dock-item" title="Portrait Style">
+            <svg viewBox="0 0 24 24" class="dock-svg" width="12" height="12" fill="currentColor">
+              <path d="M12 2a4 4 0 0 0-4 4c0 1.9 1.3 3.5 3 3.9V13l-4 8h10l-4-8V9.9c1.7-.4 3-2 3-3.9a4 4 0 0 0-4-4z"/>
+            </svg>
+          </div>
+
+          <!-- Item 2: Focus Reticle -->
+          <div class="dock-item" title="Focus Reticle">
+            <svg viewBox="0 0 24 24" class="dock-svg" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M3 8V5a2 2 0 0 1 2-2h3"/>
+              <path d="M16 3h3a2 2 0 0 1 2 2v3"/>
+              <path d="M21 16v3a2 2 0 0 1-2 2h-3"/>
+              <path d="M8 21H5a2 2 0 0 1-2-2v-3"/>
+              <circle cx="12" cy="12" r="2.5" fill="currentColor"/>
+            </svg>
+          </div>
+
+          <!-- Item 3: Filter [N] -->
+          <div class="dock-item" title="Natural Filter">
+            <div class="dock-badge-icon">N</div>
+          </div>
+
+          <!-- Item 4: Light / Exposure -->
+          <div class="dock-item" title="Exposure / Light">
+            <svg viewBox="0 0 24 24" class="dock-svg" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="3.5" fill="currentColor"/>
+              <line x1="12" y1="1" x2="12" y2="4"/>
+              <line x1="12" y1="20" x2="12" y2="23"/>
+              <line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/>
+              <line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/>
+              <line x1="1" y1="12" x2="4" y2="12"/>
+              <line x1="20" y1="12" x2="23" y2="12"/>
+              <line x1="4.22" y1="19.78" x2="6.34" y2="17.66"/>
+              <line x1="17.66" y1="6.34" x2="19.78" y2="4.22"/>
+            </svg>
+          </div>
+
+          <!-- Item 5: Aspect Ratio / Grid -->
+          <div class="dock-item" title="Aspect Ratio">
+            <svg viewBox="0 0 24 24" class="dock-svg" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="phone-bottom-bar">
+          <span class="phone-home-line"></span>
+        </div>
+      </div>
+
+      <!-- Editorial Side Typography (Reference Match: Left Column & Right Column) -->
+      <div class="spotlight-editorial-content">
+        <!-- Left Side: Approach Tag, Headline, Narrative & Sub-tags -->
+        <div class="editorial-col-left">
+          <div class="spotlight-approach-tag">
+            <span class="approach-bracket">[</span>
+            <span class="approach-num">001</span>
+            <span class="approach-dash">—</span>
+            <span class="approach-label">MY APPROACH</span>
+            <span class="approach-bracket">]</span>
+          </div>
+
+          <h2 class="spotlight-headline">
+            <span class="headline-white">CURIOUS BY</span>
+            <span class="headline-blue">DEFAULT.</span>
+          </h2>
+
+          <p class="spotlight-left-bio">
+            I love experimenting, building things,<br>
+            breaking limitations and learning<br>
+            something new with every project.
+          </p>
+
+          <div class="spotlight-left-footer-tags">
+            <span>THINK</span>
+            <span class="tag-sep">/</span>
+            <span>BUILD</span>
+            <span class="tag-sep">/</span>
+            <span>ITERATE</span>
+          </div>
+        </div>
+
+        <!-- Right Side: SRINJOYEE with TechText effect, Roles, Desc, BUILD WITH ME, Explore Button -->
+        <div class="editorial-col-right">
+          <div class="editorial-header-block">
+            <div class="editorial-header-title-row">
+              <div id="tech-text-srinjoyee" class="tech-text-srinjoyee-wrap"></div>
+              <span class="editorial-cursor-block">_</span>
+              <span class="editorial-date">17.04.2026</span>
+            </div>
+
+            <div class="spotlight-right-roles">
+              <span>DEVELOPER</span>
+              <span class="role-bullet">•</span>
+              <span>CREATIVE THINKER</span>
+              <span class="role-bullet">•</span>
+              <span>PROBLEM SOLVER</span>
+            </div>
+
+            <p class="spotlight-right-desc">
+              I create digital experiences, explore technology,<br>
+              and turn curiosity into meaningful projects.
+            </p>
+          </div>
+
+          <div class="spotlight-build-with-me">
+            <div class="build-line">BUILD</div>
+            <div class="with-me-line">WITH <span class="me-italic-blue">ME</span></div>
+          </div>
+
+          <div class="spotlight-btn-wrap">
+            <a href="#projects" class="spotlight-explore-btn" data-cursor-label="Explore">
+              <span>EXPLORE MY WORK</span>
+              <span class="btn-arrow">↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Center: Scroll To Discover Indicator -->
+      <div class="spotlight-scroll-nav" aria-label="Scroll to Discover">
+        <div class="spotlight-scroll-indicator">
+          <span class="scroll-divider-line">|</span>
+          <div class="scroll-mouse-icon">
+            <div class="scroll-mouse-wheel"></div>
+          </div>
+          <span class="scroll-text">SCROLL TO DISCOVER</span>
+          <span class="scroll-divider-line">|</span>
+        </div>
+      </div>
+
+      <!-- Far Right Vertical Quick Rail (Reference Match) -->
+      <div class="spotlight-vertical-rail" aria-hidden="true">
+        <div class="rail-icon">&lt;/&gt;</div>
+        <div class="rail-icon">☆</div>
+        <div class="rail-icon">🌐</div>
+        <div class="rail-icon">👥</div>
+      </div>
+
+      <!-- Corner Grid Crosshairs -->
+      <div class="spotlight-corner-plus corner-bl">+</div>
+      <div class="spotlight-corner-plus corner-br">+</div>
+
+    </section>
+  </div><!-- /story-layer-spotlight -->
+
   <!-- LAYER 2: ABOUT VIEWPORT STAGE -->
   <div class="story-layer" id="story-layer-about" data-layer-id="about">
     <!-- ABOUT SECTION (Matching User Reference Design Exactly) -->
@@ -536,7 +749,7 @@
             </div>
 
             <!-- Working Experience Section -->
-            <div class="sub-section-box margin-top-sm">
+            <div class="sub-section-box margin-top-sm" id="experience">
               <h3 class="yellow-underline-title">What I've Been Building</h3>
 
               <div class="experience-two-col">
@@ -576,50 +789,16 @@
     </section>
   </div><!-- /story-layer-about -->
 
-  <!-- LAYER 2.5: INTERACTIVE FLIGHT LAUNCHPAD STAGE -->
-  <div class="story-layer" id="story-layer-flight" data-layer-id="flight">
-    <section class="flying-button-stage-section" id="launchpad" aria-label="Interactive Thruster Lift-Off">
-      <div id="flying-button-root"></div>
-    </section>
-  </div><!-- /story-layer-flight -->
-
   <!-- LAYER 3: PROJECTS / WORKS VIEWPORT STAGE -->
-  <div class="story-layer featured-creations-locked" id="story-layer-projects" data-layer-id="projects">
-    <section class="projects-section section-padding" id="projects" style="position: relative;">
-      <div class="container" style="position: relative; z-index: 2;">
-        <div class="section-header flex-header">
-          <div>
-            <div class="selected-work-title-wrap">
-              <span class="title-watermark-ghost" aria-hidden="true">“ FEATURED CREATIONS. ”</span>
-              <h2 class="selected-work-title">
-                <span class="title-first-word">
-                  <span>FEATURED</span>
-                  <span class="title-floating-quote">”</span>
-                </span>
-                <span class="title-tilted-badge">CREATIONS</span><span class="title-yellow-dot">.</span>
-              </h2>
-            </div>
-          </div>
-
-          <!-- Category Filter Buttons -->
-          <div class="filter-btn-group" id="filter-btn-group">
-            <button class="filter-btn active" data-filter="all">All</button>
-            <button class="filter-btn" data-filter="ai">AI • Healthcare</button>
-            <button class="filter-btn" data-filter="uiux">UI/UX</button>
-            <button class="filter-btn" data-filter="web">Web Dev</button>
-            <button class="filter-btn" data-filter="visual">Visual &amp; 3D</button>
-            <button class="filter-btn" data-filter="branding">Branding</button>
-          </div>
-        </div>
-
-        <!-- CardSwap 3D Interactive Project Showcase Root -->
-        <div id="projects-card-swap-root"></div>
-      </div>
+  <div class="story-layer" id="story-layer-projects" data-layer-id="projects">
+    <section class="projects-section-immersive" id="projects" style="position: relative; padding: 0; margin: 0; min-height: 100vh; height: 100vh; width: 100%; overflow: hidden;">
+      <!-- React Bits ScrollStack Interactive Project Showcase Root -->
+      <div id="projects-showcase-root"></div>
     </section>
   </div><!-- /story-layer-projects -->
 
   <!-- LAYER 4: GLOBAL REACH & SKILLS VIEWPORT STAGE -->
-  <div class="story-layer featured-creations-locked" id="story-layer-skills" data-layer-id="skills">
+  <div class="story-layer" id="story-layer-skills" data-layer-id="skills">
     <!-- ==========================================================================
          STANDALONE INTERACTIVE GLOBE (Right-Aligned, Independent, No Card)
          ========================================================================== -->
@@ -932,170 +1111,9 @@
     </section>
   </div><!-- /story-layer-skills -->
 
-  <!-- LAYER 5: JOURNEY & EXPERIENCE VIEWPORT STAGE -->
-  <div class="story-layer featured-creations-locked" id="story-layer-experience" data-layer-id="experience">
-    <!-- ==========================================================================
-         THE JOURNEY SO FAR (Interactive Scroll-Driven Timeline 2024 - Present)
-         ========================================================================== -->
-    <section class="experience-showcase-section journey-timeline-section section-padding" id="experience" style="position: relative;">
-      
-      <!-- Ambient Blueprint / Grid Decorative Watermark -->
-      <div class="journey-ambient-layer" aria-hidden="true">
-        <span class="journey-ghost-bg-watermark">JOURNEY</span>
-        <svg class="journey-circuit-tracer" viewBox="0 0 1200 1600" fill="none" preserveAspectRatio="none">
-          <path d="M100 50 L100 450 L180 530 L550 530" stroke="rgba(34, 36, 40, 0.06)" stroke-width="2" stroke-dasharray="6 6" />
-          <path d="M1100 200 L1100 800 L980 920 L650 920" stroke="rgba(34, 36, 40, 0.06)" stroke-width="2" stroke-dasharray="6 6" />
-          <circle cx="180" cy="530" r="4" fill="rgba(34, 36, 40, 0.15)" />
-          <circle cx="980" cy="920" r="4" fill="rgba(34, 36, 40, 0.15)" />
-        </svg>
-      </div>
-
-      <div class="container journey-main-container" style="position: relative; z-index: 2;">
-        
-        <!-- Header Section -->
-        <div class="section-header journey-header-wrap">
-          <div class="journey-header-content">
-            <span class="section-subtitle-tag"><i class="fa-solid fa-compass-drafting"></i> 2024 — Present</span>
-            
-            <div class="selected-work-title-wrap">
-              <span class="title-watermark-ghost" aria-hidden="true">“ THE JOURNEY SO FAR. ”</span>
-              <h2 class="selected-work-title">
-                <span class="title-first-word">
-                  <span>THE</span>
-                  <span class="title-floating-quote">”</span>
-                  <span style="margin-left: 0.28em;">JOURNEY</span>
-                </span>
-                <span class="title-tilted-badge">SO FAR</span><span class="title-yellow-dot">.</span>
-              </h2>
-            </div>
-            
-            <div class="journey-headlines">
-              <h3 class="journey-headline-bold">Growing. Building. Leading.</h3>
-              <p class="section-subtitle journey-headline-desc">
-                From curious beginnings to building products, contributing to communities, and turning ideas into reality.
-              </p>
-            </div>
-          </div>
-
-          <!-- Quick Timeline Navigation Jump Bar -->
-          <div class="journey-jump-bar" aria-label="Timeline Jump Links">
-            <a href="#milestone-2024" class="journey-jump-pill"><span>'24</span> Foundation</a>
-            <a href="#milestone-2025-build" class="journey-jump-pill"><span>'25</span> Building</a>
-            <a href="#milestone-2025-hack" class="journey-jump-pill"><span>'25</span> Impact</a>
-            <a href="#milestone-2026-lead" class="journey-jump-pill"><span>'26</span> Leadership</a>
-            <a href="#milestone-present" class="journey-jump-pill"><span>Now</span> Horizon</a>
-          </div>
-        </div>
-
-        <!-- Central Timeline Track & Alternating Cards -->
-                <!-- Central Timeline Track & Alternating Cards -->
-        <div class="journey-timeline-flow" id="journeyTimelineFlow">
-          
-          <!-- Central Spine -->
-          <div class="timeline-central-spine" aria-hidden="true">
-            <div class="timeline-spine-track"></div>
-            <div class="timeline-spine-fill" id="timelineSpineFill"></div>
-          </div>
-
-          <!-- MILESTONE 01: 2024 — The Foundation (Writing on Left, Visual on Right) -->
-          <div class="timeline-milestone-row milestone-pair-row" id="milestone-2024" data-milestone="1">
-            <div class="milestone-spine-marker" aria-hidden="true">
-              <div class="spine-dot-ring"></div>
-              <div class="spine-dot-core"></div>
-              <span class="spine-year-pill">2024</span>
-            </div>
-
-            <!-- Left: Writing & Story -->
-            <div class="milestone-col-text">
-              <article class="milestone-card card-writing">
-                <div class="milestone-card-header">
-                  <div class="milestone-badge-pill">
-                    <span class="pill-dot"></span>
-                    <span class="pill-year">2024</span>
-                    <span class="pill-divider">•</span>
-                    <span class="pill-track">Academic Inception</span>
-                  </div>
-                  <span class="milestone-number-tag">01</span>
-                </div>
-
-                <div class="milestone-title-block">
-                  <h3 class="milestone-title">The Foundation</h3>
-                  <div class="milestone-role-tag">
-                    <i class="fa-solid fa-graduation-cap"></i>
-                    <span>B.Tech in Computer Science &amp; Engineering • Academy of Technology</span>
-                  </div>
-                </div>
-
-                <p class="milestone-narrative">
-                  Began my journey in Computer Science and Engineering at Academy of Technology, Hooghly. 
-                  Immersed in programming fundamentals, computational logic, and problem-solving, 
-                  forging an unshakeable base in data structures and object-oriented paradigms.
-                </p>
-
-                <!-- Focus Areas & Technology Tags -->
-                <div class="milestone-pills-cluster">
-                  <span class="tech-tag-pill"><i class="fa-brands fa-cuttlefish"></i> C / C++</span>
-                  <span class="tech-tag-pill"><i class="fa-brands fa-python"></i> Python</span>
-                  <span class="tech-tag-pill"><i class="fa-brands fa-java"></i> Java</span>
-                  <span class="tech-tag-pill"><i class="fa-solid fa-network-wired"></i> Data Structures &amp; Algorithms</span>
-                  <span class="tech-tag-pill"><i class="fa-solid fa-cubes"></i> OOP Principles</span>
-                  <span class="tech-tag-pill"><i class="fa-solid fa-code"></i> Web Foundations</span>
-                </div>
-
-                <div class="milestone-hand-note note-left">
-                  <span class="hand-note-text">First line of code, endless curiosity ✨</span>
-                  <svg class="hand-note-arrow" viewBox="0 0 45 20" aria-hidden="true">
-                    <path d="M4 16 Q 22 2 38 12" fill="none" stroke="#222428" stroke-width="2" stroke-linecap="round"/>
-                    <path d="M30 15 L 38 12 L 34 5" fill="none" stroke="#222428" stroke-width="2" stroke-linecap="round"/>
-                  </svg>
-                </div>
-              </article>
-            </div>
-
-            <!-- Right (Opposite Side): Image & Code Snippet Visuals -->
-            <div class="milestone-col-visual">
-              <div class="milestone-card card-visual">
-                <div class="foundation-bento-grid">
-                  <div class="bento-photo-frame">
-                    <img src="images/milestone-foundation.jpg" alt="Developer workstation with DSA notebook and code" class="milestone-photo-img" loading="lazy">
-                    <div class="bento-photo-overlay">
-                      <span class="photo-caption-tag"><i class="fa-solid fa-code"></i> Engineering Desk</span>
-                    </div>
-                  </div>
-
-                  <div class="bento-code-snippet">
-                    <div class="code-editor-header">
-                      <span class="editor-dot red"></span>
-                      <span class="editor-dot yellow"></span>
-                      <span class="editor-dot green"></span>
-                      <span class="editor-filename">DataStructures.cpp</span>
-                    </div>
-                    <pre class="code-editor-body"><code><span class="ck">template</span> &lt;<span class="ck">typename</span> <span class="ct">T</span>&gt;
-<span class="ck">class</span> <span class="cn">BinarySearchTree</span> {
-  <span class="ct">Node</span>* root;
-<span class="ck">public</span>:
-  <span class="ct">void</span> <span class="cf">insert</span>(<span class="ct">T</span> val);
-  <span class="ct">bool</span> <span class="cf">search</span>(<span class="ct">T</span> key); <span class="cc">// O(log n)</span>
-};</code></pre>
-                  </div>
-                </div>
-
-                <div class="visual-footer-badge">
-                  <span class="visual-tag-item"><i class="fa-solid fa-terminal"></i> Algorithmic Problem Solving</span>
-                  <span class="visual-tag-item"><i class="fa-solid fa-laptop-code"></i> Discrete Paradigms</span>
-                </div>
-
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </section>
-  </div><!-- /story-layer-experience -->
 
   <!-- LAYER 6: CLI TERMINAL VIEWPORT STAGE -->
-  <div class="story-layer featured-creations-locked" id="story-layer-terminal" data-layer-id="cli-terminal">
+  <div class="story-layer" id="story-layer-terminal" data-layer-id="cli-terminal">
     <!-- ==========================================================================
          MONOCHROMATIC CLAY TERMINAL INTERFACE SECTION
          ========================================================================== -->
@@ -1191,7 +1209,7 @@
   </div><!-- /story-layer-terminal -->
 
   <!-- LAYER 7: CONTACT & FOOTER VIEWPORT STAGE -->
-  <div class="story-layer featured-creations-locked" id="story-layer-contact" data-layer-id="contact">
+  <div class="story-layer" id="story-layer-contact" data-layer-id="contact">
     <!-- ==========================================================================
          CONTACT SECTION
          ========================================================================== -->
@@ -1350,28 +1368,23 @@
     <!-- Toast Notification -->
     <div class="toast-notification" id="toast"></div>
 
-    <!-- Custom Pixel Cursor & Follower Ring -->
-    <div class="custom-pixel-cursor" id="custom-cursor">
-      <svg viewBox="0 0 32 32" class="cursor-pixel-svg">
-        <path d="M2 2 L2 26 L8 20 L13 29 L17 27 L12 18 L20 18 Z" class="cursor-glass-fill" stroke-linejoin="miter" stroke-linecap="square" />
-      </svg>
-    </div>
-    <div class="cursor-follower-ring" id="cursor-follower-ring"></div>
+    <!-- React Bits TargetCursor Container -->
+    <div id="target-cursor-mount"></div>
 
     <!-- Floating Mac Dock -->
     <div class="dock-outer" id="mac-dock">
       <div class="dock-panel">
-        <div class="dock-item" data-label="Selected Works" data-href="#projects" tabindex="0" role="button"
+        <div class="dock-item" data-label="Selected Works" data-cursor-label="Selected Works" data-href="#projects" tabindex="0" role="button"
           aria-label="Selected Works">
           <div class="dock-icon"><i class="fa-solid fa-briefcase"></i></div>
           <div class="dock-label">Selected Works</div>
         </div>
-        <div class="dock-item" data-label="Skills & Tools" data-href="#skills" tabindex="0" role="button"
+        <div class="dock-item" data-label="Skills & Tools" data-cursor-label="Skills & Tools" data-href="#skills" tabindex="0" role="button"
           aria-label="Skills & Tools">
           <div class="dock-icon"><i class="fa-solid fa-bolt"></i></div>
           <div class="dock-label">Skills & Tools</div>
         </div>
-        <div class="dock-item" data-label="Get In Touch" data-href="#contact" tabindex="0" role="button"
+        <div class="dock-item" data-label="Get In Touch" data-cursor-label="Get In Touch" data-href="#contact" tabindex="0" role="button"
           aria-label="Get In Touch">
           <div class="dock-icon"><i class="fa-solid fa-paper-plane"></i></div>
           <div class="dock-label">Get In Touch</div>
@@ -1493,9 +1506,13 @@
     <!-- Magic UI Interactive Globe & DotField Bundles -->
     <script src="grid-scan-bundle.js"></script>
     <script src="globe-bundle.js"></script>
-    <script src="projects-swap-bundle.js"></script>
+    <script src="projects-showcase-bundle.js?v=20"></script>
     <script src="dot-field-bundle.js"></script>
-    <script src="flying-button-bundle.js"></script>
+    <script src="ripple-grid-bundle.js"></script>
+    <script src="text-pressure-bundle.js?v=5"></script>
+    <script src="tech-text-bundle.js?v=12"></script>
+    <script src="circular-text-bundle.js?v=2"></script>
+    <script src="target-cursor-bundle.js?v=28"></script>
 
     <!-- GSAP & ScrollTrigger Animation Libraries -->
     <script src="lib/gsap.min.js"></script>
@@ -1504,6 +1521,7 @@
     <!-- Main Interactive Scripts -->
     <script src="script.js?v=11"></script>
     <script src="hero-3d-model.js?v=8"></script>
-    <script src="scroll-reveal.js?v=1"></script>
+    <script src="scroll-reveal.js?v=3"></script>
+    <script src="editorial-spotlight.js?v=4"></script>
   </body>
 </html>

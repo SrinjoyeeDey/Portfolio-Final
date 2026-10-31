@@ -7,6 +7,13 @@
     "dev": "npx serve .",
     "start": "npx serve .",
     "build": "esbuild src/index.jsx --bundle --outfile=lanyard.bundle.js",
+    "build:ripple-grid": "node scripts/build-ripple-grid.js",
+    "build:text-pressure": "node scripts/build-text-pressure.js",
+    "build:target-cursor": "node scripts/build-target-cursor.js",
+    "build:projects-showcase": "node scripts/build-projects-showcase.js",
+    "build:circular-text": "node scripts/build-circular-text.js",
+    "build:tech-text": "node scripts/build-tech-text.js",
+    "build:all": "npm run build && npm run build:ripple-grid && npm run build:text-pressure && npm run build:target-cursor && npm run build:projects-showcase && npm run build:circular-text && npm run build:tech-text",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -1,0 +1,52 @@
+.target-cursor {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483647;
+  pointer-events: none;
+}
+
+html.tc-active,
+html.tc-active *,
+html.tc-active *::before,
+html.tc-active *::after {
+  cursor: none !important;
+}
+
+.target-cursor__corner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  border-style: solid;
+  border-color: var(--target-cursor-color, #FFBD12);
+  transform-origin: 0 0;
+  will-change: transform;
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.75));
+}
+
+.target-cursor__dot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  border-radius: 50%;
+  background: var(--target-cursor-color, #FFBD12);
+  will-change: transform;
+  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.75));
+}
+
+.target-cursor__label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: var(--target-cursor-color, #ffffff);
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  line-height: 1;
+  white-space: nowrap;
+  opacity: 0;
+  will-change: transform, opacity;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
