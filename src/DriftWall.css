@@ -5,16 +5,23 @@
   overflow: hidden;
   perspective: var(--dw-perspective, 1200px);
   perspective-origin: 50% 50%;
-  --dw-tile-w: 220px;
-  --dw-tile-h: 140px;
-  --dw-gap: 20px;
+  --dw-tile-w: 200px;
+  --dw-tile-h: 132px;
+  --dw-gap: 18px;
   --dw-radius: 14px;
-  --dw-lift: 52px;
-  --dw-dim: 0.88;
-  --dw-gray: 1;
-  --dw-overlay: transparent;
-  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 6%, #000 94%, transparent 100%);
-  mask-image: linear-gradient(to bottom, transparent 0%, #000 6%, #000 94%, transparent 100%);
+  --dw-lift: 64px;
+  --dw-dim: 0.55;
+  --dw-gray: 0;
+  --dw-overlay: #060010;
+  --dw-edge: 40%;
+  -webkit-mask-image:
+    radial-gradient(ellipse 78% 82% at 50% 46%, #000 var(--dw-edge), transparent 100%),
+    linear-gradient(to top, #000 var(--dw-edge), transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image:
+    radial-gradient(ellipse 78% 82% at 50% 46%, #000 var(--dw-edge), transparent 100%),
+    linear-gradient(to top, #000 var(--dw-edge), transparent 100%);
+  mask-composite: intersect;
 }
 
 .drift-wall__plane {
@@ -24,7 +31,10 @@
   display: flex;
   flex-direction: row;
   transform-style: preserve-3d;
-  cursor: pointer;
+  cursor: default;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
   transform-origin: 50% 50%;
   will-change: transform;
 }
@@ -33,6 +43,9 @@
   position: relative;
   width: calc(var(--dw-tile-w) + var(--dw-gap));
   transform-style: preserve-3d;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .drift-wall__track {
@@ -40,6 +53,9 @@
   flex-direction: column;
   will-change: transform;
   transform-style: preserve-3d;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .drift-wall__tile {
@@ -50,6 +66,10 @@
   flex: 0 0 auto;
   outline: none;
   transform-style: preserve-3d;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-user-drag: none;
 }
 
 .drift-wall__inner {
@@ -58,9 +78,7 @@
   display: block;
   border-radius: var(--dw-radius);
   overflow: hidden;
-  background: #ffffff;
-  border: 1px solid rgba(34, 36, 40, 0.12);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+  background: #0b0b12;
   opacity: var(--dw-dim);
   transform: translateZ(0);
   pointer-events: none;
@@ -75,44 +93,30 @@
   height: 100%;
   object-fit: cover;
   display: block;
-  filter: grayscale(var(--dw-gray, 1)) saturate(1.0);
-  transition: filter 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-  user-select: none;
-  -webkit-user-drag: none;
-}
-
-.drift-wall:hover .drift-wall__tile img {
-  filter: grayscale(0%) saturate(1.1);
+  filter: grayscale(var(--dw-gray)) saturate(0.92);
+  transition: filter 0.42s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -webkit-user-drag: none !important;
 }
 
 .drift-wall__overlay {
   position: absolute;
   inset: 0;
   background: var(--dw-overlay);
-  opacity: 0.12;
+  opacity: 0.42;
   pointer-events: none;
   transition: opacity 0.42s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.drift-wall__tile.is-active .drift-wall__inner,
-.drift-wall__tile:hover .drift-wall__inner,
-.drift-wall__tile:focus-visible .drift-wall__inner {
-  opacity: 1;
-  transform: translateZ(var(--dw-lift));
-  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.28);
-  border-color: rgba(255, 189, 18, 0.65);
-}
-
-.drift-wall__tile.is-active img,
-.drift-wall__tile:hover img,
-.drift-wall__tile:focus-visible img {
-  filter: grayscale(0%) saturate(1.25) contrast(1.05);
-}
-
-.drift-wall__tile.is-active .drift-wall__overlay,
-.drift-wall__tile:hover .drift-wall__overlay,
-.drift-wall__tile:focus-visible .drift-wall__overlay {
-  opacity: 0;
+.drift-wall,
+.drift-wall * {
+  pointer-events: none !important;
+  user-select: none !important;
+  -webkit-user-select: none !important;
+  -webkit-user-drag: none !important;
+  cursor: default !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

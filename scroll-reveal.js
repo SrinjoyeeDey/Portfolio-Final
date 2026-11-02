@@ -92,7 +92,11 @@
 
         if (targetId === 'hero') {
           e.preventDefault();
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          if (window.lenis) {
+            window.lenis.scrollTo(0, { duration: 1.2 });
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
           return;
         }
 
@@ -100,7 +104,11 @@
         if (!targetEl) return;
 
         e.preventDefault();
-        targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (window.lenis) {
+          window.lenis.scrollTo(targetEl, { offset: 0, duration: 1.2 });
+        } else {
+          targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       });
     });
 

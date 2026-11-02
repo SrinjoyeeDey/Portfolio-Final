@@ -22,18 +22,20 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
 
+  <!-- Lenis Smooth Scroll Stylesheet -->
+  <link rel="stylesheet" href="lib/lenis.css">
+
   <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=38">
+  <link rel="stylesheet" href="styles.css?v=54">
   <link rel="stylesheet" href="journey-timeline.css?v=2">
   <link rel="stylesheet" href="grid-scan-bundle.css">
-  <link rel="stylesheet" href="projects-showcase-bundle.css?v=18">
-  <link rel="stylesheet" href="ripple-grid-bundle.css">
-  <link rel="stylesheet" href="scroll-reveal.css?v=3">
-  <link rel="stylesheet" href="editorial-spotlight.css?v=27">
+  <link rel="stylesheet" href="projects-showcase-bundle.css?v=21">
+  <link rel="stylesheet" href="scroll-reveal.css?v=6">
+  <link rel="stylesheet" href="editorial-spotlight.css?v=35">
   <link rel="stylesheet" href="circular-text-bundle.css?v=2">
   <link rel="stylesheet" href="target-cursor-bundle.css">
-  <link rel="stylesheet" href="memory-wall-bundle.css">
-  <link rel="stylesheet" href="memory-wall.css">
+  <link rel="stylesheet" href="memory-wall-bundle.css?v=6">
+  <link rel="stylesheet" href="memory-wall.css?v=6">
 </head>
 
 <body>
@@ -79,6 +81,7 @@
           <li><a href="#hero" class="nav-link active">Home</a></li>
           <li><a href="#about" class="nav-link">About</a></li>
           <li><a href="#projects" class="nav-link">Works</a></li>
+          <li><a href="#memory-wall" class="nav-link">Snapshots</a></li>
           <li><a href="#skills" class="nav-link">Skills</a></li>
           <li><a href="#experience" class="nav-link">Experience</a></li>
           <li><a href="#contact" class="nav-link">Contact</a></li>
@@ -375,99 +378,20 @@
         </div>
       </div>
 
-      <!-- Ambient Monochrome Surroundings (Entire Photo Clearly Visible!) -->
-      <img src="images/srinjoyee-hackathon.png" alt="" class="spotlight-photo-ambient" aria-hidden="true" />
+      <!-- Base Full Image: Black and White Monochrome -->
+      <img src="images/srinjoyee-classroom.png" alt="Srinjoyee Dey Background" class="spotlight-photo-bw" aria-hidden="true" />
 
-      <!-- Soft Vignette & Contrast Overlay -->
-      <div class="spotlight-ambient-overlay" aria-hidden="true"></div>
+      <!-- Atmospheric Contrast Overlay (Protects text legibility) -->
+      <div class="spotlight-contrast-overlay" aria-hidden="true"></div>
 
-      <!-- Interactive RippleGrid Stage from React Bits -->
-      <div id="spotlight-ripple-grid" class="spotlight-ripple-grid" aria-hidden="true"></div>
+      <!-- Full-Bleed Color Reveal Stage (Reveals rich COLOR inside cursor circle only!) -->
+      <div class="spotlight-reveal-stage" aria-hidden="true">
+        <img src="images/srinjoyee-classroom.png" alt="Srinjoyee Dey Color Spotlight" class="spotlight-reveal-color" />
+      </div>
 
-      <!-- Crystal Sharp Vibrant Color Focus on Face (Clipped to Phone Screen) -->
-      <img src="images/srinjoyee-hackathon.png" alt="Srinjoyee Dey at Hackathon" class="spotlight-photo-sharp" id="spotlight-hackathon-img" />
-
-      <!-- Vertical Smartphone Screen Frame (Reference Match) -->
-      <div class="spotlight-phone-frame" aria-hidden="true">
-        <div class="phone-status-bar">
-          <span class="phone-time">18:32</span>
-          <div class="phone-sensor-pill"></div>
-          <div class="phone-status-icons">
-            <i class="fa-solid fa-signal"></i>
-            <i class="fa-solid fa-wifi"></i>
-            <i class="fa-solid fa-battery-full"></i>
-          </div>
-        </div>
-
-        <!-- Camera Viewfinder Focus Reticle Overlay (over face in phone) -->
-        <div class="phone-focus-reticle" aria-hidden="true">
-          <span class="reticle-corner reticle-tl"></span>
-          <span class="reticle-corner reticle-tr"></span>
-          <span class="reticle-corner reticle-br"></span>
-          <span class="reticle-corner reticle-bl"></span>
-          <span class="reticle-dot"></span>
-        </div>
-
-        <!-- Vertical Camera Control Dock (Compact Mobile Real-Theme) -->
-        <div class="phone-camera-dock" aria-label="Camera Controls">
-          <div class="dock-top-notch" title="Camera Flip">
-            <svg viewBox="0 0 24 24" class="dock-svg" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-              <circle cx="12" cy="13" r="3"/>
-            </svg>
-          </div>
-
-          <!-- Item 1: Portrait / Style -->
-          <div class="dock-item" title="Portrait Style">
-            <svg viewBox="0 0 24 24" class="dock-svg" width="12" height="12" fill="currentColor">
-              <path d="M12 2a4 4 0 0 0-4 4c0 1.9 1.3 3.5 3 3.9V13l-4 8h10l-4-8V9.9c1.7-.4 3-2 3-3.9a4 4 0 0 0-4-4z"/>
-            </svg>
-          </div>
-
-          <!-- Item 2: Focus Reticle -->
-          <div class="dock-item" title="Focus Reticle">
-            <svg viewBox="0 0 24 24" class="dock-svg" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M3 8V5a2 2 0 0 1 2-2h3"/>
-              <path d="M16 3h3a2 2 0 0 1 2 2v3"/>
-              <path d="M21 16v3a2 2 0 0 1-2 2h-3"/>
-              <path d="M8 21H5a2 2 0 0 1-2-2v-3"/>
-              <circle cx="12" cy="12" r="2.5" fill="currentColor"/>
-            </svg>
-          </div>
-
-          <!-- Item 3: Filter [N] -->
-          <div class="dock-item" title="Natural Filter">
-            <div class="dock-badge-icon">N</div>
-          </div>
-
-          <!-- Item 4: Light / Exposure -->
-          <div class="dock-item" title="Exposure / Light">
-            <svg viewBox="0 0 24 24" class="dock-svg" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="3.5" fill="currentColor"/>
-              <line x1="12" y1="1" x2="12" y2="4"/>
-              <line x1="12" y1="20" x2="12" y2="23"/>
-              <line x1="4.22" y1="4.22" x2="6.34" y2="6.34"/>
-              <line x1="17.66" y1="17.66" x2="19.78" y2="19.78"/>
-              <line x1="1" y1="12" x2="4" y2="12"/>
-              <line x1="20" y1="12" x2="23" y2="12"/>
-              <line x1="4.22" y1="19.78" x2="6.34" y2="17.66"/>
-              <line x1="17.66" y1="6.34" x2="19.78" y2="4.22"/>
-            </svg>
-          </div>
-
-          <!-- Item 5: Aspect Ratio / Grid -->
-          <div class="dock-item" title="Aspect Ratio">
-            <svg viewBox="0 0 24 24" class="dock-svg" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-              <circle cx="8.5" cy="8.5" r="1.5" fill="currentColor"/>
-              <polyline points="21 15 16 10 5 21"/>
-            </svg>
-          </div>
-        </div>
-
-        <div class="phone-bottom-bar">
-          <span class="phone-home-line"></span>
-        </div>
+      <!-- Spotlight Circular Lens Ring around Cursor -->
+      <div class="spotlight-cursor-ring" aria-hidden="true">
+        <span class="spotlight-ring-dot"></span>
       </div>
 
       <!-- Editorial Side Typography (Reference Match: Left Column & Right Column) -->
@@ -801,16 +725,6 @@
 
   <!-- LAYER 4: GLOBAL REACH & SKILLS VIEWPORT STAGE -->
   <div class="story-layer" id="story-layer-skills" data-layer-id="skills">
-    <!-- ==========================================================================
-         STANDALONE INTERACTIVE GLOBE (Right-Aligned, Independent, No Card)
-         ========================================================================== -->
-    <section class="globe-standalone-section" id="global-reach-stage" aria-label="Interactive Globe">
-      <div class="container globe-standalone-container">
-        <div class="globe-standalone-wrapper">
-          <canvas id="cobe-globe-canvas" class="cobe-globe-canvas" aria-label="Interactive 3D World Globe"></canvas>
-        </div>
-      </div>
-    </section>
 
     <!-- ==========================================================================
          MEMORY WALL SECTION (Circular 3D Carousel from React Bits)
@@ -828,7 +742,7 @@
             SNAPSHOTS & MEMORIES<span class="yellow-dot">.</span>
           </h2>
           <p class="memory-wall-sub">
-            Drag, throw, or explore spatial milestones, hackathons, and creative journey captures.
+            A visual stream of milestones, national hackathons, and creative journey captures.
           </p>
         </div>
       </div>
@@ -840,9 +754,7 @@
 
       <div class="container">
         <div class="memory-wall-hint" aria-hidden="true">
-          <span>✦ Drag or fling horizontally</span>
-          <span class="hint-dot">•</span>
-          <span>Click any card to center ✦</span>
+          <span>✦ Curated moments from hackathons & creative engineering sprints ✦</span>
         </div>
       </div>
     </section>
@@ -1185,18 +1097,8 @@
               </div>
             </div>
 
-            <!-- Terminal Screen Content / Output Body Wrapped with Live Radar Pattern Background -->
+            <!-- Terminal Screen Content / Output Body -->
             <div class="clay-screen-body-wrap">
-              <div class="radar-pattern" aria-hidden="true">
-                <div class="radar-crosshair-x"></div>
-                <div class="radar-crosshair-y"></div>
-                <div class="radar-center"></div>
-                <div class="radar-blip blip-1" title="Node: Portfolio Engine"></div>
-                <div class="radar-blip blip-2" title="Node: AI & System Dev"></div>
-                <div class="radar-blip blip-3" title="Node: Creative UI/UX"></div>
-                <div class="radar-hud-tag-tl">SCAN: SECTOR-07 [ACTIVE]</div>
-                <div class="radar-hud-tag-tr">AZ: 360° // 9.4 GHz</div>
-              </div>
               <div class="clay-screen-body" id="clay-terminal-output">
                 <div class="term-line sys-welcome">
                   <span class="term-green">LIVE_TERMINAL</span>
@@ -1214,17 +1116,17 @@
                   <span class="term-prompt">$</span> <span class="typed-cmd">help</span>
                 </div>
                 <div class="term-line output-block">
-                  <p><strong class="term-yellow">Available Commands:</strong></p>
-                  <p>&nbsp;&nbsp;<strong class="term-green">about</strong> - Learn about Srinjoyee</p>
-                  <p>&nbsp;&nbsp;<strong class="term-green">skills</strong> - View technical skills</p>
-                  <p>&nbsp;&nbsp;<strong class="term-green">projects</strong> - List featured projects</p>
-                  <p>&nbsp;&nbsp;<strong class="term-green">contact</strong> - Get contact information</p>
-                  <p>&nbsp;&nbsp;<strong class="term-green">radar</strong> - Scan sector & surveillance</p>
-                  <p>&nbsp;&nbsp;<strong class="term-green">joke</strong> - Get a dev joke</p>
-                  <p>&nbsp;&nbsp;<strong class="term-green">resume</strong> - Get my resume</p>
-                  <p>&nbsp;&nbsp;<strong class="term-green">hack</strong> - Simulate system breach</p>
-                  <p>&nbsp;&nbsp;<strong class="term-green">coffee</strong> - Caffeine boost</p>
-                  <p>&nbsp;&nbsp;<strong class="term-green">clear</strong> - Clear terminal</p>
+                  <p><strong class="term-yellow">⌨️ CLI COMMANDS (Run while pretending to be busy):</strong></p>
+                  <p>&nbsp;&nbsp;<strong class="term-green">about</strong>    - Who made this & why they need sleep</p>
+                  <p>&nbsp;&nbsp;<strong class="term-green">skills</strong>   - Actual skills (yes, includes git push --force)</p>
+                  <p>&nbsp;&nbsp;<strong class="term-green">projects</strong> - Proof that caffeine produces software</p>
+                  <p>&nbsp;&nbsp;<strong class="term-green">roast</strong>    - Brutal roast of your browser & life choices 🔥</p>
+                  <p>&nbsp;&nbsp;<strong class="term-green">sudo</strong>     - High privilege access (or so you thought)</p>
+                  <p>&nbsp;&nbsp;<strong class="term-green">contact</strong>  - Job offers, funding, or funny memes</p>
+                  <p>&nbsp;&nbsp;<strong class="term-green">hack</strong>     - Simulate NASA breach (FBI don't look) 💻</p>
+                  <p>&nbsp;&nbsp;<strong class="term-green">coffee</strong>   - Liquid sanity booster ☕</p>
+                  <p>&nbsp;&nbsp;<strong class="term-green">joke</strong>     - Developer humor to distract from bugs 🎭</p>
+                  <p>&nbsp;&nbsp;<strong class="term-green">clear</strong>    - Wipe away the evidence 🧹</p>
                 </div>
               </div>
             </div>
@@ -1232,10 +1134,24 @@
             <!-- Terminal Interactive Input Bar -->
             <div class="clay-terminal-input-bar">
               <span class="term-input-prompt">$</span>
-              <input type="text" id="clay-terminal-input" class="clay-terminal-input" placeholder="Type a command (try 'help', 'skills', 'about')..." autocomplete="off" spellcheck="false">
+              <input type="text" id="clay-terminal-input" class="clay-terminal-input" placeholder="Type a command (try 'roast', 'projects', 'skills')..." autocomplete="off" spellcheck="false">
               <button id="run-clay-cmd-btn" class="clay-bar-icon-right" title="Run Command">
                 <i class="fa-solid fa-arrow-turn-down fa-rotate-90"></i>
               </button>
+            </div>
+
+            <!-- Terminal Quick Commands Chips (No typing needed) -->
+            <div class="clay-terminal-quick-tags">
+              <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: #71717A; margin-right: 4px;">QUICK:</span>
+              <button type="button" class="clay-tag-btn" data-cmd="about">about</button>
+              <button type="button" class="clay-tag-btn" data-cmd="skills">skills</button>
+              <button type="button" class="clay-tag-btn" data-cmd="projects">projects</button>
+              <button type="button" class="clay-tag-btn" data-cmd="roast">roast 🔥</button>
+              <button type="button" class="clay-tag-btn" data-cmd="sudo">sudo 🤫</button>
+              <button type="button" class="clay-tag-btn" data-cmd="hack">hack 💻</button>
+              <button type="button" class="clay-tag-btn" data-cmd="coffee">coffee ☕</button>
+              <button type="button" class="clay-tag-btn" data-cmd="joke">joke 🎭</button>
+              <button type="button" class="clay-tag-btn" data-cmd="clear">clear 🧹</button>
             </div>
 
           </div>
@@ -1247,53 +1163,94 @@
   <!-- LAYER 7: CONTACT & FOOTER VIEWPORT STAGE -->
   <div class="story-layer" id="story-layer-contact" data-layer-id="contact">
     <!-- ==========================================================================
-         CONTACT SECTION
+         CONTACT SECTION (Form Left, 3D Globe Right with 30-35% Under Card)
          ========================================================================== -->
     <section class="contact-section section-padding" id="contact">
-      <div class="container">
-        <div class="contact-card-wrapper">
-          <div class="contact-grid">
-            
-            <!-- Left Info Column -->
-            <div class="contact-info-col">
-              <h2 class="contact-title">Let's Create Something Extraordinary<span class="yellow-dot">.</span></h2>
+      <div class="container contact-container">
+        <div class="contact-stage-layout">
+
+          <!-- Left Form Card -->
+          <div class="contact-card-wrapper">
+            <div class="contact-card-header">
+              <div class="contact-badge-pill">
+                <span class="live-pulse-dot" aria-hidden="true"></span>
+                <span>GLOBAL AVAILABILITY • CONNECT FROM ANYWHERE IN THE WORLD</span>
+              </div>
+              <h2 class="contact-title">Let's Connect From Anywhere in the World<span class="yellow-dot">.</span></h2>
               <p class="contact-subtext">
-                Have an ambitious project, an AI system in mind, or just want to discuss innovative technology? Feel free to reach out anytime.
+                Operating worldwide across time zones — from Silicon Valley to Tokyo, London to Kolkata. Whether you're across the street or across continents, let's engineer groundbreaking AI systems, creative 3D web platforms, and visionary software together.
               </p>
+            </div>
 
-              <div class="contact-details-list">
-                <div class="contact-detail-item">
-                  <div class="contact-icon">
-                    <i class="fa-solid fa-envelope"></i>
-                  </div>
-                  <div>
-                    <span class="contact-label">Email Me</span>
-                    <a href="mailto:srinjoyeedey@gmail.com" class="contact-value">srinjoyeedey@gmail.com</a>
-                  </div>
+            <form class="contact-form" id="contact-form">
+              <div class="form-row-dual">
+                <div class="form-group">
+                  <label for="contact-name" class="form-label">Your Name</label>
+                  <input type="text" id="contact-name" class="form-input" placeholder="e.g. Alex Morgan" required>
                 </div>
 
-                <div class="contact-detail-item">
-                  <div class="contact-icon">
-                    <i class="fa-solid fa-location-dot"></i>
-                  </div>
-                  <div>
-                    <span class="contact-label">Location</span>
-                    <span class="contact-value">Kolkata, India • Open to Global / Remote</span>
-                  </div>
-                </div>
-
-                <div class="contact-detail-item">
-                  <div class="contact-icon">
-                    <i class="fa-solid fa-graduation-cap"></i>
-                  </div>
-                  <div>
-                    <span class="contact-label">Education</span>
-                    <span class="contact-value">Academy of Technology • Computer Science &amp; Engineering</span>
-                  </div>
+                <div class="form-group">
+                  <label for="contact-email" class="form-label">Your Email</label>
+                  <input type="email" id="contact-email" class="form-input" placeholder="e.g. alex@example.com" required>
                 </div>
               </div>
 
-              <!-- Social Links -->
+              <div class="form-group">
+                <label class="form-label">Project Type</label>
+                <div class="project-type-pills">
+                  <label class="type-pill-option">
+                    <input type="radio" name="project_type" value="ai" checked>
+                    <span>AI &amp; Neural Systems</span>
+                  </label>
+                  <label class="type-pill-option">
+                    <input type="radio" name="project_type" value="web">
+                    <span>Web Architecture</span>
+                  </label>
+                  <label class="type-pill-option">
+                    <input type="radio" name="project_type" value="3d">
+                    <span>3D &amp; Creative UI</span>
+                  </label>
+                  <label class="type-pill-option">
+                    <input type="radio" name="project_type" value="other">
+                    <span>Collaboration</span>
+                  </label>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="contact-message" class="form-label">Your Message</label>
+                <textarea id="contact-message" class="form-input form-textarea" rows="4" placeholder="Tell me about your project, goals, or ideas..." required></textarea>
+              </div>
+
+              <button type="submit" id="submit-btn" class="btn btn-pill-dark btn-block btn-lg interactive-hover-btn">
+                <span class="btn-text-initial">
+                  <span>Send Message</span>
+                  <i class="fa-solid fa-paper-plane"></i>
+                </span>
+                <span class="btn-hover-reveal">
+                  <span>Send Message</span>
+                  <i class="fa-solid fa-arrow-right"></i>
+                </span>
+                <span class="btn-expanding-dot" aria-hidden="true"></span>
+              </button>
+            </form>
+
+            <!-- Card Bottom: Contact Info & Socials -->
+            <div class="contact-card-footer">
+              <div class="contact-meta-items">
+                <div class="contact-meta-pill">
+                  <i class="fa-solid fa-envelope"></i>
+                  <a href="mailto:srinjoyeedey@gmail.com">srinjoyeedey@gmail.com</a>
+                </div>
+                <div class="contact-meta-pill">
+                  <i class="fa-solid fa-earth-americas"></i>
+                  <span>Worldwide Remote • 24/7 Connectivity</span>
+                </div>
+                <div class="contact-meta-pill">
+                  <i class="fa-solid fa-bolt"></i>
+                  <span>Fast Response &lt; 12 Hours</span>
+                </div>
+              </div>
               <div class="social-links-group">
                 <a href="https://github.com/SrinjoyeeDey" target="_blank" rel="noopener noreferrer" class="social-link-btn" title="GitHub">
                   <i class="fa-brands fa-github"></i>
@@ -1309,62 +1266,34 @@
                 </a>
               </div>
             </div>
+          </div>
 
-            <!-- Right Form Column -->
-            <div class="contact-form-col">
-              <form class="contact-form" id="contact-form">
-                <div class="form-group">
-                  <label for="contact-name" class="form-label">Your Name</label>
-                  <input type="text" id="contact-name" class="form-input" placeholder="e.g. Alex Morgan" required>
-                </div>
+          <!-- Right Interactive 3D Globe Stage (~80% visible, ~20% tucked behind card) -->
+          <div class="contact-globe-stage" id="contact-globe-stage" aria-label="Interactive 3D World Globe Stage">
+            <!-- Frosted Glass Halo Lens & Orbital Disc (Backdrop) -->
+            <div class="globe-frosted-backdrop" aria-hidden="true">
+              <div class="globe-glass-inner-ring"></div>
+              <div class="globe-glass-specular-glare"></div>
+            </div>
+            <div class="globe-atmospheric-aura" aria-hidden="true"></div>
 
-                <div class="form-group">
-                  <label for="contact-email" class="form-label">Your Email</label>
-                  <input type="email" id="contact-email" class="form-input" placeholder="e.g. alex@example.com" required>
-                </div>
+            <!-- 3D Cobe Globe Canvas -->
+            <canvas id="cobe-globe-canvas" class="cobe-globe-canvas" aria-label="Interactive 3D World Globe"></canvas>
 
-                <div class="form-group">
-                  <label class="form-label">Project Type</label>
-                  <div class="project-type-pills">
-                    <label class="type-pill-option">
-                      <input type="radio" name="project_type" value="ai" checked>
-                      <span>AI &amp; Neural Systems</span>
-                    </label>
-                    <label class="type-pill-option">
-                      <input type="radio" name="project_type" value="web">
-                      <span>Web Architecture</span>
-                    </label>
-                    <label class="type-pill-option">
-                      <input type="radio" name="project_type" value="3d">
-                      <span>3D &amp; Creative UI</span>
-                    </label>
-                    <label class="type-pill-option">
-                      <input type="radio" name="project_type" value="other">
-                      <span>Collaboration</span>
-                    </label>
-                  </div>
-                </div>
-
-                <div class="form-group">
-                  <label for="contact-message" class="form-label">Your Message</label>
-                  <textarea id="contact-message" class="form-input form-textarea" rows="4" placeholder="Tell me about your project, goals, or ideas..." required></textarea>
-                </div>
-
-                <button type="submit" id="submit-btn" class="btn btn-pill-dark btn-block btn-lg interactive-hover-btn">
-                  <span class="btn-text-initial">
-                    <span>Send Message</span>
-                    <i class="fa-solid fa-paper-plane"></i>
-                  </span>
-                  <span class="btn-hover-reveal">
-                    <span>Send Message</span>
-                    <i class="fa-solid fa-arrow-right"></i>
-                  </span>
-                  <span class="btn-expanding-dot" aria-hidden="true"></span>
-                </button>
-              </form>
+            <!-- Floating Frosted Glass Telemetry Badges -->
+            <div class="globe-glass-hud-chip globe-hud-top" aria-hidden="true">
+              <span class="globe-glass-live-dot"></span>
+              <span class="globe-glass-hud-label">GLOBAL MESH NODE</span>
+              <span class="globe-glass-hud-divider">/</span>
+              <span class="globe-glass-hud-val">22.57° N, 88.36° E</span>
             </div>
 
+            <div class="globe-drag-hint" id="globe-drag-hint">
+              <i class="fa-solid fa-hand-pointer"></i>
+              <span>Drag to rotate globe</span>
+            </div>
           </div>
+
         </div>
       </div>
     </section>
@@ -1415,6 +1344,11 @@
           <div class="dock-icon"><i class="fa-solid fa-briefcase"></i></div>
           <div class="dock-label">Selected Works</div>
         </div>
+        <div class="dock-item" data-label="Snapshots" data-cursor-label="Snapshots" data-href="#memory-wall" tabindex="0" role="button"
+          aria-label="Snapshots & Memories">
+          <div class="dock-icon"><i class="fa-solid fa-camera-retro"></i></div>
+          <div class="dock-label">Snapshots</div>
+        </div>
         <div class="dock-item" data-label="Skills & Tools" data-cursor-label="Skills & Tools" data-href="#skills" tabindex="0" role="button"
           aria-label="Skills & Tools">
           <div class="dock-icon"><i class="fa-solid fa-bolt"></i></div>
@@ -1429,7 +1363,7 @@
     </div>
 
     <!-- Mimo Robot AI Assistant Chatbot -->
-    <div id="mimo-chatbot-container" class="mimo-chatbot-container">
+    <div id="mimo-chatbot-container" class="mimo-chatbot-container" data-lenis-prevent>
       <button id="mimo-chatbot-trigger" class="mimo-trigger-btn" aria-label="Open Mimo AI Assistant">
         <div class="mimo-robot-avatar">
           <svg viewBox="0 0 100 100" class="mimo-robot-svg">
@@ -1450,7 +1384,7 @@
         <span class="mimo-tooltip-label">Chat with Mimo! 🤖</span>
       </button>
 
-      <div id="mimo-chatbot-modal" class="mimo-chat-modal hidden" role="dialog" aria-labelledby="mimo-chat-title">
+      <div id="mimo-chatbot-modal" class="mimo-chat-modal hidden" role="dialog" aria-labelledby="mimo-chat-title" data-lenis-prevent>
         <div class="mimo-modal-header">
           <div class="mimo-header-info">
             <div class="mimo-header-avatar">
@@ -1473,19 +1407,27 @@
           </button>
         </div>
 
-        <div id="mimo-messages-body" class="mimo-messages-body">
+        <div id="mimo-messages-body" class="mimo-messages-body" data-lenis-prevent>
           <div class="mimo-msg bot-msg">
             <div class="msg-avatar-icon">🤖</div>
             <div class="msg-bubble">
-              <p>Hi there! 👋 I'm <strong>Mimo</strong>, Srinjoyee's AI assistant companion!</p>
-              <p>How can I help you explore today?</p>
+              <p>Beep boop! 👋 I'm <strong>Mimo</strong>, Srinjoyee's AI companion (and full-time debugger).</p>
+              <p>Ask me anything about her projects, or click a button below if you're too lazy to type! 😉</p>
+              <div class="mimo-reactions-bar">
+                <button type="button" class="mimo-reaction-btn" data-emoji="😂" title="Laugh">😂 <span class="rx-count">2</span></button>
+                <button type="button" class="mimo-reaction-btn" data-emoji="🔥" title="Fire">🔥 <span class="rx-count">5</span></button>
+                <button type="button" class="mimo-reaction-btn" data-emoji="❤️" title="Love">❤️ <span class="rx-count">7</span></button>
+              </div>
             </div>
           </div>
           <div class="mimo-quick-pills" id="mimo-quick-pills">
-            <button class="quick-pill-btn" data-query="show works">🎨 Show Selected Works</button>
-            <button class="quick-pill-btn" data-query="skills">🛠️ What tools do you use?</button>
-            <button class="quick-pill-btn" data-query="hire">📩 How can I hire you?</button>
-            <button class="quick-pill-btn" data-query="experience">⚡ Tell me about yourself</button>
+            <button type="button" class="quick-pill-btn" data-query="projects">🚀 Featured Projects</button>
+            <button type="button" class="quick-pill-btn" data-query="roast">🔥 Roast Srinjoyee</button>
+            <button type="button" class="quick-pill-btn" data-query="excuse">🎲 Dev Excuse</button>
+            <button type="button" class="quick-pill-btn" data-query="gossip">☕ Dev Tea / Gossip</button>
+            <button type="button" class="quick-pill-btn" data-query="skills">🛠️ Actual Skills</button>
+            <button type="button" class="quick-pill-btn" data-query="coin">🪙 Flip Coin</button>
+            <button type="button" class="quick-pill-btn" data-query="hire">📩 Hire Her</button>
           </div>
         </div>
 
@@ -1539,26 +1481,33 @@
       </div>
     </div>
 
-    <!-- Magic UI Interactive Globe & DotField Bundles -->
-    <script src="grid-scan-bundle.js"></script>
-    <script src="globe-bundle.js"></script>
-    <script src="projects-showcase-bundle.js?v=20"></script>
-    <script src="dot-field-bundle.js"></script>
-    <script src="ripple-grid-bundle.js"></script>
-    <script src="text-pressure-bundle.js?v=5"></script>
-    <script src="tech-text-bundle.js?v=12"></script>
-    <script src="circular-text-bundle.js?v=2"></script>
-    <script src="target-cursor-bundle.js?v=28"></script>
-    <script src="memory-wall-bundle.js"></script>
+    <!-- Lenis Smooth Scroll Engine (Matching asmitrishi.dev) -->
+    <script src="lib/lenis.min.js"></script>
 
     <!-- GSAP & ScrollTrigger Animation Libraries -->
     <script src="lib/gsap.min.js"></script>
     <script src="lib/ScrollTrigger.min.js"></script>
+    <script>
+      if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+        gsap.registerPlugin(ScrollTrigger);
+      }
+    </script>
+
+    <!-- Magic UI Interactive Globe & DotField Bundles -->
+    <script src="grid-scan-bundle.js"></script>
+    <script src="globe-bundle.js?v=8"></script>
+    <script src="projects-showcase-bundle.js?v=32"></script>
+    <script src="dot-field-bundle.js"></script>
+    <script src="text-pressure-bundle.js?v=5"></script>
+    <script src="tech-text-bundle.js?v=12"></script>
+    <script src="circular-text-bundle.js?v=2"></script>
+    <script src="target-cursor-bundle.js?v=28"></script>
+    <script src="memory-wall-bundle.js?v=8"></script>
 
     <!-- Main Interactive Scripts -->
-    <script src="script.js?v=11"></script>
+    <script src="script.js?v=22"></script>
     <script src="hero-3d-model.js?v=8"></script>
-    <script src="scroll-reveal.js?v=3"></script>
-    <script src="editorial-spotlight.js?v=4"></script>
+    <script src="scroll-reveal.js?v=6"></script>
+    <script src="editorial-spotlight.js?v=8"></script>
   </body>
 </html>

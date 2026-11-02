@@ -1,4 +1,77 @@
 /* ==========================================================================
+   LENIS ULTRA-SMOOTH INERTIAL SCROLL ENGINE
+   Exact match to https://asmitrishi.dev configuration:
+   lerp: 0.09, smoothWheel: true, autoRaf: false synced with GSAP Ticker
+   ========================================================================== */
+(function initLenisEngine() {
+  if (typeof window === 'undefined') return;
+
+  function bootLenis() {
+    if (typeof Lenis === 'undefined') {
+      setTimeout(bootLenis, 60);
+      return;
+    }
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+    try {
+      const lenis = new Lenis({
+        lerp: 0.1, // Optimal buttery inertial response
+        smoothWheel: true,
+        wheelMultiplier: 1.0,
+        touchMultiplier: 1.2,
+        autoRaf: false,
+        allowNestedScroll: true,
+        prevent: (node) => {
+          if (!node || typeof node.closest !== 'function') return false;
+          return (
+            node.hasAttribute?.('data-lenis-prevent') ||
+            Boolean(node.closest('[data-lenis-prevent]')) ||
+            Boolean(node.closest('#mimo-chatbot-container')) ||
+            Boolean(node.closest('#mimo-chatbot-modal')) ||
+            Boolean(node.closest('.mimo-messages-body')) ||
+            Boolean(node.closest('#project-modal')) ||
+            Boolean(node.closest('.clay-screen-body'))
+          );
+        }
+      });
+
+      window.lenis = lenis;
+
+      // Sync with GSAP ScrollTrigger
+      if (typeof ScrollTrigger !== 'undefined') {
+        lenis.on('scroll', ScrollTrigger.update);
+      }
+
+      // Drive Lenis RAF via GSAP ticker with lagSmoothing enabled for silky 60/120fps sync
+      if (typeof gsap !== 'undefined') {
+        gsap.ticker.add((time) => {
+          lenis.raf(time * 1000);
+        });
+        // 500ms max lag adjustment, 33ms threshold prevents frame drops from causing sudden jerks
+        gsap.ticker.lagSmoothing(500, 33);
+      } else {
+        function raf(time) {
+          lenis.raf(time);
+          requestAnimationFrame(raf);
+        }
+        requestAnimationFrame(raf);
+      }
+
+      console.log('✨ Lenis smooth scroll engine initialized');
+    } catch (e) {
+      console.warn('Lenis init warning:', e);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', bootLenis);
+  } else {
+    bootLenis();
+  }
+})();
+
+/* ==========================================================================
    CREATIVE PORTFOLIO INTERACTIVE LOGIC
    ========================================================================== */
 
@@ -651,18 +724,16 @@ document.addEventListener('DOMContentLoaded', () => {
         e.preventDefault();
         const targetId = href.slice(1);
         if (targetId === 'hero') {
-          window.scrollTo({ top: 0, behavior: 'smooth' });
+          if (window.lenis) {
+            window.lenis.scrollTo(0, { duration: 1.2 });
+          } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
         } else {
           const targetEl = document.getElementById(targetId);
           if (targetEl) {
-            const storyLayer = targetEl.closest('.story-layer');
-            if (storyLayer && typeof ScrollTrigger !== 'undefined') {
-              const layerST = ScrollTrigger.getAll().find(st => st.trigger === storyLayer);
-              if (layerST) {
-                window.scrollTo({ top: layerST.end + 2, behavior: 'smooth' });
-              } else {
-                targetEl.scrollIntoView({ behavior: 'smooth' });
-              }
+            if (window.lenis) {
+              window.lenis.scrollTo(targetEl, { offset: 0, duration: 1.2 });
             } else {
               targetEl.scrollIntoView({ behavior: 'smooth' });
             }
@@ -685,16 +756,23 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  let navTicking = false;
   window.addEventListener('scroll', () => {
-    if (navbar) {
-      if (window.scrollY > 40) {
-        navbar.classList.add('scrolled');
-      } else {
-        navbar.classList.remove('scrolled');
-      }
+    if (!navTicking) {
+      navTicking = true;
+      requestAnimationFrame(() => {
+        if (navbar) {
+          if (window.scrollY > 40) {
+            navbar.classList.add('scrolled');
+          } else {
+            navbar.classList.remove('scrolled');
+          }
+        }
+        highlightNavOnScroll();
+        navTicking = false;
+      });
     }
-    highlightNavOnScroll();
-  });
+  }, { passive: true });
 
   function highlightNavOnScroll() {
     const sections = document.querySelectorAll('section[id]');
@@ -1355,18 +1433,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (targetHref) {
           const targetId = targetHref.startsWith('#') ? targetHref.slice(1) : targetHref;
           if (targetId === 'hero') {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            if (window.lenis) {
+              window.lenis.scrollTo(0, { duration: 1.2 });
+            } else {
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
           } else {
             const targetEl = document.getElementById(targetId);
             if (targetEl) {
-              const storyLayer = targetEl.closest('.story-layer');
-              if (storyLayer && typeof ScrollTrigger !== 'undefined') {
-                const layerST = ScrollTrigger.getAll().find(st => st.trigger === storyLayer);
-                if (layerST) {
-                  window.scrollTo({ top: layerST.end + 2, behavior: 'smooth' });
-                } else {
-                  targetEl.scrollIntoView({ behavior: 'smooth' });
-                }
+              if (window.lenis) {
+                window.lenis.scrollTo(targetEl, { offset: 0, duration: 1.2 });
               } else {
                 targetEl.scrollIntoView({ behavior: 'smooth' });
               }
@@ -1436,11 +1512,27 @@ document.addEventListener('DOMContentLoaded', () => {
   const mimoQuickPills = document.getElementById('mimo-quick-pills');
 
   if (mimoTrigger && mimoModal) {
+    // Isolate wheel and touch events so Lenis and page scroll never hijack chat scrolling
+    const stopScrollHijack = (e) => {
+      e.stopPropagation();
+    };
+    mimoModal.addEventListener('wheel', stopScrollHijack, { passive: true });
+    mimoModal.addEventListener('touchmove', stopScrollHijack, { passive: true });
+    if (mimoMessagesBody) {
+      mimoMessagesBody.addEventListener('wheel', stopScrollHijack, { passive: true });
+      mimoMessagesBody.addEventListener('touchmove', stopScrollHijack, { passive: true });
+    }
+
     // Toggle Chat Modal
     mimoTrigger.addEventListener('click', () => {
       mimoModal.classList.toggle('hidden');
       if (!mimoModal.classList.contains('hidden')) {
         mimoInput?.focus();
+        setTimeout(() => {
+          if (mimoMessagesBody) {
+            mimoMessagesBody.scrollTop = mimoMessagesBody.scrollHeight;
+          }
+        }, 120);
       }
     });
 
@@ -1448,66 +1540,223 @@ document.addEventListener('DOMContentLoaded', () => {
       mimoModal.classList.add('hidden');
     });
 
-    // Helper: Add message bubble
-    function addMimoMessage(text, sender = 'bot') {
+    // Helper: Add message bubble with interactive buttons & reactions
+    function addMimoMessage(htmlContent, sender = 'bot', actionButtons = []) {
       const msgDiv = document.createElement('div');
       msgDiv.className = `mimo-msg ${sender === 'bot' ? 'bot-msg' : 'user-msg'}`;
       
       const avatarHtml = sender === 'bot' ? '<div class="msg-avatar-icon">🤖</div>' : '<div class="msg-avatar-icon">👤</div>';
-      msgDiv.innerHTML = `${avatarHtml}<div class="msg-bubble"><p>${text}</p></div>`;
+      
+      let actionsHtml = '';
+      if (actionButtons && actionButtons.length > 0) {
+        actionsHtml = `<div class="mimo-inline-actions">` + 
+          actionButtons.map(btn => `<button type="button" class="mimo-action-chip" data-action="${btn.action}" data-val="${btn.val || ''}">${btn.label}</button>`).join('') +
+          `</div>`;
+      }
+
+      let reactionsHtml = '';
+      if (sender === 'bot') {
+        reactionsHtml = `
+          <div class="mimo-reactions-bar">
+            <button type="button" class="mimo-reaction-btn" data-emoji="😂" title="Laugh">😂 <span class="rx-count">0</span></button>
+            <button type="button" class="mimo-reaction-btn" data-emoji="🔥" title="Fire">🔥 <span class="rx-count">0</span></button>
+            <button type="button" class="mimo-reaction-btn" data-emoji="❤️" title="Love">❤️ <span class="rx-count">0</span></button>
+          </div>
+        `;
+      }
+
+      msgDiv.innerHTML = `${avatarHtml}<div class="msg-bubble"><p>${htmlContent}</p>${actionsHtml}${reactionsHtml}</div>`;
 
       mimoMessagesBody.appendChild(msgDiv);
-      mimoMessagesBody.scrollTop = mimoMessagesBody.scrollHeight;
+      requestAnimationFrame(() => {
+        mimoMessagesBody.scrollTop = mimoMessagesBody.scrollHeight;
+      });
     }
 
     // Helper: Show bot typing indicator
     function showTypingIndicator(callback) {
       const typingDiv = document.createElement('div');
       typingDiv.className = 'mimo-msg bot-msg typing-msg';
-      typingDiv.innerHTML = `<div class="msg-avatar-icon">🤖</div><div class="msg-bubble"><p><em>Mimo is typing... 💬</em></p></div>`;
+      typingDiv.innerHTML = `<div class="msg-avatar-icon">🤖</div><div class="msg-bubble"><p><em>Mimo is cooking up a reply... 💭</em></p></div>`;
       mimoMessagesBody.appendChild(typingDiv);
-      mimoMessagesBody.scrollTop = mimoMessagesBody.scrollHeight;
+      requestAnimationFrame(() => {
+        mimoMessagesBody.scrollTop = mimoMessagesBody.scrollHeight;
+      });
 
       setTimeout(() => {
         typingDiv.remove();
         callback();
-      }, 600);
+      }, 500);
+    }
+
+    // Sarcastic Roasts Pool
+    const MIMO_ROASTS = [
+      "Srinjoyee spent 3 hours deciding between two shades of charcoal grey that look identical to every human with normal 20/20 vision. Meanwhile, you're chatting with a yellow robot on the internet instead of finishing your work. We are both running on questionable life choices. 😭🔥",
+      "Her Git commit history goes from <em>'Initial microservices architecture commit'</em> at 11 AM to <em>'PLEASE JUST WORK BRO I BEG YOU I WILL NEVER COMMIT TO MAIN AGAIN'</em> at 3:45 AM. Pure software engineering perfectionism. 💅",
+      "Srinjoyee has 6 hackathon wins, 4 years of UI/UX craft, and still refreshes the browser 15 times to see if 1px margin-top actually changed. Don't worry, we don't judge. 🤡",
+      "You want a roast? You've scrolled all the way through this portfolio without hiring Srinjoyee or sending a message. That's a bigger bug than an unclosed &lt;div&gt; tag in production! 💥"
+    ];
+
+    // Dev Excuses Pool
+    const DEV_EXCUSES = [
+      "🐛 <em>'It works completely fine on my machine. Maybe your browser is emotionally unstable?'</em>",
+      "🐛 <em>'That's not a bug. It's an undocumented surprise feature with spicy behavior!'</em>",
+      "🐛 <em>'A cosmic solar flare definitely flipped a bit in the server cache right when you clicked that.'</em>",
+      "🐛 <em>'The AI hallucinated that requirement, I just wrote the unit tests!'</em>",
+      "🐛 <em>'Somebody pushed directly to main on a Friday at 5:59 PM and immediately slammed their laptop shut.'</em>"
+    ];
+
+    // Helper: Clear Chat
+    function clearMimoChat() {
+      mimoMessagesBody.innerHTML = `
+        <div class="mimo-msg bot-msg">
+          <div class="msg-avatar-icon">🤖</div>
+          <div class="msg-bubble">
+            <p>🧹 <em>*Poof!*</em> Chat history wiped clean. Slate reset! What do you wanna check out now, friend?</p>
+            <div class="mimo-inline-actions">
+              <button type="button" class="mimo-action-chip" data-action="query" data-val="projects">🚀 Projects</button>
+              <button type="button" class="mimo-action-chip" data-action="query" data-val="roast">🔥 Roast Srinjoyee</button>
+              <button type="button" class="mimo-action-chip" data-action="query" data-val="excuse">🎲 Dev Excuse</button>
+              <button type="button" class="mimo-action-chip" data-action="query" data-val="gossip">☕ Dev Tea</button>
+            </div>
+            <div class="mimo-reactions-bar">
+              <button type="button" class="mimo-reaction-btn" data-emoji="😂" title="Laugh">😂 <span class="rx-count">0</span></button>
+              <button type="button" class="mimo-reaction-btn" data-emoji="🔥" title="Fire">🔥 <span class="rx-count">0</span></button>
+              <button type="button" class="mimo-reaction-btn" data-emoji="❤️" title="Love">❤️ <span class="rx-count">0</span></button>
+            </div>
+          </div>
+        </div>
+      `;
     }
 
     // Bot Response Logic
     function handleQuery(queryText) {
       const q = queryText.toLowerCase().trim();
       let reply = "";
+      let actions = [];
 
-      if (q.includes('work') || q.includes('project') || q.includes('show works') || q.includes('poster')) {
-        reply = "Here are Srinjoyee's featured selected works and polaroid posters! Take a look below ✨";
+      if (q.includes('work') || q.includes('project') || q.includes('build')) {
+        reply = "Oh, you want to see actual code and engineering? Thank goodness, I thought you were gonna ask me to write a poem about cryptocurrency. 😂<br><br>Srinjoyee builds heavy-duty full-stack & edge AI systems that solve real problems (zero generic todo-app filler):<br>• 🛰️ <strong>Nobodristhi:</strong> Drone AI saving humans during floods<br>• 🩺 <strong>Vani:</strong> Audio tele-triage streaming live vitals<br>• 🔥 <strong>Agnivaarak:</strong> Edge fire surveillance engine<br>• ⚡ <strong>NexVyapaar:</strong> Offline retail POS for local stores<br>• ♻️ <strong>Punarchakra:</strong> Circular economy AI e-waste classifier<br>• 🔐 <strong>Anchor:</strong> Vector knowledge memory vault";
+        actions = [
+          { label: '🚀 Jump to Projects Deck', action: 'navigate', val: 'projects' },
+          { label: '🔥 Roast Srinjoyee', action: 'query', val: 'roast' },
+          { label: '🛠️ Actual Skills', action: 'query', val: 'skills' }
+        ];
         showTypingIndicator(() => {
-          addMimoMessage(reply, 'bot');
-          const target = document.getElementById('selected-work') || document.getElementById('projects');
-          target?.scrollIntoView({ behavior: 'smooth' });
+          addMimoMessage(reply, 'bot', actions);
+          document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
         });
-      } else if (q.includes('skill') || q.includes('tool') || q.includes('software')) {
-        reply = "Srinjoyee specializes in Figma, React, Three.js, Character Illustration, Branding, Typography, and Motion Graphics! 🎨⚡";
-        showTypingIndicator(() => {
-          addMimoMessage(reply, 'bot');
-        });
-      } else if (q.includes('hire') || q.includes('contact') || q.includes('mail') || q.includes('freelance')) {
-        reply = "Srinjoyee is open for freelance commissions and creative projects! 📩 You can reach out directly via email or our contact section!";
-        showTypingIndicator(() => {
-          addMimoMessage(reply, 'bot');
-          document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-        });
-      } else if (q.includes('about') || q.includes('yourself') || q.includes('who') || q.includes('experience')) {
-        reply = "Srinjoyee is a multidisciplinary visual creative crafting bold brand experiences, dynamic UI/UX, and visual stories! 🌟";
-        showTypingIndicator(() => {
-          addMimoMessage(reply, 'bot');
-        });
-      } else {
-        reply = `Thanks for asking! I'm Mimo 🤖 You can ask me about Srinjoyee's <strong>Selected Works</strong>, <strong>Skills & Tools</strong>, or <strong>Hire Info</strong>!`;
-        showTypingIndicator(() => {
-          addMimoMessage(reply, 'bot');
-        });
+        return;
       }
+
+      if (q.includes('roast')) {
+        const roast = MIMO_ROASTS[Math.floor(Math.random() * MIMO_ROASTS.length)];
+        reply = roast;
+        actions = [
+          { label: '🔥 Roast Again', action: 'query', val: 'roast' },
+          { label: '☕ Spill Dev Tea', action: 'query', val: 'gossip' },
+          { label: '🎲 Dev Excuse', action: 'query', val: 'excuse' }
+        ];
+        showTypingIndicator(() => {
+          addMimoMessage(reply, 'bot', actions);
+        });
+        return;
+      }
+
+      if (q.includes('excuse') || q.includes('bug')) {
+        const excuse = DEV_EXCUSES[Math.floor(Math.random() * DEV_EXCUSES.length)];
+        reply = `<strong>OFFICIAL DEVELOPER EXCUSE GENERATOR:</strong><br><br>${excuse}`;
+        actions = [
+          { label: '🔄 Another Excuse', action: 'query', val: 'excuse' },
+          { label: '☕ Dev Tea', action: 'query', val: 'gossip' },
+          { label: '🚀 Show Projects', action: 'query', val: 'projects' }
+        ];
+        showTypingIndicator(() => {
+          addMimoMessage(reply, 'bot', actions);
+        });
+        return;
+      }
+
+      if (q.includes('tea') || q.includes('gossip') || q.includes('secret')) {
+        reply = "<strong>CONFIDENTIAL DEV TEA ☕:</strong><br><br>1. Half of Srinjoyee's code comments are literally just <em>'DO NOT TOUCH THIS OR THE WHOLE UNIVERSE BREAKS'</em>.<br>2. She drinks so much coffee her blood type is probably Espresso Positive.<br>3. Zero jQuery was harmed in building this site. Pure modern JavaScript, GSAP & React elegance.";
+        actions = [
+          { label: '🔥 Roast Her', action: 'query', val: 'roast' },
+          { label: '🛠️ Actual Skills', action: 'query', val: 'skills' },
+          { label: '📩 Hire Her Now', action: 'query', val: 'hire' }
+        ];
+        showTypingIndicator(() => {
+          addMimoMessage(reply, 'bot', actions);
+        });
+        return;
+      }
+
+      if (q.includes('coin') || q.includes('flip')) {
+        const isHeads = Math.random() > 0.3;
+        reply = `Flipping quantum decision coin... 🪙<br><br>Result: <strong>${isHeads ? 'HEADS! 🎉' : 'TAILS! 🎯'}</strong><br>The universe has spoken: You must hire Srinjoyee immediately.<br><em>(Note: Even if it landed on edge, company protocol dictates you still hire her. I don't make the rules).</em>`;
+        actions = [
+          { label: '🪙 Flip Again', action: 'query', val: 'coin' },
+          { label: '📩 Hire Her Now', action: 'query', val: 'hire' },
+          { label: '🚀 Show Projects', action: 'query', val: 'projects' }
+        ];
+        showTypingIndicator(() => {
+          addMimoMessage(reply, 'bot', actions);
+        });
+        return;
+      }
+
+      if (q.includes('skill') || q.includes('tool') || q.includes('stack')) {
+        reply = "Here's what Srinjoyee brings to the table (besides relentless energy and caffeine):<br>• <strong>Frontend:</strong> React, Three.js, WebGL, GSAP, Tailwind & Vanilla CSS (can center a &lt;div&gt; with eyes closed).<br>• <strong>Backend & AI:</strong> Python, Node, PyTorch, Edge AI, FastAPI.<br>• <strong>Databases:</strong> PostgreSQL, Redis, Vector Embeddings.<br>• <strong>Soft Skills:</strong> Explaining to clients why 'just making the logo bigger' won't double their conversion rate. 🎯";
+        actions = [
+          { label: '🚀 See Featured Builds', action: 'query', val: 'projects' },
+          { label: '📩 Let\'s Talk', action: 'query', val: 'hire' }
+        ];
+        showTypingIndicator(() => {
+          addMimoMessage(reply, 'bot', actions);
+        });
+        return;
+      }
+
+      if (q.includes('hire') || q.includes('contact') || q.includes('mail') || q.includes('freelance') || q.includes('job')) {
+        reply = "10/10 engineers and startup founders recommend hiring Srinjoyee before she gets poached by Big Tech. 🤝<br><br>She specializes in full-stack platforms, high-performance interactive UI/UX, and AI applications.<br><br>Drop an email at: <strong>hello@srinjoyee.dev</strong>";
+        actions = [
+          { label: '📋 Copy Email', action: 'copy', val: 'hello@srinjoyee.dev' },
+          { label: '⬇️ Scroll to Contact Form', action: 'navigate', val: 'contact' }
+        ];
+        showTypingIndicator(() => {
+          addMimoMessage(reply, 'bot', actions);
+        });
+        return;
+      }
+
+      if (q.includes('about') || q.includes('yourself') || q.includes('who') || q.includes('experience')) {
+        reply = "Srinjoyee is a multidisciplinary visual technologist & software developer who loves building products that look insanely gorgeous and perform at lightning speed. ⚡<br><br>When she isn't coding, she's designing, participating in national hackathons, or training me (Mimo) to be less sarcastic. <em>Clearly that last part isn't going well.</em> 😉";
+        actions = [
+          { label: '👀 Check About Section', action: 'navigate', val: 'about' },
+          { label: '🔥 Roast Her', action: 'query', val: 'roast' },
+          { label: '🚀 Projects', action: 'query', val: 'projects' }
+        ];
+        showTypingIndicator(() => {
+          addMimoMessage(reply, 'bot', actions);
+        });
+        return;
+      }
+
+      if (q.includes('clear') || q.includes('clean') || q.includes('reset')) {
+        clearMimoChat();
+        return;
+      }
+
+      // Default Sarcastic Fallback
+      reply = `Beep boop! 🤖 My neural pathways didn't compute <em>"${queryText}"</em>. But hey, don't leave me hanging! Try clicking one of the buttons below to see projects, get a sarcastic roast, or flip a coin! ✨`;
+      actions = [
+        { label: '🚀 Projects', action: 'query', val: 'projects' },
+        { label: '🔥 Roast Srinjoyee', action: 'query', val: 'roast' },
+        { label: '🎲 Dev Excuse', action: 'query', val: 'excuse' },
+        { label: '☕ Dev Tea', action: 'query', val: 'gossip' }
+      ];
+      showTypingIndicator(() => {
+        addMimoMessage(reply, 'bot', actions);
+      });
     }
 
     // Form Submission
@@ -1526,8 +1775,46 @@ document.addEventListener('DOMContentLoaded', () => {
       const btn = e.target.closest('.quick-pill-btn');
       if (btn) {
         const query = btn.getAttribute('data-query');
-        addMimoMessage(btn.textContent, 'user');
+        addMimoMessage(btn.textContent.trim(), 'user');
         handleQuery(query);
+      }
+    });
+
+    // Click handler for Inline Reactions & Action Chips inside Mimo messages
+    mimoMessagesBody.addEventListener('click', (e) => {
+      // 1. Reaction button click
+      const rxBtn = e.target.closest('.mimo-reaction-btn');
+      if (rxBtn) {
+        const countSpan = rxBtn.querySelector('.rx-count');
+        if (countSpan) {
+          const count = parseInt(countSpan.textContent || '0', 10);
+          countSpan.textContent = count + 1;
+          rxBtn.classList.add('reacted');
+        }
+        return;
+      }
+
+      // 2. Action chip click
+      const actionBtn = e.target.closest('.mimo-action-chip');
+      if (actionBtn) {
+        const action = actionBtn.getAttribute('data-action');
+        const val = actionBtn.getAttribute('data-val');
+        if (action === 'navigate') {
+          const target = document.getElementById(val);
+          target?.scrollIntoView({ behavior: 'smooth' });
+        } else if (action === 'query') {
+          addMimoMessage(actionBtn.textContent.trim(), 'user');
+          handleQuery(val);
+        } else if (action === 'copy') {
+          navigator.clipboard?.writeText(val).catch(() => {});
+          const original = actionBtn.textContent;
+          actionBtn.textContent = '✅ Email Copied!';
+          setTimeout(() => {
+            actionBtn.textContent = original;
+          }, 2500);
+        } else if (action === 'clear') {
+          clearMimoChat();
+        }
       }
     });
   }
@@ -1538,9 +1825,22 @@ document.addEventListener('DOMContentLoaded', () => {
   const clayTerminalInput = document.getElementById('clay-terminal-input');
   const clayTerminalOutput = document.getElementById('clay-terminal-output');
   const runClayBtn = document.getElementById('run-clay-cmd-btn');
-  const quickCmdTags = document.querySelectorAll('.clay-tag-btn');
 
   if (clayTerminalInput && clayTerminalOutput) {
+    const TERMINAL_ROASTS = [
+      "🔥 SYSTEM ROAST: You have 52 browser tabs open, 4 of which are StackOverflow answers from 2018. Your posture right now looks like a boiled shrimp. Sit up straight!",
+      "🔥 SYSTEM ROAST: You've spent the last 5 minutes testing random commands in a website terminal instead of doing what you opened your laptop for. We see you.",
+      "🔥 SYSTEM ROAST: Your internet ping has more emotional baggage than a junior dev pushing directly to production on Friday at 5:59 PM."
+    ];
+
+    const TERMINAL_JOKES = [
+      "Why do programmers prefer dark mode? Because light attracts bugs! 🐛",
+      "A SQL query walks into a bar, walks up to two tables and asks: 'Can I join you?' 🍺",
+      "Why do Java developers wear glasses? Because they don't C#! 👓",
+      "There are 10 types of people in the world: those who understand binary, and those who don't! 🤖",
+      "A QA engineer walks into a bar. Runs into a bar. Crawls into a bar. Orders a beer. Orders 0 beers. Orders 999999999 beers. Orders a lizard. Orders -1 beers. A real customer walks in and asks where the bathroom is. The bar crashes and burns."
+    ];
+
     function executeClayCommand(commandStr) {
       const cmd = commandStr.trim().toLowerCase();
       if (!cmd) return;
@@ -1558,96 +1858,109 @@ document.addEventListener('DOMContentLoaded', () => {
       switch (cmd) {
         case 'help':
           respLine.innerHTML = `
-            <p><strong class="term-yellow">Available Commands:</strong></p>
-            <p>&nbsp;&nbsp;<strong class="term-green">about</strong>    - Learn about Srinjoyee</p>
-            <p>&nbsp;&nbsp;<strong class="term-green">skills</strong>   - View technical skills</p>
-            <p>&nbsp;&nbsp;<strong class="term-green">projects</strong> - List featured projects</p>
-            <p>&nbsp;&nbsp;<strong class="term-green">contact</strong>  - Get contact information</p>
-            <p>&nbsp;&nbsp;<strong class="term-green">joke</strong>     - Get a dev joke</p>
-            <p>&nbsp;&nbsp;<strong class="term-green">resume</strong>   - Get my resume</p>
-            <p>&nbsp;&nbsp;<strong class="term-green">hack</strong>     - Simulate system breach</p>
-            <p>&nbsp;&nbsp;<strong class="term-green">coffee</strong>   - Caffeine boost</p>
-            <p>&nbsp;&nbsp;<strong class="term-green">clear</strong>    - Clear terminal</p>
+            <p><strong class="term-yellow">⌨️ CLI COMMANDS (Run while pretending to be busy):</strong></p>
+            <p>&nbsp;&nbsp;<strong class="term-green">about</strong>    - Who made this & why they need sleep</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">skills</strong>   - Actual skills (yes, includes git push --force)</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">projects</strong> - Proof that caffeine produces software</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">roast</strong>    - Brutal roast of your browser & life choices 🔥</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">sudo</strong>     - High privilege access (or so you thought)</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">contact</strong>  - Job offers, funding, or funny memes</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">hack</strong>     - Simulate NASA breach (FBI don't look) 💻</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">coffee</strong>   - Liquid sanity booster ☕</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">joke</strong>     - Developer humor to distract from bugs 🎭</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">tea</strong>      - Confidential dev gossip & behind-the-scenes</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">clear</strong>    - Wipe away the evidence 🧹</p>
           `;
           break;
 
         case 'about':
         case 'bio':
           respLine.innerHTML = `
-            <p>👋 <strong class="term-yellow">ABOUT SRINJOYEE:</strong></p>
-            <p>Srinjoyee is a multidisciplinary visual creative & developer crafting bold brand experiences, dynamic UI/UX, and visual stories.</p>
-            <p>📍 Location: Worldwide / Remote</p>
-            <p>📩 Status: Open for freelance commissions & collaborations</p>
+            <p>👋 <strong class="term-yellow">SRINJOYEE DEY // HUMAN SPECIFICATION:</strong></p>
+            <p>• Role: Full-Stack Engineer, AI Architect & Visual Technologist.</p>
+            <p>• Motto: <em>"If it works on my machine, we pack my laptop in a crate and ship it to AWS."</em></p>
+            <p>• Daily Routine: Writing clean code, winning national hackathons, and debugging CSS flexbox at 3 AM.</p>
+            <p>• Warning: Highly allergic to bad typography, bloated npm packages, and unnecessary meetings that could have been an email.</p>
           `;
           break;
 
         case 'skills':
           respLine.innerHTML = `
-            <p>⚡ <strong class="term-yellow">TECHNICAL SKILLS:</strong></p>
-            <p>  [UI/UX]       Figma, Design Systems, Wireframing, Prototyping</p>
-            <p>  [FRONTEND]    HTML5, CSS3, JavaScript (ES6+), React, Vite</p>
-            <p>  [3D & GRAPHICS] Three.js, WebGL, Shader Physics, R3F</p>
-            <p>  [VISUAL ART]  Character Illustration, Typography, Motion</p>
+            <p>⚡ <strong class="term-yellow">ACTUAL TECHNICAL ARSENAL:</strong></p>
+            <p>&nbsp;&nbsp;[FRONTEND]     React, Three.js, GSAP, WebGL (Can center a &lt;div&gt; with both eyes closed).</p>
+            <p>&nbsp;&nbsp;[AI & BACKEND] Python, PyTorch, Edge AI, Node.js, FastAPI (Models that don't hallucinate your grandma's cookie recipe).</p>
+            <p>&nbsp;&nbsp;[DATABASE]     PostgreSQL, Redis, Vector Embeddings (Remembers data better than you remember your passwords).</p>
+            <p>&nbsp;&nbsp;[SOFT SKILL]   Explaining to stakeholders why an 'easy 5-minute button tweak' requires re-architecting the backend.</p>
           `;
           break;
 
         case 'projects':
         case 'works':
           respLine.innerHTML = `
-            <p>🖼️ <strong class="term-yellow">FEATURED PROJECTS LOADED:</strong></p>
-            <p> 1. Travel Poster ("Let's Go Explore")</p>
-            <p> 2. Food Poster ("Strawberry Milkshake")</p>
-            <p> 3. Christmas Poster ("Merry Christmas & Happy New Year")</p>
-            <p> 4. Event Poster ("Wabi Sabi Art Festival")</p>
-            <p> 5. Social Media Post ("Burger Hours")</p>
-            <p><span class="term-green">▶ Scrolling to featured projects section...</span></p>
+            <p>🚀 <strong class="term-yellow">FEATURED BUILDS (Real software, zero todo-app filler):</strong></p>
+            <p> 1. 🛰️ <strong class="term-green">Nobodristhi:</strong> AI aerial vision for disaster triage & flood rescues.</p>
+            <p> 2. 🩺 <strong class="term-green">Vani:</strong> Audio-first patient vitals triage system for critical care.</p>
+            <p> 3. 🔥 <strong class="term-green">Agnivaarak:</strong> Edge surveillance spotting fires before marshmallows burn.</p>
+            <p> 4. ⚡ <strong class="term-green">NexVyapaar:</strong> Offline-first POS for Indian retail (smarter than SAP).</p>
+            <p> 5. ♻️ <strong class="term-green">Punarchakra:</strong> Circular economy AI classifier (Earth thanks us).</p>
+            <p> 6. 🔐 <strong class="term-green">Anchor:</strong> High-dimensional vector memory vault tighter than Fort Knox.</p>
+            <p><span class="term-yellow">▶ Navigating directly to Projects showcase deck...</span></p>
           `;
-          document.getElementById('selected-work')?.scrollIntoView({ behavior: 'smooth' });
+          document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+          break;
+
+        case 'roast':
+          const roast = TERMINAL_ROASTS[Math.floor(Math.random() * TERMINAL_ROASTS.length)];
+          respLine.innerHTML = `<p>${roast}</p>`;
+          break;
+
+        case 'sudo':
+          respLine.innerHTML = `
+            <p class="term-red">🚫 [PERMISSION DENIED] User is not in the sudoers file.</p>
+            <p class="term-muted">This incident has been logged and reported to Santa Claus 🎅. Your browser history is currently being judged.</p>
+          `;
           break;
 
         case 'contact':
           respLine.innerHTML = `
-            <p>📩 <strong class="term-yellow">CONTACT INFORMATION:</strong></p>
-            <p> Email: hello@creativevisual.com</p>
-            <p> Instagram: @your_doodle</p>
-            <p> Status: Open for freelance commissions & projects!</p>
+            <p>📩 <strong class="term-yellow">REACH OUT TO SRINJOYEE:</strong></p>
+            <p>• Email: <span class="term-green">hello@srinjoyee.dev</span></p>
+            <p>• Direct: Scroll to the contact form below or reach out via LinkedIn!</p>
+            <p>• Pro Tip: Mentioning coffee or cool tech ideas increases reply speed by 250%.</p>
             <p><span class="term-green">▶ Scrolling to contact form...</span></p>
           `;
           document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
           break;
 
         case 'joke':
-          const jokes = [
-            "Why do programmers prefer dark mode? Because light attracts bugs! 🐛",
-            "There are 10 types of people in the world: those who understand binary, and those who don't! 🤖",
-            "A SQL query walks into a bar, walks up to two tables and asks: 'Can I join you?' 🍺",
-            "How many programmers does it take to change a lightbulb? None, that's a hardware problem! 💡"
-          ];
-          const randomJoke = jokes[Math.floor(Math.random() * jokes.length)];
+          const randomJoke = TERMINAL_JOKES[Math.floor(Math.random() * TERMINAL_JOKES.length)];
           respLine.innerHTML = `<p>😂 <strong class="term-yellow">DEV JOKE:</strong> ${randomJoke}</p>`;
           break;
 
         case 'resume':
           respLine.innerHTML = `
             <p>📄 <strong class="term-yellow">SRINJOYEE RESUME:</strong></p>
-            <p> Multidisciplinary Visual & UI/UX Creative with 4+ years experience in brand systems and Web UI.</p>
-            <p> 📥 <span class="term-green">Resume ready. Scroll to Contact section to request PDF!</span></p>
+            <p> Full-Stack AI Engineer & Creative Developer. Proven hackathon winner, scalable backend architect, and UI specialist.</p>
+            <p> 📥 <span class="term-green">Ready to interview? Scroll to Contact section or email hello@srinjoyee.dev!</span></p>
           `;
           break;
 
-        case 'radar':
+        case 'tea':
+        case 'gossip':
           respLine.innerHTML = `
-            <p class="term-yellow">🛰️ <strong class="term-green">RADAR SCANNER ACTIVE [360° BEAM]:</strong></p>
-            <p> Frequency: 9.4 GHz X-Band • Sweep Cycle: 4.0s Continuous</p>
-            <p class="term-highlight"> [STATUS] Concentric grid active. 0 threats detected. 100% creative signal locked.</p>
+            <p>☕ <strong class="term-yellow">CONFIDENTIAL DEV TEA:</strong></p>
+            <p>• Srinjoyee once debugged an issue for 6 hours only to realize the server was running on port 3001 instead of 3000.</p>
+            <p>• Half her code comments are just 'PLEASE DONT TOUCH OR REALITY COLLAPSES'.</p>
+            <p>• Zero jQuery was harmed in building this site. Pure modern JavaScript & CSS.</p>
           `;
           break;
 
         case 'hack':
           respLine.innerHTML = `
-            <p class="term-green">ACCESS GRANTED. INITIALIZING SYSTEM BREACH...</p>
-            <p class="term-green">[████████████████████] 100% SECURITY OVERRIDDEN</p>
-            <p class="term-highlight">░▒▓█ PORTO MAINFRAME UNLOCKED █▓▒░</p>
+            <p class="term-green">INITIALIZING ROOT PROTOCOL OVERRIDE...</p>
+            <p class="term-green">[████████████████████] 100% SECURITY PURGED</p>
+            <p class="term-highlight">░▒▓█ CONGRATULATIONS: You just hacked your own time. █▓▒░</p>
+            <p class="term-muted">Now scroll down and hire Srinjoyee before your next release deadline hits.</p>
           `;
           break;
 
@@ -1661,7 +1974,7 @@ document.addEventListener('DOMContentLoaded', () => {
                \\  COFFEE    /<br>
                 \\_________/
             </p>
-            <p class="term-green">☕ Caffeine level boosted to 100%! Ready to code & create!</p>
+            <p class="term-green">☕ Caffeine level boosted to 100%! Ready to compile, ship, and conquer!</p>
           `;
           break;
 
@@ -1674,17 +1987,14 @@ document.addEventListener('DOMContentLoaded', () => {
               <span class="term-muted">--------------------------------------------------------------------------</span>
             </div>
             <div class="term-line">
-              <span>$ Welcome to the <strong class="term-yellow">TERMINAL</strong></span>
-            </div>
-            <div class="term-line">
-              <span class="term-muted">Type <strong class="term-yellow">'help'</span> for available commands</span>
+              <span>$ Terminal wiped clean. Type <strong class="term-yellow">'help'</strong> or click chips below!</span>
             </div>
           `;
           clayTerminalInput.value = '';
           return;
 
         default:
-          respLine.innerHTML = `<p class="term-muted">zsh: command not found: ${commandStr}. Type <span class="term-yellow">'help'</span> for available commands.</p>`;
+          respLine.innerHTML = `<p class="term-muted">zsh: command not found: "${commandStr}". Did you mean <span class="term-yellow">'help'</span>? Or did your cat step on the keyboard again? 🐱</p>`;
           break;
       }
 
@@ -1704,12 +2014,16 @@ document.addEventListener('DOMContentLoaded', () => {
       executeClayCommand(clayTerminalInput.value);
     });
 
-    // Quick Command Buttons
-    quickCmdTags.forEach((tag) => {
-      tag.addEventListener('click', () => {
+    // Quick Command Buttons via Event Delegation
+    document.addEventListener('click', (e) => {
+      const tag = e.target.closest('.clay-tag-btn');
+      if (tag) {
         const cmd = tag.getAttribute('data-cmd');
-        if (cmd) executeClayCommand(cmd);
-      });
+        if (cmd) {
+          clayTerminalInput.value = cmd;
+          executeClayCommand(cmd);
+        }
+      }
     });
   }
 
@@ -2200,4 +2514,119 @@ document.addEventListener('DOMContentLoaded', () => {
   } else {
     setupTimeline();
   }
+
+  /* ==========================================================================
+     VANI-STYLE FROSTED GLASS SHUTTER CONTROLLER
+     Exact replication of scroll-driven curtain reveal from https://vani-bice.vercel.app
+     - Early lift completion guarantees the shutter never gets stuck over cards or content
+     - Synced directly with Lenis smooth scroll engine & RAF ticker
+     - Interactive pull pill with smooth hover & glide-to-reveal
+     ========================================================================== */
+  function setupVaniShutters() {
+    const shutterConfigs = [];
+
+    const activeShutters = [];
+
+    shutterConfigs.forEach(cfg => {
+      const shutter = document.getElementById(cfg.shutterId);
+      const target = document.getElementById(cfg.targetId);
+      if (!shutter || !target) return;
+
+      const handle = shutter.querySelector('.vani-shutter-handle');
+      if (handle) {
+        handle.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (window.lenis) {
+            window.lenis.scrollTo(target, { offset: 0, duration: 1.0 });
+          } else {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+      }
+
+      activeShutters.push({ shutter, target });
+    });
+
+    if (!activeShutters.length) return;
+
+    let ticking = false;
+
+    function updateShutters() {
+      ticking = false;
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+
+      for (let i = 0; i < activeShutters.length; i++) {
+        const { shutter, target } = activeShutters[i];
+        const rect = target.getBoundingClientRect();
+
+        // Shutter begins rolling up as soon as target enters the bottom of the screen (rect.top === vh),
+        // and completes 100% of its lift 40px BEFORE the section reaches top (rect.top <= 40px)!
+        // This guarantees it is completely lifted off and hidden before ScrollTrigger pins #projects!
+        const startPoint = vh;
+        const endPoint = 40;
+        const revealRange = startPoint - endPoint;
+        const distanceScrolled = startPoint - rect.top;
+
+        // 1. Below viewport: completely covered at 0%
+        if (distanceScrolled <= 0) {
+          shutter.style.transform = 'translate3d(0, 0%, 0)';
+          shutter.style.webkitTransform = 'translate3d(0, 0%, 0)';
+          shutter.style.opacity = '1';
+          shutter.style.visibility = 'visible';
+          shutter.style.pointerEvents = 'none';
+          continue;
+        }
+
+        // 2. Beyond reveal point: shutter is completely lifted off-screen and hidden
+        if (distanceScrolled >= revealRange || rect.top <= endPoint) {
+          shutter.style.transform = 'translate3d(0, -100%, 0)';
+          shutter.style.webkitTransform = 'translate3d(0, -100%, 0)';
+          shutter.style.opacity = '0';
+          shutter.style.visibility = 'hidden';
+          shutter.style.pointerEvents = 'none';
+          continue;
+        }
+
+        // 3. In transit: smooth scroll-driven lift
+        const progress = Math.max(0, Math.min(1, distanceScrolled / revealRange));
+        const translateY = -(progress * 100);
+
+        shutter.style.visibility = 'visible';
+        shutter.style.pointerEvents = 'none';
+        shutter.style.transform = `translate3d(0, ${translateY.toFixed(2)}%, 0)`;
+        shutter.style.webkitTransform = `translate3d(0, ${translateY.toFixed(2)}%, 0)`;
+
+        // Soft opacity transition near the very end
+        if (progress > 0.8) {
+          const fade = 1 - (progress - 0.8) / 0.2;
+          shutter.style.opacity = Math.max(0, fade).toFixed(3);
+        } else {
+          shutter.style.opacity = '1';
+        }
+      }
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(updateShutters);
+      }
+    }
+
+    // Connect with Lenis smooth scroll or native scroll fallback
+    if (window.lenis) {
+      window.lenis.on('scroll', onScroll);
+    } else {
+      window.addEventListener('scroll', onScroll, { passive: true });
+    }
+    window.addEventListener('resize', onScroll, { passive: true });
+    updateShutters();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupVaniShutters);
+  } else {
+    setupVaniShutters();
+  }
 })();
+

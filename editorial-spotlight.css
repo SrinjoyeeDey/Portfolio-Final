@@ -45,10 +45,20 @@
   transform: translateY(-40px) !important;
 }
 
+/* Registered custom property for smooth spotlight size interpolation */
+@property --spotlight-radius {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 140px;
+}
+
 .editorial-spotlight-section {
-  --phone-w: clamp(270px, 22.5vw, 335px);
-  --phone-h: clamp(500px, 73vh, 630px);
-  --phone-top: 13.5vh;
+  --spotlight-radius: clamp(125px, 14vw, 175px);
+  --mouse-x: -9999px;
+  --mouse-y: -9999px;
+  --spotlight-active: 0;
+  --phone-w: clamp(260px, 22vw, 340px);
+  --phone-h: clamp(500px, 72vh, 640px);
   position: relative;
   width: 100vw;
   width: 100%;
@@ -56,12 +66,8 @@
   min-height: 100vh;
   max-height: 100vh;
   overflow: hidden;
-  background-color: #080a0f;
-  background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
-  background-size: 64px 64px;
-  background-position: center center;
+  background-color: #05070b;
+  background-image: none;
   color: #ffffff;
   display: block;
   box-sizing: border-box;
@@ -69,228 +75,106 @@
   padding: 0;
 }
 
-/* Ambient Monochrome Surroundings (Entire Photo Clearly Visible!) */
-.spotlight-photo-ambient {
+/* Base Full Background Image: Black and White Monochrome (Full bleed, shifted left to reveal laptop) */
+.spotlight-photo-bw {
   position: absolute;
   top: 0;
-  left: 0;
-  width: 100%;
+  left: -8%;
+  width: 114%;
   height: 100%;
   object-fit: cover;
-  object-position: center 25%;
+  object-position: center 24%;
   display: block;
   z-index: 1;
-  filter: grayscale(100%) brightness(0.38) contrast(1.15);
+  filter: grayscale(100%) contrast(1.1) brightness(0.82);
   pointer-events: none;
 }
 
-/* Soft Contrast & Edge Vignette Overlay */
-.spotlight-ambient-overlay {
+/* Atmospheric Contrast Overlay (Protects text legibility & adds mood) */
+.spotlight-contrast-overlay {
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(8, 10, 15, 0.25) 30%, rgba(8, 10, 15, 0.72) 75%, rgba(8, 10, 15, 0.95) 100%),
-              linear-gradient(to bottom, rgba(8, 10, 15, 0.65) 0%, transparent 20%, transparent 80%, rgba(8, 10, 15, 0.85) 100%);
+  background: 
+    radial-gradient(circle at 50% 50%, rgba(5, 7, 11, 0.05) 0%, rgba(5, 7, 11, 0.3) 60%, rgba(5, 7, 11, 0.75) 100%),
+    linear-gradient(to right, rgba(5, 7, 11, 0.72) 0%, rgba(5, 7, 11, 0.15) 35%, transparent 50%, rgba(5, 7, 11, 0.15) 65%, rgba(5, 7, 11, 0.72) 100%),
+    linear-gradient(to bottom, rgba(5, 7, 11, 0.45) 0%, transparent 20%, transparent 80%, rgba(5, 7, 11, 0.8) 100%);
   z-index: 2;
   pointer-events: none;
 }
 
-/* Interactive RippleGrid WebGL Layer (React Bits) */
+/* Interactive RippleGrid WebGL Layer (Disabled per user request) */
 .spotlight-ripple-grid {
+  display: none !important;
+  pointer-events: none !important;
+}
+
+/* Full-Bleed Color Photo Reveal Layer (Shows rich COLOR inside cursor circle only!) */
+.spotlight-reveal-stage {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  z-index: 3;
-  pointer-events: auto;
-  opacity: 0.65;
+  overflow: hidden;
+  z-index: 4;
+  pointer-events: none;
+  -webkit-mask-image: radial-gradient(
+    circle var(--spotlight-radius, 140px) at var(--mouse-x, -9999px) var(--mouse-y, -9999px),
+    #000000 0%,
+    #000000 calc(var(--spotlight-radius, 140px) - 22px),
+    rgba(0, 0, 0, 0.75) calc(var(--spotlight-radius, 140px) - 4px),
+    transparent var(--spotlight-radius, 140px)
+  );
+  mask-image: radial-gradient(
+    circle var(--spotlight-radius, 140px) at var(--mouse-x, -9999px) var(--mouse-y, -9999px),
+    #000000 0%,
+    #000000 calc(var(--spotlight-radius, 140px) - 22px),
+    rgba(0, 0, 0, 0.75) calc(var(--spotlight-radius, 140px) - 4px),
+    transparent var(--spotlight-radius, 140px)
+  );
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  opacity: var(--spotlight-active, 0);
+  transition: opacity 0.35s ease;
+  will-change: mask-image, -webkit-mask-image, opacity;
 }
 
-/* Crystal Sharp Vibrant Color Focus on Face (Clipped precisely to Smartphone Screen) */
-.spotlight-photo-sharp {
+.spotlight-reveal-color {
   position: absolute;
   top: 0;
-  left: 0;
-  width: 100%;
+  left: -8%;
+  width: 114%;
   height: 100%;
   object-fit: cover;
-  object-position: center 25%;
+  object-position: center 24%;
   display: block;
-  z-index: 4;
-  filter: contrast(1.06) saturate(1.15) brightness(1.02);
-  clip-path: inset(
-    var(--phone-top)
-    calc((100% - var(--phone-w)) / 2)
-    calc(100% - var(--phone-top) - var(--phone-h))
-    calc((100% - var(--phone-w)) / 2)
-    round 36px
-  );
-  -webkit-clip-path: inset(
-    var(--phone-top)
-    calc((100% - var(--phone-w)) / 2)
-    calc(100% - var(--phone-top) - var(--phone-h))
-    calc((100% - var(--phone-w)) / 2)
-    round 36px
-  );
-  pointer-events: none;
+  filter: contrast(1.05) saturate(1.15) brightness(1.02);
 }
 
-/* Vertical Smartphone Screen 3D Case & Frame (Exact Match to User Reference) */
-.spotlight-phone-frame {
-  position: absolute;
-  top: var(--phone-top);
-  left: 50%;
-  transform: translateX(-50%);
-  width: var(--phone-w);
-  height: var(--phone-h);
-  border-radius: 36px;
-  border: 1.5px solid rgba(255, 255, 255, 0.95);
-  /* 3D Realistic Smartphone Curved Bumper Case (Clean, crisp outer rim without screen haze) */
-  background: transparent !important;
-  box-shadow: 
-    0 0 0 1px rgba(0, 0, 0, 0.75),
-    0 0 0 3.5px #15181e,
-    0 0 0 5.5px #cbd5e1,
-    0 0 0 7.5px #ffffff,
-    0 0 0 9px #475569,
-    0 25px 65px rgba(0, 0, 0, 0.85),
-    0 10px 25px rgba(0, 0, 0, 0.6);
-  pointer-events: none;
-  z-index: 5;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 10px 14px 12px 14px;
-}
-
-/* Remove all fog, haze, and diagonal glare overlays to keep the photo 100% crystal clear */
-.spotlight-phone-frame::before,
-.spotlight-phone-frame::after {
+/* Spotlight Circular Lens Ring around Cursor - Yellow outline completely removed as requested */
+.spotlight-cursor-ring {
   display: none !important;
-  content: none !important;
 }
 
-/* Phone Top Status Bar */
-.phone-status-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  font-family: -apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif;
-  font-size: 0.82rem;
-  font-weight: 700;
-  color: #ffffff;
-  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
-  letter-spacing: 0.02em;
-  padding: 2px 4px 0 4px;
-  position: relative;
-  z-index: 3;
-}
-
-.phone-time {
-  font-weight: 700;
-  font-size: 0.86rem;
-  letter-spacing: -0.01em;
-}
-
-.phone-sensor-pill {
-  width: 52px;
-  height: 4.5px;
-  background: #0f1217;
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  border-radius: 10px;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.9), 0 1px 2px rgba(255, 255, 255, 0.2);
-}
-
-.phone-status-icons {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 0.72rem;
-  color: #ffffff;
-}
-
-/* Floating Vertical Transparent Glass Camera Dock (Authentic Real Mobile Theme) */
-.phone-camera-dock {
-  position: absolute;
-  left: 10px;
-  bottom: 26px;
-  width: 24px;
-  background: rgba(14, 18, 25, 0.48);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.24);
-  color: #ffffff;
-  border-radius: 20px;
-  padding: 6px 2px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 5px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 0 6px rgba(255, 255, 255, 0.1);
-  box-sizing: border-box;
-  pointer-events: auto;
-  user-select: none;
-  z-index: 6;
-}
-
-.dock-top-notch {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  color: rgba(255, 255, 255, 0.85);
-  padding-bottom: 2px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-}
-
-.dock-item {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 19px;
-  height: 19px;
-  cursor: pointer;
-  color: rgba(255, 255, 255, 0.9);
-  transition: all 0.2s ease;
-  border-radius: 50%;
-}
-
-.dock-item:hover {
-  color: #FFBD12;
-  background: rgba(255, 255, 255, 0.15);
-  transform: scale(1.15);
-}
-
-.dock-svg {
-  display: block;
-}
-
-.dock-badge-icon {
-  width: 12px;
-  height: 12px;
-  border: 1.2px solid currentColor;
-  border-radius: 2px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Plus Jakarta Sans', sans-serif;
-  font-size: 8px;
-  font-weight: 800;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 1;
-}
-
-/* Phone Home Indicator Bar at Bottom */
+/* Obsolete phone and card elements - completely hidden/removed */
+.spotlight-photo-ambient,
+.spotlight-ambient-overlay,
+.spotlight-portrait-card,
+.spotlight-phone-frame,
+.spotlight-photo-sharp,
+.phone-status-bar,
+.phone-focus-reticle,
+.phone-camera-dock,
 .phone-bottom-bar {
-  width: 100%;
-  display: flex;
-  justify-content: center;
+  display: none !important;
 }
 
-.phone-home-line {
-  width: 70px;
-  height: 3.5px;
-  background: rgba(255, 255, 255, 0.8);
-  border-radius: 4px;
+@media (prefers-reduced-motion: reduce) {
+  .spotlight-cursor-ring::before {
+    animation: none !important;
+  }
+  .spotlight-reveal-stage {
+    transition: none !important;
+  }
 }
 
 /* ==========================================================================
@@ -359,63 +243,6 @@
   margin: 0 2px;
 }
 
-/* ==========================================================================
-   PHONE FOCUS RETICLE OVERLAY (Viewfinder in center of phone)
-   ========================================================================== */
-.phone-focus-reticle {
-  position: absolute;
-  top: 42%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 40px;
-  height: 40px;
-  pointer-events: none;
-  z-index: 5;
-}
-
-.reticle-corner {
-  position: absolute;
-  width: 10px;
-  height: 10px;
-  border-color: #FFBD12;
-  border-style: solid;
-}
-
-.reticle-tl {
-  top: 0;
-  left: 0;
-  border-width: 2px 0 0 2px;
-}
-
-.reticle-tr {
-  top: 0;
-  right: 0;
-  border-width: 2px 2px 0 0;
-}
-
-.reticle-br {
-  bottom: 0;
-  right: 0;
-  border-width: 0 2px 2px 0;
-}
-
-.reticle-bl {
-  bottom: 0;
-  left: 0;
-  border-width: 0 0 2px 2px;
-}
-
-.reticle-dot {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 3.5px;
-  height: 3.5px;
-  border-radius: 50%;
-  background: #FFBD12;
-  box-shadow: 0 0 6px #FFBD12;
-}
 
 /* ==========================================================================
    EDITORIAL SIDE CONTENT (Reference Match: Left Column & Right Column)
@@ -432,19 +259,21 @@
 }
 
 /* --------------------------------------------------------------------------
-   LEFT COLUMN: Approach Tag, Headline, Narrative & Sub-tags
+   LEFT COLUMN: Approach Tag, Headline, Narrative & Sub-tags (Shifted to top-left)
    -------------------------------------------------------------------------- */
 .editorial-col-left {
   position: absolute;
-  right: calc(50% + var(--phone-w) / 2 + clamp(44px, 4.4vw, 78px));
-  top: 50%;
-  transform: translateY(-50%);
+  left: clamp(32px, 3.8vw, 54px);
+  right: auto;
+  top: clamp(76px, 10.5vh, 100px);
+  transform: none;
   width: clamp(280px, 24vw, 360px);
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
   text-align: left;
   pointer-events: auto;
+  z-index: 7;
 }
 
 .spotlight-approach-tag {
@@ -505,17 +334,18 @@
 }
 
 /* --------------------------------------------------------------------------
-   RIGHT COLUMN: SRINJOYEE with TechText, Roles, Desc, BUILD WITH ME, Button
+   RIGHT COLUMN: SRINJOYEE with TechText, Roles, Desc, BUILD WITH ME, Button (Shifted to top-right)
    -------------------------------------------------------------------------- */
 .editorial-col-right {
   position: absolute;
-  left: calc(50% + var(--phone-w) / 2 + clamp(44px, 4.4vw, 78px));
-  top: 50%;
-  transform: translateY(-50%);
-  width: clamp(300px, 26vw, 385px);
+  right: clamp(32px, 3.8vw, 54px);
+  left: auto;
+  top: clamp(76px, 10.5vh, 100px);
+  transform: none;
+  width: clamp(300px, 26vw, 390px);
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 16px;
   text-align: left;
   pointer-events: auto;
 }

@@ -804,6 +804,8 @@ const CircularCarousel = ({
   };
 
   const handleClick = event => {
+    event.preventDefault();
+    event.stopPropagation();
     const state = stateRef.current;
     if (state.suppressClick) {
       state.suppressClick = false;
@@ -902,12 +904,16 @@ const CircularCarousel = ({
       role="region"
       aria-roledescription="carousel"
       aria-label="Image carousel"
-      tabIndex={0}
+      tabIndex={-1}
       data-axis={axis}
       data-shape={shape}
       data-ready={ready ? '' : undefined}
       data-draggable={draggable ? '' : undefined}
       data-dragging={dragging ? '' : undefined}
+      onMouseDown={e => {
+        // Prevent default browser focus-stealing which violently scrolls viewport to pinned layers
+        e.preventDefault();
+      }}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={releasePointer}

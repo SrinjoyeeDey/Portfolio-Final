@@ -82,14 +82,15 @@ html, body {
 
 
 #story-layer-projects {
-  z-index: 30;
+  z-index: 35;
   background-color: var(--color-bg-light, #ECECE7);
   background-image: var(--color-bg-studio, linear-gradient(135deg, #f0f0eb 0%, #e2e3dd 50%, #e9e8e3 100%));
-  box-shadow: 0 -20px 50px rgba(34, 36, 40, 0.08);
+  box-shadow: none; /* Seamless single-page continuity with story-layer-about */
+  overflow: visible;
 }
 
 #story-layer-skills {
-  z-index: 40;
+  z-index: 36;
   background-color: var(--color-bg-light, #ECECE7);
   background-image: var(--color-bg-studio, linear-gradient(135deg, #f0f0eb 0%, #e2e3dd 50%, #e9e8e3 100%));
   box-shadow: 0 -20px 50px rgba(34, 36, 40, 0.08);
@@ -120,7 +121,8 @@ html, body {
 .story-layer a,
 .story-layer button,
 .story-layer input,
-.story-layer textarea {
+.story-layer textarea,
+.story-layer canvas {
   pointer-events: auto;
 }
 

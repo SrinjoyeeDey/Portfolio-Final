@@ -1,83 +1,249 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import CircularCarousel from './CircularCarousel';
 import DriftWall from './DriftWall';
 
 /**
  * Memory Wall Items
- * User can easily drop their own images, titles, and subtitles here,
- * or configure window.MEMORY_WALL_ITEMS before load.
+ * Authentic real-world photographs from Srinjoyee's hackathons, award ceremonies,
+ * engineering sprints, and campus journey (sourced from images/grid_img/).
  */
 export const MEMORY_WALL_ITEMS = [
   {
     src: 'images/srinjoyee-hackathon.png',
+    image: 'images/srinjoyee-hackathon.png',
     alt: 'Smart India Hackathon Grand Finale Winner Stage',
-    title: 'Hackathon Grand Finale',
-    subtitle: 'National 1st Place Winner'
+    title: 'Smart India Hackathon',
+    subtitle: 'Grand Finale Winner • National 1st Place'
+  },
+  {
+    src: 'images/srinjoyee-classroom.png',
+    image: 'images/srinjoyee-classroom.png',
+    alt: 'Candid Classroom Tech Sprint & Laptop Ideation',
+    title: 'Classroom Ideation',
+    subtitle: 'Candid Tech Sprint • AI & ML'
   },
   {
     src: 'images/srinjoyee-about-portrait.png',
+    image: 'images/srinjoyee-about-portrait.png',
     alt: 'Creative Studio & Tech Ideation',
     title: 'Creative Studio',
-    subtitle: 'Design & Code Journey'
+    subtitle: 'Design & Code • Experimental UI'
   },
   {
-    src: 'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=900&q=80&auto=format&fit=crop',
-    alt: 'Hackathon collaboration and brainstorming whiteboard',
-    title: 'Team Ideation',
-    subtitle: 'Midnight Sprint • Problem Solving'
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.14 PM-2.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.14 PM-2.jpeg',
+    alt: 'Hackathon Grand Finale Stage Presentation',
+    title: 'Grand Finale Stage',
+    subtitle: 'Pitching to the National Jury'
   },
   {
-    src: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=900&q=80&auto=format&fit=crop',
-    alt: 'Collaborative code sprint and system architecture',
-    title: 'Code Sprint',
-    subtitle: 'Pair Programming & Architecture'
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.14 PM.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.14 PM.jpeg',
+    alt: 'SIH Winners Celebration & Trophy',
+    title: 'National Champions',
+    subtitle: 'Smart India Hackathon 1st Prize'
   },
   {
-    src: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=900&q=80&auto=format&fit=crop',
-    alt: 'Keynote presentation and project showcase',
-    title: 'Demo Day & Pitch',
-    subtitle: 'Project Presentation'
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.15 PM.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.15 PM.jpeg',
+    alt: 'Prototype Pitch & Live Demo',
+    title: 'Live Evaluation',
+    subtitle: 'Demonstrating Edge AI Vision'
   },
   {
-    src: 'https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=900&q=80&auto=format&fit=crop',
-    alt: 'Hands-on hardware and robotics prototype testing',
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.16 PM-2.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.16 PM-2.jpeg',
+    alt: 'Team Strategy Sync & Design',
+    title: 'Architecture Review',
+    subtitle: 'System Design & Dataflow'
+  },
+  {
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.16 PM.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.16 PM.jpeg',
+    alt: 'Candid Campus Moment & Debrief',
+    title: 'Campus Moments',
+    subtitle: 'Post-Hackathon Reflections'
+  },
+  {
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.18 PM.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.18 PM.jpeg',
+    alt: 'Innovation Lab Review & Hardware Bench',
     title: 'Hardware & IoT Lab',
-    subtitle: 'Edge AI Testing'
+    subtitle: 'Microcontrollers & Sensors'
   },
   {
-    src: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=900&q=80&auto=format&fit=crop',
-    alt: 'Deep learning neural network telemetry',
-    title: 'Neural Lab',
-    subtitle: 'Model Training & Inference'
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.19 PM.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.19 PM.jpeg',
+    alt: 'Team Victory Trophy & Celebration',
+    title: 'Milestone Victory',
+    subtitle: 'Celebrating with the Team'
   },
   {
-    src: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?w=900&q=80&auto=format&fit=crop',
-    alt: 'Trophy celebration and achievement milestone',
-    title: 'Milestone Celebration',
-    subtitle: 'Recognition & Joy'
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.20 PM.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.20 PM.jpeg',
+    alt: 'National Podium Moment at Grand Finale',
+    title: 'Podium Honors',
+    subtitle: 'SIH National Grand Finale'
   },
   {
-    src: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=900&q=80&auto=format&fit=crop',
-    alt: 'Retro tech workstation and creative coding setup',
-    title: 'Creative Setup',
-    subtitle: 'Workstation & Hardware'
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.21 PM.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.21 PM.jpeg',
+    alt: 'Hackathon Jury Presentation & Defense',
+    title: 'Jury Defense',
+    subtitle: 'Addressing Technical Deep-Dives'
   },
   {
-    src: 'https://images.unsplash.com/photo-1558655146-d09347e92766?w=900&q=80&auto=format&fit=crop',
-    alt: 'Design thinking workshop with tactile UI mockups',
-    title: 'Design Workshop',
-    subtitle: 'Interface Prototyping'
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.22 PM.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.22 PM.jpeg',
+    alt: 'Tech Sprint Discussions & Ideation',
+    title: 'Collaborative Dev',
+    subtitle: 'Peer Brainstorming & Review'
+  },
+  {
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.23 PM-2.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.23 PM-2.jpeg',
+    alt: 'Felicitation & Certificate of Excellence',
+    title: 'Certificate of Honor',
+    subtitle: 'Institutional Felicitation'
+  },
+  {
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.23 PM.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.23 PM.jpeg',
+    alt: 'Grand Finale Showcase Arena',
+    title: 'Grand Finale Arena',
+    subtitle: 'All-India National Contestants'
+  },
+  {
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.25 PM-2.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.25 PM-2.jpeg',
+    alt: 'Engineering Lab Sprints & Prototyping',
+    title: 'Rapid Prototyping',
+    subtitle: 'Hardware Enclosures & Wiring'
+  },
+  {
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.25 PM.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.25 PM.jpeg',
+    alt: 'Winner Stage Accolades & Cheque',
+    title: 'Stage Accolades',
+    subtitle: '1st Prize Trophy & Award'
+  },
+  {
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.26 PM.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.26 PM.jpeg',
+    alt: 'Midnight Coding Marathon at Hackathon',
+    title: 'Midnight Coding',
+    subtitle: '36-Hour Hackathon Sprint'
+  },
+  {
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.29 PM.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.29 PM.jpeg',
+    alt: 'Post-Demo Celebrations with Team',
+    title: 'Team Celebrations',
+    subtitle: 'Winning Smiles After Demo'
+  },
+  {
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.30 PM-2.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.30 PM-2.jpeg',
+    alt: 'Keynote Stage Honor & Dignitaries',
+    title: 'Keynote Stage Honor',
+    subtitle: 'Awarded by Chief Dignitaries'
+  },
+  {
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.30 PM.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.30 PM.jpeg',
+    alt: 'Hands-on Hardware Integration',
+    title: 'Hardware Setup',
+    subtitle: 'Sensor Array & Breadboard'
+  },
+  {
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.31 PM.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.31 PM.jpeg',
+    alt: 'Candid Classroom Ideation & Whiteboard',
+    title: 'Ideation Room',
+    subtitle: 'Formulating Core Algorithms'
+  },
+  {
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.32 PM-2.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.32 PM-2.jpeg',
+    alt: 'Winner Cheque Presentation Ceremony',
+    title: 'Cash Prize Ceremony',
+    subtitle: 'Smart India Hackathon Award'
+  },
+  {
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.32 PM.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.32 PM.jpeg',
+    alt: 'Campus Hackathon Team Sprint',
+    title: 'Squad Sprint',
+    subtitle: 'Pair Programming & Testing'
+  },
+  {
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.33 PM.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.33 PM.jpeg',
+    alt: 'Jury Tech Q&A and Live Demo',
+    title: 'Jury Tech Q&A',
+    subtitle: 'Real-Time Edge Testing'
+  },
+  {
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.35 PM.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.35 PM.jpeg',
+    alt: 'National Champions Team Photo',
+    title: 'Championship Victory',
+    subtitle: 'Proud Team Moment'
+  },
+  {
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.36 PM.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.36 PM.jpeg',
+    alt: 'AI Pipeline Verification & Benchmarking',
+    title: 'Model Benchmarking',
+    subtitle: 'Inference Latency Audit'
+  },
+  {
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.38 PM.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.38 PM.jpeg',
+    alt: 'Demo Arena Standee & Presentation',
+    title: 'Showcase Booth',
+    subtitle: 'Live Product Walkthrough'
+  },
+  {
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.39 PM.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.39 PM.jpeg',
+    alt: 'Fellow Builders Community Meetup',
+    title: 'Builder Community',
+    subtitle: 'Developer Networking'
+  },
+  {
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.40 PM.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.40 PM.jpeg',
+    alt: 'Victory Smiles After 36 Hours of Code',
+    title: 'Unstoppable Energy',
+    subtitle: 'Post-Hackathon Energy'
+  },
+  {
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.42 PM.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.42 PM.jpeg',
+    alt: 'Stage Recognition & Honors',
+    title: 'Excellence Citation',
+    subtitle: 'National Stage Award'
+  },
+  {
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.43 PM.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.43 PM.jpeg',
+    alt: 'Mentor & Jury Strategic Feedback',
+    title: 'Mentor Debrief',
+    subtitle: 'Architecture Scalability Review'
+  },
+  {
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.45 PM.jpeg',
+    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.45 PM.jpeg',
+    alt: 'Journey Reflections & Future Builds',
+    title: 'Journey Ahead',
+    subtitle: 'Continuous Building & Growth'
   }
 ];
 
-const EXTRA_DRIFT_TILES = [
-  { image: 'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=900&q=80&auto=format&fit=crop', title: 'Tech Innovation' },
-  { image: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=900&q=80&auto=format&fit=crop', title: 'Collaborative Lab' },
-  { image: 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=900&q=80&auto=format&fit=crop', title: 'Development Sprint' },
-  { image: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=900&q=80&auto=format&fit=crop', title: 'Strategy & Architecture' },
-  { image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=900&q=80&auto=format&fit=crop', title: 'Global Connectivity' }
-];
+if (typeof window !== 'undefined') {
+  window.MEMORY_WALL_ITEMS = MEMORY_WALL_ITEMS;
+}
 
 export function initMemoryWall() {
   const mountEl = document.getElementById('memory-wall-carousel-root');
@@ -89,52 +255,37 @@ export function initMemoryWall() {
 
   const driftTiles = items.map(item => ({
     image: item.src || item.image,
-    title: item.title || item.alt || 'Memory'
-  })).concat(EXTRA_DRIFT_TILES);
+    title: item.title || item.alt || 'Memory',
+    subtitle: item.subtitle || ''
+  }));
 
   const root = createRoot(mountEl);
   root.render(
     <div className="memory-wall-composite-stage">
-      {/* Background: Spatial DriftWall (Clear, elegant drifting mural with bokeh blur until hovered) */}
+      {/* Drifting 3D Photo Mural across the entire viewport */}
       <div className="memory-wall-drift-backdrop" aria-hidden="true">
         <DriftWall
           items={driftTiles}
           columns={7}
           tileWidth={230}
           tileHeight={148}
-          gap={22}
+          gap={20}
           tilt={12}
           turn={-10}
+          roll={0}
           perspective={1400}
-          depth={160}
-          speed={24}
+          depth={130}
+          speed={28}
           direction="up"
-          variance={0.35}
-          parallax={0.4}
-          lift={56}
-          fade={0.4}
+          variance={0.4}
+          parallax={0}
+          pauseOnHover={false}
+          lift={0}
+          fade={0.25}
           dim={0.92}
-          grayscale={true}
+          grayscale={false}
           overlayColor="transparent"
-        />
-      </div>
-
-      {/* Foreground: Interactive Circular 3D Reel (Slightly smaller, centered hero) */}
-      <div className="memory-wall-carousel-front">
-        <CircularCarousel
-          items={items}
-          preset="cylinder"
-          intro="rise"
-          cardWidth={230}
-          aspectRatio={0.9}
-          gap={24}
-          speed={12}
-          autoplay="drift"
-          pauseOnHover={true}
-          draggable={true}
-          captions={true}
-          fadeColor="#ECECE7"
-          cornerRadius={16}
+          style={{ width: '100%', height: '100%' }}
         />
       </div>
     </div>

@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
-import Ballpit from './Ballpit';
 import ScrollStack, { ScrollStackItem } from './ScrollStack';
 import { isSoundEnabled, setSoundEnabled, playSlideSound } from './tactileSound';
 import './ProjectsShowcase.css';
@@ -167,51 +166,14 @@ const SHOWCASE_PROJECTS = [
 export default function ProjectsShowcase() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [soundOn, setSoundOn] = useState(false);
-  const [inView, setInView] = useState(false);
-  const [cascadeKey, setCascadeKey] = useState(0);
   const containerRef = useRef(null);
   const stackRef = useRef(null);
 
   const total = SHOWCASE_PROJECTS.length;
 
-  // Trigger full-viewport falling cascade as user scrolls to see the Projects section
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-
-    let currentlyInView = false;
-
-    const checkScrollVisibility = () => {
-      const rect = el.getBoundingClientRect();
-      const windowHeight = window.innerHeight || document.documentElement.clientHeight;
-
-      // Triggers as soon as the user scrolls down and the Projects section enters view
-      const isVisible = rect.top < windowHeight * 0.95 && rect.bottom > windowHeight * 0.05;
-
-      if (isVisible) {
-        if (!currentlyInView) {
-          currentlyInView = true;
-          setCascadeKey((prev) => prev + 1);
-          setInView(true);
-        }
-      } else {
-        if (rect.bottom < 0 || rect.top > windowHeight) {
-          if (currentlyInView) {
-            currentlyInView = false;
-            setInView(false);
-          }
-        }
-      }
-    };
-
-    checkScrollVisibility();
-    window.addEventListener('scroll', checkScrollVisibility, { passive: true });
-    window.addEventListener('resize', checkScrollVisibility, { passive: true });
-
-    return () => {
-      window.removeEventListener('scroll', checkScrollVisibility);
-      window.removeEventListener('resize', checkScrollVisibility);
-    };
+  const handleIndexChange = useCallback((idx) => {
+    setActiveIndex(idx);
+    playSlideSound();
   }, []);
 
   // Navigate to slide index
@@ -266,13 +228,22 @@ export default function ProjectsShowcase() {
     }
   };
 
-  // Keyboard navigation when projects container is visible
+  // Keyboard navigation when projects container is actively visible and focused
   useEffect(() => {
     const handleKeyDown = (e) => {
       const container = containerRef.current;
       if (!container) return;
+
+      // Do NOT intercept if user is interacting with another section/widget (e.g. Memory Wall, Mimo, etc.)
+      const activeEl = document.activeElement;
+      if (activeEl && (activeEl.closest?.('#memory-wall') || activeEl.closest?.('.circular-carousel') || activeEl.closest?.('#mimo-chatbot-container') || activeEl.closest?.('.modal-overlay'))) {
+        return;
+      }
+
       const rect = container.getBoundingClientRect();
-      if (rect.top < window.innerHeight && rect.bottom > 0) {
+      // Only react if Projects container is dominant in the viewport (at least 75% visible)
+      const isDominant = rect.top <= 80 && rect.bottom >= window.innerHeight * 0.75;
+      if (isDominant) {
         if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
           if (activeIndex < total - 1) {
             e.preventDefault();
@@ -299,39 +270,47 @@ export default function ProjectsShowcase() {
       id="projects-showcase-container"
       ref={containerRef}
     >
-      {/* Top Controls: Sound Toggle */}
-      <div className="showcase-top-controls">
-        <button
-          type="button"
-          className={`showcase-sound-toggle-btn cursor-target ${soundOn ? 'sound-active' : ''}`}
-          onClick={handleToggleSound}
-          data-cursor-label={soundOn ? 'Mute' : 'Audio'}
-          aria-label={soundOn ? 'Disable Sound Effect' : 'Enable Sound Effect'}
-        >
-          <i className={`fa-solid ${soundOn ? 'fa-volume-high' : 'fa-volume-xmark'}`}></i>
-          <span>{soundOn ? 'Sound: ON' : 'Sound: OFF'}</span>
-        </button>
-      </div>
+      {/* Top Section Header Bar: Section Brand Title (Left) & Audio Controls (Right) */}
+      <header className="showcase-top-header" aria-label="Projects Section Header">
+        <div className="showcase-header-left">
+          <div className="showcase-section-pill">
+            <span className="showcase-pill-dot" />
+            <i className="fa-solid fa-layer-group" style={{ fontSize: '11px', color: '#FFC52E' }} />
+            <span className="showcase-pill-label">SELECTED WORKS</span>
+            <span className="showcase-pill-divider">/</span>
+            <span className="showcase-pill-count">06 PROJECTS</span>
+          </div>
 
-      {/* React Bits ScrollStack: Vertical stacking card experience */}
+          <div className="showcase-header-title-row">
+            <h2 className="showcase-section-title">
+              PROJECTS<span className="showcase-yellow-dot">.</span>
+            </h2>
+            <div className="showcase-header-line" aria-hidden="true" />
+            <span className="showcase-section-tagline">
+              Featured Innovations & Interactive Systems
+            </span>
+          </div>
+        </div>
+
+        <div className="showcase-header-right">
+          <button
+            type="button"
+            className={`showcase-sound-toggle-btn cursor-target ${soundOn ? 'sound-active' : ''}`}
+            onClick={handleToggleSound}
+            data-cursor-label={soundOn ? 'Mute' : 'Audio'}
+            aria-label={soundOn ? 'Disable Sound Effect' : 'Enable Sound Effect'}
+          >
+            <i className={`fa-solid ${soundOn ? 'fa-volume-high' : 'fa-volume-xmark'}`}></i>
+            <span>{soundOn ? 'Sound: ON' : 'Sound: OFF'}</span>
+          </button>
+        </div>
+      </header>
+
+      {/* GSAP ScrollTrigger + Lenis: Vertical stacking card experience */}
       <ScrollStack
         ref={stackRef}
-        useWindowScroll={false}
-        itemDistance={110}
-        itemStackDistance={22}
-        stackPosition="38px"
-        itemScale={0.045}
-        baseScale={0.82}
-        dimAmount={0.16}
-        tiltAmount={2.0}
-        rotationAmount={1.2}
-        holdDistance={180}
-        smoothScroll={true}
         className="projects-scroll-stack"
-        onIndexChange={(idx) => {
-          setActiveIndex(idx);
-          playSlideSound();
-        }}
+        onIndexChange={handleIndexChange}
       >
         {SHOWCASE_PROJECTS.map((project, index) => {
           const displayIdx = String(index + 1).padStart(2, '0');
@@ -600,26 +579,29 @@ export default function ProjectsShowcase() {
                         </div>
                       )}
 
-                      {/* Punarchakra Interactive Ballpit Canvas */}
+                      {/* Punarchakra Eco-Tech Recycling Platform */}
                       {project.visualType === 'ballpit' && (
-                        <div className="mockup-body-ballpit">
-                          <div className="ballpit-floating-overlay">
-                            <span className="dot" />
-                            <span>Physics Sandbox • Interactive Recycler</span>
+                        <div className="mockup-body-vault" style={{ background: '#0d1514' }}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+                            <span style={{ color: '#14B8A6', fontWeight: 700, fontSize: 12 }}>
+                              <i className="fa-solid fa-recycle"></i> PUNARCHAKRA CIRCULAR ENGINE
+                            </span>
+                            <span style={{ fontSize: 11, background: 'rgba(20,184,166,0.15)', color: '#14B8A6', padding: '3px 8px', borderRadius: 4 }}>
+                              ECO VERIFIED
+                            </span>
                           </div>
-                          <Ballpit
-                            count={65}
-                            colors={['#FFC52E', '#242529', '#FFFFFF', '#14B8A6']}
-                            material="satin"
-                            gravity={0.3}
-                            friction={0.995}
-                            wallBounce={0.9}
-                            bounce={0.8}
-                            drift={0.2}
-                            followCursor={true}
-                            grab={true}
-                            clickEffect="burst"
-                          />
+
+                          <div style={{ padding: '16px', background: 'rgba(255,255,255,0.04)', borderRadius: 12, border: '1px solid rgba(255,255,255,0.08)' }}>
+                            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.5)', marginBottom: 6 }}>AI E-WASTE CLASSIFICATION</div>
+                            <div style={{ fontSize: 14, fontWeight: 600, color: '#FFFFFF', marginBottom: 10 }}>Automated Material Recognition: 99.4%</div>
+                            <div style={{ height: 6, background: 'rgba(255,255,255,0.1)', borderRadius: 3, overflow: 'hidden' }}>
+                              <div style={{ width: '94%', height: '100%', background: '#14B8A6', borderRadius: 3 }}></div>
+                            </div>
+                          </div>
+
+                          <div className="vault-footer-text" style={{ color: '#14B8A6' }}>
+                            <i className="fa-solid fa-leaf"></i> Sustainable circular reward lifecycle operational
+                          </div>
                         </div>
                       )}
                     </div>
@@ -630,35 +612,6 @@ export default function ProjectsShowcase() {
           );
         })}
       </ScrollStack>
-
-      {/* Full-Viewport Interactive 3D Balls Cascade Layer: Falls from top on scroll, rests along bottom edge */}
-      {inView && (
-        <div className="showcase-balls-full-stage" aria-label="Interactive Cascading 3D Balls">
-          <Ballpit
-            key={cascadeKey}
-            count={85}
-            colors={['#FFC52E', '#242529', '#FFFFFF', '#D5E859', '#14B8A6', '#FF7A00', '#D8D3C5', '#6366F1', '#EC4899']}
-            material="satin"
-            minSize={0.42}
-            maxSize={0.82}
-            gravity={0.28}
-            friction={0.996}
-            wallBounce={0.92}
-            bounce={0.85}
-            depth={2.0}
-            drift={0.2}
-            followCursor={true}
-            cursorSize={1.4}
-            grab={true}
-            clickEffect="burst"
-            lightIntensity={1.3}
-            exposure={1.1}
-            shadows={0.45}
-            intro={true}
-            className="showcase-ballpit-full-canvas"
-          />
-        </div>
-      )}
 
       {/* Floating Bottom Navigation Rail (Counter & Prev/Next Arrows) */}
       <div className="showcase-bottom-rail">
