@@ -23,13 +23,6 @@ export const MEMORY_WALL_ITEMS = [
     subtitle: 'Candid Tech Sprint • AI & ML'
   },
   {
-    src: 'images/srinjoyee-about-portrait.png',
-    image: 'images/srinjoyee-about-portrait.png',
-    alt: 'Creative Studio & Tech Ideation',
-    title: 'Creative Studio',
-    subtitle: 'Design & Code • Experimental UI'
-  },
-  {
     src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.14 PM-2.jpeg',
     image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.14 PM-2.jpeg',
     alt: 'Hackathon Grand Finale Stage Presentation',
@@ -126,13 +119,6 @@ export const MEMORY_WALL_ITEMS = [
     alt: 'Winner Stage Accolades & Cheque',
     title: 'Stage Accolades',
     subtitle: '1st Prize Trophy & Award'
-  },
-  {
-    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.26 PM.jpeg',
-    image: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.26 PM.jpeg',
-    alt: 'Midnight Coding Marathon at Hackathon',
-    title: 'Midnight Coding',
-    subtitle: '36-Hour Hackathon Sprint'
   },
   {
     src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.29 PM.jpeg',

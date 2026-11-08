@@ -1,0 +1,486 @@
+/* ==========================================================================
+   PORTFOLIO THEME HARMONY — Neubrutalist / Playful Tactile Design System
+   Matches the entire portfolio with the Home section:
+   - Warm studio cream background (#ECECE7)
+   - Bold charcoal borders (2px to 2.5px solid #222428)
+   - Tactile offset drop shadows (3px 3px 0px #222428, 4px 4px 0px, etc.)
+   - Playful chunky Fredoka typography with #FFBD12 yellow dot accents
+   - Tactile pills, chips, badges, and smooth spring hover interactions
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. STATS BAR SECTION
+   -------------------------------------------------------------------------- */
+.stats-bar-section {
+  position: relative;
+  background: var(--color-bg-light, #ECECE7);
+  background-image: var(--color-bg-studio);
+  border-top: 2.5px solid var(--color-charcoal, #222428);
+  border-bottom: 2.5px solid var(--color-charcoal, #222428);
+  padding: 40px 0;
+  z-index: 20;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.stat-card {
+  position: relative;
+  overflow: hidden;
+  background: #FFFFFF;
+  border: 2.5px solid var(--color-charcoal, #222428);
+  border-radius: 20px;
+  padding: 24px 18px;
+  text-align: center;
+  box-shadow: 4px 4px 0px var(--color-charcoal, #222428);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), 
+              box-shadow 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+              background-color 0.35s ease;
+  cursor: pointer;
+  z-index: 1;
+}
+
+/* Expanding circle ripple from center — matching "Explore My Work" expanding dot transition */
+.stat-card::before,
+.stat-card .stat-expanding-dot {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--color-yellow, #FFBD12);
+  transform: translate(-50%, -50%) scale(0);
+  transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.35s ease;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px) rotate(-0.5deg);
+  box-shadow: 6px 6px 0px var(--color-charcoal, #222428);
+  background-color: var(--color-yellow, #FFBD12);
+}
+
+.stat-card:hover::before,
+.stat-card:hover .stat-expanding-dot {
+  transform: translate(-50%, -50%) scale(35);
+  opacity: 1;
+}
+
+.stat-card > * {
+  position: relative;
+  z-index: 2;
+  transition: color 0.3s ease;
+}
+
+.stat-card:hover .stat-number {
+  color: var(--color-charcoal, #222428) !important;
+}
+
+.stat-card:hover .stat-label {
+  color: var(--color-charcoal, #222428) !important;
+}
+
+.stat-card:hover .stat-number::after {
+  background-color: var(--color-charcoal, #222428);
+  border-color: var(--color-charcoal, #222428);
+}
+
+.stat-number {
+  font-family: var(--font-heading, 'Fredoka', cursive);
+  font-size: clamp(2.2rem, 3.2vw, 3rem);
+  font-weight: 800;
+  color: var(--color-charcoal, #222428) !important;
+  line-height: 1;
+  margin-bottom: 6px;
+  display: inline-flex;
+  align-items: baseline;
+  justify-content: center;
+}
+
+.stat-number::after {
+  content: '';
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  background-color: var(--color-yellow, #FFBD12);
+  border-radius: 50%;
+  margin-left: 5px;
+  border: 1.5px solid var(--color-charcoal, #222428);
+}
+
+.stat-label {
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--color-charcoal-muted, #5C6069) !important;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. EDITORIAL SPOTLIGHT SECTION
+   -------------------------------------------------------------------------- */
+.spotlight-approach-tag {
+  background: #FFFFFF !important;
+  color: #222428 !important;
+  border: 2px solid #222428 !important;
+  box-shadow: 3px 3px 0px #222428 !important;
+  border-radius: 999px !important;
+  padding: 6px 16px !important;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.08em !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+}
+
+.spotlight-approach-tag .approach-num,
+.spotlight-approach-tag .approach-bracket,
+.spotlight-approach-tag .approach-dash {
+  color: #FFBD12 !important;
+  font-weight: 800 !important;
+}
+
+.headline-blue,
+.me-italic-blue {
+  color: #FFBD12 !important;
+  text-shadow: 0 0 24px rgba(255, 189, 18, 0.5) !important;
+}
+
+.spotlight-status-dot {
+  background: #22C55E !important;
+  box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7) !important;
+  animation: radarPulse 2s infinite ease-out !important;
+}
+
+.spotlight-explore-btn {
+  background: #FFBD12 !important;
+  color: #222428 !important;
+  border: 2.5px solid #222428 !important;
+  box-shadow: 4px 4px 0px #222428 !important;
+  border-radius: 999px !important;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif) !important;
+  font-weight: 800 !important;
+  letter-spacing: 0.04em !important;
+  padding: 14px 28px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+  text-decoration: none !important;
+}
+
+.spotlight-explore-btn:hover {
+  background: #FFFFFF !important;
+  color: #222428 !important;
+  transform: translateY(-3px) scale(1.02) !important;
+  box-shadow: 6px 6px 0px #222428 !important;
+}
+
+/* --------------------------------------------------------------------------
+   4. CLAY TERMINAL SECTION
+   -------------------------------------------------------------------------- */
+.clay-terminal-section {
+  background-color: var(--color-bg-light, #ECECE7) !important;
+  background-image: var(--color-bg-studio) !important;
+  border-top: 2.5px solid var(--color-charcoal, #222428) !important;
+  border-bottom: 2.5px solid var(--color-charcoal, #222428) !important;
+  position: relative;
+}
+
+.clay-screen-window {
+  background: #FFFFFF !important;
+  border: 3px solid var(--color-charcoal, #222428) !important;
+  border-radius: 28px !important;
+  box-shadow: 8px 8px 0px var(--color-charcoal, #222428) !important;
+  padding: 22px !important;
+}
+
+.clay-screen-header {
+  border-bottom: 2px solid var(--color-charcoal, #222428) !important;
+  padding-bottom: 14px !important;
+}
+
+.clay-traffic-lights .light {
+  border: 1.5px solid var(--color-charcoal, #222428) !important;
+  box-shadow: 1px 1px 0px var(--color-charcoal, #222428) !important;
+}
+
+.clay-window-title {
+  font-family: var(--font-heading, 'Fredoka', cursive) !important;
+  font-weight: 800 !important;
+  font-size: 0.95rem !important;
+  color: var(--color-charcoal, #222428) !important;
+  letter-spacing: 0.04em !important;
+}
+
+.clay-screen-body-wrap {
+  border: 2.5px solid var(--color-charcoal, #222428) !important;
+  border-radius: 18px !important;
+  box-shadow: inset 0 0 16px rgba(0, 0, 0, 0.85) !important;
+}
+
+.clay-terminal-input-bar {
+  background: #F4F4F0 !important;
+  border: 2px solid var(--color-charcoal, #222428) !important;
+  border-radius: 999px !important;
+  box-shadow: 3px 3px 0px var(--color-charcoal, #222428) !important;
+  padding: 8px 18px !important;
+  margin-top: 12px !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+}
+
+.clay-bar-icon-right {
+  background: var(--color-yellow, #FFBD12) !important;
+  color: var(--color-charcoal, #222428) !important;
+  border: 2px solid var(--color-charcoal, #222428) !important;
+  box-shadow: 2px 2px 0px var(--color-charcoal, #222428) !important;
+}
+
+.clay-bar-icon-right:hover {
+  background: #FFFFFF !important;
+  transform: scale(1.08) !important;
+}
+
+.clay-terminal-quick-tags {
+  background: #F4F4F0 !important;
+  border: 2px solid var(--color-charcoal, #222428) !important;
+  border-radius: 18px !important;
+  box-shadow: 3px 3px 0px var(--color-charcoal, #222428) !important;
+  padding: 12px 18px !important;
+  margin-top: 12px !important;
+}
+
+.clay-tag-btn {
+  background: #FFFFFF !important;
+  color: var(--color-charcoal, #222428) !important;
+  border: 2px solid var(--color-charcoal, #222428) !important;
+  box-shadow: 2px 2px 0px var(--color-charcoal, #222428) !important;
+  border-radius: 999px !important;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif) !important;
+  font-weight: 800 !important;
+  font-size: 0.8rem !important;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+.clay-tag-btn:hover {
+  background: var(--color-yellow, #FFBD12) !important;
+  color: var(--color-charcoal, #222428) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 4px 4px 0px var(--color-charcoal, #222428) !important;
+}
+
+/* --------------------------------------------------------------------------
+   5. CONTACT SECTION
+   -------------------------------------------------------------------------- */
+.contact-section {
+  position: relative;
+  background-color: var(--color-bg-light, #ECECE7);
+  background-image: var(--color-bg-studio);
+}
+
+.contact-card-wrapper {
+  background: #FFFFFF !important;
+  color: var(--color-charcoal, #222428) !important;
+  border: 3px solid var(--color-charcoal, #222428) !important;
+  border-radius: 28px !important;
+  box-shadow: 8px 8px 0px var(--color-charcoal, #222428) !important;
+  padding: 46px 50px !important;
+}
+
+.contact-card-header .contact-title {
+  font-family: var(--font-heading, 'Fredoka', cursive) !important;
+  color: var(--color-charcoal, #222428) !important;
+  font-size: clamp(2rem, 3.2vw, 2.6rem) !important;
+  font-weight: 800 !important;
+  line-height: 1.15 !important;
+}
+
+.contact-card-header .contact-subtext {
+  color: var(--color-charcoal-muted, #5C6069) !important;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif) !important;
+  font-size: 0.98rem !important;
+  line-height: 1.6 !important;
+}
+
+.contact-badge-pill {
+  background: var(--color-yellow, #FFBD12) !important;
+  border: 2px solid var(--color-charcoal, #222428) !important;
+  box-shadow: 2.5px 2.5px 0px var(--color-charcoal, #222428) !important;
+  color: var(--color-charcoal, #222428) !important;
+  font-weight: 800 !important;
+  border-radius: 999px !important;
+  letter-spacing: 0.08em !important;
+}
+
+.form-label {
+  font-family: var(--font-heading, 'Fredoka', cursive) !important;
+  color: var(--color-charcoal, #222428) !important;
+  font-size: 0.96rem !important;
+  font-weight: 700 !important;
+}
+
+.form-input {
+  background: #F4F4F0 !important;
+  color: var(--color-charcoal, #222428) !important;
+  border: 2px solid var(--color-charcoal, #222428) !important;
+  border-radius: 14px !important;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif) !important;
+  font-weight: 600 !important;
+  font-size: 0.95rem !important;
+  padding: 12px 16px !important;
+  box-shadow: 2px 2px 0px var(--color-charcoal, #222428) !important;
+  transition: all 0.2s ease !important;
+}
+
+.form-input::placeholder {
+  color: #8C9099 !important;
+}
+
+.form-input:focus {
+  background: #FFFFFF !important;
+  border-color: var(--color-charcoal, #222428) !important;
+  box-shadow: 4px 4px 0px var(--color-yellow, #FFBD12) !important;
+  outline: none !important;
+}
+
+.project-type-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.type-pill-option {
+  position: relative;
+  cursor: pointer;
+}
+
+.type-pill-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.type-pill-option span {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  background: #F4F4F0;
+  color: var(--color-charcoal, #222428);
+  border: 2px solid var(--color-charcoal, #222428);
+  border-radius: 999px;
+  box-shadow: 2px 2px 0px var(--color-charcoal, #222428);
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.85rem;
+  font-weight: 700;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  user-select: none;
+}
+
+.type-pill-option:hover span {
+  transform: translateY(-2px);
+  box-shadow: 3px 3px 0px var(--color-charcoal, #222428);
+}
+
+.type-pill-option input[type="radio"]:checked + span {
+  background: var(--color-yellow, #FFBD12);
+  color: var(--color-charcoal, #222428);
+  box-shadow: 3px 3px 0px var(--color-charcoal, #222428);
+  transform: translateY(-2px);
+}
+
+.contact-meta-pill {
+  background: #F4F4F0 !important;
+  color: var(--color-charcoal, #222428) !important;
+  border: 2px solid var(--color-charcoal, #222428) !important;
+  box-shadow: 2px 2px 0px var(--color-charcoal, #222428) !important;
+  border-radius: 999px !important;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif) !important;
+  font-weight: 700 !important;
+  padding: 8px 16px !important;
+}
+
+.contact-meta-pill a,
+.contact-meta-pill span {
+  color: var(--color-charcoal, #222428) !important;
+  text-decoration: none !important;
+  font-weight: 700 !important;
+}
+
+.contact-meta-pill a:hover {
+  color: var(--color-charcoal, #222428) !important;
+  text-decoration: underline !important;
+}
+
+.contact-meta-pill i {
+  color: var(--color-yellow-hover, #E5A500) !important;
+}
+
+.social-link-btn {
+  background: #FFFFFF !important;
+  color: var(--color-charcoal, #222428) !important;
+  border: 2px solid var(--color-charcoal, #222428) !important;
+  box-shadow: 3px 3px 0px var(--color-charcoal, #222428) !important;
+  border-radius: 50% !important;
+  width: 44px !important;
+  height: 44px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+.social-link-btn:hover {
+  background: var(--color-yellow, #FFBD12) !important;
+  color: var(--color-charcoal, #222428) !important;
+  transform: translateY(-3px) scale(1.08) !important;
+  box-shadow: 5px 5px 0px var(--color-charcoal, #222428) !important;
+}
+
+/* --------------------------------------------------------------------------
+   6. FOOTER SECTION
+   -------------------------------------------------------------------------- */
+.footer-section {
+  background: var(--color-bg-light, #ECECE7);
+  background-image: var(--color-bg-studio);
+  border-top: 2.5px solid var(--color-charcoal, #222428);
+  padding: 40px 0;
+}
+
+.back-to-top-btn {
+  background: var(--color-yellow, #FFBD12) !important;
+  color: var(--color-charcoal, #222428) !important;
+  border: 2px solid var(--color-charcoal, #222428) !important;
+  box-shadow: 3px 3px 0px var(--color-charcoal, #222428) !important;
+  border-radius: 50% !important;
+  width: 46px !important;
+  height: 46px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
+}
+
+.back-to-top-btn:hover {
+  background: #FFFFFF !important;
+  transform: translateY(-4px) scale(1.08) !important;
+  box-shadow: 5px 5px 0px var(--color-charcoal, #222428) !important;
+}
+

@@ -16,7 +16,10 @@
     "build:tech-text": "node scripts/build-tech-text.js",
     "build:memory-wall": "node scripts/build-memory-wall.js",
     "build:grid-scan": "node scripts/build-grid-scan.js",
-    "build:all": "npm run build:lanyard && npm run build:ripple-grid && npm run build:text-pressure && npm run build:target-cursor && npm run build:projects-showcase && npm run build:circular-text && npm run build:tech-text && npm run build:memory-wall && npm run build:grid-scan && npm run build:preloader",
+    "build:pixel-transition": "node scripts/build-pixel-transition.js",
+    "build:letter-glitch": "node scripts/build-letter-glitch.js",
+    "build:footer-shuffle": "node scripts/build-footer-shuffle.js",
+    "build:all": "npm run build:lanyard && npm run build:ripple-grid && npm run build:text-pressure && npm run build:target-cursor && npm run build:projects-showcase && npm run build:circular-text && npm run build:tech-text && npm run build:memory-wall && npm run build:grid-scan && npm run build:pixel-transition && npm run build:letter-glitch && npm run build:footer-shuffle && npm run build:preloader",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build:preloader": "node scripts/build-preloader.js"
   },
@@ -25,6 +28,7 @@
   "license": "ISC",
   "type": "commonjs",
   "dependencies": {
+    "@gsap/react": "^2.1.2",
     "@react-three/drei": "^10.7.8",
     "@react-three/fiber": "^9.7.0",
     "@react-three/rapier": "^2.2.0",

@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@600;700&family=Fredoka:wght@500;600;700;800&family=Gochi+Hand&family=Patrick+Hand&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700;1,800&family=Syne:wght@700;800;900&family=Roboto+Flex:opsz,wdth,wght,slnt@8..144,25..151,100..1000,-10..0&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@600;700&family=Fredoka:wght@500;600;700;800&family=Gochi+Hand&family=Patrick+Hand&family=Permanent+Marker&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700;1,800&family=Syne:wght@700;800;900&family=Roboto+Flex:opsz,wdth,wght,slnt@8..144,25..151,100..1000,-10..0&display=swap"
     rel="stylesheet">
 
   <!-- FontAwesome Icons for UI & Doodles -->
@@ -26,16 +26,19 @@
   <link rel="stylesheet" href="lib/lenis.css">
 
   <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=57">
+  <link rel="stylesheet" href="styles.css?v=81">
   <link rel="stylesheet" href="journey-timeline.css?v=2">
   <link rel="stylesheet" href="grid-scan-bundle.css">
-  <link rel="stylesheet" href="projects-showcase-bundle.css?v=65">
-  <link rel="stylesheet" href="scroll-reveal.css?v=6">
+  <link rel="stylesheet" href="projects-showcase-bundle.css?v=70">
+  <link rel="stylesheet" href="scroll-reveal.css?v=13">
   <link rel="stylesheet" href="circular-text-bundle.css?v=2">
-  <link rel="stylesheet" href="target-cursor-bundle.css">
-  <link rel="stylesheet" href="memory-wall-bundle.css?v=60">
+  <link rel="stylesheet" href="target-cursor-bundle.css?v=29">
+  <link rel="stylesheet" href="memory-wall-bundle.css?v=61">
   <link rel="stylesheet" href="memory-wall.css?v=60">
-  <link rel="stylesheet" href="tech-arsenal.css?v=1">
+  <link rel="stylesheet" href="pixel-transition-bundle.css?v=2">
+  <link rel="stylesheet" href="letter-glitch-bundle.css?v=1">
+  <link rel="stylesheet" href="tech-arsenal.css?v=5">
+  <link rel="stylesheet" href="footer-shuffle-bundle.css?v=1">
   <link rel="stylesheet" href="preloader-bundle.css?v=7">
 </head>
 
@@ -95,6 +98,20 @@
       </nav>
 
       <div class="nav-actions">
+        <!-- Global Sound ON/OFF Toggle -->
+        <button type="button" class="sound-toggle-btn" id="sound-toggle-btn" aria-label="Toggle Sound Effects" aria-pressed="false" title="Sound Effects: OFF (Click to Enable)">
+          <span class="sound-toggle-icon-wrap" aria-hidden="true">
+            <i class="fa-solid fa-volume-xmark sound-icon-muted"></i>
+            <i class="fa-solid fa-volume-high sound-icon-active"></i>
+            <span class="sound-wave-bars">
+              <span class="sw-bar"></span>
+              <span class="sw-bar"></span>
+              <span class="sw-bar"></span>
+            </span>
+          </span>
+          <span class="sound-toggle-label">SFX: OFF</span>
+        </button>
+
         <a href="#contact" class="btn btn-pill-dark interactive-hover-btn">
           <span class="btn-text-initial">
             <span>Let's Connect</span>
@@ -341,36 +358,13 @@
       </svg>
     </div>
 
-    <!-- QUICK STATS BAR (Attached to Hero Stage) -->
-    <section class="stats-bar-section">
-      <div class="container">
-        <div class="stats-grid">
-          <div class="stat-card">
-            <h3 class="stat-number" data-target="3" data-suffix="+">03+</h3>
-            <p class="stat-label">Years Building</p>
-          </div>
-          <div class="stat-card">
-            <h3 class="stat-number" data-target="20" data-suffix="+">20+</h3>
-            <p class="stat-label">Projects & Builds</p>
-          </div>
-          <div class="stat-card">
-            <h3 class="stat-number" data-target="5" data-suffix="+">05+</h3>
-            <p class="stat-label">Awards & Recognitions</p>
-          </div>
-          <div class="stat-card">
-            <h3 class="stat-number" data-target="20" data-suffix="+">20+</h3>
-            <p class="stat-label">Open-Source Contributions</p>
-          </div>
-        </div>
-      </div>
-    </section>
   </div><!-- /story-layer-hero -->
 
 
 
   <!-- LAYER 2: ABOUT VIEWPORT STAGE -->
   <div class="story-layer" id="story-layer-about" data-layer-id="about">
-    <!-- ABOUT SECTION (Matching User Reference Design Exactly) -->
+    <!-- ABOUT SECTION (Blank clean canvas) -->
     <section class="about-section section-padding" id="about">
       <div class="container">
 
@@ -503,16 +497,15 @@
               <h2 class="tilted-hello-text">HELLO<span class="yellow-dot">.</span></h2>
             </div>
 
-            <p class="about-bio-text">
-              Hello, I'm <strong>Srinjoyee</strong>, a Computer Science undergraduate who likes turning ideas into
-              things people can actually interact with. I build across web & Android development, AI/ML, Generative AI,
-              game development, 3D modeling, and creative technology.
-            </p>
-            <p class="about-bio-text">
-              From building AI products and practical ML models to crafting interactive 3D in Unity and Blender, I love
-              working where code meets design. Still learning, still building, and occasionally debugging something that
-              was working perfectly five minutes ago.
-            </p>
+            <!-- Prominent Bio Text on Transparent Background -->
+            <div class="about-bio-wrap">
+              <p class="about-bio-lead">
+                Hello, I'm <strong class="bio-name-highlight">Srinjoyee</strong>, a Computer Science undergraduate who likes turning ideas into things people can actually interact with. I build across <span class="bio-keyword-tag">web & Android development</span>, <span class="bio-keyword-tag">AI/ML</span>, <span class="bio-keyword-tag">Generative AI</span>, <span class="bio-keyword-tag">game development</span>, <span class="bio-keyword-tag">3D modeling</span>, and <span class="bio-keyword-tag">creative technology</span>.
+              </p>
+              <p class="about-bio-body">
+                From building <strong>AI products</strong> and <strong>practical ML models</strong> to crafting <strong>interactive 3D in Unity and Blender</strong>, I love working <span class="bio-phrase-highlight">where code meets design</span>. Still learning, still building, and occasionally debugging something that was working perfectly five minutes ago.
+              </p>
+            </div>
 
             <!-- Education & Software Skills Row -->
             <div class="about-sub-grid">
@@ -595,8 +588,8 @@
 
   <!-- LAYER 3: PROJECTS / WORKS VIEWPORT STAGE -->
   <div class="story-layer" id="story-layer-projects" data-layer-id="projects">
-    <section class="projects-section-immersive" id="projects" style="position: relative; padding: 0; margin: 0; min-height: 100vh; height: 100vh; width: 100%; overflow: hidden;">
-      <!-- React Bits ScrollStack Interactive Project Showcase Root -->
+    <section class="projects-section-immersive" id="projects" style="position: relative; padding: 0; margin: 0; min-height: 100vh; width: 100%;">
+      <!-- Interactive Expandable Editorial Projects Showcase Root -->
       <div id="projects-showcase-root"></div>
     </section>
   </div><!-- /story-layer-projects -->
@@ -637,174 +630,167 @@
       </div>
     </section>
 
-    <!-- SKILLS & TOOLS SECTION -->
-    <section class="skills-section light-theme-skills" id="skills">
+    <!-- TECH STACK & TOOLS SECTION (Interactive Infinite Logo Showcase) -->
+    <section class="tech-showcase-section" id="skills" aria-label="Technology Stack & Tools">
+      <!-- Ambient Interactive WebGL2 LetterGlitch Background Canvas -->
+      <div id="tech-showcase-letterglitch-root" class="tech-showcase-letterglitch-bg" aria-hidden="true"></div>
 
-      <!-- Interactive WebGL DotField Background Canvas -->
-      <div id="skills-dotfield-root" class="skills-dotfield-bg" aria-hidden="true"></div>
-
-      <!-- Top Canvas Frame Meta -->
-      <div class="skills-frame-meta container">
-        <div class="frame-meta-left">SRINJOYEE DEY <span class="meta-dash">—</span></div>
-        <div class="frame-meta-right">PORTFOLIO © 2026</div>
-      </div>
-
-      <!-- Watermark Background Layer: TECH, ARSENAL & Hand-Drawn Doodles -->
-      <div class="skills-watermark-layer" aria-hidden="true">
-        <!-- Giant Chalk Typography Watermarks -->
-        <span class="watermark-word watermark-tech">TECH</span>
-        <span class="watermark-word watermark-arsenal">ARSENAL</span>
-
-        <!-- Doodles -->
-        <svg class="doodle-top-arrow" viewBox="0 0 60 30" fill="none" stroke="currentColor">
-          <path d="M8 20 Q 30 6 52 14" stroke-width="2.2" stroke-linecap="round" />
-          <path d="M42 8 L 54 14 L 46 24" stroke-width="2.2" stroke-linecap="round" />
-        </svg>
-
-        <svg class="doodle-crown-left" viewBox="0 0 45 35" fill="none" stroke="currentColor">
-          <path d="M5 28 L 5 12 L 15 20 L 22.5 6 L 30 20 L 40 12 L 40 28 Z" stroke-width="2.2" stroke-linecap="round"
-            stroke-linejoin="round" />
-        </svg>
-
-        <div class="doodle-sparkle-mid">✦</div>
-        <div class="doodle-sparkle-bottom">✦</div>
-
-        <!-- Node.js Burst Lines -->
-        <svg class="doodle-node-burst" viewBox="0 0 50 30" fill="none" stroke="currentColor">
-          <line x1="8" y1="24" x2="16" y2="10" stroke-width="2.2" stroke-linecap="round" />
-          <line x1="25" y1="26" x2="25" y2="6" stroke-width="2.2" stroke-linecap="round" />
-          <line x1="42" y1="24" x2="34" y2="10" stroke-width="2.2" stroke-linecap="round" />
-        </svg>
-
-        <!-- Bottom Right Butterfly Doodle -->
-        <svg class="doodle-butterfly-exact" viewBox="0 0 60 60" fill="none" stroke="currentColor">
-          <path d="M28 20 C20 8 4 12 12 28 C16 36 28 32 28 32" stroke-width="2" stroke-linecap="round" />
-          <path d="M32 20 C40 8 56 12 48 28 C44 36 32 32 32 32" stroke-width="2" stroke-linecap="round" />
-          <path d="M28 32 C18 34 10 46 22 52 C28 56 30 40 30 32" stroke-width="2" stroke-linecap="round" />
-          <path d="M32 32 C42 34 50 46 38 52 C32 56 30 40 30 32" stroke-width="2" stroke-linecap="round" />
-          <line x1="30" y1="14" x2="30" y2="46" stroke-width="2.2" stroke-linecap="round" />
-        </svg>
-      </div>
-
-      <div class="container relative-z skills-main-container">
-
-        <!-- Left Floating Social Tiles Stack (GitHub, LinkedIn, Email) -->
-        <aside class="left-social-stack" aria-label="Social notifications">
-          <!-- 1. GitHub -->
-          <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="social-notif-tile"
-            title="GitHub">
-            <i class="fa-brands fa-github"></i>
-            <span class="notif-badge">99+</span>
-          </a>
-
-          <!-- 2. LinkedIn -->
-          <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="social-notif-tile"
-            title="LinkedIn">
-            <i class="fa-brands fa-linkedin-in"></i>
-            <span class="notif-badge">99+</span>
-          </a>
-
-          <!-- 3. Email -->
-          <a href="#contact" class="social-notif-tile" title="Contact Email">
-            <i class="fa-solid fa-envelope"></i>
-            <span class="notif-badge">99+</span>
-          </a>
-
-          <!-- Curved Arrow Doodle beneath social stack -->
-          <svg class="stack-curve-arrow" viewBox="0 0 60 50" fill="none" stroke="currentColor">
-            <path d="M12 8 Q 12 36 44 36" stroke-width="2.2" stroke-linecap="round" />
-            <path d="M35 27 L 46 36 L 35 45" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" />
-          </svg>
-        </aside>
-
-        <!-- Central Showcase Content -->
-        <div class="skills-showcase-center">
-
-          <!-- Mode Switcher Pill (Top Centered) -->
-          <div class="tech-mode-switcher-container">
-            <div class="tech-mode-switcher-pill" role="tablist" aria-label="Tech Arsenal View Modes">
-              <button class="mode-switch-btn active" data-mode="blueprint" role="tab" aria-selected="true">
-                <i class="fa-solid fa-diagram-project"></i>
-                <span>⚡ Blueprint Graph</span>
-              </button>
-              <button class="mode-switch-btn" data-mode="constellation" role="tab" aria-selected="false">
-                <i class="fa-solid fa-atom"></i>
-                <span>✦ Cosmic Constellation</span>
-              </button>
-            </div>
+      <div class="tech-showcase-container">
+        <!-- Left Column: Rectangular Video Preview Card with React Bits PixelTransition -->
+        <div class="tech-video-card-wrap">
+          <div class="tech-video-card" id="tech-video-card">
+            <div id="tech-video-pixel-root" class="tech-video-pixel-root"></div>
           </div>
-
-          <!-- Title Area with 14 ACTIVE STACKS badge to the right -->
-          <div class="skills-title-row">
-            <div class="skills-title-left">
-              <h2 class="light-hero-heading">
-                TOOLS &amp;<br>
-                CREATIVE TECH<span class="yellow-dot">.</span>
-              </h2>
-              <p class="light-hero-sub">Interactive dual-mode architecture graph of neural pipelines, 3D engines, and systems.</p>
-            </div>
-
-            <!-- 14 Active Stacks Badge with Hand-Drawn Bursts -->
-            <div class="active-stacks-badge-box">
-              <div class="badge-burst-lines burst-left">
-                <span></span><span></span><span></span>
-              </div>
-              <div class="active-stacks-pill">
-                <span class="pill-green-dot">●</span> 14 ACTIVE STACKS
-              </div>
-              <div class="badge-burst-lines burst-right">
-                <span></span><span></span><span></span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Architecture Presets Bar (Blueprint Mode Only) -->
-          <div class="blueprint-presets-bar" id="blueprintPresetsBar">
-            <span class="preset-intro-pill"><i class="fa-solid fa-bolt"></i> PIPELINE PRESETS:</span>
-            <button class="preset-btn active" data-pipeline="sih">🏆 SIH Edge AI Winner</button>
-            <button class="preset-btn" data-pipeline="3d">🌐 3D Spatial Web</button>
-            <button class="preset-btn" data-pipeline="agent">🤖 Autonomous AI Agent</button>
-            <button class="preset-btn" data-pipeline="all">🔗 Full Network</button>
-          </div>
-
-          <!-- Dual-Mode Interactive Board -->
-          <div class="tech-arsenal-wrapper">
-            <div class="tech-stage-board" id="techStageBoard">
-              <!-- Blueprint Grid Layer -->
-              <div class="stage-blueprint-grid" aria-hidden="true"></div>
-
-              <!-- Cosmic Canvas Layer (for Mode 2) -->
-              <canvas class="stage-cosmic-canvas" id="stageCosmicCanvas" aria-hidden="true"></canvas>
-
-              <!-- Dynamic SVG Cables Layer -->
-              <svg class="tech-cables-svg" id="techCablesSvg" aria-hidden="true"></svg>
-
-              <!-- Dynamic Draggable Nodes Container -->
-              <div class="tech-nodes-container" id="techNodesContainer"></div>
-
-              <!-- Floating Live Telemetry HUD Bar -->
-              <div class="stage-telemetry-strip" id="stageTelemetryStrip">
-                <div class="telemetry-left">
-                  <span class="telemetry-status-pill" id="telemetryStatusTag">ACTIVE PIPELINE</span>
-                  <span class="telemetry-text" id="telemetryStatusText">
-                    OpenCV frame features stream into PyTorch tensors, orchestrated by Python backend and visualized in real-time on Next.js &amp; React dashboards.
-                  </span>
-                </div>
-                <div class="telemetry-hint">
-                  <i class="fa-solid fa-hand-pointer"></i>
-                  <span>Drag nodes • Click for dossier</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
         </div>
 
-        </div>
+        <!-- Right Column: Two Horizontal Infinite Scrolling Logo Rows -->
+        <div class="tech-logos-column">
+          <div class="tech-showcase-meta">
+            <span class="meta-tag">(TECHNOLOGIES &amp; TOOLS)</span>
+            <button class="tech-sound-toggle-btn" id="techSoundToggleBtn" aria-label="Toggle interaction sound" title="Sound feedback on logo hover">
+              <i class="fa-solid fa-volume-high"></i>
+              <span>SFX ON</span>
+            </button>
+          </div>
 
+          <!-- Logo Loop Container with Soft Edge Fading -->
+          <div class="tech-logo-marquee-wrapper">
+            <!-- Row 1: Right to Left -->
+            <div class="tech-logo-row row-left" aria-label="Core Engineering Technologies">
+              <div class="tech-logo-track track-left" id="techLogoTrack1"></div>
+            </div>
+
+            <!-- Row 2: Left to Right -->
+            <div class="tech-logo-row row-right" aria-label="AI, Data & Specialized Systems">
+              <div class="tech-logo-track track-right" id="techLogoTrack2"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </div><!-- /story-layer-skills -->
+
+
+  <!-- LAYER 5: STATEMENT STAGE: "NOT AN OPTION BUT THE UPGRADE THAT I BRING" (Reference Match) -->
+  <div class="story-layer" id="story-layer-advantage" data-layer-id="advantage">
+    <section class="unfair-advantage-section" id="advantage" aria-label="Not an option but The upgrade that I bring">
+      
+      <!-- Studio Ribbon on Left Edge (Reference w. Nominee match) -->
+      <div class="advantage-studio-badge" aria-hidden="true">
+        <span class="badge-letter">w.</span>
+        <span class="badge-text">Nominee</span>
+      </div>
+
+      <!-- Background Animated Script Marquee Wall (Repeating 'not an option but the upgrade that i bring.') -->
+      <div class="advantage-script-wall" aria-hidden="true">
+        <div class="script-row row-left">
+          <div class="script-track">
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+          </div>
+          <div class="script-track" aria-hidden="true">
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+          </div>
+        </div>
+
+        <div class="script-row row-right">
+          <div class="script-track">
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+          </div>
+          <div class="script-track" aria-hidden="true">
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+          </div>
+        </div>
+
+        <div class="script-row row-left">
+          <div class="script-track">
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+          </div>
+          <div class="script-track" aria-hidden="true">
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+          </div>
+        </div>
+
+        <div class="script-row row-right">
+          <div class="script-track">
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+          </div>
+          <div class="script-track" aria-hidden="true">
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+          </div>
+        </div>
+
+        <div class="script-row row-left">
+          <div class="script-track">
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+          </div>
+          <div class="script-track" aria-hidden="true">
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+            <span>not an option but the upgrade that i bring.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Foreground Massive Graphic Typography (Dense, Congested Editorial Layout - worksruthi match) -->
+      <div class="advantage-foreground-grid">
+        <!-- Row 1: Top Quadrants -->
+        <div class="advantage-row row-top">
+          <div class="advantage-word-cell word-top-left">
+            <span class="advantage-word word-lg">NOT AN</span>
+          </div>
+          <div class="advantage-word-cell word-top-right">
+            <span class="advantage-word word-lg">OPTION</span>
+          </div>
+        </div>
+
+        <!-- Center Tightly Bridged Accent Dot & Connector (Crimson Red) -->
+        <div class="advantage-center-bridge" aria-hidden="true">
+          <span class="advantage-center-dot">•</span>
+          <span class="advantage-connector">BUT</span>
+          <span class="advantage-center-dot">•</span>
+        </div>
+
+        <!-- Row 2: Bottom Quadrants -->
+        <div class="advantage-row row-bottom">
+          <div class="advantage-word-cell word-bottom-left">
+            <span class="advantage-word word-md">THE UPGRADE</span>
+          </div>
+          <div class="advantage-word-cell word-bottom-right">
+            <span class="advantage-word word-md">THAT I BRING<span class="advantage-yellow-dot">.</span></span>
+          </div>
+        </div>
+      </div>
+
+    </section>
+  </div><!-- /story-layer-advantage -->
 
 
   <!-- LAYER 6: CONTACT & LIVE TERMINAL VIEWPORT STAGE (Exact side-by-side reference match to raghawshukla.xyz) -->
@@ -908,15 +894,15 @@
             </div>
           </div>
 
-          <!-- COLUMN 2: LIVE INTERACTIVE TERMINAL (raghawshukla.xyz match) -->
+          <!-- COLUMN 2: LIVE INTERACTIVE TERMINAL (Powered by Mimo AI) -->
           <div class="uplink-terminal-col" id="terminal-container">
             <div class="terminal-bar-header">
               <div class="terminal-traffic-dots">
                 <span class="dot-red" id="term-clear-dot" title="Clear Terminal"></span>
                 <span class="dot-yellow" title="Minimize"></span>
                 <span class="dot-green" title="Expand"></span>
-                <span class="terminal-header-title">SRINZ_CORE // UPLINK v4.2</span>
-                <span class="terminal-live-badge"><span class="pulse-beacon"></span>ONLINE</span>
+                <span class="terminal-header-title">SRINZ_CORE // AI TERMINAL v5.0 [MIMO LOADED]</span>
+                <span class="terminal-live-badge"><span class="pulse-beacon"></span>AI ACTIVE</span>
               </div>
               <span id="live-terminal-clock" class="terminal-clock">00:00:00 IST</span>
             </div>
@@ -931,12 +917,12 @@
   |____/|_| \_\_|_| \_| |_| /___/_/   \_\ </pre>
               </div>
               <div class="term-boot-sequence">
-                <div class="term-log-line"><span class="term-dim">// ARCHITECTURE:</span> <span class="term-val-green">NEURAL-EDGE v4.2-STABLE</span></div>
-                <div class="term-log-line"><span class="term-dim">// SUBSYSTEMS:</span> <span class="term-val-green">14 ACTIVE STACKS MOUNTED</span> <span class="term-muted">|</span> <span class="term-val-yellow">0 CRITICAL FAULTS</span></div>
-                <div class="term-log-line"><span class="term-dim">// SESSION_NODE:</span> <span class="term-val-cyan">visitor@client.uplink</span> <span class="term-muted">|</span> <span class="term-dim">PORT:</span> <span class="term-val-green">443 (TLS 1.3)</span></div>
+                <div class="term-log-line"><span class="term-dim">// ARCHITECTURE:</span> <span class="term-val-green">NEURAL-EDGE v5.0 [MIMO_AI_CORE]</span></div>
+                <div class="term-log-line"><span class="term-dim">// SUBSYSTEMS:</span> <span class="term-val-green">CLI + NATURAL LANGUAGE NLP ACTIVE</span> <span class="term-muted">|</span> <span class="term-val-yellow">0 CRITICAL FAULTS</span></div>
+                <div class="term-log-line"><span class="term-dim">// SESSION_NODE:</span> <span class="term-val-cyan">visitor@mimo.uplink</span> <span class="term-muted">|</span> <span class="term-dim">PORT:</span> <span class="term-val-green">443 (TLS 1.3)</span></div>
                 <div class="term-log-line term-divider">─────────────────────────────────────────────────────────────────</div>
                 <div class="term-log-line prompt-hint">
-                  <span class="term-prompt-green">$</span> Interactive uplink ready. Type <span class="term-chip-hint">'help'</span> or tap chips below:
+                  <span class="term-prompt-green">$</span> Interactive AI Uplink online. Type commands or ask anything (e.g. <span class="term-chip-hint">'roast'</span>, <span class="term-chip-hint">'excuse'</span>, <span class="term-chip-hint">'tea'</span>, <span class="term-chip-hint">'hire'</span>, <span class="term-chip-hint">'why hire her?'</span>):
                 </div>
               </div>
             </div>
@@ -946,8 +932,11 @@
               <button type="button" class="term-chip" data-cmd="about">about</button>
               <button type="button" class="term-chip" data-cmd="skills">skills</button>
               <button type="button" class="term-chip" data-cmd="projects">projects</button>
-              <button type="button" class="term-chip" data-cmd="contact">contact</button>
+              <button type="button" class="term-chip" data-cmd="hire">hire 🤝</button>
               <button type="button" class="term-chip" data-cmd="roast">roast 🔥</button>
+              <button type="button" class="term-chip" data-cmd="excuse">excuse 🎲</button>
+              <button type="button" class="term-chip" data-cmd="tea">tea ☕</button>
+              <button type="button" class="term-chip" data-cmd="coin">coin 🪙</button>
               <button type="button" class="term-chip" data-cmd="coffee">coffee ☕</button>
               <button type="button" class="term-chip" data-cmd="joke">joke 🎭</button>
               <button type="button" class="term-chip" data-cmd="hack">hack 💻</button>
@@ -956,7 +945,7 @@
 
             <div class="terminal-input-row">
               <span class="terminal-prompt-char">$</span>
-              <input type="text" id="terminal-input" class="terminal-input-field" placeholder="Enter command..." autocomplete="off" spellcheck="false">
+              <input type="text" id="terminal-input" class="terminal-input-field" placeholder="Enter command or ask anything (e.g. 'skills', 'roast', 'why hire her?')..." autocomplete="off" spellcheck="false">
               <button type="button" id="run-terminal-btn" class="terminal-run-btn" title="Execute">
                 <i class="fa-solid fa-arrow-turn-down fa-rotate-90"></i>
               </button>
@@ -977,24 +966,106 @@
     </section>
 
     <!-- ==========================================================================
-         FOOTER
+         EDITORIAL STUDIO FOOTER (Inspired by worksruthi.com reference)
          ========================================================================== -->
-    <footer class="footer-section">
-      <div class="container footer-container">
-        <div class="footer-left">
-          <a href="#hero" class="brand-logo">
-            <span class="logo-text">PORTO<span class="logo-dot">.</span></span>
-          </a>
-          <p class="footer-tagline">Crafting thoughtful digital experiences, intelligent systems, and interactive creative web applications.</p>
+    <footer class="editorial-footer-stage" id="site-footer">
+      <!-- Floating Studio Recognition Ribbon (Left Edge) -->
+      <aside class="footer-studio-ribbon" aria-label="Studio Recognition">
+        <span class="ribbon-letter">W.</span>
+        <span class="ribbon-text">Nominee</span>
+      </aside>
+
+      <!-- Back to Top Direct Action (Top Right) -->
+      <div class="footer-top-row">
+        <a href="#hero" class="footer-back-to-top cursor-target" data-cursor-label="Top" aria-label="Back to Top">
+          [ BACK TO TOP ]
+        </a>
+      </div>
+
+      <div class="footer-main-grid">
+        <!-- Left Brand & Conversational Socials Column -->
+        <div class="footer-brand-column">
+          <div class="footer-hero-brand">
+            <span class="footer-hero-name">SRINJOYEE</span>
+            <span class="highlight-yellow-text footer-hero-last">DEY</span>
+            <span class="footer-hero-yellow-dot">.</span>
+          </div>
+
+          <p class="footer-conversational-prompt">
+            i’m even better in conversation.<br>
+            say hi at
+          </p>
+
+          <nav class="footer-social-links-bar" aria-label="Social & Direct Uplinks">
+            <a href="https://www.linkedin.com/in/srinjoyee-dey/" target="_blank" rel="noopener noreferrer" class="cursor-target" data-cursor-label="LinkedIn">LINKEDIN</a>
+            <a href="https://github.com/SrinjoyeeDey" target="_blank" rel="noopener noreferrer" class="cursor-target" data-cursor-label="GitHub">GITHUB</a>
+            <a href="https://twitter.com/SrinjoyeeDey" target="_blank" rel="noopener noreferrer" class="cursor-target" data-cursor-label="Twitter">TWITTER</a>
+            <a href="mailto:deysrinjoyee28@gmail.com" class="cursor-target" data-cursor-label="Email">MAIL</a>
+            <a href="https://srinjoyeedey.substack.com" target="_blank" rel="noopener noreferrer" class="cursor-target" data-cursor-label="Substack">SUBSTACK</a>
+            <a href="images/Srinjoyee_Dey_Resume.pdf" target="_blank" rel="noopener noreferrer" class="cursor-target" data-cursor-label="Resume">RESUME</a>
+          </nav>
         </div>
-        <div class="footer-center">
-          <span class="copyright-text">© 2026 Srinjoyee Dey. All rights reserved.</span>
+
+        <!-- Center Floating Interactive Accent Dot -->
+        <div class="footer-center-dot-wrap" aria-hidden="true">
+          <div class="footer-center-dot"></div>
         </div>
-        <div class="footer-right">
-          <a href="#hero" class="back-to-top-btn" aria-label="Back to Top">
-            <i class="fa-solid fa-arrow-up"></i>
-          </a>
+
+        <!-- Right Numbered Navigation Index Columns -->
+        <nav class="footer-nav-index-grid" aria-label="Footer Quick Navigation">
+          <div class="footer-nav-col">
+            <a href="#projects" class="footer-nav-item cursor-target" data-cursor-label="Projects">
+              <span class="nav-item-title">WORK</span>
+              <span class="nav-item-num">01</span>
+            </a>
+            <a href="#about" class="footer-nav-item cursor-target" data-cursor-label="About">
+              <span class="nav-item-title">ABOUT</span>
+              <span class="nav-item-num">02</span>
+            </a>
+            <a href="#experience" class="footer-nav-item cursor-target" data-cursor-label="Experience">
+              <span class="nav-item-title">EXPERIENCE</span>
+              <span class="nav-item-num">03</span>
+            </a>
+            <a href="#skills" class="footer-nav-item cursor-target" data-cursor-label="Skills">
+              <span class="nav-item-title">SKILLS</span>
+              <span class="nav-item-num">04</span>
+            </a>
+          </div>
+
+          <div class="footer-nav-col">
+            <a href="#memory-wall" class="footer-nav-item cursor-target" data-cursor-label="Memories">
+              <span class="nav-item-title">MEMORY WALL</span>
+              <span class="nav-item-num">05</span>
+            </a>
+            <a href="#tech-arsenal" class="footer-nav-item cursor-target" data-cursor-label="Tech Stack">
+              <span class="nav-item-title">TECH ARSENAL</span>
+              <span class="nav-item-num">06</span>
+            </a>
+            <a href="#terminal-window" class="footer-nav-item cursor-target" data-cursor-label="Terminal">
+              <span class="nav-item-title">TERMINAL</span>
+              <span class="nav-item-num">07</span>
+            </a>
+            <a href="#contact" class="footer-nav-item cursor-target" data-cursor-label="Contact">
+              <span class="nav-item-title">CONTACT</span>
+              <span class="nav-item-num">08</span>
+            </a>
+          </div>
+        </nav>
+      </div>
+
+      <!-- Mid Horizontal Credits Row -->
+      <div class="footer-colophon-row">
+        <div class="footer-colophon-left">
+          HANDMADE WITH <span class="emoji-heart">💖</span> AND <span class="emoji-brain">🧠</span> AND <span class="emoji-coffee">☕</span>
         </div>
+        <div class="footer-colophon-right">
+          © 2026 SRINJOYEE DEY, ALL RIGHTS RESERVED.
+        </div>
+      </div>
+
+      <!-- Bottom Massive Inverted Watermark Typography -->
+      <div class="footer-massive-watermark" aria-hidden="true">
+        <span>SRINJOYEE</span>
       </div>
     </footer>
   </div><!-- /story-layer-contact -->
@@ -1040,85 +1111,241 @@
       </div>
     </div>
 
-    <!-- Mimo Robot AI Assistant Chatbot -->
-    <div id="mimo-chatbot-container" class="mimo-chatbot-container" data-lenis-prevent>
-      <button id="mimo-chatbot-trigger" class="mimo-trigger-btn" aria-label="Open Mimo AI Assistant">
-        <div class="mimo-robot-avatar">
-          <svg viewBox="0 0 100 100" class="mimo-robot-svg">
-            <rect x="25" y="6" width="50" height="7" rx="3" fill="#18181B" />
-            <circle cx="50" cy="5" r="5" fill="#FFBD12" />
-            <rect x="15" y="15" width="70" height="64" rx="26" fill="#FFC300" />
-            <rect x="7" y="36" width="10" height="22" rx="5" fill="#18181B" />
-            <rect x="83" y="36" width="10" height="22" rx="5" fill="#18181B" />
-            <circle cx="12" cy="47" r="3" fill="#FFBD12" />
-            <circle cx="88" cy="47" r="3" fill="#FFBD12" />
-            <rect x="24" y="27" width="52" height="40" rx="14" fill="#18181B" />
-            <path d="M28 31 L68 31 Q72 31, 70 35 L30 35 Q26 31, 28 31 Z" fill="rgba(255,255,255,0.15)" />
-            <ellipse cx="40" cy="42" rx="4.5" ry="6" fill="#FEF08A" class="mimo-eye left" />
-            <ellipse cx="60" cy="42" rx="4.5" ry="6" fill="#FEF08A" class="mimo-eye right" />
-            <path d="M 43 53 Q 50 59, 57 53" fill="none" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" />
-          </svg>
-        </div>
-        <span class="mimo-tooltip-label">Chat with Mimo! 🤖</span>
-      </button>
+    <!-- Floating 3D Fabric Email Envelope (worksruthi-style tactile cotton object) -->
+    <aside class="floating-envelope-widget envelope-hidden" id="floating-envelope-widget">
+      <a href="mailto:deysrinjoyee28@gmail.com" class="floating-envelope-link" aria-label="Send me an email" data-cursor-label="Email Me">
+        <!-- Layer 0: 3D Rotation & Spin Layer -->
+        <div class="envelope-spin-layer">
+          <!-- Layer A: Continuous Vertical Floating Bob -->
+          <div class="envelope-float-layer">
+            <!-- Layer B: Occasional Organic Rocking & Tilting -->
+            <div class="envelope-rock-layer">
+              <!-- Layer C: Irregular Electric Shake Bursts -->
+              <div class="envelope-shake-layer">
+                <!-- Layer D: 3D Resting Tilt, Hover Lift & Tactile Parallax -->
+                <div class="envelope-tilt-layer">
+                  <!-- 3D Volumetric Chassis with Width/Thickness -->
+                  <div class="envelope-3d-chassis">
+                    <!-- Physical 3D Edge Panels & Depth Slices for Solid Volumetric Thickness -->
+                    <div class="envelope-3d-edge edge-left" aria-hidden="true"></div>
+                    <div class="envelope-3d-edge edge-right" aria-hidden="true"></div>
+                    <div class="envelope-3d-edge edge-top" aria-hidden="true"></div>
+                    <div class="envelope-3d-edge edge-bottom" aria-hidden="true"></div>
+                    <div class="envelope-3d-depth-slice slice-1" aria-hidden="true"></div>
+                    <div class="envelope-3d-depth-slice slice-2" aria-hidden="true"></div>
+                    <div class="envelope-3d-depth-slice slice-3" aria-hidden="true"></div>
+                    <div class="envelope-3d-depth-slice slice-4" aria-hidden="true"></div>
 
-      <div id="mimo-chatbot-modal" class="mimo-chat-modal hidden" role="dialog" aria-labelledby="mimo-chat-title" data-lenis-prevent>
-        <div class="mimo-modal-header">
-          <div class="mimo-header-info">
-            <div class="mimo-header-avatar">
-              <svg viewBox="0 0 100 100" class="mimo-robot-mini-svg">
-                <rect x="15" y="15" width="70" height="64" rx="26" fill="#FFC300" />
-                <rect x="24" y="27" width="52" height="40" rx="14" fill="#18181B" />
-                <ellipse cx="40" cy="42" rx="4" ry="5.5" fill="#FEF08A" />
-                <ellipse cx="60" cy="42" rx="4" ry="5.5" fill="#FEF08A" />
-                <path d="M 43 53 Q 50 58, 57 53" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" />
-              </svg>
-              <span class="header-status-dot"></span>
-            </div>
-            <div class="mimo-header-text">
-              <h3 id="mimo-chat-title" class="mimo-robot-name">Mimo <span class="badge-ai">AI Companion</span></h3>
-              <span class="mimo-status-subtitle">Online & Ready to Help</span>
+                    <!-- Front Face (Z +4.5px) -->
+                    <div class="envelope-3d-face envelope-3d-front">
+                      <svg class="envelope-svg" viewBox="0 0 94 76" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <!-- Outer Body Clip Path for Padded Rounded Geometry -->
+                    <clipPath id="env-clip-body">
+                      <rect x="2" y="2" width="90" height="72" rx="16" ry="16" />
+                    </clipPath>
+
+                    <!-- Fine Cotton Weave Fabric Texture Pattern -->
+                    <pattern id="pat-cotton-weave" width="3.5" height="3.5" patternUnits="userSpaceOnUse">
+                      <rect width="3.5" height="3.5" fill="#E8BD4B" />
+                      <!-- Interwoven Cotton Fiber Ribs -->
+                      <path d="M0 1.75 H3.5" stroke="#D5A52E" stroke-width="0.7" stroke-opacity="0.32" />
+                      <path d="M1.75 0 V3.5" stroke="#F5D879" stroke-width="0.7" stroke-opacity="0.38" />
+                      <circle cx="1.75" cy="1.75" r="0.45" fill="#FFF3D5" fill-opacity="0.22" />
+                      <circle cx="0" cy="0" r="0.4" fill="#B98219" fill-opacity="0.25" />
+                      <circle cx="3.5" cy="3.5" r="0.4" fill="#B98219" fill-opacity="0.25" />
+                    </pattern>
+
+                    <!-- Main Fabric Body Gradient (Soft, matte brushed cotton lighting) -->
+                    <linearGradient id="grad-fabric-body" x1="12" y1="4" x2="82" y2="72" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#F5D879" />
+                      <stop offset="28%" stop-color="#E8BD4B" />
+                      <stop offset="78%" stop-color="#D5A52E" />
+                      <stop offset="100%" stop-color="#B98219" />
+                    </linearGradient>
+
+                    <!-- Left Fold Fabric Gradient -->
+                    <linearGradient id="grad-fabric-left" x1="2" y1="20" x2="47" y2="41" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#F5D879" />
+                      <stop offset="55%" stop-color="#E8BD4B" />
+                      <stop offset="100%" stop-color="#D5A52E" />
+                    </linearGradient>
+
+                    <!-- Right Fold Fabric Gradient -->
+                    <linearGradient id="grad-fabric-right" x1="92" y1="20" x2="47" y2="41" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#D5A52E" />
+                      <stop offset="65%" stop-color="#B98219" />
+                      <stop offset="100%" stop-color="#9C6B13" />
+                    </linearGradient>
+
+                    <!-- Bottom Fold Fabric Gradient -->
+                    <linearGradient id="grad-fabric-bottom" x1="47" y1="38" x2="47" y2="74" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#E8BD4B" />
+                      <stop offset="45%" stop-color="#D5A52E" />
+                      <stop offset="100%" stop-color="#B98219" />
+                    </linearGradient>
+
+                    <!-- Top Flap Fabric Gradient -->
+                    <linearGradient id="grad-fabric-top" x1="47" y1="2" x2="47" y2="43" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#FFF4D1" />
+                      <stop offset="15%" stop-color="#F5D879" />
+                      <stop offset="65%" stop-color="#E8BD4B" />
+                      <stop offset="100%" stop-color="#D5A52E" />
+                    </linearGradient>
+
+                    <!-- Diffuse Fabric Shadow for Flap Layers (Soft, no harsh specular edges) -->
+                    <filter id="filter-fabric-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                      <feDropShadow dx="0" dy="2.8" stdDeviation="2.4" flood-color="#734F08" flood-opacity="0.38" />
+                    </filter>
+
+                    <!-- Soft Heart Seal Fabric Shadow -->
+                    <filter id="filter-heart-fabric-shadow" x="-30%" y="-30%" width="160%" height="160%">
+                      <feDropShadow dx="0" dy="2.2" stdDeviation="1.8" flood-color="#6B4704" flood-opacity="0.4" />
+                    </filter>
+
+                    <!-- Fabric Perimeter Padded Bevel -->
+                    <linearGradient id="grad-fabric-rim" x1="6" y1="2" x2="88" y2="74" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.65" />
+                      <stop offset="25%" stop-color="#F5D879" stop-opacity="0.55" />
+                      <stop offset="70%" stop-color="#D5A52E" stop-opacity="0.3" />
+                      <stop offset="100%" stop-color="#8C6210" stop-opacity="0.5" />
+                    </linearGradient>
+
+                    <!-- Soft Fabric Heart Radial Gradient (Matte Ivory Felt) -->
+                    <radialGradient id="grad-heart-fabric" cx="36%" cy="32%" r="68%">
+                      <stop offset="0%" stop-color="#FFFFFF" />
+                      <stop offset="40%" stop-color="#FFF3D5" />
+                      <stop offset="85%" stop-color="#EED599" />
+                      <stop offset="100%" stop-color="#D4B66E" />
+                    </radialGradient>
+                  </defs>
+
+                  <!-- Base Envelope & Folds Clipped to Padded Rounded Contour -->
+                  <g clip-path="url(#env-clip-body)">
+                    <!-- 1. Back Body Foundation with Base Gradient -->
+                    <rect x="2" y="2" width="90" height="72" rx="16" fill="url(#grad-fabric-body)" />
+
+                    <!-- 2. Left Fabric Flap -->
+                    <path d="M 2 2 L 47 41 L 2 74 Z" fill="url(#grad-fabric-left)" />
+
+                    <!-- 3. Right Fabric Flap -->
+                    <path d="M 92 2 L 47 41 L 92 74 Z" fill="url(#grad-fabric-right)" />
+
+                    <!-- 4. Bottom Fabric Flap (Curved Soft Edge) -->
+                    <path d="M 2 74 L 47 39 L 92 74 Z" fill="url(#grad-fabric-bottom)" filter="url(#filter-fabric-shadow)" />
+
+                    <!-- 5. Flap Fold Crease Shadows & Soft Cushion Highlights -->
+                    <path d="M 2 74 L 47 39" stroke="#B98219" stroke-width="1.6" stroke-opacity="0.4" stroke-linecap="round" />
+                    <path d="M 92 74 L 47 39" stroke="#8C6210" stroke-width="1.6" stroke-opacity="0.45" stroke-linecap="round" />
+                    <path d="M 2 74 L 47 39" stroke="#F5D879" stroke-width="1" stroke-opacity="0.4" stroke-linecap="round" transform="translate(0, -1)" />
+
+                    <!-- 6. Fine Stitched Tailoring Seam along Bottom Flap -->
+                    <path d="M 6 71 L 47 41.5 L 88 71"
+                          fill="none" stroke="#FFF4D1" stroke-width="0.85"
+                          stroke-dasharray="2.2 2.2" stroke-opacity="0.6" stroke-linecap="round" />
+
+                    <!-- 7. Top Flap with Cushion Edge (Folded Down, Overlapping at Center) -->
+                    <g class="envelope-top-flap-group">
+                      <path d="M 2 2 L 92 2 L 50.8 41.8 C 48.6 44 45.4 44 43.2 41.8 Z"
+                            fill="url(#grad-fabric-top)"
+                            filter="url(#filter-fabric-shadow)" />
+
+                      <!-- Soft Padded Fabric Ridge Highlight on Top Flap -->
+                      <path d="M 2 2 L 43.2 41.8 C 45.4 44 48.6 44 50.8 41.8 L 92 2"
+                            stroke="#FFF4D1" stroke-width="1.2" stroke-opacity="0.65" fill="none" />
+
+                      <!-- Delicate Stitched Thread Seam along Top Flap Edge -->
+                      <path d="M 5 4.5 L 44 40 C 45.8 41.6 48.2 41.6 50 40 L 89 4.5"
+                            fill="none" stroke="#D5A52E" stroke-width="0.9"
+                            stroke-dasharray="2 2.2" stroke-opacity="0.7" stroke-linecap="round" />
+
+                      <!-- Micro-shadow under Top Stitch Thread for Thread Depth -->
+                      <path d="M 5 5 L 44 40.5 C 45.8 42.1 48.2 42.1 50 40.5 L 89 5"
+                            fill="none" stroke="#8C6210" stroke-width="0.5"
+                            stroke-dasharray="2 2.2" stroke-opacity="0.4" stroke-linecap="round" />
+
+                      <!-- Raised 3D Cotton Heart Seal (Embellishment at Center Tip) -->
+                      <g filter="url(#filter-heart-fabric-shadow)">
+                        <!-- Heart Felt Body -->
+                        <path d="M 47 48.8 C 47 48.8 38.2 43.4 38.2 37.8 C 38.2 34.5 41 32 44.3 32 C 46.2 32 47 33.4 47 33.4 C 47 33.4 47.8 32 49.7 32 C 53 32 55.8 34.5 55.8 37.8 C 55.8 43.4 47 48.8 47 48.8 Z"
+                              fill="url(#grad-heart-fabric)" />
+
+                        <!-- Soft Felt Heart Perimeter Highlight -->
+                        <path d="M 47 48.8 C 47 48.8 38.2 43.4 38.2 37.8 C 38.2 34.5 41 32 44.3 32 C 46.2 32 47 33.4 47 33.4 C 47 33.4 47.8 32 49.7 32 C 53 32 55.8 34.5 55.8 37.8 C 55.8 43.4 47 48.8 47 48.8 Z"
+                              fill="none" stroke="#FFFFFF" stroke-width="0.9" stroke-opacity="0.75" />
+
+                        <!-- Heart Embroidery Center Accent / Soft Fiber Highlight -->
+                        <ellipse cx="43.4" cy="35.2" rx="1.6" ry="1.1" transform="rotate(-30 43.4 35.2)" fill="#FFFFFF" opacity="0.8" />
+                      </g>
+                    </g>
+
+                    <!-- 8. Realistic Woven Cotton Canvas Texture Overlay (Multiply onto Entire Envelope) -->
+                    <rect x="2" y="2" width="90" height="72" rx="16" fill="url(#pat-cotton-weave)" mix-blend-mode="multiply" opacity="0.38" pointer-events="none" />
+
+                    <!-- 9. Perimeter Stitched Border Seam around Envelope Edge -->
+                    <rect x="5.5" y="5.5" width="83" height="65" rx="13"
+                          fill="none" stroke="#FFF4D1" stroke-width="0.85"
+                          stroke-dasharray="2.5 2.5" stroke-opacity="0.55" stroke-linecap="round" />
+                    <rect x="5.8" y="5.8" width="82.4" height="64.4" rx="12.8"
+                          fill="none" stroke="#8C6210" stroke-width="0.45"
+                          stroke-dasharray="2.5 2.5" stroke-opacity="0.3" stroke-linecap="round" />
+
+                    <!-- 10. Ambient Padded Rim Cushion Light around Envelope Edges -->
+                    <rect x="2.6" y="2.6" width="88.8" height="70.8" rx="15.4"
+                          fill="none" stroke="url(#grad-fabric-rim)" stroke-width="1.3" />
+                  </g>
+                </svg>
+              </div><!-- /envelope-3d-front -->
+
+              <!-- Back Face (Z -4.5px, rotateY 180deg) with Diagonal Fold Flaps & Stitching -->
+              <div class="envelope-3d-face envelope-3d-back" aria-hidden="true">
+                <svg class="envelope-svg envelope-svg-back" viewBox="0 0 94 76" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <clipPath id="env-clip-body-back">
+                      <rect x="2" y="2" width="90" height="72" rx="16" ry="16" />
+                    </clipPath>
+                    <linearGradient id="grad-fabric-back" x1="12" y1="4" x2="82" y2="72" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#F5D879" />
+                      <stop offset="35%" stop-color="#E8BD4B" />
+                      <stop offset="75%" stop-color="#D5A52E" />
+                      <stop offset="100%" stop-color="#B98219" />
+                    </linearGradient>
+                  </defs>
+                  <g clip-path="url(#env-clip-body-back)">
+                    <rect x="2" y="2" width="90" height="72" rx="16" fill="url(#grad-fabric-back)" />
+                    <rect x="2" y="2" width="90" height="72" rx="16" fill="url(#pat-cotton-weave)" fill-opacity="0.82" />
+                    <!-- Diagonal back seam folds -->
+                    <path d="M2 2 L47 42 L92 2" stroke="#8C6210" stroke-width="1.2" stroke-opacity="0.35" />
+                    <path d="M2 2 L47 42 L92 2" stroke="#FFF4D1" stroke-width="0.8" stroke-opacity="0.45" />
+                    <path d="M2 74 L47 42 L92 74" stroke="#8C6210" stroke-width="1.2" stroke-opacity="0.3" />
+                    <!-- Stitched Perimeter -->
+                    <rect x="5.5" y="5.5" width="83" height="65" rx="13"
+                          fill="none" stroke="#FFF4D1" stroke-width="0.85"
+                          stroke-dasharray="2.5 2.5" stroke-opacity="0.55" stroke-linecap="round" />
+                    <!-- Center Embossed Cotton Seal Button -->
+                    <circle cx="47" cy="42" r="7" fill="#E8BD4B" stroke="#B98219" stroke-width="1" />
+                    <circle cx="47" cy="42" r="5.2" fill="none" stroke="#FFF4D1" stroke-width="0.6" stroke-dasharray="1.5 1.5" />
+                    <path d="M44.5 41.5 L47 44 L49.5 41.5" stroke="#B98219" stroke-width="1" stroke-linecap="round" />
+                    <!-- Padded Rim -->
+                    <rect x="2.6" y="2.6" width="88.8" height="70.8" rx="15.4"
+                          fill="none" stroke="url(#grad-fabric-rim)" stroke-width="1.3" />
+                  </g>
+                </svg>
+              </div><!-- /envelope-3d-back -->
+
+            </div><!-- /envelope-3d-chassis -->
+          </div><!-- /envelope-tilt-layer -->
             </div>
           </div>
-          <button id="mimo-close-btn" class="mimo-close-btn" aria-label="Close Chat">
-            <i class="fa-solid fa-xmark"></i>
-          </button>
-        </div>
-
-        <div id="mimo-messages-body" class="mimo-messages-body" data-lenis-prevent>
-          <div class="mimo-msg bot-msg">
-            <div class="msg-avatar-icon">🤖</div>
-            <div class="msg-bubble">
-              <p>Beep boop! 👋 I'm <strong>Mimo</strong>, Srinjoyee's AI companion (and full-time debugger).</p>
-              <p>Ask me anything about her projects, or click a button below if you're too lazy to type! 😉</p>
-              <div class="mimo-reactions-bar">
-                <button type="button" class="mimo-reaction-btn" data-emoji="😂" title="Laugh">😂 <span class="rx-count">2</span></button>
-                <button type="button" class="mimo-reaction-btn" data-emoji="🔥" title="Fire">🔥 <span class="rx-count">5</span></button>
-                <button type="button" class="mimo-reaction-btn" data-emoji="❤️" title="Love">❤️ <span class="rx-count">7</span></button>
-              </div>
-            </div>
-          </div>
-          <div class="mimo-quick-pills" id="mimo-quick-pills">
-            <button type="button" class="quick-pill-btn" data-query="projects">🚀 Featured Projects</button>
-            <button type="button" class="quick-pill-btn" data-query="roast">🔥 Roast Srinjoyee</button>
-            <button type="button" class="quick-pill-btn" data-query="excuse">🎲 Dev Excuse</button>
-            <button type="button" class="quick-pill-btn" data-query="gossip">☕ Dev Tea / Gossip</button>
-            <button type="button" class="quick-pill-btn" data-query="skills">🛠️ Actual Skills</button>
-            <button type="button" class="quick-pill-btn" data-query="coin">🪙 Flip Coin</button>
-            <button type="button" class="quick-pill-btn" data-query="hire">📩 Hire Her</button>
-          </div>
-        </div>
-
-        <div class="mimo-modal-footer">
-          <form id="mimo-chat-form" class="mimo-chat-form">
-            <input type="text" id="mimo-input-field" class="mimo-input-field" placeholder="Ask Mimo a question..." autocomplete="off" required />
-            <button type="submit" class="mimo-send-btn" aria-label="Send Message">
-              <i class="fa-solid fa-paper-plane"></i>
-            </button>
-          </form>
         </div>
       </div>
-    </div>
+
+        <!-- Synchronized Floor Shadow underneath Envelope -->
+        <div class="envelope-shadow-anchor" aria-hidden="true">
+          <div class="envelope-floor-shadow"></div>
+        </div>
+      </a>
+    </aside>
 
     <!-- ==========================================================================
          INITIAL PAGE & SECTION LOADER OVERLAY
@@ -1172,20 +1399,26 @@
     </script>
 
     <!-- Magic UI Interactive Globe & DotField Bundles -->
-    <script src="grid-scan-bundle.js"></script>
+    <script src="grid-scan-bundle.js?v=4"></script>
     <script src="globe-bundle.js?v=8"></script>
-    <script src="projects-showcase-bundle.js?v=65"></script>
+    <script src="projects-showcase-bundle.js?v=70"></script>
     <script src="dot-field-bundle.js"></script>
     <script src="text-pressure-bundle.js?v=5"></script>
     <script src="tech-text-bundle.js?v=12"></script>
     <script src="circular-text-bundle.js?v=2"></script>
-    <script src="target-cursor-bundle.js?v=28"></script>
-    <script src="memory-wall-bundle.js?v=60"></script>
+    <script src="target-cursor-bundle.js?v=29"></script>
+    <script src="memory-wall-bundle.js?v=61"></script>
+
+    <!-- Sound Design System (Procedural Web Audio Engine) -->
+    <script src="sound-system.js?v=1"></script>
 
     <!-- Main Interactive Scripts -->
-    <script src="script.js?v=24"></script>
-    <script src="tech-arsenal.js?v=1"></script>
+    <script src="script.js?v=32"></script>
+    <script src="letter-glitch-bundle.js?v=1"></script>
+    <script src="pixel-transition-bundle.js?v=2"></script>
+    <script src="tech-arsenal.js?v=5"></script>
+    <script src="footer-shuffle-bundle.js?v=1"></script>
     <script src="hero-3d-model.js?v=8"></script>
-    <script src="scroll-reveal.js?v=6"></script>
+    <script src="scroll-reveal.js?v=12"></script>
   </body>
 </html>

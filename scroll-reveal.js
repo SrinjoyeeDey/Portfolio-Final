@@ -1,85 +1,121 @@
 /**
- * Smooth Layer Scrolling Engine
- * (In-viewport scroll pinning effect removed per user request; normal natural scroll preserved)
+ * SMOOTH PINNED VIEWPORT SLIDE-UP ENGINE: HERO → ABOUT SECTION
+ * 
+ * - Hero section is pinned at top: 0 in the viewport (pinSpacing: false)
+ * - As the visitor scrolls down, About scrolls UP into the same viewport all at once over Hero
+ * - Hero subtly scales & fades with depth underneath
+ * - When About reaches top: 0, it fills the viewport and stays in view naturally
+ * - Normal page scrolling continues down into Projects when scrolling past About
+ * - Scrolling back up smoothly slides About down, revealing Hero again
  */
 
 (function () {
   'use strict';
 
-  // State
   let isInitialized = false;
-  let isTakeoffUnlocked = true;
 
-  function resetLayerStyles() {
-    const layers = document.querySelectorAll('.story-layer');
-    layers.forEach(layer => {
-      layer.style.filter = 'none';
-      layer.style.opacity = '1';
-      layer.style.transform = 'none';
-      layer.style.clipPath = 'none';
-      layer.style.visibility = 'visible';
-    });
-
-    if (typeof gsap !== 'undefined') {
-      try {
-        gsap.set('.story-layer', {
-          clearProps: 'filter,clipPath,scale,opacity,transform,y'
-        });
-      } catch (e) {
-        // Fallback already handled via direct inline styles
-      }
-    }
-  }
-
-  function unlockFeaturedCreations(autoScroll = true) {
-    if (isTakeoffUnlocked) return;
-    isTakeoffUnlocked = true;
-
-    // Remove lock from all locked layers
-    document.querySelectorAll('.featured-creations-locked').forEach(el => {
-      el.classList.remove('featured-creations-locked');
-    });
-
-    resetLayerStyles();
-
-    // Trigger resize event for CardSwap and Three.js viewports
-    window.dispatchEvent(new Event('resize'));
-
-    // Smoothly glide into Featured Creations
-    if (autoScroll) {
-      setTimeout(() => {
-        const projectsLayer = document.getElementById('story-layer-projects');
-        if (projectsLayer) {
-          projectsLayer.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 800);
-    }
-  }
-
-  window.unlockFeaturedCreations = unlockFeaturedCreations;
-
-  function initScrollReveal() {
+  function initHeroAboutScrollUp() {
     if (isInitialized) return;
+
+    if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+      setTimeout(initHeroAboutScrollUp, 80);
+      return;
+    }
+
+    gsap.registerPlugin(ScrollTrigger);
+
+    const heroLayer = document.getElementById('story-layer-hero');
+    const aboutLayer = document.getElementById('story-layer-about');
+
+    if (!heroLayer || !aboutLayer) {
+      console.warn('Hero or About story layers not found in DOM.');
+      return;
+    }
+
     isInitialized = true;
 
-    // Kill any prior layer transition ScrollTriggers if they exist
-    if (typeof ScrollTrigger !== 'undefined') {
-      ScrollTrigger.getAll().forEach(st => {
-        if (st.vars && st.vars.id && st.vars.id.startsWith('layer-transition-')) {
-          st.kill(true);
+    // Responsive & reduced motion handling
+    const mm = gsap.matchMedia();
+
+    mm.add('(min-width: 769px) and (prefers-reduced-motion: no-preference)', () => {
+      // Clear any prior per-element transforms so everything in About appears complete and intact
+      const aboutChildren = aboutLayer.querySelectorAll(
+        '.glass-card-wrapper, .work-together-card, .sub-section-box, .about-header-bar, .tilted-hello-wrap, .about-bio-lead, .about-bio-body, .glass-icon-btn, .circle-arrow-btn, .software-badge'
+      );
+      gsap.set(aboutChildren, {
+        clearProps: 'opacity,transform,filter,visibility'
+      });
+
+      gsap.set(aboutLayer, {
+        clearProps: 'all'
+      });
+
+      // Pinned transition:
+      // Hero stays pinned at top: 0 while About scrolls UP into the same viewport!
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          id: 'hero-about-transition-pin',
+          trigger: aboutLayer,
+          start: 'top bottom',
+          end: 'top top',
+          pin: heroLayer,
+          pinSpacing: false,
+          scrub: 0.5,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            // Coordinate floating email envelope widget
+            const envelopeWidget = document.getElementById('floating-envelope-widget');
+            if (envelopeWidget) {
+              const projectsEl = document.getElementById('projects');
+              const projectsRect = projectsEl ? projectsEl.getBoundingClientRect() : null;
+              const isProjects = projectsRect ? projectsRect.top <= window.innerHeight * 0.55 : false;
+
+              if (self.progress < 0.25) {
+                envelopeWidget.classList.add('envelope-hidden');
+                envelopeWidget.classList.remove('envelope-visible', 'envelope-side-left');
+              } else {
+                envelopeWidget.classList.remove('envelope-hidden');
+                envelopeWidget.classList.add('envelope-visible');
+                if (isProjects) {
+                  envelopeWidget.classList.add('envelope-side-left');
+                } else {
+                  envelopeWidget.classList.remove('envelope-side-left');
+                }
+              }
+            }
+          }
         }
       });
-    }
 
-    // Ensure all layers are fully visible and unpinned in normal document flow
-    resetLayerStyles();
+      // Outgoing Hero: subtle depth lift & soft fade
+      tl.fromTo(heroLayer, {
+        y: '0%',
+        opacity: 1,
+        scale: 1,
+        filter: 'blur(0px)'
+      }, {
+        y: '-10%',
+        opacity: 0.35,
+        scale: 0.97,
+        filter: 'blur(4px)',
+        ease: 'none',
+        duration: 1
+      }, 0);
+
+      return () => {
+        tl.kill();
+        gsap.set([heroLayer, aboutLayer], {
+          clearProps: 'all'
+        });
+      };
+    });
 
     // Setup seamless navigation for anchor links and Mac dock
     setupSmoothLayerNavigation();
   }
 
   function setupSmoothLayerNavigation() {
-    // Intercept navigation links targeting sections inside layers
     const navAnchors = document.querySelectorAll('a[href^="#"], .dock-item[data-href^="#"]');
 
     navAnchors.forEach(anchor => {
@@ -93,7 +129,7 @@
         if (targetId === 'hero') {
           e.preventDefault();
           if (window.lenis) {
-            window.lenis.scrollTo(0, { duration: 1.2 });
+            window.lenis.scrollTo(0, { duration: 1.0 });
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }
@@ -105,7 +141,7 @@
 
         e.preventDefault();
         if (window.lenis) {
-          window.lenis.scrollTo(targetEl, { offset: 0, duration: 1.2 });
+          window.lenis.scrollTo(targetEl, { offset: 0, duration: 1.0 });
         } else {
           targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
@@ -134,29 +170,25 @@
 
       window.addEventListener('website-loaded', () => {
         document.body.classList.remove('preloader-locked');
-        setTimeout(initScrollReveal, 250);
+        setTimeout(initHeroAboutScrollUp, 250);
       }, { once: true });
 
-      // Safety timeout in case website-loaded doesn't fire
       setTimeout(() => {
         document.body.classList.remove('preloader-locked');
         if (!isInitialized) {
-          initScrollReveal();
+          initHeroAboutScrollUp();
         }
       }, 4200);
     } else {
-      // Preloader not active, initialize directly
-      setTimeout(initScrollReveal, 200);
+      setTimeout(initHeroAboutScrollUp, 200);
     }
   }
 
-  // Run on DOM ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', setupLoaderCoordination);
   } else {
     setupLoaderCoordination();
   }
 
-  // Export for external control if needed
-  window.initScrollReveal = initScrollReveal;
+  window.initHeroAboutScrollUp = initHeroAboutScrollUp;
 })();

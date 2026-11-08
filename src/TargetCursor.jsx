@@ -226,7 +226,7 @@ const TargetCursor = ({
       spring(press, pointer.pressed && s.clickEffect ? 1 : 0, 900, 40, dt);
 
       let goalX = pointer.x;
-      let goalY = pointer.y;
+      let goalY = pointer.y + 7.5;
       let goalW = s.size / 2;
       let goalH = s.size / 2;
       let goalR = Math.min(2, s.cornerSize / 4);
@@ -308,10 +308,8 @@ const TargetCursor = ({
 
       const dot = dotRef.current;
       if (dot) {
-        const dotScale = 1 - press.x * 0.35;
-        dot.style.transform = `translate3d(${pointer.x}px, ${pointer.y}px, 0) translate(-50%, -50%) scale(${dotScale.toFixed(3)})`;
-        dot.style.width = `${s.dotSize}px`;
-        dot.style.height = `${s.dotSize}px`;
+        const dotScale = 1 - press.x * 0.22;
+        dot.style.transform = `translate3d(${pointer.x}px, ${pointer.y}px, 0) translate(-50%, -1.5px) scale(${dotScale.toFixed(3)})`;
       }
 
       const label = labelRef.current;
@@ -454,7 +452,27 @@ const TargetCursor = ({
           className="target-cursor__corner"
         />
       ))}
-      <span ref={dotRef} className="target-cursor__dot" />
+      <div
+        ref={dotRef}
+        className="target-cursor__arrow target-cursor__dot"
+        aria-hidden="true"
+      >
+        <svg
+          viewBox="0 0 26 27"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          className="target-cursor__arrow-svg"
+        >
+          <path
+            d="M 13 2.2 C 13.7 2.2 14.3 2.6 14.7 3.3 L 23.9 22.1 C 24.5 23.3 23.9 24.8 22.7 25.2 C 21.9 25.5 21.1 25.2 20.5 24.6 Q 13 19.2 5.5 24.6 C 4.9 25.2 4.1 25.5 3.3 25.2 C 2.1 24.8 1.5 23.3 2.1 22.1 L 11.3 3.3 C 11.7 2.6 12.3 2.2 13 2.2 Z"
+            fill="#000000"
+            stroke="#ffffff"
+            strokeWidth="1.8"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          />
+        </svg>
+      </div>
       <span ref={labelRef} className="target-cursor__label" />
     </div>,
     host

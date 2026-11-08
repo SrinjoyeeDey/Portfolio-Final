@@ -27,9 +27,6 @@
           return (
             node.hasAttribute?.('data-lenis-prevent') ||
             Boolean(node.closest('[data-lenis-prevent]')) ||
-            Boolean(node.closest('#mimo-chatbot-container')) ||
-            Boolean(node.closest('#mimo-chatbot-modal')) ||
-            Boolean(node.closest('.mimo-messages-body')) ||
             Boolean(node.closest('#project-modal')) ||
             Boolean(node.closest('.clay-screen-body'))
           );
@@ -725,7 +722,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const targetId = href.slice(1);
         if (targetId === 'hero') {
           if (window.lenis) {
-            window.lenis.scrollTo(0, { duration: 1.2 });
+            window.lenis.scrollTo(0, { duration: 1.0 });
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }
@@ -733,7 +730,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const targetEl = document.getElementById(targetId);
           if (targetEl) {
             if (window.lenis) {
-              window.lenis.scrollTo(targetEl, { offset: 0, duration: 1.2 });
+              window.lenis.scrollTo(targetEl, { offset: 0, duration: 1.0 });
             } else {
               targetEl.scrollIntoView({ behavior: 'smooth' });
             }
@@ -802,7 +799,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
       }
     });
+
+    // Update floating email envelope visibility & initiate choreographed flight if needed
+    const envelopeWidget = document.getElementById('floating-envelope-widget');
+    if (envelopeWidget) {
+      const aboutEl = document.getElementById('about');
+      const projectsEl = document.getElementById('projects');
+      const projectsRect = projectsEl ? projectsEl.getBoundingClientRect() : null;
+
+      // In Home section: not visible
+      const isHome = (window.scrollY < 120) || (aboutEl && window.getComputedStyle(aboutEl).opacity === '0');
+      const isProjectsOrBeyond = projectsRect ? projectsRect.top <= window.innerHeight * 0.55 : false;
+
+      if (isHome) {
+        envelopeWidget.classList.add('envelope-hidden');
+        envelopeWidget.classList.remove('envelope-visible');
+      } else {
+        envelopeWidget.classList.remove('envelope-hidden');
+        envelopeWidget.classList.add('envelope-visible');
+
+        // When scrolling to Projects section, if envelope is on the right, trigger flight to left
+        if (isProjectsOrBeyond && typeof window._triggerEnvelopeFlight === 'function' && window._envelopeCurrentSide === 'right') {
+          window._triggerEnvelopeFlight('left');
+        }
+      }
+    }
   }
+
+  // Initial call on page load to configure section states
+  highlightNavOnScroll();
 
   /* --------------------------------------------------------------------------
      3. PROJECT GALLERY CATEGORY FILTERING
@@ -1199,7 +1224,11 @@ document.addEventListener('DOMContentLoaded', () => {
         submitBtn.disabled = true;
         submitBtn.innerHTML = `<span class="btn-text-content"><span>[ TRANSMITTING... ]</span> <i class="fa-solid fa-spinner fa-spin"></i></span>`;
       }
-      playPinSound(440);
+      if (window.PortoSound) {
+        window.PortoSound.playClick(true);
+      } else {
+        playPinSound(440);
+      }
 
       // Construct verified email payload with sender's identity
       const payload = {
@@ -1236,7 +1265,11 @@ document.addEventListener('DOMContentLoaded', () => {
             formStatusMsg.innerHTML = '<span style="color:#00875a; font-weight:700;">// UPLINK_SUCCESS: Data packet sent. Direct response dispatched within 24h.</span>';
           }
           contactForm.reset();
-          playPinSound(880);
+          if (window.PortoSound) {
+            window.PortoSound.playSuccess();
+          } else {
+            playPinSound(880);
+          }
           showToast(`📬 Transmission dispatched to Srinjoyee! Direct reply will arrive at ${email} shortly.`);
 
           setTimeout(() => {
@@ -1399,7 +1432,11 @@ document.addEventListener('DOMContentLoaded', () => {
           pinNoteBtn.disabled = false;
           pinNoteBtn.innerHTML = originalBtnHTML;
 
-          playPinSound(880);
+          if (window.PortoSound) {
+            window.PortoSound.playSuccess();
+          } else {
+            playPinSound(880);
+          }
           showToast('📌 Note pinned to the community board & dispatched anonymously to Srinjoyee’s inbox!');
         }, 750);
       });
@@ -1682,7 +1719,7 @@ document.addEventListener('DOMContentLoaded', () => {
           const targetId = targetHref.startsWith('#') ? targetHref.slice(1) : targetHref;
           if (targetId === 'hero') {
             if (window.lenis) {
-              window.lenis.scrollTo(0, { duration: 1.2 });
+              window.lenis.scrollTo(0, { duration: 1.0 });
             } else {
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }
@@ -1690,7 +1727,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const targetEl = document.getElementById(targetId);
             if (targetEl) {
               if (window.lenis) {
-                window.lenis.scrollTo(targetEl, { offset: 0, duration: 1.2 });
+                window.lenis.scrollTo(targetEl, { offset: 0, duration: 1.0 });
               } else {
                 targetEl.scrollIntoView({ behavior: 'smooth' });
               }
@@ -1765,100 +1802,153 @@ document.addEventListener('DOMContentLoaded', () => {
   // Card remains completely still as requested
 
   /* --------------------------------------------------------------------------
-     12. MIMO 3D ROBOT AI CHATBOT INTERACTIVE CONTROLLER
+     11. FLOATING 3D EMAIL ENVELOPE (Choreographed Flight, Rotation & Color Shift)
      -------------------------------------------------------------------------- */
-  const mimoTrigger = document.getElementById('mimo-chatbot-trigger');
-  const mimoModal = document.getElementById('mimo-chatbot-modal');
-  const mimoCloseBtn = document.getElementById('mimo-close-btn');
-  const mimoForm = document.getElementById('mimo-chat-form');
-  const mimoInput = document.getElementById('mimo-input-field');
-  const mimoMessagesBody = document.getElementById('mimo-messages-body');
-  const mimoQuickPills = document.getElementById('mimo-quick-pills');
+  const envelopeWidget = document.getElementById('floating-envelope-widget');
+  if (envelopeWidget) {
+    const link = envelopeWidget.querySelector('.floating-envelope-link');
+    const tiltLayer = envelopeWidget.querySelector('.envelope-tilt-layer');
+    const spinLayer = envelopeWidget.querySelector('.envelope-spin-layer');
 
-  if (mimoTrigger && mimoModal) {
-    // Isolate wheel and touch events so Lenis and page scroll never hijack chat scrolling
-    const stopScrollHijack = (e) => {
-      e.stopPropagation();
+    // Pointer hover parallax
+    if (link && tiltLayer) {
+      link.addEventListener('pointermove', (e) => {
+        const rect = link.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        tiltLayer.style.transform = `translateY(-24px) rotateX(${15 - y * 16}deg) rotateY(${-14 + x * 16}deg) rotateZ(${-9 + x * 6}deg) scale(1.1)`;
+      });
+      link.addEventListener('pointerleave', () => {
+        tiltLayer.style.transform = '';
+      });
+    }
+
+    // Flight state & choreography controller:
+    // "move like up and stay ther and then go other sode and then come down"
+    // "rotate sometimes and even change colour to some othe sphosticated white grayish after some time"
+    window._envelopeCurrentSide = 'right';
+    let isFlightInProgress = false;
+    let totalSpinAngle = 0;
+
+    const getSideX = (side) => {
+      const isMobile = window.innerWidth < 640;
+      if (side === 'left') {
+        return isMobile ? 'calc(-100vw + 118px)' : 'calc(-100vw + 154px)';
+      }
+      return '0px';
     };
-    mimoModal.addEventListener('wheel', stopScrollHijack, { passive: true });
-    mimoModal.addEventListener('touchmove', stopScrollHijack, { passive: true });
-    if (mimoMessagesBody) {
-      mimoMessagesBody.addEventListener('wheel', stopScrollHijack, { passive: true });
-      mimoMessagesBody.addEventListener('touchmove', stopScrollHijack, { passive: true });
-    }
 
-    // Toggle Chat Modal
-    mimoTrigger.addEventListener('click', () => {
-      mimoModal.classList.toggle('hidden');
-      if (!mimoModal.classList.contains('hidden')) {
-        mimoInput?.focus();
-        setTimeout(() => {
-          if (mimoMessagesBody) {
-            mimoMessagesBody.scrollTop = mimoMessagesBody.scrollHeight;
-          }
-        }, 120);
-      }
-    });
-
-    mimoCloseBtn?.addEventListener('click', () => {
-      mimoModal.classList.add('hidden');
-    });
-
-    // Helper: Add message bubble with interactive buttons & reactions
-    function addMimoMessage(htmlContent, sender = 'bot', actionButtons = []) {
-      const msgDiv = document.createElement('div');
-      msgDiv.className = `mimo-msg ${sender === 'bot' ? 'bot-msg' : 'user-msg'}`;
-      
-      const avatarHtml = sender === 'bot' ? '<div class="msg-avatar-icon">🤖</div>' : '<div class="msg-avatar-icon">👤</div>';
-      
-      let actionsHtml = '';
-      if (actionButtons && actionButtons.length > 0) {
-        actionsHtml = `<div class="mimo-inline-actions">` + 
-          actionButtons.map(btn => `<button type="button" class="mimo-action-chip" data-action="${btn.action}" data-val="${btn.val || ''}">${btn.label}</button>`).join('') +
-          `</div>`;
+    const triggerFlight = (preferredDestination) => {
+      if (envelopeWidget.classList.contains('envelope-hidden') || isFlightInProgress || document.hidden) {
+        return;
       }
 
-      let reactionsHtml = '';
-      if (sender === 'bot') {
-        reactionsHtml = `
-          <div class="mimo-reactions-bar">
-            <button type="button" class="mimo-reaction-btn" data-emoji="😂" title="Laugh">😂 <span class="rx-count">0</span></button>
-            <button type="button" class="mimo-reaction-btn" data-emoji="🔥" title="Fire">🔥 <span class="rx-count">0</span></button>
-            <button type="button" class="mimo-reaction-btn" data-emoji="❤️" title="Love">❤️ <span class="rx-count">0</span></button>
-          </div>
-        `;
+      const dest = preferredDestination || (window._envelopeCurrentSide === 'right' ? 'left' : 'right');
+      if (dest === window._envelopeCurrentSide && preferredDestination) {
+        return;
       }
 
-      msgDiv.innerHTML = `${avatarHtml}<div class="msg-bubble"><p>${htmlContent}</p>${actionsHtml}${reactionsHtml}</div>`;
+      isFlightInProgress = true;
+      const startX = getSideX(window._envelopeCurrentSide);
+      const destX = getSideX(dest);
+      const isGoingLeft = dest === 'left';
 
-      mimoMessagesBody.appendChild(msgDiv);
-      requestAnimationFrame(() => {
-        mimoMessagesBody.scrollTop = mimoMessagesBody.scrollHeight;
-      });
-    }
+      // 1. MOVE UP: Ascend high into the upper viewport
+      envelopeWidget.classList.add('envelope-airborne');
+      envelopeWidget.style.setProperty('--flight-duration', '2.2s');
+      envelopeWidget.style.setProperty('--flight-easing', 'cubic-bezier(0.25, 1, 0.4, 1)');
+      envelopeWidget.style.setProperty('--flight-x', startX);
+      envelopeWidget.style.setProperty('--flight-y', '-48vh');
 
-    // Helper: Show bot typing indicator
-    function showTypingIndicator(callback) {
-      const typingDiv = document.createElement('div');
-      typingDiv.className = 'mimo-msg bot-msg typing-msg';
-      typingDiv.innerHTML = `<div class="msg-avatar-icon">🤖</div><div class="msg-bubble"><p><em>Mimo is cooking up a reply... 💭</em></p></div>`;
-      mimoMessagesBody.appendChild(typingDiv);
-      requestAnimationFrame(() => {
-        mimoMessagesBody.scrollTop = mimoMessagesBody.scrollHeight;
-      });
-
+      // 2. STAY THERE & ROTATE & COLOR SHIFT
       setTimeout(() => {
-        typingDiv.remove();
-        callback();
-      }, 500);
-    }
+        if (!isFlightInProgress) return;
 
-    // Sarcastic Roasts Pool
-    const MIMO_ROASTS = [
-      "Srinjoyee spent 3 hours deciding between two shades of charcoal grey that look identical to every human with normal 20/20 vision. Meanwhile, you're chatting with a yellow robot on the internet instead of finishing your work. We are both running on questionable life choices. 😭🔥",
-      "Her Git commit history goes from <em>'Initial microservices architecture commit'</em> at 11 AM to <em>'PLEASE JUST WORK BRO I BEG YOU I WILL NEVER COMMIT TO MAIN AGAIN'</em> at 3:45 AM. Pure software engineering perfectionism. 💅",
-      "Srinjoyee has 6 hackathon wins, 4 years of UI/UX craft, and still refreshes the browser 15 times to see if 1px margin-top actually changed. Don't worry, we don't judge. 🤡",
-      "You want a roast? You've scrolled all the way through this portfolio without hiring Srinjoyee or sending a message. That's a bigger bug than an unclosed &lt;div&gt; tag in production! 💥"
+        // Perform playful 3D rotation pirouette
+        totalSpinAngle += isGoingLeft ? 360 : -360;
+        if (spinLayer) {
+          spinLayer.style.transform = `rotateY(${totalSpinAngle}deg)`;
+        }
+
+        // Color change: shift to sophisticated white-grayish if moving to left, or back to butter-yellow if returning
+        if (isGoingLeft) {
+          envelopeWidget.classList.add('envelope-silver-state');
+        } else {
+          envelopeWidget.classList.remove('envelope-silver-state');
+        }
+
+        // 3. GO TO OTHER SIDE: Horizontal flight across the sky
+        setTimeout(() => {
+          if (!isFlightInProgress) return;
+
+          envelopeWidget.style.setProperty('--flight-duration', '2.8s');
+          envelopeWidget.style.setProperty('--flight-easing', 'cubic-bezier(0.35, 0, 0.25, 1)');
+          envelopeWidget.style.setProperty('--flight-x', destX);
+          envelopeWidget.style.setProperty('--flight-y', '-48vh');
+
+          // 4. COME DOWN: Gently float down to resting bottom position on new side
+          setTimeout(() => {
+            if (!isFlightInProgress) return;
+
+            envelopeWidget.style.setProperty('--flight-duration', '2.0s');
+            envelopeWidget.style.setProperty('--flight-easing', 'cubic-bezier(0.25, 1, 0.5, 1)');
+            envelopeWidget.style.setProperty('--flight-x', destX);
+            envelopeWidget.style.setProperty('--flight-y', '0px');
+            envelopeWidget.classList.remove('envelope-airborne');
+
+            // 5. TOUCHDOWN: Update state and rest
+            setTimeout(() => {
+              window._envelopeCurrentSide = dest;
+              isFlightInProgress = false;
+            }, 2100);
+
+          }, 2900); // Wait for horizontal glide to finish
+
+        }, 3600); // Stay/hover duration in the air
+
+      }, 2300); // Rise duration
+    };
+
+    window._triggerEnvelopeFlight = triggerFlight;
+
+    // Periodic autonomous flight cycles (runs every ~22s when visible)
+    setInterval(() => {
+      triggerFlight();
+    }, 22000);
+
+    // Initial autonomous flight shortly after loading
+    setTimeout(() => {
+      triggerFlight();
+    }, 7500);
+  }
+
+  /* --------------------------------------------------------------------------
+     12. LIVE UPLINK TERMINAL INTERACTIVE CLI & AI CONTROLLER (POWERED BY MIMO AI)
+     -------------------------------------------------------------------------- */
+  const terminalInput = document.getElementById('terminal-input') || document.getElementById('clay-terminal-input');
+  const terminalOutput = document.getElementById('terminal-output') || document.getElementById('clay-terminal-output');
+  const runTerminalBtn = document.getElementById('run-terminal-btn') || document.getElementById('run-clay-cmd-btn');
+  const termClearDot = document.getElementById('term-clear-dot') || document.getElementById('term-btn-red');
+
+  if (terminalInput && terminalOutput) {
+    const TERMINAL_COMMANDS = [
+      'help', 'about', 'skills', 'projects', 'roast', 'contact', 'hack', 'coffee',
+      'joke', 'whoami', 'clear', 'matrix', 'time', 'stats', 'suggest',
+      'excuse', 'tea', 'gossip', 'hire', 'coin', 'flip', 'mimo', 'ai'
+    ];
+    const cmdHistory = [];
+    let historyIdx = -1;
+
+    // Combined Roasts Pool (System Telemetry + Mimo Personality)
+    const TERMINAL_ROASTS = [
+      "🔥 SYSTEM ROAST: You have 52 browser tabs open, 4 of which are StackOverflow answers from 2018. Your posture right now looks like a boiled shrimp. Sit up straight!",
+      "🔥 SYSTEM ROAST: You've spent the last 5 minutes testing random commands in a website terminal instead of doing what you opened your laptop for. We see you.",
+      "🔥 SYSTEM ROAST: Your internet ping has more emotional baggage than a junior dev pushing directly to production on Friday at 5:59 PM.",
+      "🔥 SYSTEM ROAST: You probably star GitHub repositories like you're collecting Pokémon cards, but haven't written a commit since Tuesday.",
+      "🔥 MIMO ROAST: Srinjoyee spent 3 hours deciding between two shades of charcoal grey that look identical to every human with normal 20/20 vision. Meanwhile, you're typing in a website terminal instead of finishing your work. We are both running on questionable life choices. 😭🔥",
+      "🔥 MIMO ROAST: Her Git commit history goes from <em>'Initial microservices architecture commit'</em> at 11 AM to <em>'PLEASE JUST WORK BRO I BEG YOU I WILL NEVER COMMIT TO MAIN AGAIN'</em> at 3:45 AM. Pure software engineering perfectionism. 💅",
+      "🔥 MIMO ROAST: Srinjoyee has 20+ hackathon wins, 4 years of UI/UX craft, and still refreshes the browser 15 times to see if 1px margin-top actually changed. Don't worry, we don't judge. 🤡",
+      "🔥 MIMO ROAST: You want a roast? You've scrolled all the way through this portfolio without hiring Srinjoyee or sending a message. That's a bigger bug than an unclosed &lt;div&gt; tag in production! 💥"
     ];
 
     // Dev Excuses Pool
@@ -1867,242 +1957,11 @@ document.addEventListener('DOMContentLoaded', () => {
       "🐛 <em>'That's not a bug. It's an undocumented surprise feature with spicy behavior!'</em>",
       "🐛 <em>'A cosmic solar flare definitely flipped a bit in the server cache right when you clicked that.'</em>",
       "🐛 <em>'The AI hallucinated that requirement, I just wrote the unit tests!'</em>",
-      "🐛 <em>'Somebody pushed directly to main on a Friday at 5:59 PM and immediately slammed their laptop shut.'</em>"
+      "🐛 <em>'Somebody pushed directly to main on a Friday at 5:59 PM and immediately slammed their laptop shut.'</em>",
+      "🐛 <em>'It's a quantum feature: observation changes the outcome.'</em>"
     ];
 
-    // Helper: Clear Chat
-    function clearMimoChat() {
-      mimoMessagesBody.innerHTML = `
-        <div class="mimo-msg bot-msg">
-          <div class="msg-avatar-icon">🤖</div>
-          <div class="msg-bubble">
-            <p>🧹 <em>*Poof!*</em> Chat history wiped clean. Slate reset! What do you wanna check out now, friend?</p>
-            <div class="mimo-inline-actions">
-              <button type="button" class="mimo-action-chip" data-action="query" data-val="projects">🚀 Projects</button>
-              <button type="button" class="mimo-action-chip" data-action="query" data-val="roast">🔥 Roast Srinjoyee</button>
-              <button type="button" class="mimo-action-chip" data-action="query" data-val="excuse">🎲 Dev Excuse</button>
-              <button type="button" class="mimo-action-chip" data-action="query" data-val="gossip">☕ Dev Tea</button>
-            </div>
-            <div class="mimo-reactions-bar">
-              <button type="button" class="mimo-reaction-btn" data-emoji="😂" title="Laugh">😂 <span class="rx-count">0</span></button>
-              <button type="button" class="mimo-reaction-btn" data-emoji="🔥" title="Fire">🔥 <span class="rx-count">0</span></button>
-              <button type="button" class="mimo-reaction-btn" data-emoji="❤️" title="Love">❤️ <span class="rx-count">0</span></button>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    // Bot Response Logic
-    function handleQuery(queryText) {
-      const q = queryText.toLowerCase().trim();
-      let reply = "";
-      let actions = [];
-
-      if (q.includes('work') || q.includes('project') || q.includes('build')) {
-        reply = "Oh, you want to see actual code and engineering? Thank goodness, I thought you were gonna ask me to write a poem about cryptocurrency. 😂<br><br>Srinjoyee builds heavy-duty full-stack & edge AI systems that solve real problems (zero generic todo-app filler):<br>• 🛰️ <strong>Nobodristhi:</strong> Drone AI saving humans during floods<br>• 🩺 <strong>Vani:</strong> Audio tele-triage streaming live vitals<br>• 🔥 <strong>Agnivaarak:</strong> Edge fire surveillance engine<br>• ⚡ <strong>NexVyapaar:</strong> Offline retail POS for local stores<br>• ♻️ <strong>Punarchakra:</strong> Circular economy AI e-waste classifier<br>• 🔐 <strong>Anchor:</strong> Vector knowledge memory vault";
-        actions = [
-          { label: '🚀 Jump to Projects Deck', action: 'navigate', val: 'projects' },
-          { label: '🔥 Roast Srinjoyee', action: 'query', val: 'roast' },
-          { label: '🛠️ Actual Skills', action: 'query', val: 'skills' }
-        ];
-        showTypingIndicator(() => {
-          addMimoMessage(reply, 'bot', actions);
-          document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
-        });
-        return;
-      }
-
-      if (q.includes('roast')) {
-        const roast = MIMO_ROASTS[Math.floor(Math.random() * MIMO_ROASTS.length)];
-        reply = roast;
-        actions = [
-          { label: '🔥 Roast Again', action: 'query', val: 'roast' },
-          { label: '☕ Spill Dev Tea', action: 'query', val: 'gossip' },
-          { label: '🎲 Dev Excuse', action: 'query', val: 'excuse' }
-        ];
-        showTypingIndicator(() => {
-          addMimoMessage(reply, 'bot', actions);
-        });
-        return;
-      }
-
-      if (q.includes('excuse') || q.includes('bug')) {
-        const excuse = DEV_EXCUSES[Math.floor(Math.random() * DEV_EXCUSES.length)];
-        reply = `<strong>OFFICIAL DEVELOPER EXCUSE GENERATOR:</strong><br><br>${excuse}`;
-        actions = [
-          { label: '🔄 Another Excuse', action: 'query', val: 'excuse' },
-          { label: '☕ Dev Tea', action: 'query', val: 'gossip' },
-          { label: '🚀 Show Projects', action: 'query', val: 'projects' }
-        ];
-        showTypingIndicator(() => {
-          addMimoMessage(reply, 'bot', actions);
-        });
-        return;
-      }
-
-      if (q.includes('tea') || q.includes('gossip') || q.includes('secret')) {
-        reply = "<strong>CONFIDENTIAL DEV TEA ☕:</strong><br><br>1. Half of Srinjoyee's code comments are literally just <em>'DO NOT TOUCH THIS OR THE WHOLE UNIVERSE BREAKS'</em>.<br>2. She drinks so much coffee her blood type is probably Espresso Positive.<br>3. Zero jQuery was harmed in building this site. Pure modern JavaScript, GSAP & React elegance.";
-        actions = [
-          { label: '🔥 Roast Her', action: 'query', val: 'roast' },
-          { label: '🛠️ Actual Skills', action: 'query', val: 'skills' },
-          { label: '📩 Hire Her Now', action: 'query', val: 'hire' }
-        ];
-        showTypingIndicator(() => {
-          addMimoMessage(reply, 'bot', actions);
-        });
-        return;
-      }
-
-      if (q.includes('coin') || q.includes('flip')) {
-        const isHeads = Math.random() > 0.3;
-        reply = `Flipping quantum decision coin... 🪙<br><br>Result: <strong>${isHeads ? 'HEADS! 🎉' : 'TAILS! 🎯'}</strong><br>The universe has spoken: You must hire Srinjoyee immediately.<br><em>(Note: Even if it landed on edge, company protocol dictates you still hire her. I don't make the rules).</em>`;
-        actions = [
-          { label: '🪙 Flip Again', action: 'query', val: 'coin' },
-          { label: '📩 Hire Her Now', action: 'query', val: 'hire' },
-          { label: '🚀 Show Projects', action: 'query', val: 'projects' }
-        ];
-        showTypingIndicator(() => {
-          addMimoMessage(reply, 'bot', actions);
-        });
-        return;
-      }
-
-      if (q.includes('skill') || q.includes('tool') || q.includes('stack')) {
-        reply = "Here's what Srinjoyee brings to the table (besides relentless energy and caffeine):<br>• <strong>Frontend:</strong> React, Three.js, WebGL, GSAP, Tailwind & Vanilla CSS (can center a &lt;div&gt; with eyes closed).<br>• <strong>Backend & AI:</strong> Python, Node, PyTorch, Edge AI, FastAPI.<br>• <strong>Databases:</strong> PostgreSQL, Redis, Vector Embeddings.<br>• <strong>Soft Skills:</strong> Explaining to clients why 'just making the logo bigger' won't double their conversion rate. 🎯";
-        actions = [
-          { label: '🚀 See Featured Builds', action: 'query', val: 'projects' },
-          { label: '📩 Let\'s Talk', action: 'query', val: 'hire' }
-        ];
-        showTypingIndicator(() => {
-          addMimoMessage(reply, 'bot', actions);
-        });
-        return;
-      }
-
-      if (q.includes('hire') || q.includes('contact') || q.includes('mail') || q.includes('freelance') || q.includes('job')) {
-        reply = "10/10 engineers and startup founders recommend hiring Srinjoyee before she gets poached by Big Tech. 🤝<br><br>She specializes in full-stack platforms, high-performance interactive UI/UX, and AI applications.<br><br>Drop an email at: <strong>hello@srinjoyee.dev</strong>";
-        actions = [
-          { label: '📋 Copy Email', action: 'copy', val: 'hello@srinjoyee.dev' },
-          { label: '⬇️ Scroll to Contact Form', action: 'navigate', val: 'contact' }
-        ];
-        showTypingIndicator(() => {
-          addMimoMessage(reply, 'bot', actions);
-        });
-        return;
-      }
-
-      if (q.includes('about') || q.includes('yourself') || q.includes('who') || q.includes('experience')) {
-        reply = "Srinjoyee is a multidisciplinary visual technologist & software developer who loves building products that look insanely gorgeous and perform at lightning speed. ⚡<br><br>When she isn't coding, she's designing, participating in national hackathons, or training me (Mimo) to be less sarcastic. <em>Clearly that last part isn't going well.</em> 😉";
-        actions = [
-          { label: '👀 Check About Section', action: 'navigate', val: 'about' },
-          { label: '🔥 Roast Her', action: 'query', val: 'roast' },
-          { label: '🚀 Projects', action: 'query', val: 'projects' }
-        ];
-        showTypingIndicator(() => {
-          addMimoMessage(reply, 'bot', actions);
-        });
-        return;
-      }
-
-      if (q.includes('clear') || q.includes('clean') || q.includes('reset')) {
-        clearMimoChat();
-        return;
-      }
-
-      // Default Sarcastic Fallback
-      reply = `Beep boop! 🤖 My neural pathways didn't compute <em>"${queryText}"</em>. But hey, don't leave me hanging! Try clicking one of the buttons below to see projects, get a sarcastic roast, or flip a coin! ✨`;
-      actions = [
-        { label: '🚀 Projects', action: 'query', val: 'projects' },
-        { label: '🔥 Roast Srinjoyee', action: 'query', val: 'roast' },
-        { label: '🎲 Dev Excuse', action: 'query', val: 'excuse' },
-        { label: '☕ Dev Tea', action: 'query', val: 'gossip' }
-      ];
-      showTypingIndicator(() => {
-        addMimoMessage(reply, 'bot', actions);
-      });
-    }
-
-    // Form Submission
-    mimoForm?.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const text = mimoInput.value.trim();
-      if (!text) return;
-
-      addMimoMessage(text, 'user');
-      mimoInput.value = '';
-      handleQuery(text);
-    });
-
-    // Quick Pill Buttons
-    mimoQuickPills?.addEventListener('click', (e) => {
-      const btn = e.target.closest('.quick-pill-btn');
-      if (btn) {
-        const query = btn.getAttribute('data-query');
-        addMimoMessage(btn.textContent.trim(), 'user');
-        handleQuery(query);
-      }
-    });
-
-    // Click handler for Inline Reactions & Action Chips inside Mimo messages
-    mimoMessagesBody.addEventListener('click', (e) => {
-      // 1. Reaction button click
-      const rxBtn = e.target.closest('.mimo-reaction-btn');
-      if (rxBtn) {
-        const countSpan = rxBtn.querySelector('.rx-count');
-        if (countSpan) {
-          const count = parseInt(countSpan.textContent || '0', 10);
-          countSpan.textContent = count + 1;
-          rxBtn.classList.add('reacted');
-        }
-        return;
-      }
-
-      // 2. Action chip click
-      const actionBtn = e.target.closest('.mimo-action-chip');
-      if (actionBtn) {
-        const action = actionBtn.getAttribute('data-action');
-        const val = actionBtn.getAttribute('data-val');
-        if (action === 'navigate') {
-          const target = document.getElementById(val);
-          target?.scrollIntoView({ behavior: 'smooth' });
-        } else if (action === 'query') {
-          addMimoMessage(actionBtn.textContent.trim(), 'user');
-          handleQuery(val);
-        } else if (action === 'copy') {
-          navigator.clipboard?.writeText(val).catch(() => {});
-          const original = actionBtn.textContent;
-          actionBtn.textContent = '✅ Email Copied!';
-          setTimeout(() => {
-            actionBtn.textContent = original;
-          }, 2500);
-        } else if (action === 'clear') {
-          clearMimoChat();
-        }
-      }
-    });
-  }
-
-  /* --------------------------------------------------------------------------
-     13. LIVE UPLINK TERMINAL INTERACTIVE CLI CONTROLLER (raghawshukla.xyz match)
-     -------------------------------------------------------------------------- */
-  const terminalInput = document.getElementById('terminal-input') || document.getElementById('clay-terminal-input');
-  const terminalOutput = document.getElementById('terminal-output') || document.getElementById('clay-terminal-output');
-  const runTerminalBtn = document.getElementById('run-terminal-btn') || document.getElementById('run-clay-cmd-btn');
-  const termClearDot = document.getElementById('term-clear-dot') || document.getElementById('term-btn-red');
-
-  if (terminalInput && terminalOutput) {
-    const TERMINAL_COMMANDS = ['help', 'about', 'skills', 'projects', 'roast', 'contact', 'hack', 'coffee', 'joke', 'whoami', 'clear', 'matrix', 'time', 'stats', 'suggest'];
-    const cmdHistory = [];
-    let historyIdx = -1;
-
-    const TERMINAL_ROASTS = [
-      "🔥 SYSTEM ROAST: You have 52 browser tabs open, 4 of which are StackOverflow answers from 2018. Your posture right now looks like a boiled shrimp. Sit up straight!",
-      "🔥 SYSTEM ROAST: You've spent the last 5 minutes testing random commands in a website terminal instead of doing what you opened your laptop for. We see you.",
-      "🔥 SYSTEM ROAST: Your internet ping has more emotional baggage than a junior dev pushing directly to production on Friday at 5:59 PM.",
-      "🔥 SYSTEM ROAST: You probably star GitHub repositories like you're collecting Pokémon cards, but haven't written a commit since Tuesday."
-    ];
-
+    // Developer Jokes Pool
     const TERMINAL_JOKES = [
       "Why do programmers prefer dark mode? Because light attracts bugs! 🐛",
       "A SQL query walks into a bar, walks up to two tables and asks: 'Can I join you?' 🍺",
@@ -2113,9 +1972,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function executeCommand(commandStr) {
       const raw = commandStr.trim();
+      if (!raw) return;
+      if (window.PortoSound) {
+        window.PortoSound.playClick(false);
+      }
       const cmd = raw.toLowerCase().split(' ')[0];
       const arg = raw.slice(cmd.length).trim();
-      if (!cmd) return;
 
       cmdHistory.push(commandStr);
       historyIdx = cmdHistory.length;
@@ -2123,7 +1985,7 @@ document.addEventListener('DOMContentLoaded', () => {
       // Append command prompt line
       const promptLine = document.createElement('div');
       promptLine.className = 'term-line prompt-line';
-      promptLine.innerHTML = `<span class="term-green" style="font-weight:700;">visitor@porto-uplink:~$</span> <span class="typed-cmd" style="color:#ECECE7;">${escapeHtml(commandStr)}</span>`;
+      promptLine.innerHTML = `<span class="term-green" style="font-weight:700;">visitor@mimo-uplink:~$</span> <span class="typed-cmd" style="color:#ECECE7;">${escapeHtml(commandStr)}</span>`;
       terminalOutput.appendChild(promptLine);
 
       // Response container
@@ -2132,22 +1994,30 @@ document.addEventListener('DOMContentLoaded', () => {
 
       switch (cmd) {
         case 'help':
+        case 'commands':
+        case '?':
           respLine.innerHTML = `
-            <p><strong class="term-yellow">AVAILABLE TERMINAL COMMANDS:</strong></p>
-            <p>&nbsp;&nbsp;<strong class="term-green">about</strong>     - Full developer overview & background</p>
-            <p>&nbsp;&nbsp;<strong class="term-green">skills</strong>    - Core technical stack & frameworks</p>
-            <p>&nbsp;&nbsp;<strong class="term-green">projects</strong>  - Featured production deployments</p>
-            <p>&nbsp;&nbsp;<strong class="term-green">contact</strong>   - Direct communication channels</p>
-            <p>&nbsp;&nbsp;<strong class="term-green">whoami</strong>    - Visitor session telemetry</p>
+            <p><strong class="term-yellow">AVAILABLE TERMINAL COMMANDS & AI SKILLS:</strong></p>
+            <p>&nbsp;&nbsp;<strong class="term-green">about</strong>     - Developer background, philosophy & bio</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">skills</strong>    - Core technical stack & active frameworks</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">projects</strong>  - Featured production deployments & deck</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">hire</strong>      - Why hire Srinjoyee + contact channels 🤝</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">contact</strong>   - Direct communication channels & email</p>
             <p>&nbsp;&nbsp;<strong class="term-green">roast</strong>     - Brutal AI roast of your browser & life choices 🔥</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">excuse</strong>    - Official Developer Excuse Generator 🎲</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">tea</strong>       - Confidential developer gossip / dev tea ☕</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">coin</strong>      - Quantum decision coin flip 🪙</p>
             <p>&nbsp;&nbsp;<strong class="term-green">coffee</strong>    - Liquid caffeine sanity recharge ☕</p>
             <p>&nbsp;&nbsp;<strong class="term-green">joke</strong>      - Engineering humor to survive sprint deadlines 🎭</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">mimo</strong>      - Mimo AI companion persona & status 🤖</p>
             <p>&nbsp;&nbsp;<strong class="term-green">hack</strong>      - Simulated classified neural network uplink 💻</p>
             <p>&nbsp;&nbsp;<strong class="term-green">matrix</strong>    - Digital falling code rain 🟢</p>
-            <p>&nbsp;&nbsp;<strong class="term-green">time</strong>      - Current live studio chronometer ⏰</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">time</strong>      - Current live studio chronometer (IST) ⏰</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">whoami</strong>    - Visitor session telemetry</p>
             <p>&nbsp;&nbsp;<strong class="term-green">stats</strong>     - Real-time developer telemetry metrics 📊</p>
             <p>&nbsp;&nbsp;<strong class="term-green">suggest &lt;msg&gt;</strong> - Transmit quick suggestion to Srinjoyee</p>
             <p>&nbsp;&nbsp;<strong class="term-green">clear</strong>     - Reset and wipe terminal output 🧹</p>
+            <p class="term-muted">💡 Pro-tip: You can also ask conversational questions in plain English (e.g. <em>'why hire Srinjoyee?'</em>, <em>'who are you?'</em>, <em>'what stack do you use?'</em>)!</p>
           `;
           break;
 
@@ -2159,17 +2029,27 @@ document.addEventListener('DOMContentLoaded', () => {
             <p>• Focus: Real-time computer vision, distributed neural systems, edge AI, and high-performance WebGL.</p>
             <p>• Track Record: 20+ national hackathon championships (Smart India Hackathon, Techfest IIT Bombay, Google DevFest).</p>
             <p>• Philosophy: <em>"Software should be brutally fast, mathematically rigorous, and visually memorable."</em></p>
+            <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+              <button type="button" class="term-chip" data-cmd="skills">skills ⚡</button>
+              <button type="button" class="term-chip" data-cmd="projects">projects 🚀</button>
+              <button type="button" class="term-chip" data-cmd="hire">hire 🤝</button>
+              <button type="button" class="term-chip" data-cmd="roast">roast 🔥</button>
+            </div>
           `;
           break;
 
         case 'skills':
+        case 'stack':
           respLine.innerHTML = `
             <p>⚡ <strong class="term-yellow">TECHNICAL ARSENAL // ACTIVE STACKS:</strong></p>
             <p>&nbsp;&nbsp;[AI & TENSORS]  Python, PyTorch, YOLOv8, LangChain, pgvector, Edge AI</p>
             <p>&nbsp;&nbsp;[FRONTEND]      React 19, Next.js, Three.js, GSAP, WebGL, Tailwind</p>
             <p>&nbsp;&nbsp;[BACKEND]       Node.js, Express, FastAPI, PostgreSQL, Redis, WebSockets</p>
             <p>&nbsp;&nbsp;[DEVOPS & 3D]   Docker, AWS, Cloud Run, Blender, Unity, Figma</p>
-            <p><span class="term-muted">▶ Pro-tip: Scroll up to the Skills Dock to inspect all 14 active stacks!</span></p>
+            <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+              <button type="button" class="term-chip" data-cmd="projects">projects 🚀</button>
+              <button type="button" class="term-chip" data-cmd="hire">hire 🤝</button>
+            </div>
           `;
           break;
 
@@ -2183,9 +2063,32 @@ document.addEventListener('DOMContentLoaded', () => {
             <p> 4. ⚡ <strong class="term-green">NexVyapaar:</strong> Offline-first POS for Indian retail with instant sync.</p>
             <p> 5. ♻️ <strong class="term-green">Punarchakra:</strong> Circular economy AI classifier & recycling tracker.</p>
             <p> 6. 🔐 <strong class="term-green">Anchor:</strong> High-dimensional vector memory vault tighter than Fort Knox.</p>
-            <p><span class="term-yellow">▶ Scrolling to Projects showcase...</span></p>
+            <p><span class="term-yellow">▶ Navigating viewport to Projects deck...</span></p>
+            <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+              <button type="button" class="term-chip" data-cmd="hire">hire 🤝</button>
+              <button type="button" class="term-chip" data-cmd="skills">skills 🛠️</button>
+              <button type="button" class="term-chip" data-cmd="roast">roast 🔥</button>
+            </div>
           `;
           document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+          if (window.PortoSound) {
+            window.PortoSound.playNav();
+          }
+          break;
+
+        case 'hire':
+          respLine.innerHTML = `
+            <p>🤝 <strong class="term-yellow">WHY HIRE SRINJOYEE DEY:</strong></p>
+            <p>• 10/10 engineers and startup founders recommend hiring Srinjoyee before she gets poached by Big Tech.</p>
+            <p>• Specializes in end-to-end full-stack architectures, high-performance interactive 3D/WebGL interfaces, and computer vision &amp; edge AI.</p>
+            <p>• 20+ national hackathon podiums prove she delivers production-ready code under extreme time constraints.</p>
+            <p>• Direct Email: <a href="mailto:srinjoyeedey@gmail.com" class="term-green" style="text-decoration:underline;">srinjoyeedey@gmail.com</a></p>
+            <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+              <button type="button" class="term-chip" data-cmd="contact">contact 📩</button>
+              <button type="button" class="term-chip" data-cmd="projects">projects 🚀</button>
+              <button type="button" class="term-chip" data-cmd="coin">coin 🪙</button>
+            </div>
+          `;
           break;
 
         case 'contact':
@@ -2194,23 +2097,78 @@ document.addEventListener('DOMContentLoaded', () => {
             <p>• Email: <span class="term-green">srinjoyeedey@gmail.com</span></p>
             <p>• GitHub: <a href="https://github.com/SrinjoyeeDey" target="_blank" style="color:#FFBD12; text-decoration:underline;">github.com/SrinjoyeeDey</a></p>
             <p>• LinkedIn: <a href="https://linkedin.com/in/srinjoyee-dey" target="_blank" style="color:#FFBD12; text-decoration:underline;">linkedin.com/in/srinjoyee-dey</a></p>
-            <p>• Fill the form on the left to transmit your payload directly!</p>
-          `;
-          break;
-
-        case 'whoami':
-          respLine.innerHTML = `
-            <p>👤 <strong class="term-yellow">CLIENT SESSION TELEMETRY:</strong></p>
-            <p>&nbsp;&nbsp;• Node: <span class="term-green">visitor@portfolio-uplink.local</span></p>
-            <p>&nbsp;&nbsp;• User-Agent: <span class="term-muted">${navigator.userAgent.slice(0, 65)}...</span></p>
-            <p>&nbsp;&nbsp;• Screen: <span class="term-green">${window.innerWidth}x${window.innerHeight} (${window.devicePixelRatio}x DPR)</span></p>
-            <p>&nbsp;&nbsp;• Connection: <span class="term-green">Uplink Active • TLS 1.3 Verified</span></p>
+            <p>• Fill out the form on the left to transmit your payload directly!</p>
           `;
           break;
 
         case 'roast':
           const roast = TERMINAL_ROASTS[Math.floor(Math.random() * TERMINAL_ROASTS.length)];
-          respLine.innerHTML = `<p>${roast}</p>`;
+          respLine.innerHTML = `
+            <p>${roast}</p>
+            <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+              <button type="button" class="term-chip" data-cmd="roast">roast again 🔥</button>
+              <button type="button" class="term-chip" data-cmd="tea">dev tea ☕</button>
+              <button type="button" class="term-chip" data-cmd="excuse">dev excuse 🎲</button>
+            </div>
+          `;
+          break;
+
+        case 'excuse':
+          const excuse = DEV_EXCUSES[Math.floor(Math.random() * DEV_EXCUSES.length)];
+          respLine.innerHTML = `
+            <p>🎲 <strong class="term-yellow">OFFICIAL DEVELOPER EXCUSE GENERATOR:</strong></p>
+            <p>${excuse}</p>
+            <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+              <button type="button" class="term-chip" data-cmd="excuse">another excuse 🔄</button>
+              <button type="button" class="term-chip" data-cmd="tea">dev tea ☕</button>
+              <button type="button" class="term-chip" data-cmd="roast">roast 🔥</button>
+            </div>
+          `;
+          break;
+
+        case 'tea':
+        case 'gossip':
+          respLine.innerHTML = `
+            <p>☕ <strong class="term-yellow">CONFIDENTIAL DEV TEA:</strong></p>
+            <p>1. Half of Srinjoyee's code comments are literally just <em>'DO NOT TOUCH THIS OR THE WHOLE UNIVERSE BREAKS'</em>.</p>
+            <p>2. She drinks so much coffee her blood type is probably Espresso Positive.</p>
+            <p>3. Zero jQuery was harmed in building this site. Pure modern JavaScript, GSAP, WebGL &amp; React elegance.</p>
+            <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+              <button type="button" class="term-chip" data-cmd="hire">hire 🤝</button>
+              <button type="button" class="term-chip" data-cmd="roast">roast 🔥</button>
+              <button type="button" class="term-chip" data-cmd="projects">projects 🚀</button>
+            </div>
+          `;
+          break;
+
+        case 'coin':
+        case 'flip':
+          const isHeads = Math.random() > 0.3;
+          respLine.innerHTML = `
+            <p>🪙 <strong class="term-yellow">QUANTUM DECISION COIN:</strong></p>
+            <p>Result: <strong class="term-green">${isHeads ? 'HEADS! 🎉' : 'TAILS! 🎯'}</strong></p>
+            <p>The universe has spoken: You must hire Srinjoyee immediately.<br><span class="term-muted"><em>(Note: Even if it landed on edge, company protocol dictates you still hire her. I don't make the rules 😉).</em></span></p>
+            <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+              <button type="button" class="term-chip" data-cmd="coin">flip again 🪙</button>
+              <button type="button" class="term-chip" data-cmd="hire">hire 🤝</button>
+            </div>
+          `;
+          break;
+
+        case 'mimo':
+        case 'ai':
+          respLine.innerHTML = `
+            <p>🤖 <strong class="term-yellow">MIMO AI ENGINE v5.0 [TERMINAL EDITION]:</strong></p>
+            <p>Beep boop! 👋 I am <strong>Mimo</strong>, Srinjoyee's resident AI companion &amp; full-time debugger.</p>
+            <p>I have been integrated directly into this terminal console! You can run standard CLI commands or ask me anything in plain English (e.g. <em>'why hire Srinjoyee?'</em>, <em>'roast me'</em>, <em>'show projects'</em>).</p>
+            <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+              <button type="button" class="term-chip" data-cmd="about">about</button>
+              <button type="button" class="term-chip" data-cmd="skills">skills</button>
+              <button type="button" class="term-chip" data-cmd="projects">projects</button>
+              <button type="button" class="term-chip" data-cmd="roast">roast 🔥</button>
+              <button type="button" class="term-chip" data-cmd="tea">dev tea ☕</button>
+            </div>
+          `;
           break;
 
         case 'joke':
@@ -2238,7 +2196,7 @@ document.addEventListener('DOMContentLoaded', () => {
               &gt; INITIALIZING BRUTE_FORCE KERNEL DEPLOYMENT...<br>
               &gt; BYPASSING QUANTUM HANDSHAKE... [OK]<br>
               &gt; INJECTING NEURAL WEIGHT MATRICES... [OK]<br>
-              &gt; ACCESS GRANTED TO MAINFRAME: <strong class="term-yellow">SRINJOYEE_STUDIO_V4</strong><br>
+              &gt; ACCESS GRANTED TO MAINFRAME: <strong class="term-yellow">SRINJOYEE_STUDIO_V5</strong><br>
               &gt; Mission: Building revolutionary experiences that break the internet 🚀
             </p>
           `;
@@ -2252,6 +2210,16 @@ document.addEventListener('DOMContentLoaded', () => {
               01000011 01001111 01001110 01001110 01000101 01000011<br>
               Wake up, Neo... The Matrix has you. Follow the white rabbit 🐇
             </p>
+          `;
+          break;
+
+        case 'whoami':
+          respLine.innerHTML = `
+            <p>👤 <strong class="term-yellow">CLIENT SESSION TELEMETRY:</strong></p>
+            <p>&nbsp;&nbsp;• Node: <span class="term-green">visitor@mimo-uplink.local</span></p>
+            <p>&nbsp;&nbsp;• User-Agent: <span class="term-muted">${navigator.userAgent.slice(0, 65)}...</span></p>
+            <p>&nbsp;&nbsp;• Screen: <span class="term-green">${window.innerWidth}x${window.innerHeight} (${window.devicePixelRatio}x DPR)</span></p>
+            <p>&nbsp;&nbsp;• Connection: <span class="term-green">Uplink Active • TLS 1.3 Verified</span></p>
           `;
           break;
 
@@ -2290,6 +2258,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 message: arg,
                 _subject: '[Terminal Suggestion / Idea] New feedback submitted'
               })
+            }).then(() => {
+              if (window.PortoSound) window.PortoSound.playSuccess();
             }).catch(() => {});
           }
           break;
@@ -2305,10 +2275,11 @@ document.addEventListener('DOMContentLoaded', () => {
   |____/|_| \_\_|_| \_| |_| /___/_/   \_\ </pre>
             </div>
             <div class="term-boot-sequence">
-              <div class="term-log-line"><span class="term-dim">// BUFFER_CLEARED:</span> <span class="term-val-green">READY</span> <span class="term-muted">|</span> <span class="term-dim">PORT:</span> <span class="term-val-green">443 (TLS 1.3)</span></div>
+              <div class="term-log-line"><span class="term-dim">// ARCHITECTURE:</span> <span class="term-val-green">NEURAL-EDGE v5.0 [MIMO_AI_CORE]</span></div>
+              <div class="term-log-line"><span class="term-dim">// SUBSYSTEMS:</span> <span class="term-val-green">READY</span> <span class="term-muted">|</span> <span class="term-dim">PORT:</span> <span class="term-val-green">443 (TLS 1.3)</span></div>
               <div class="term-log-line term-divider">─────────────────────────────────────────────────────────────────</div>
               <div class="term-log-line prompt-hint">
-                <span class="term-prompt-green">$</span> Terminal wiped. Type <span class="term-chip-hint">'help'</span> or tap chips below:
+                <span class="term-prompt-green">$</span> Terminal wiped. Type <span class="term-chip-hint">'help'</span> or ask anything below:
               </div>
             </div>
           `;
@@ -2316,7 +2287,67 @@ document.addEventListener('DOMContentLoaded', () => {
           return;
 
         default:
-          respLine.innerHTML = `<p class="term-muted">zsh: command not found: "${escapeHtml(commandStr)}". Type <span class="term-yellow">'help'</span> for list of commands!</p>`;
+          // Natural Language AI Processing with Mimo
+          const q = raw.toLowerCase();
+          if (q.includes('hi') || q.includes('hello') || q.includes('hey')) {
+            respLine.innerHTML = `
+              <p>🤖 <strong class="term-yellow">MIMO_CORE:</strong> Hey there! 👋 I'm Mimo, Srinjoyee's AI companion running inside the Uplink Terminal.</p>
+              <p>Ask me about her projects, why you should hire her, get a spicy roast, or inspect her actual tech stack!</p>
+              <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+                <button type="button" class="term-chip" data-cmd="projects">projects 🚀</button>
+                <button type="button" class="term-chip" data-cmd="hire">why hire her? 🤝</button>
+                <button type="button" class="term-chip" data-cmd="skills">skills ⚡</button>
+                <button type="button" class="term-chip" data-cmd="roast">roast 🔥</button>
+              </div>
+            `;
+          } else if (q.includes('hire') || q.includes('work') || q.includes('freelance') || q.includes('contract') || q.includes('job')) {
+            executeCommand('hire');
+            return;
+          } else if (q.includes('project') || q.includes('build') || q.includes('work') || q.includes('portfolio')) {
+            executeCommand('projects');
+            return;
+          } else if (q.includes('skill') || q.includes('stack') || q.includes('tech') || q.includes('framework')) {
+            executeCommand('skills');
+            return;
+          } else if (q.includes('who') || q.includes('about') || q.includes('bio') || q.includes('experience')) {
+            executeCommand('about');
+            return;
+          } else if (q.includes('contact') || q.includes('mail') || q.includes('reach') || q.includes('email')) {
+            executeCommand('contact');
+            return;
+          } else if (q.includes('roast')) {
+            executeCommand('roast');
+            return;
+          } else if (q.includes('excuse') || q.includes('bug')) {
+            executeCommand('excuse');
+            return;
+          } else if (q.includes('tea') || q.includes('gossip') || q.includes('secret')) {
+            executeCommand('tea');
+            return;
+          } else if (q.includes('coin') || q.includes('flip')) {
+            executeCommand('coin');
+            return;
+          } else if (q.includes('joke') || q.includes('funny') || q.includes('laugh')) {
+            executeCommand('joke');
+            return;
+          } else if (q.includes('coffee') || q.includes('caffeine')) {
+            executeCommand('coffee');
+            return;
+          } else {
+            respLine.innerHTML = `
+              <p>🤖 <strong class="term-yellow">MIMO_CORE:</strong> I processed your query: <em>"${escapeHtml(raw)}"</em>.</p>
+              <p>I don't have a direct shell script for that exact command, but here are actions you can execute right now:</p>
+              <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
+                <button type="button" class="term-chip" data-cmd="projects">projects 🚀</button>
+                <button type="button" class="term-chip" data-cmd="skills">skills ⚡</button>
+                <button type="button" class="term-chip" data-cmd="hire">hire her 🤝</button>
+                <button type="button" class="term-chip" data-cmd="roast">roast 🔥</button>
+                <button type="button" class="term-chip" data-cmd="excuse">dev excuse 🎲</button>
+                <button type="button" class="term-chip" data-cmd="tea">dev tea ☕</button>
+                <button type="button" class="term-chip" data-cmd="help">help 📖</button>
+              </div>
+            `;
+          }
           break;
       }
 
