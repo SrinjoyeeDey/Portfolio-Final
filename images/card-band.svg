@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 768" width="192" height="768">
+  <defs>
+    <linearGradient id="strapBg" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#0E0F12"/>
+      <stop offset="15%" stop-color="#181A22"/>
+      <stop offset="50%" stop-color="#1E212B"/>
+      <stop offset="85%" stop-color="#181A22"/>
+      <stop offset="100%" stop-color="#0E0F12"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Strap Base -->
+  <rect width="192" height="768" fill="url(#strapBg)"/>
+
+  <!-- Left and Right Stitched Gold Borders -->
+  <line x1="16" y1="0" x2="16" y2="768" stroke="#FFBD12" stroke-width="3" stroke-dasharray="8 6" stroke-opacity="0.8"/>
+  <line x1="176" y1="0" x2="176" y2="768" stroke="#FFBD12" stroke-width="3" stroke-dasharray="8 6" stroke-opacity="0.8"/>
+
+  <!-- Center Repeating Text (Vertical) -->
+  <g transform="translate(96, 0)">
+    
+      <g transform="translate(0, 0)">
+        <text x="0" y="30" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="900" font-size="16" fill="#FFBD12" text-anchor="middle" letter-spacing="4">
+          ★ SIH '24 WINNER ★
+        </text>
+        <text x="0" y="65" font-family="'JetBrains Mono', monospace" font-weight="800" font-size="13" fill="#FFFFFF" text-anchor="middle" letter-spacing="3">
+          SRINJOYEE DEY
+        </text>
+        <text x="0" y="98" font-family="'JetBrains Mono', monospace" font-weight="700" font-size="11" fill="#94A3B8" text-anchor="middle" letter-spacing="2">
+          RANK #1 NATIONWIDE
+        </text>
+        <circle cx="0" cy="130" r="4" fill="#FFBD12"/>
+        <line x1="-30" y1="130" x2="30" y2="130" stroke="#FFBD12" stroke-width="1.5" stroke-opacity="0.4"/>
+      </g>
+
+      <g transform="translate(0, 192)">
+        <text x="0" y="30" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="900" font-size="16" fill="#FFBD12" text-anchor="middle" letter-spacing="4">
+          ★ SIH '24 WINNER ★
+        </text>
+        <text x="0" y="65" font-family="'JetBrains Mono', monospace" font-weight="800" font-size="13" fill="#FFFFFF" text-anchor="middle" letter-spacing="3">
+          SRINJOYEE DEY
+        </text>
+        <text x="0" y="98" font-family="'JetBrains Mono', monospace" font-weight="700" font-size="11" fill="#94A3B8" text-anchor="middle" letter-spacing="2">
+          RANK #1 NATIONWIDE
+        </text>
+        <circle cx="0" cy="130" r="4" fill="#FFBD12"/>
+        <line x1="-30" y1="130" x2="30" y2="130" stroke="#FFBD12" stroke-width="1.5" stroke-opacity="0.4"/>
+      </g>
+
+      <g transform="translate(0, 384)">
+        <text x="0" y="30" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="900" font-size="16" fill="#FFBD12" text-anchor="middle" letter-spacing="4">
+          ★ SIH '24 WINNER ★
+        </text>
+        <text x="0" y="65" font-family="'JetBrains Mono', monospace" font-weight="800" font-size="13" fill="#FFFFFF" text-anchor="middle" letter-spacing="3">
+          SRINJOYEE DEY
+        </text>
+        <text x="0" y="98" font-family="'JetBrains Mono', monospace" font-weight="700" font-size="11" fill="#94A3B8" text-anchor="middle" letter-spacing="2">
+          RANK #1 NATIONWIDE
+        </text>
+        <circle cx="0" cy="130" r="4" fill="#FFBD12"/>
+        <line x1="-30" y1="130" x2="30" y2="130" stroke="#FFBD12" stroke-width="1.5" stroke-opacity="0.4"/>
+      </g>
+
+      <g transform="translate(0, 576)">
+        <text x="0" y="30" font-family="'Plus Jakarta Sans', system-ui, sans-serif" font-weight="900" font-size="16" fill="#FFBD12" text-anchor="middle" letter-spacing="4">
+          ★ SIH '24 WINNER ★
+        </text>
+        <text x="0" y="65" font-family="'JetBrains Mono', monospace" font-weight="800" font-size="13" fill="#FFFFFF" text-anchor="middle" letter-spacing="3">
+          SRINJOYEE DEY
+        </text>
+        <text x="0" y="98" font-family="'JetBrains Mono', monospace" font-weight="700" font-size="11" fill="#94A3B8" text-anchor="middle" letter-spacing="2">
+          RANK #1 NATIONWIDE
+        </text>
+        <circle cx="0" cy="130" r="4" fill="#FFBD12"/>
+        <line x1="-30" y1="130" x2="30" y2="130" stroke="#FFBD12" stroke-width="1.5" stroke-opacity="0.4"/>
+      </g>
+  </g>
+</svg>

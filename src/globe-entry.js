@@ -144,6 +144,38 @@ export function initGlobe() {
   window.addEventListener('pointerup', stopInteraction);
   window.addEventListener('pointercancel', stopInteraction);
 
+  window.teleportGlobe = (targetPhi, targetTheta) => {
+    if (window.gsap) {
+      const obj = { p: phi, t: theta };
+      window.gsap.to(obj, {
+        p: targetPhi,
+        t: targetTheta,
+        duration: 1.2,
+        ease: 'power2.out',
+        onUpdate: () => {
+          phi = obj.p;
+          theta = obj.t;
+          velocityX = 0;
+          velocityY = 0;
+        }
+      });
+    } else {
+      phi = targetPhi;
+      theta = targetTheta;
+    }
+  };
+
+  const teleportPills = document.querySelectorAll('.teleport-pill');
+  teleportPills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      teleportPills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      const targetPhi = parseFloat(pill.getAttribute('data-phi') || '0');
+      const targetTheta = parseFloat(pill.getAttribute('data-theta') || '0.25');
+      if (window.teleportGlobe) window.teleportGlobe(targetPhi, targetTheta);
+    });
+  });
+
   setTimeout(() => {
     if (canvas) canvas.style.opacity = '1';
   }, 100);

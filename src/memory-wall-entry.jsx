@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import DriftWall from './DriftWall';
+import PhotoGlobe from './PhotoGlobe';
 
 /**
  * Memory Wall Items
@@ -253,42 +253,9 @@ export function initMemoryWall() {
     ? window.MEMORY_WALL_ITEMS
     : MEMORY_WALL_ITEMS;
 
-  const driftTiles = items.map(item => ({
-    image: item.src || item.image,
-    title: item.title || item.alt || 'Memory',
-    subtitle: item.subtitle || ''
-  }));
-
   const root = createRoot(mountEl);
   root.render(
-    <div className="memory-wall-composite-stage">
-      {/* Drifting 3D Photo Mural across the entire viewport */}
-      <div className="memory-wall-drift-backdrop" aria-hidden="true">
-        <DriftWall
-          items={driftTiles}
-          columns={7}
-          tileWidth={230}
-          tileHeight={148}
-          gap={20}
-          tilt={12}
-          turn={-10}
-          roll={0}
-          perspective={1400}
-          depth={130}
-          speed={28}
-          direction="up"
-          variance={0.4}
-          parallax={0}
-          pauseOnHover={false}
-          lift={0}
-          fade={0.25}
-          dim={0.92}
-          grayscale={false}
-          overlayColor="transparent"
-          style={{ width: '100%', height: '100%' }}
-        />
-      </div>
-    </div>
+    <PhotoGlobe items={items} />
   );
 }
 

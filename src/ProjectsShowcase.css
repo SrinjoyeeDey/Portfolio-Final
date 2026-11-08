@@ -22,7 +22,7 @@
   min-height: 100vh;
   height: 100vh;
   overflow: hidden;
-  background-color: var(--showcase-ivory);
+  background-color: transparent;
   font-family: var(--showcase-font-body);
   user-select: none;
   -webkit-user-select: none;

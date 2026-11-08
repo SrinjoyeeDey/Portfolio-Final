@@ -88,8 +88,8 @@ const ScrollStack = forwardRef(({
       });
     }
 
-    // Distance pinned in pixels: tuned for silky smooth Lenis momentum
-    const getScrollDistance = () => (cards.length - 1) * Math.max(window.innerHeight * 0.9, 700);
+    // Distance pinned in pixels: tuned for silky smooth, movie-like Lenis momentum
+    const getScrollDistance = () => (cards.length - 1) * Math.max(window.innerHeight * 0.75, 600);
 
     const tl = gsap.timeline({
       scrollTrigger: {
@@ -98,8 +98,8 @@ const ScrollStack = forwardRef(({
         end: () => `+=${getScrollDistance()}`,
         pin: true,
         pinSpacing: true,
-        scrub: 0.5, // Butter-smooth momentum synced with Lenis!
-        anticipatePin: 0,
+        scrub: true, // Direct 1:1 sync with Lenis smooth lerp
+        anticipatePin: 1,
         invalidateOnRefresh: true,
         onUpdate: (self) => {
           const p = self.progress; // 0.0 to 1.0
@@ -123,7 +123,7 @@ const ScrollStack = forwardRef(({
       tl.to(cards[i], {
         yPercent: -50,
         scale: 1,
-        ease: 'power2.out',
+        ease: 'none',
         duration: 1
       }, stepLabel);
 
@@ -132,27 +132,27 @@ const ScrollStack = forwardRef(({
         const depth = i - j;
         const shade = cards[j].querySelector('.scroll-stack-card__shade');
         tl.to(cards[j], {
-          scale: Math.max(0.84, 1 - depth * 0.045),
-          yPercent: -50 - depth * 3.2,
-          ease: 'power2.out',
+          scale: Math.max(0.86, 1 - depth * 0.04),
+          yPercent: -50 - depth * 3.0,
+          ease: 'none',
           duration: 1
         }, stepLabel);
 
         if (shade) {
           tl.to(shade, {
-            opacity: Math.min(0.38, depth * 0.12),
-            ease: 'power2.out',
+            opacity: Math.min(0.35, depth * 0.1),
+            ease: 'none',
             duration: 1
           }, stepLabel);
         }
       }
 
-      // Buffer rest pause so each card can be admired/interacted with
-      tl.to({}, { duration: 0.25 });
+      // Small resting interval
+      tl.to({}, { duration: 0.18 });
     }
 
     // Comfortable resting pause at final card before unpinning
-    tl.to({}, { duration: 0.5 });
+    tl.to({}, { duration: 0.3 });
 
     // Refresh ScrollTrigger after DOM setup
     ScrollTrigger.refresh();

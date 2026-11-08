@@ -50,10 +50,13 @@
   pointer-events: auto;
 }
 
-/* Card Themes */
+/* Frosted Glass Card Themes */
 .scroll-stack-card[data-theme="ivory"] {
-  background: #F4F2E9;
+  background: rgba(244, 242, 233, 0.88);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
   color: #242529;
+  border: 1px solid rgba(255, 255, 255, 0.7);
   box-shadow:
     0 0 0 1px rgba(36, 37, 41, 0.08),
     0 -10px 36px -12px rgba(36, 37, 41, 0.12),
@@ -61,8 +64,11 @@
 }
 
 .scroll-stack-card[data-theme="charcoal"] {
-  background: #15161A;
+  background: rgba(21, 22, 26, 0.88);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
   color: #F3F1E8;
+  border: 1px solid rgba(255, 255, 255, 0.18);
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.12),
     0 -14px 44px -16px rgba(0, 0, 0, 0.5),
@@ -70,8 +76,11 @@
 }
 
 .scroll-stack-card[data-theme="sand"] {
-  background: #EAE6D8;
+  background: rgba(234, 230, 216, 0.88);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
   color: #222428;
+  border: 1px solid rgba(255, 255, 255, 0.65);
   box-shadow:
     0 0 0 1px rgba(34, 36, 40, 0.1),
     0 -10px 36px -12px rgba(34, 36, 40, 0.12),
@@ -79,8 +88,11 @@
 }
 
 .scroll-stack-card[data-theme="slate"] {
-  background: #131418;
+  background: rgba(19, 20, 24, 0.88);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
   color: #FFFFFF;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.14),
     0 -14px 44px -16px rgba(0, 0, 0, 0.5),
@@ -88,8 +100,11 @@
 }
 
 .scroll-stack-card[data-theme="lime"] {
-  background: #D5E859;
+  background: rgba(213, 232, 89, 0.92);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
   color: #17181C;
+  border: 1px solid rgba(255, 255, 255, 0.7);
   box-shadow:
     0 0 0 1px rgba(23, 24, 28, 0.1),
     0 -10px 36px -12px rgba(23, 24, 28, 0.12),

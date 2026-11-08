@@ -52779,106 +52779,58 @@ ${FOIL_FRAGMENT_HEAD}`).replace("#include <opaque_fragment>", `${FOIL_FRAGMENT_B
       var import_client = __toESM(require_client());
       init_Lanyard2();
       var import_jsx_runtime2 = __toESM(require_jsx_runtime());
-      function LanyardApp() {
-        const [isOpen, setIsOpen] = (0, import_react2.useState)(true);
-        const droppedRef = (0, import_react2.useRef)(false);
-        const triggerDropAnimation = () => {
-          if (window.triggerLanyardDrop) {
-            window.triggerLanyardDrop();
-          } else {
-            window.dispatchEvent(new CustomEvent("drop-lanyard-card"));
-          }
-          droppedRef.current = true;
-        };
+      function LanyardSpotlight() {
         (0, import_react2.useEffect)(() => {
-          const overlay = document.getElementById("section-loader-overlay");
-          const isLoaderActive = overlay && overlay.classList.contains("active");
-          let safetyTimer = null;
-          const onWebsiteLoaded = () => {
-            setTimeout(() => {
-              triggerDropAnimation();
-            }, 120);
-          };
-          if (isLoaderActive) {
-            window.addEventListener("website-loaded", onWebsiteLoaded, { once: true });
-            safetyTimer = setTimeout(() => {
-              if (!droppedRef.current) {
-                triggerDropAnimation();
-              }
-            }, 4e3);
-          } else {
-            safetyTimer = setTimeout(() => {
-              triggerDropAnimation();
-            }, 300);
-          }
-          const handleToggleEvent = (e) => {
-            if (e?.detail?.force !== void 0) {
-              setIsOpen(e.detail.force);
-              if (e.detail.force) {
-                setTimeout(triggerDropAnimation, 80);
-              }
-            } else {
-              setIsOpen((prev) => {
-                const next = !prev;
-                if (next) {
-                  setTimeout(triggerDropAnimation, 80);
+          const section = document.getElementById("spotlight");
+          if (!section || !window.IntersectionObserver) return;
+          let hasDroppedOnce = false;
+          const observer = new IntersectionObserver(
+            (entries) => {
+              entries.forEach((entry) => {
+                if (entry.isIntersecting && !hasDroppedOnce && window.triggerLanyardDrop) {
+                  hasDroppedOnce = true;
+                  setTimeout(() => {
+                    window.triggerLanyardDrop();
+                  }, 150);
                 }
-                return next;
               });
-            }
-          };
-          window.addEventListener("toggle-lanyard", handleToggleEvent);
+            },
+            { threshold: 0.2 }
+          );
+          observer.observe(section);
           return () => {
-            if (safetyTimer) clearTimeout(safetyTimer);
-            window.removeEventListener("website-loaded", onWebsiteLoaded);
-            window.removeEventListener("toggle-lanyard", handleToggleEvent);
+            observer.disconnect();
           };
         }, []);
-        (0, import_react2.useEffect)(() => {
-          const navBtn = document.getElementById("nav-id-badge-toggle");
-          if (navBtn) {
-            if (isOpen) {
-              navBtn.classList.add("active");
-              navBtn.setAttribute("title", "Fold ID Pass back into navbar");
-              const label = navBtn.querySelector(".badge-label");
-              if (label) label.textContent = "FOLD PASS \u2191";
-            } else {
-              navBtn.classList.remove("active");
-              navBtn.setAttribute("title", "Drop ID Pass down from navbar");
-              const label = navBtn.querySelector(".badge-label");
-              if (label) label.textContent = "ID PASS \u2193";
-            }
-          }
-        }, [isOpen]);
-        return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: `lanyard-stage-container ${isOpen ? "is-deployed" : "is-folded"}`, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "lanyard-canvas-wrapper", children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
+        return /* @__PURE__ */ (0, import_jsx_runtime2.jsx)("div", { className: "lanyard-spotlight-wrapper", style: { width: "100%", height: "100%", position: "relative" }, children: /* @__PURE__ */ (0, import_jsx_runtime2.jsx)(
           Lanyard_default,
           {
             frontImage: "images/card-front.png",
             backImage: "images/card-back.png",
             strapImage: "images/card-band.png",
-            strapColor: "#111114",
-            cardColor: "#0f1013",
-            finish: "glossy",
+            strapColor: "#111215",
+            cardColor: "#0E0F13",
+            finish: "holographic",
             metal: "gold",
             orientation: "portrait",
-            cornerRadius: 0.22,
-            size: 0.68,
-            strapLength: 0.58,
-            strapWidth: 0.8,
+            cornerRadius: 0.25,
+            size: 0.78,
+            strapLength: 0.52,
+            strapWidth: 0.82,
             anchor: "center",
-            breeze: 0.35,
-            gravity: 1.05,
-            damping: 0.58,
-            elasticity: 0.42,
+            breeze: 0.4,
+            gravity: 1.1,
+            damping: 0.55,
+            elasticity: 0.45,
             interactive: true,
-            intro: false
+            intro: true
           }
-        ) }) });
+        ) });
       }
       var container = document.getElementById("lanyard-root");
       if (container) {
         const root = (0, import_client.createRoot)(container);
-        root.render(/* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LanyardApp, {}));
+        root.render(/* @__PURE__ */ (0, import_jsx_runtime2.jsx)(LanyardSpotlight, {}));
       }
     }
   });

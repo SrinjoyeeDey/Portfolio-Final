@@ -43,13 +43,13 @@
         lenis.on('scroll', ScrollTrigger.update);
       }
 
-      // Drive Lenis RAF via GSAP ticker with lagSmoothing enabled for silky 60/120fps sync
+      // Drive Lenis RAF via GSAP ticker
       if (typeof gsap !== 'undefined') {
         gsap.ticker.add((time) => {
           lenis.raf(time * 1000);
         });
-        // 500ms max lag adjustment, 33ms threshold prevents frame drops from causing sudden jerks
-        gsap.ticker.lagSmoothing(500, 33);
+        // Official Lenis + GSAP integration: disable lag smoothing so Lenis time delta remains linear and smooth
+        gsap.ticker.lagSmoothing(0);
       } else {
         function raf(time) {
           lenis.raf(time);
@@ -778,12 +778,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const sections = document.querySelectorAll('section[id]');
     const navItems = document.querySelectorAll('.nav-menu .nav-link');
     const vhPoint = window.innerHeight * 0.45;
+    const heroEl = document.getElementById('hero');
+    const heroBottom = heroEl ? heroEl.getBoundingClientRect().bottom : window.innerHeight;
+
+    // Toggle global background blur scrim when user scrolls past hero
+    const isPastHero = heroBottom < window.innerHeight * 0.5;
+    document.body.classList.toggle('scrolled-past-hero', isPastHero);
 
     sections.forEach(current => {
       const rect = current.getBoundingClientRect();
       const sectionId = current.getAttribute('id');
 
       if (rect.top <= vhPoint && rect.bottom >= vhPoint) {
+        document.body.setAttribute('data-active-section', sectionId);
+
         navItems.forEach(link => {
           const href = link.getAttribute('href');
           if (href === `#${sectionId}`) {
@@ -1127,39 +1135,279 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   /* --------------------------------------------------------------------------
-     5. CONTACT FORM & TOAST NOTIFICATION
+     5. CONTACT SECTION: FORMAL INQUIRY FORM & ANONYMOUS STICKY BOARD
      -------------------------------------------------------------------------- */
   const contactForm = document.getElementById('contact-form');
   const toast = document.getElementById('toast');
   const toastMessage = document.getElementById('toast-message');
 
-  if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-
-      const submitBtn = document.getElementById('submit-btn');
-      const originalText = submitBtn.innerHTML;
-
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = `<span>Sending...</span> <i class="fa-solid fa-spinner fa-spin"></i>`;
-
-      setTimeout(() => {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = originalText;
-        contactForm.reset();
-
-        showToast("Message sent successfully! I'll get back to you within 24 hours.");
-      }, 1200);
-    });
-  }
-
   function showToast(message) {
+    if (!toast || !toastMessage) return;
     toastMessage.textContent = message;
     toast.classList.add('active');
     setTimeout(() => {
       toast.classList.remove('active');
-    }, 4000);
+    }, 4500);
   }
+
+  // Synthesized tactile pop sound for clicks & pin drops
+  function playPinSound(freq = 640) {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, ctx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(freq * 1.8, ctx.currentTime + 0.05);
+      gain.gain.setValueAtTime(0.06, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.06);
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + 0.065);
+    } catch (e) {}
+  }
+
+  // --- PART A: FORMAL VERIFIED PROJECT INQUIRY FORM (raghawshukla.xyz match) ---
+  if (contactForm) {
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const nameInput = document.getElementById('contact-name');
+      const emailInput = document.getElementById('contact-email');
+      const msgInput = document.getElementById('contact-message');
+      const submitBtn = document.getElementById('submit-btn');
+      const formStatusMsg = document.getElementById('form-status-msg');
+      const selectedType = document.querySelector('input[name="project_type"]:checked')?.value || 'AI & Neural Systems';
+
+      const name = nameInput ? nameInput.value.trim() : '';
+      const email = emailInput ? emailInput.value.trim() : '';
+      const message = msgInput ? msgInput.value.trim() : '';
+
+      if (!name || !email || !message) {
+        showToast('Please fill out all required fields.');
+        return;
+      }
+
+      const originalHTML = submitBtn ? submitBtn.innerHTML : '';
+      const originalBg = submitBtn ? submitBtn.style.background : '';
+      const originalColor = submitBtn ? submitBtn.style.color : '';
+
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `<span class="btn-text-content"><span>[ TRANSMITTING... ]</span> <i class="fa-solid fa-spinner fa-spin"></i></span>`;
+      }
+      playPinSound(440);
+
+      // Construct verified email payload with sender's identity
+      const payload = {
+        name: name,
+        email: email,
+        _replyto: email,
+        project_type: selectedType,
+        message: message,
+        _subject: `[Portfolio Project Inquiry] from ${name} (${selectedType})`
+      };
+
+      // Background asynchronous dispatch to mail recipient
+      fetch('https://formsubmit.co/ajax/srinjoyeedey@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(res => res.json())
+      .catch(err => {
+        console.warn('Direct fetch note: fallback active', err);
+      })
+      .finally(() => {
+        setTimeout(() => {
+          if (submitBtn) {
+            submitBtn.innerHTML = `<span class="btn-text-content"><span>[ TRANSMISSION_COMPLETE. ACK_RECEIVED. ]</span> <i class="fa-solid fa-check"></i></span>`;
+            submitBtn.style.background = '#22c55e';
+            submitBtn.style.color = '#FFFFFF';
+            submitBtn.style.borderColor = '#111111';
+          }
+          if (formStatusMsg) {
+            formStatusMsg.innerHTML = '<span style="color:#00875a; font-weight:700;">// UPLINK_SUCCESS: Data packet sent. Direct response dispatched within 24h.</span>';
+          }
+          contactForm.reset();
+          playPinSound(880);
+          showToast(`📬 Transmission dispatched to Srinjoyee! Direct reply will arrive at ${email} shortly.`);
+
+          setTimeout(() => {
+            if (submitBtn) {
+              submitBtn.disabled = false;
+              submitBtn.innerHTML = originalHTML;
+              submitBtn.style.background = originalBg;
+              submitBtn.style.color = originalColor;
+            }
+            if (formStatusMsg) {
+              formStatusMsg.innerHTML = '';
+            }
+          }, 4500);
+        }, 900);
+      });
+    });
+  }
+
+  // --- PART B: ANONYMOUS SUGGESTION WALL & STICKY NOTE PINBOARD ---
+  const stickyComposer = document.getElementById('stickyComposerCard');
+  const stickyTextarea = document.getElementById('anonymous-note-text');
+  const stickyCategorySelect = document.getElementById('anonymous-note-category');
+  const pinNoteBtn = document.getElementById('pin-note-btn');
+  const stickyNotesGrid = document.getElementById('stickyNotesGrid');
+  const colorDots = document.querySelectorAll('.sticky-color-picker .color-dot');
+
+  let currentStickyColor = 'yellow';
+
+  // 1. Color Picker Dots Handler
+  if (colorDots.length > 0) {
+    colorDots.forEach(dot => {
+      dot.addEventListener('click', () => {
+        colorDots.forEach(d => d.classList.remove('active'));
+        dot.classList.add('active');
+        const color = dot.getAttribute('data-color') || 'yellow';
+        currentStickyColor = color;
+        playPinSound(720);
+
+        if (stickyComposer) {
+          stickyComposer.className = `sticky-composer-card composer-${color}`;
+        }
+      });
+    });
+  }
+
+  // 2. Helper to escape HTML characters
+  function sanitizeNoteText(str) {
+    const div = document.createElement('div');
+    div.textContent = str;
+    return div.innerHTML;
+  }
+
+  // 3. Local Storage community board persistence
+  const STICKY_STORAGE_KEY = 'srinz_sticky_community_notes';
+
+  function createNoteDOM(category, text, color, pinClass, isFresh = true) {
+    const noteEl = document.createElement('div');
+    const tiltClasses = ['note-tilt-left', 'note-tilt-right', 'note-tilt-straight'];
+    const randomTilt = tiltClasses[Math.floor(Math.random() * tiltClasses.length)];
+
+    noteEl.className = `pinned-note-item note-${color} ${randomTilt} ${isFresh ? 'note-pinned-fresh' : ''}`;
+    noteEl.innerHTML = `
+      <div class="note-pin ${pinClass}"></div>
+      <span class="note-cat-tag">${sanitizeNoteText(category)}</span>
+      <p class="note-text">"${sanitizeNoteText(text)}"</p>
+      <span class="note-author">— Anonymous Visitor (${isFresh ? 'Just Now' : 'Recent'})</span>
+    `;
+    return noteEl;
+  }
+
+  function loadSavedStickyNotes() {
+    if (!stickyNotesGrid) return;
+    try {
+      const saved = localStorage.getItem(STICKY_STORAGE_KEY);
+      if (!saved) return;
+      const notes = JSON.parse(saved);
+      if (Array.isArray(notes)) {
+        notes.forEach(item => {
+          const noteEl = createNoteDOM(item.category, item.text, item.color, item.pin, false);
+          stickyNotesGrid.prepend(noteEl);
+        });
+      }
+    } catch (e) {
+      console.warn('Sticky note restore error:', e);
+    }
+  }
+
+  function saveStickyNoteToStorage(category, text, color, pin) {
+    try {
+      const saved = localStorage.getItem(STICKY_STORAGE_KEY);
+      const notes = saved ? JSON.parse(saved) : [];
+      notes.unshift({ category, text, color, pin, timestamp: Date.now() });
+      if (notes.length > 20) notes.pop();
+      localStorage.setItem(STICKY_STORAGE_KEY, JSON.stringify(notes));
+    } catch (e) {}
+  }
+
+  // 4. Pin Note Submission Handler (Anonymous)
+  if (pinNoteBtn && stickyTextarea) {
+    pinNoteBtn.addEventListener('click', () => {
+      const noteText = stickyTextarea.value.trim();
+
+      if (noteText.length < 3) {
+        if (stickyComposer) {
+          stickyComposer.classList.remove('shake-card');
+          void stickyComposer.offsetWidth; // re-trigger animation
+          stickyComposer.classList.add('shake-card');
+        }
+        stickyTextarea.focus();
+        showToast('✍️ Write a suggestion or thought before pinning!');
+        return;
+      }
+
+      const category = stickyCategorySelect ? stickyCategorySelect.value : '💭 Random Thought';
+      const color = currentStickyColor || 'yellow';
+      const pins = ['red-pin', 'brass-pin'];
+      const chosenPin = pins[Math.floor(Math.random() * pins.length)];
+
+      const originalBtnHTML = pinNoteBtn.innerHTML;
+      pinNoteBtn.disabled = true;
+      pinNoteBtn.innerHTML = `<span>Pinning & Sending...</span> <i class="fa-solid fa-spinner fa-spin"></i>`;
+      playPinSound(550);
+
+      // Anonymous email payload (Explicitly marked as anonymous, NO sender email attached)
+      const anonPayload = {
+        sender: '100% Anonymous Visitor (Portfolio Sticky Wall)',
+        category: category,
+        note_color: color,
+        suggestion: noteText,
+        _replyto: 'no-reply@anonymous-sticky-wall.io',
+        _subject: `[Anonymous Suggestion / Thought from Portfolio Sticky Wall] ${category}`
+      };
+
+      // Send to Srinjoyee's inbox via formsubmit endpoint
+      fetch('https://formsubmit.co/ajax/srinjoyeedey@gmail.com', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(anonPayload)
+      })
+      .then(res => res.json())
+      .catch(err => {
+        console.warn('Anonymous dispatch fetch note:', err);
+      })
+      .finally(() => {
+        setTimeout(() => {
+          // Pin note to the live board
+          if (stickyNotesGrid) {
+            const freshNote = createNoteDOM(category, noteText, color, chosenPin, true);
+            stickyNotesGrid.prepend(freshNote);
+          }
+
+          // Persist in local storage
+          saveStickyNoteToStorage(category, noteText, color, chosenPin);
+
+          // Reset composer
+          stickyTextarea.value = '';
+          pinNoteBtn.disabled = false;
+          pinNoteBtn.innerHTML = originalBtnHTML;
+
+          playPinSound(880);
+          showToast('📌 Note pinned to the community board & dispatched anonymously to Srinjoyee’s inbox!');
+        }, 750);
+      });
+    });
+  }
+
+  // Restore previously saved anonymous notes on page load
+  loadSavedStickyNotes();
 
   /* --------------------------------------------------------------------------
      6. FLOATING SIDE GRADIENT COLOR REGULATOR ENGINE (Reference Match)
@@ -1451,6 +1699,22 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       });
     });
+
+    // Auto-hide Mac Dock when in Contact Section so inputs & social links are 100% unobstructed
+    const macDockOuter = document.getElementById('mac-dock');
+    const contactSectionEl = document.getElementById('contact');
+    if (macDockOuter && contactSectionEl) {
+      const dockObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            macDockOuter.classList.add('dock-hide-contact');
+          } else {
+            macDockOuter.classList.remove('dock-hide-contact');
+          }
+        });
+      }, { threshold: 0.12 });
+      dockObserver.observe(contactSectionEl);
+    }
   }
 
   /* --------------------------------------------------------------------------
@@ -1820,17 +2084,23 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* --------------------------------------------------------------------------
-     13. MONOCHROMATIC CLAY TERMINAL INTERACTIVE CLI CONTROLLER
+     13. LIVE UPLINK TERMINAL INTERACTIVE CLI CONTROLLER (raghawshukla.xyz match)
      -------------------------------------------------------------------------- */
-  const clayTerminalInput = document.getElementById('clay-terminal-input');
-  const clayTerminalOutput = document.getElementById('clay-terminal-output');
-  const runClayBtn = document.getElementById('run-clay-cmd-btn');
+  const terminalInput = document.getElementById('terminal-input') || document.getElementById('clay-terminal-input');
+  const terminalOutput = document.getElementById('terminal-output') || document.getElementById('clay-terminal-output');
+  const runTerminalBtn = document.getElementById('run-terminal-btn') || document.getElementById('run-clay-cmd-btn');
+  const termClearDot = document.getElementById('term-clear-dot') || document.getElementById('term-btn-red');
 
-  if (clayTerminalInput && clayTerminalOutput) {
+  if (terminalInput && terminalOutput) {
+    const TERMINAL_COMMANDS = ['help', 'about', 'skills', 'projects', 'roast', 'contact', 'hack', 'coffee', 'joke', 'whoami', 'clear', 'matrix', 'time', 'stats', 'suggest'];
+    const cmdHistory = [];
+    let historyIdx = -1;
+
     const TERMINAL_ROASTS = [
       "🔥 SYSTEM ROAST: You have 52 browser tabs open, 4 of which are StackOverflow answers from 2018. Your posture right now looks like a boiled shrimp. Sit up straight!",
       "🔥 SYSTEM ROAST: You've spent the last 5 minutes testing random commands in a website terminal instead of doing what you opened your laptop for. We see you.",
-      "🔥 SYSTEM ROAST: Your internet ping has more emotional baggage than a junior dev pushing directly to production on Friday at 5:59 PM."
+      "🔥 SYSTEM ROAST: Your internet ping has more emotional baggage than a junior dev pushing directly to production on Friday at 5:59 PM.",
+      "🔥 SYSTEM ROAST: You probably star GitHub repositories like you're collecting Pokémon cards, but haven't written a commit since Tuesday."
     ];
 
     const TERMINAL_JOKES = [
@@ -1841,15 +2111,20 @@ document.addEventListener('DOMContentLoaded', () => {
       "A QA engineer walks into a bar. Runs into a bar. Crawls into a bar. Orders a beer. Orders 0 beers. Orders 999999999 beers. Orders a lizard. Orders -1 beers. A real customer walks in and asks where the bathroom is. The bar crashes and burns."
     ];
 
-    function executeClayCommand(commandStr) {
-      const cmd = commandStr.trim().toLowerCase();
+    function executeCommand(commandStr) {
+      const raw = commandStr.trim();
+      const cmd = raw.toLowerCase().split(' ')[0];
+      const arg = raw.slice(cmd.length).trim();
       if (!cmd) return;
+
+      cmdHistory.push(commandStr);
+      historyIdx = cmdHistory.length;
 
       // Append command prompt line
       const promptLine = document.createElement('div');
       promptLine.className = 'term-line prompt-line';
-      promptLine.innerHTML = `<span class="term-prompt">srinjoyee@porto-cli ~$</span> <span class="typed-cmd">${commandStr}</span>`;
-      clayTerminalOutput.appendChild(promptLine);
+      promptLine.innerHTML = `<span class="term-green" style="font-weight:700;">visitor@porto-uplink:~$</span> <span class="typed-cmd" style="color:#ECECE7;">${escapeHtml(commandStr)}</span>`;
+      terminalOutput.appendChild(promptLine);
 
       // Response container
       const respLine = document.createElement('div');
@@ -1858,39 +2133,43 @@ document.addEventListener('DOMContentLoaded', () => {
       switch (cmd) {
         case 'help':
           respLine.innerHTML = `
-            <p><strong class="term-yellow">⌨️ CLI COMMANDS (Run while pretending to be busy):</strong></p>
-            <p>&nbsp;&nbsp;<strong class="term-green">about</strong>    - Who made this & why they need sleep</p>
-            <p>&nbsp;&nbsp;<strong class="term-green">skills</strong>   - Actual skills (yes, includes git push --force)</p>
-            <p>&nbsp;&nbsp;<strong class="term-green">projects</strong> - Proof that caffeine produces software</p>
-            <p>&nbsp;&nbsp;<strong class="term-green">roast</strong>    - Brutal roast of your browser & life choices 🔥</p>
-            <p>&nbsp;&nbsp;<strong class="term-green">sudo</strong>     - High privilege access (or so you thought)</p>
-            <p>&nbsp;&nbsp;<strong class="term-green">contact</strong>  - Job offers, funding, or funny memes</p>
-            <p>&nbsp;&nbsp;<strong class="term-green">hack</strong>     - Simulate NASA breach (FBI don't look) 💻</p>
-            <p>&nbsp;&nbsp;<strong class="term-green">coffee</strong>   - Liquid sanity booster ☕</p>
-            <p>&nbsp;&nbsp;<strong class="term-green">joke</strong>     - Developer humor to distract from bugs 🎭</p>
-            <p>&nbsp;&nbsp;<strong class="term-green">tea</strong>      - Confidential dev gossip & behind-the-scenes</p>
-            <p>&nbsp;&nbsp;<strong class="term-green">clear</strong>    - Wipe away the evidence 🧹</p>
+            <p><strong class="term-yellow">AVAILABLE TERMINAL COMMANDS:</strong></p>
+            <p>&nbsp;&nbsp;<strong class="term-green">about</strong>     - Full developer overview & background</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">skills</strong>    - Core technical stack & frameworks</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">projects</strong>  - Featured production deployments</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">contact</strong>   - Direct communication channels</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">whoami</strong>    - Visitor session telemetry</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">roast</strong>     - Brutal AI roast of your browser & life choices 🔥</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">coffee</strong>    - Liquid caffeine sanity recharge ☕</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">joke</strong>      - Engineering humor to survive sprint deadlines 🎭</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">hack</strong>      - Simulated classified neural network uplink 💻</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">matrix</strong>    - Digital falling code rain 🟢</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">time</strong>      - Current live studio chronometer ⏰</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">stats</strong>     - Real-time developer telemetry metrics 📊</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">suggest &lt;msg&gt;</strong> - Transmit quick suggestion to Srinjoyee</p>
+            <p>&nbsp;&nbsp;<strong class="term-green">clear</strong>     - Reset and wipe terminal output 🧹</p>
           `;
           break;
 
         case 'about':
         case 'bio':
           respLine.innerHTML = `
-            <p>👋 <strong class="term-yellow">SRINJOYEE DEY // HUMAN SPECIFICATION:</strong></p>
-            <p>• Role: Full-Stack Engineer, AI Architect & Visual Technologist.</p>
-            <p>• Motto: <em>"If it works on my machine, we pack my laptop in a crate and ship it to AWS."</em></p>
-            <p>• Daily Routine: Writing clean code, winning national hackathons, and debugging CSS flexbox at 3 AM.</p>
-            <p>• Warning: Highly allergic to bad typography, bloated npm packages, and unnecessary meetings that could have been an email.</p>
+            <p>👋 <strong class="term-yellow">SRINJOYEE DEY // ARCHITECT SPECIFICATION:</strong></p>
+            <p>• Role: Full-Stack Engineer, AI Architect & Creative Technologist.</p>
+            <p>• Focus: Real-time computer vision, distributed neural systems, edge AI, and high-performance WebGL.</p>
+            <p>• Track Record: 20+ national hackathon championships (Smart India Hackathon, Techfest IIT Bombay, Google DevFest).</p>
+            <p>• Philosophy: <em>"Software should be brutally fast, mathematically rigorous, and visually memorable."</em></p>
           `;
           break;
 
         case 'skills':
           respLine.innerHTML = `
-            <p>⚡ <strong class="term-yellow">ACTUAL TECHNICAL ARSENAL:</strong></p>
-            <p>&nbsp;&nbsp;[FRONTEND]     React, Three.js, GSAP, WebGL (Can center a &lt;div&gt; with both eyes closed).</p>
-            <p>&nbsp;&nbsp;[AI & BACKEND] Python, PyTorch, Edge AI, Node.js, FastAPI (Models that don't hallucinate your grandma's cookie recipe).</p>
-            <p>&nbsp;&nbsp;[DATABASE]     PostgreSQL, Redis, Vector Embeddings (Remembers data better than you remember your passwords).</p>
-            <p>&nbsp;&nbsp;[SOFT SKILL]   Explaining to stakeholders why an 'easy 5-minute button tweak' requires re-architecting the backend.</p>
+            <p>⚡ <strong class="term-yellow">TECHNICAL ARSENAL // ACTIVE STACKS:</strong></p>
+            <p>&nbsp;&nbsp;[AI & TENSORS]  Python, PyTorch, YOLOv8, LangChain, pgvector, Edge AI</p>
+            <p>&nbsp;&nbsp;[FRONTEND]      React 19, Next.js, Three.js, GSAP, WebGL, Tailwind</p>
+            <p>&nbsp;&nbsp;[BACKEND]       Node.js, Express, FastAPI, PostgreSQL, Redis, WebSockets</p>
+            <p>&nbsp;&nbsp;[DEVOPS & 3D]   Docker, AWS, Cloud Run, Blender, Unity, Figma</p>
+            <p><span class="term-muted">▶ Pro-tip: Scroll up to the Skills Dock to inspect all 14 active stacks!</span></p>
           `;
           break;
 
@@ -1899,14 +2178,34 @@ document.addEventListener('DOMContentLoaded', () => {
           respLine.innerHTML = `
             <p>🚀 <strong class="term-yellow">FEATURED BUILDS (Real software, zero todo-app filler):</strong></p>
             <p> 1. 🛰️ <strong class="term-green">Nobodristhi:</strong> AI aerial vision for disaster triage & flood rescues.</p>
-            <p> 2. 🩺 <strong class="term-green">Vani:</strong> Audio-first patient vitals triage system for critical care.</p>
-            <p> 3. 🔥 <strong class="term-green">Agnivaarak:</strong> Edge surveillance spotting fires before marshmallows burn.</p>
-            <p> 4. ⚡ <strong class="term-green">NexVyapaar:</strong> Offline-first POS for Indian retail (smarter than SAP).</p>
-            <p> 5. ♻️ <strong class="term-green">Punarchakra:</strong> Circular economy AI classifier (Earth thanks us).</p>
+            <p> 2. 🩺 <strong class="term-green">Vani:</strong> Multilingual audio vitals triage for emergency healthcare.</p>
+            <p> 3. 🔥 <strong class="term-green">Agnivaarak:</strong> Edge surveillance spotting forest fires in &lt;1.2s.</p>
+            <p> 4. ⚡ <strong class="term-green">NexVyapaar:</strong> Offline-first POS for Indian retail with instant sync.</p>
+            <p> 5. ♻️ <strong class="term-green">Punarchakra:</strong> Circular economy AI classifier & recycling tracker.</p>
             <p> 6. 🔐 <strong class="term-green">Anchor:</strong> High-dimensional vector memory vault tighter than Fort Knox.</p>
-            <p><span class="term-yellow">▶ Navigating directly to Projects showcase deck...</span></p>
+            <p><span class="term-yellow">▶ Scrolling to Projects showcase...</span></p>
           `;
           document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+          break;
+
+        case 'contact':
+          respLine.innerHTML = `
+            <p>📩 <strong class="term-yellow">DIRECT UPLINK CHANNELS:</strong></p>
+            <p>• Email: <span class="term-green">srinjoyeedey@gmail.com</span></p>
+            <p>• GitHub: <a href="https://github.com/SrinjoyeeDey" target="_blank" style="color:#FFBD12; text-decoration:underline;">github.com/SrinjoyeeDey</a></p>
+            <p>• LinkedIn: <a href="https://linkedin.com/in/srinjoyee-dey" target="_blank" style="color:#FFBD12; text-decoration:underline;">linkedin.com/in/srinjoyee-dey</a></p>
+            <p>• Fill the form on the left to transmit your payload directly!</p>
+          `;
+          break;
+
+        case 'whoami':
+          respLine.innerHTML = `
+            <p>👤 <strong class="term-yellow">CLIENT SESSION TELEMETRY:</strong></p>
+            <p>&nbsp;&nbsp;• Node: <span class="term-green">visitor@portfolio-uplink.local</span></p>
+            <p>&nbsp;&nbsp;• User-Agent: <span class="term-muted">${navigator.userAgent.slice(0, 65)}...</span></p>
+            <p>&nbsp;&nbsp;• Screen: <span class="term-green">${window.innerWidth}x${window.innerHeight} (${window.devicePixelRatio}x DPR)</span></p>
+            <p>&nbsp;&nbsp;• Connection: <span class="term-green">Uplink Active • TLS 1.3 Verified</span></p>
+          `;
           break;
 
         case 'roast':
@@ -1914,118 +2213,184 @@ document.addEventListener('DOMContentLoaded', () => {
           respLine.innerHTML = `<p>${roast}</p>`;
           break;
 
-        case 'sudo':
-          respLine.innerHTML = `
-            <p class="term-red">🚫 [PERMISSION DENIED] User is not in the sudoers file.</p>
-            <p class="term-muted">This incident has been logged and reported to Santa Claus 🎅. Your browser history is currently being judged.</p>
-          `;
-          break;
-
-        case 'contact':
-          respLine.innerHTML = `
-            <p>📩 <strong class="term-yellow">REACH OUT TO SRINJOYEE:</strong></p>
-            <p>• Email: <span class="term-green">hello@srinjoyee.dev</span></p>
-            <p>• Direct: Scroll to the contact form below or reach out via LinkedIn!</p>
-            <p>• Pro Tip: Mentioning coffee or cool tech ideas increases reply speed by 250%.</p>
-            <p><span class="term-green">▶ Scrolling to contact form...</span></p>
-          `;
-          document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-          break;
-
         case 'joke':
           const randomJoke = TERMINAL_JOKES[Math.floor(Math.random() * TERMINAL_JOKES.length)];
           respLine.innerHTML = `<p>😂 <strong class="term-yellow">DEV JOKE:</strong> ${randomJoke}</p>`;
           break;
 
-        case 'resume':
+        case 'coffee':
           respLine.innerHTML = `
-            <p>📄 <strong class="term-yellow">SRINJOYEE RESUME:</strong></p>
-            <p> Full-Stack AI Engineer & Creative Developer. Proven hackathon winner, scalable backend architect, and UI specialist.</p>
-            <p> 📥 <span class="term-green">Ready to interview? Scroll to Contact section or email hello@srinjoyee.dev!</span></p>
-          `;
-          break;
-
-        case 'tea':
-        case 'gossip':
-          respLine.innerHTML = `
-            <p>☕ <strong class="term-yellow">CONFIDENTIAL DEV TEA:</strong></p>
-            <p>• Srinjoyee once debugged an issue for 6 hours only to realize the server was running on port 3001 instead of 3000.</p>
-            <p>• Half her code comments are just 'PLEASE DONT TOUCH OR REALITY COLLAPSES'.</p>
-            <p>• Zero jQuery was harmed in building this site. Pure modern JavaScript & CSS.</p>
+            <pre class="term-yellow" style="font-size: 11px; line-height: 1.1; margin: 4px 0;">
+      (  )   (   )  )
+       ) (   )  (  (
+     (____)____)____)
+     \\              /
+      \\  COFFEE    /
+       \\_________/
+            </pre>
+            <p class="term-green">☕ Caffeine level boosted to 100%! Ready to compile, ship, and conquer!</p>
           `;
           break;
 
         case 'hack':
           respLine.innerHTML = `
-            <p class="term-green">INITIALIZING ROOT PROTOCOL OVERRIDE...</p>
-            <p class="term-green">[████████████████████] 100% SECURITY PURGED</p>
-            <p class="term-highlight">░▒▓█ CONGRATULATIONS: You just hacked your own time. █▓▒░</p>
-            <p class="term-muted">Now scroll down and hire Srinjoyee before your next release deadline hits.</p>
+            <p class="term-green" style="font-family: monospace; font-size: 12px; line-height: 1.3;">
+              &gt; INITIALIZING BRUTE_FORCE KERNEL DEPLOYMENT...<br>
+              &gt; BYPASSING QUANTUM HANDSHAKE... [OK]<br>
+              &gt; INJECTING NEURAL WEIGHT MATRICES... [OK]<br>
+              &gt; ACCESS GRANTED TO MAINFRAME: <strong class="term-yellow">SRINJOYEE_STUDIO_V4</strong><br>
+              &gt; Mission: Building revolutionary experiences that break the internet 🚀
+            </p>
           `;
           break;
 
-        case 'coffee':
+        case 'matrix':
           respLine.innerHTML = `
-            <p class="term-yellow">
-               (  )   (   )  )<br>
-                ) (   )  (  (<br>
-              (____)____)____)<br>
-              \\              /<br>
-               \\  COFFEE    /<br>
-                \\_________/
+            <p class="term-green" style="font-family: monospace; font-size: 11px; line-height: 1.2; text-shadow: 0 0 6px rgba(34, 197, 94, 0.8);">
+              01000011 01001111 01000100 01000101 01000011 01010010<br>
+              01000011 01010010 01000101 01000001 01010100 01000101<br>
+              01000011 01001111 01001110 01001110 01000101 01000011<br>
+              Wake up, Neo... The Matrix has you. Follow the white rabbit 🐇
             </p>
-            <p class="term-green">☕ Caffeine level boosted to 100%! Ready to compile, ship, and conquer!</p>
           `;
+          break;
+
+        case 'time':
+        case 'clock':
+          const now = new Date();
+          const ist = now.toLocaleTimeString('en-US', { timeZone: 'Asia/Kolkata', hour12: true });
+          const utc = now.toUTCString();
+          respLine.innerHTML = `
+            <p>⏰ <strong class="term-yellow">LIVE STUDIO CHRONOMETER:</strong></p>
+            <p>&nbsp;&nbsp;📍 <strong class="term-green">Kolkata, IN (IST):</strong> ${ist}</p>
+            <p>&nbsp;&nbsp;🌐 <strong class="term-muted">Coordinated Universal (UTC):</strong> ${utc}</p>
+          `;
+          break;
+
+        case 'stats':
+          respLine.innerHTML = `
+            <p>📊 <strong class="term-yellow">REAL-TIME TELEMETRY METRICS:</strong></p>
+            <p>&nbsp;&nbsp;• National Podiums: <span class="term-green">20+ Hackathons Won</span></p>
+            <p>&nbsp;&nbsp;• Neural Deployments: <span class="term-green">6 Active Edge AI Systems</span></p>
+            <p>&nbsp;&nbsp;• Commits This Year: <span class="term-green">1,400+ Contributions</span></p>
+            <p>&nbsp;&nbsp;• System Health: <span class="term-green">100% OPERATIONAL</span></p>
+          `;
+          break;
+
+        case 'suggest':
+          if (!arg) {
+            respLine.innerHTML = `<p class="term-yellow">Usage: suggest &lt;your suggestion or thought here&gt;</p>`;
+          } else {
+            respLine.innerHTML = `<p class="term-green">📡 Suggestion logged: "${escapeHtml(arg)}". Transmitting to inbox...</p>`;
+            fetch('https://formsubmit.co/ajax/srinjoyeedey@gmail.com', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+              body: JSON.stringify({
+                name: 'Anonymous Terminal User',
+                message: arg,
+                _subject: '[Terminal Suggestion / Idea] New feedback submitted'
+              })
+            }).catch(() => {});
+          }
           break;
 
         case 'clear':
-          clayTerminalOutput.innerHTML = `
-            <div class="term-line sys-welcome">
-              <span class="term-green">LIVE_TERMINAL</span>
+          terminalOutput.innerHTML = `
+            <div class="term-ascii-banner">
+              <pre class="ascii-art">
+   ____ ____  _ _   _ _____ _____ _     
+  / ___|  _ \| | \ | |_   _|__  // \    
+  \___ \ |_) | |  \| | | |   / // _ \   
+   ___) |  _ <| | |\  | | |  / // ___ \  
+  |____/|_| \_\_|_| \_| |_| /___/_/   \_\ </pre>
             </div>
-            <div class="term-line">
-              <span class="term-muted">--------------------------------------------------------------------------</span>
-            </div>
-            <div class="term-line">
-              <span>$ Terminal wiped clean. Type <strong class="term-yellow">'help'</strong> or click chips below!</span>
+            <div class="term-boot-sequence">
+              <div class="term-log-line"><span class="term-dim">// BUFFER_CLEARED:</span> <span class="term-val-green">READY</span> <span class="term-muted">|</span> <span class="term-dim">PORT:</span> <span class="term-val-green">443 (TLS 1.3)</span></div>
+              <div class="term-log-line term-divider">─────────────────────────────────────────────────────────────────</div>
+              <div class="term-log-line prompt-hint">
+                <span class="term-prompt-green">$</span> Terminal wiped. Type <span class="term-chip-hint">'help'</span> or tap chips below:
+              </div>
             </div>
           `;
-          clayTerminalInput.value = '';
+          terminalInput.value = '';
           return;
 
         default:
-          respLine.innerHTML = `<p class="term-muted">zsh: command not found: "${commandStr}". Did you mean <span class="term-yellow">'help'</span>? Or did your cat step on the keyboard again? 🐱</p>`;
+          respLine.innerHTML = `<p class="term-muted">zsh: command not found: "${escapeHtml(commandStr)}". Type <span class="term-yellow">'help'</span> for list of commands!</p>`;
           break;
       }
 
-      clayTerminalOutput.appendChild(respLine);
-      clayTerminalOutput.scrollTop = clayTerminalOutput.scrollHeight;
-      clayTerminalInput.value = '';
+      terminalOutput.appendChild(respLine);
+      terminalOutput.scrollTop = terminalOutput.scrollHeight;
+      terminalInput.value = '';
     }
 
-    // Input Keydown listener (Enter key)
-    clayTerminalInput.addEventListener('keydown', (e) => {
+    function escapeHtml(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
+    // Input Keydown listener (Enter, Tab autocomplete, ArrowUp/Down history)
+    terminalInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
-        executeClayCommand(clayTerminalInput.value);
+        executeCommand(terminalInput.value);
+      } else if (e.key === 'Tab') {
+        e.preventDefault();
+        const cur = terminalInput.value.trim().toLowerCase();
+        if (cur) {
+          const match = TERMINAL_COMMANDS.find(c => c.startsWith(cur));
+          if (match) terminalInput.value = match;
+        }
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (cmdHistory.length > 0) {
+          if (historyIdx > 0) historyIdx--;
+          terminalInput.value = cmdHistory[historyIdx] || '';
+        }
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (cmdHistory.length > 0) {
+          if (historyIdx < cmdHistory.length - 1) {
+            historyIdx++;
+            terminalInput.value = cmdHistory[historyIdx] || '';
+          } else {
+            historyIdx = cmdHistory.length;
+            terminalInput.value = '';
+          }
+        }
       }
     });
 
-    runClayBtn?.addEventListener('click', () => {
-      executeClayCommand(clayTerminalInput.value);
+    runTerminalBtn?.addEventListener('click', () => {
+      executeCommand(terminalInput.value);
     });
 
-    // Quick Command Buttons via Event Delegation
+    termClearDot?.addEventListener('click', () => {
+      executeCommand('clear');
+    });
+
+    // Quick Action Chips Delegation (.term-chip and legacy .clay-tag-btn)
     document.addEventListener('click', (e) => {
-      const tag = e.target.closest('.clay-tag-btn');
-      if (tag) {
-        const cmd = tag.getAttribute('data-cmd');
+      const chip = e.target.closest('.term-chip, .clay-tag-btn');
+      if (chip) {
+        const cmd = chip.getAttribute('data-cmd');
         if (cmd) {
-          clayTerminalInput.value = cmd;
-          executeClayCommand(cmd);
+          terminalInput.value = cmd;
+          executeCommand(cmd);
         }
       }
     });
   }
+
+  // Live IST Chronometer for Live Terminal & Studio Headers
+  function updateTerminalClock() {
+    const clockEl = document.getElementById('live-terminal-clock') || document.getElementById('liveKolkataTime');
+    if (!clockEl) return;
+    const now = new Date();
+    const istOptions = { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
+    clockEl.textContent = now.toLocaleTimeString('en-US', istOptions) + ' IST';
+  }
+  setInterval(updateTerminalClock, 1000);
+  updateTerminalClock();
 
   /* --------------------------------------------------------------------------
      14. SCRAPBOOK PERSONA EMPTY IMAGE SLOTS (Upload & Drag-and-Drop)
@@ -2327,38 +2692,135 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function init() {
-    const filterTabs = document.querySelectorAll('.filter-tab');
+    const filterTabs = document.querySelectorAll('#techFilterPills .filter-tab, .filter-tab');
     const tiles = document.querySelectorAll('.canvas-app-tile');
     const readyLabel = document.getElementById('inspectorReadyLabel');
     const statusText = document.getElementById('inspectorStatusText');
-
-    if (!tiles.length) return;
-
     let selectedTile = null;
 
-    // Filter Buttons
+    // Filter Buttons Handler
     filterTabs.forEach(tab => {
       tab.addEventListener('click', () => {
         playBubblePop(600);
         filterTabs.forEach(t => t.classList.remove('active'));
         tab.classList.add('active');
 
-        const filter = tab.getAttribute('data-filter');
+        const filter = tab.getAttribute('data-filter') || 'all';
 
         tiles.forEach(tile => {
           const cat = tile.getAttribute('data-cat');
           if (filter === 'all' || cat === filter) {
             tile.classList.remove('is-dimmed');
-            tile.style.animation = 'none';
-            void tile.offsetWidth;
-            tile.style.animation = '';
           } else {
             tile.classList.add('is-dimmed');
-            tile.classList.remove('is-selected');
           }
         });
+
+        if (readyLabel) readyLabel.textContent = filter === 'all' ? 'READY' : `STACK: ${filter.toUpperCase()}`;
+        if (statusText) statusText.textContent = filter === 'all' ? 'Hover to preview • Click to inspect' : `Filtered to ${tab.textContent.trim()} technologies.`;
       });
     });
+
+    const TECH_DATA = {
+      'Python': {
+        category: 'AI & Neural Systems',
+        mastery: 96,
+        icon: '🐍',
+        frameworks: ['PyTorch', 'FastAPI', 'OpenCV', 'YOLOv8', 'LangChain'],
+        impact: 'Engineered YOLOv8 fire perception pipeline for Agnivaarak & semantic vector embeddings for Anchor.'
+      },
+      'React': {
+        category: 'Modern Web Architecture',
+        mastery: 98,
+        icon: '⚛️',
+        frameworks: ['React 19', 'Next.js App Router', 'Zustand', 'GSAP', 'Tailwind'],
+        impact: 'Built VAni multilingual recovery web app and Porto studio portfolio with 60fps cinematic flows.'
+      },
+      'Blender': {
+        category: '3D & Spatial Computing',
+        mastery: 92,
+        icon: '🎨',
+        frameworks: ['Hard-Surface Modeling', 'PBR Shaders', 'Rigging', 'Cycles / Eevee'],
+        impact: 'Authored custom 3D character avatars, wireframe room perspective meshes, and product textures.'
+      },
+      'Figma': {
+        category: 'Product & Design Systems',
+        mastery: 95,
+        icon: '📐',
+        frameworks: ['Design Tokens', 'Auto Layout 5', 'Micro-Interactions', 'Interactive Components'],
+        impact: 'Created comprehensive typography hierarchies, tactile button states, and editorial dossiers.'
+      },
+      'PyTorch': {
+        category: 'Deep Learning & Tensors',
+        mastery: 93,
+        icon: '🔥',
+        frameworks: ['CUDA', 'Transformers', 'Vision Backbones', 'Loss Optimization'],
+        impact: 'Trained and fine-tuned edge neural models for real-time computer vision and safety exclusion.'
+      },
+      'Next.js': {
+        category: 'Full-Stack Performance',
+        mastery: 95,
+        icon: '▲',
+        frameworks: ['Server Actions', 'SSR Streaming', 'Edge Middleware', 'Turbopack'],
+        impact: 'Delivered sub-100ms First Contentful Paint and zero-bundle server component architectures.'
+      },
+      'Docker': {
+        category: 'DevOps & Containers',
+        mastery: 90,
+        icon: '🐳',
+        frameworks: ['Multi-Stage Builds', 'Docker Compose', 'CI/CD Pipelines', 'Linux Images'],
+        impact: 'Containerized microservices for seamless zero-downtime deployment on AWS and Cloud Run.'
+      },
+      'Node.js': {
+        category: 'Backend Microservices',
+        mastery: 94,
+        icon: '🟢',
+        frameworks: ['Express', 'WebSockets', 'PostgreSQL / Prisma', 'Redis Caching'],
+        impact: 'Architected async event-driven REST APIs handling real-time push sync for caregiver networks.'
+      },
+      'Tailwind CSS': {
+        category: 'Design Engineering',
+        mastery: 97,
+        icon: '🌊',
+        frameworks: ['Tailwind v3/v4', 'PostCSS', 'Container Queries', 'JIT Engine'],
+        impact: 'Crafted pixel-perfect design token systems and responsive glassmorphism interfaces.'
+      },
+      'GitHub': {
+        category: 'Version Control & Governance',
+        mastery: 96,
+        icon: '🐙',
+        frameworks: ['GitHub Actions', 'Semantic Releases', 'PR Review Workflows', 'Issue Tracking'],
+        impact: 'Automated CI/CD testing pipelines and published multiple open-source project releases.'
+      },
+      'JavaScript': {
+        category: 'Core Web Platform',
+        mastery: 99,
+        icon: '⚡',
+        frameworks: ['ES2024+', 'Canvas API', 'WebGL 2.0', 'Web Audio', 'Performance API'],
+        impact: 'Engineered custom procedural shaders, physics spring squashes, and bespoke smooth scrollers.'
+      },
+      'Unity': {
+        category: 'Real-Time Simulations',
+        mastery: 88,
+        icon: '🎮',
+        frameworks: ['C# Scripting', 'Universal Render Pipeline', 'Particle Systems', 'Physics Engines'],
+        impact: 'Developed immersive interactive simulation environments and spatial gameplay mechanics.'
+      },
+      'AI / LLM': {
+        category: 'Autonomous Agents',
+        mastery: 95,
+        icon: '🤖',
+        frameworks: ['LangGraph', 'RAG Pipelines', 'Function Calling', 'Groq / Gemini APIs'],
+        impact: 'Orchestrated multi-agent autonomous reasoning loops with strict factual hallucination guards.'
+      },
+      'Neural AI': {
+        category: 'Cognitive Computing',
+        mastery: 92,
+        icon: '🧠',
+        frameworks: ['Attention Mechanisms', 'Embeddings', 'Vector Search', 'pgvector'],
+        impact: 'Built semantic retrieval vaults with cosine similarity scoring across unstructured documents.'
+      }
+    };
 
     // Hover & Click Interactions
     tiles.forEach(tile => {
@@ -2391,8 +2853,14 @@ document.addEventListener('DOMContentLoaded', () => {
           tiles.forEach(t => t.classList.remove('is-selected'));
           tile.classList.add('is-selected');
           selectedTile = tile;
-          if (readyLabel) readyLabel.textContent = 'LOCKED • ' + techName.toUpperCase();
-          if (statusText) statusText.innerHTML = `<strong style="color: #111111">${techName}:</strong> ${techDesc}`;
+
+          const data = TECH_DATA[techName] || {
+            category: 'Engineering Tool',
+            impact: techDesc
+          };
+
+          if (readyLabel) readyLabel.textContent = 'INSPECTING • ' + techName.toUpperCase();
+          if (statusText) statusText.innerHTML = `<strong style="color: #111111">${techName} (${data.category}):</strong> ${data.impact}`;
         }
       });
     });
@@ -2486,7 +2954,11 @@ document.addEventListener('DOMContentLoaded', () => {
       });
     }
 
-    window.addEventListener('scroll', onScroll, { passive: true });
+    if (window.lenis) {
+      window.lenis.on('scroll', onScroll);
+    } else {
+      window.addEventListener('scroll', onScroll, { passive: true });
+    }
     window.addEventListener('resize', onScroll, { passive: true });
     
     setTimeout(updateTimelineSpine, 300);
@@ -2502,7 +2974,11 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             const yOffset = -90;
             const y = targetEl.getBoundingClientRect().top + window.pageYOffset + yOffset;
-            window.scrollTo({ top: y, behavior: 'smooth' });
+            if (window.lenis) {
+              window.lenis.scrollTo(y, { duration: 1.1 });
+            } else {
+              window.scrollTo({ top: y, behavior: 'smooth' });
+            }
           }
         }
       });

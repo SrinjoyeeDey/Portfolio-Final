@@ -5,7 +5,13 @@ try {
     entryPoints: ['src/projects-showcase-entry.jsx'],
     bundle: true,
     outfile: 'projects-showcase-bundle.js',
-    loader: { '.jsx': 'jsx', '.css': 'css' },
+    loader: {
+      '.jsx': 'jsx',
+      '.tsx': 'tsx',
+      '.ts': 'ts',
+      '.js': 'jsx',
+      '.css': 'css'
+    },
     minify: true,
     define: {
       'process.env.NODE_ENV': '"production"'

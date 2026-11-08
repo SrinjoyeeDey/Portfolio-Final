@@ -15,8 +15,10 @@
     "build:circular-text": "node scripts/build-circular-text.js",
     "build:tech-text": "node scripts/build-tech-text.js",
     "build:memory-wall": "node scripts/build-memory-wall.js",
-    "build:all": "npm run build:lanyard && npm run build:ripple-grid && npm run build:text-pressure && npm run build:target-cursor && npm run build:projects-showcase && npm run build:circular-text && npm run build:tech-text && npm run build:memory-wall",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build:grid-scan": "node scripts/build-grid-scan.js",
+    "build:all": "npm run build:lanyard && npm run build:ripple-grid && npm run build:text-pressure && npm run build:target-cursor && npm run build:projects-showcase && npm run build:circular-text && npm run build:tech-text && npm run build:memory-wall && npm run build:grid-scan && npm run build:preloader",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:preloader": "node scripts/build-preloader.js"
   },
   "keywords": [],
   "author": "",
