@@ -717,7 +717,7 @@ img {
 .hero-section {
   min-height: 100vh;
   padding-top: 140px;
-  padding-bottom: 30px;
+  padding-bottom: 24px;
   display: flex;
   align-items: center;
   position: relative;

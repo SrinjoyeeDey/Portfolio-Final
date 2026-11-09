@@ -29,9 +29,9 @@ html, body {
   z-index: 10;
   position: relative;
   width: 100%;
-  height: 100vh;
   min-height: 100vh;
-  overflow: hidden;
+  height: auto;
+  overflow: visible;
   background-color: var(--color-bg-light, #ECECE7);
   background-image: var(--color-bg-studio, linear-gradient(135deg, #f0f0eb 0%, #e2e3dd 50%, #e9e8e3 100%));
   will-change: transform, opacity;
