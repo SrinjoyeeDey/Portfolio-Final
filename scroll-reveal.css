@@ -93,7 +93,7 @@ html.lenis-scrolling {
   min-height: 100vh;
   max-height: 100vh;
   overflow: hidden;
-  background-color: var(--color-bg-light, #ECECE7);
+  background-color: #F3F3E9;
   background-image: none !important;
 }
 
