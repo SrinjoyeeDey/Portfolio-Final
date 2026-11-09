@@ -9015,21 +9015,19 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
    ========================================================================== */
 .floating-envelope-widget {
   position: fixed;
-  bottom: 30px;
-  right: 30px;
+  bottom: 34px;
+  right: 36px;
   z-index: 9990;
   width: 94px;
   height: 76px;
   pointer-events: none;
-  perspective: 1000px;
+  perspective: 1200px;
   opacity: 0;
   visibility: hidden;
-  --flight-x: 0px;
-  --flight-y: 0px;
-  transform: translate3d(var(--flight-x, 0px), calc(var(--flight-y, 0px) + 35px), 0) scale(0.88);
-  transition: transform var(--flight-duration, 0.85s) var(--flight-easing, cubic-bezier(0.16, 1, 0.3, 1)),
-              opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1),
-              visibility 0.5s ease;
+  transform: translateY(24px) scale(0.92);
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              visibility 0.4s ease;
   will-change: transform, opacity;
 }
 
@@ -9037,14 +9035,7 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
 .floating-envelope-widget.envelope-visible {
   opacity: 1;
   visibility: visible;
-  transform: translate3d(var(--flight-x, 0px), var(--flight-y, 0px), 0) scale(1);
-}
-
-/* On Project section & beyond: Glides smoothly to the other side (left) and stays there */
-.floating-envelope-widget.envelope-side-left {
-  opacity: 1;
-  visibility: visible;
-  --flight-x: calc(-100vw + 154px);
+  transform: translateY(0) scale(1);
 }
 
 /* Hidden in Home (Hero) section */
@@ -9052,26 +9043,24 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
-  transform: translate3d(var(--flight-x, 0px), calc(var(--flight-y, 0px) + 35px), 0) scale(0.88) !important;
+  transform: translateY(24px) scale(0.92) !important;
 }
 
-/* Layer 0: 3D Rotation Pirouette & Spin */
+/* 3D Rotation & Tilt Shell */
 .envelope-spin-layer {
   position: relative;
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
-  transition: transform 2.0s cubic-bezier(0.34, 1.35, 0.64, 1);
-  will-change: transform;
 }
 
-/* 3D Envelope Chassis with Physical Thickness & Side Walls */
+/* 3D Envelope Chassis with Chunky 14px Physical Thickness & Side Walls */
 .envelope-3d-chassis {
   position: relative;
   width: 94px;
   height: 76px;
   transform-style: preserve-3d;
-  perspective: 900px;
+  perspective: 1200px;
 }
 
 .envelope-3d-face {
@@ -9085,16 +9074,16 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
 }
 
 .envelope-3d-front {
-  transform: translateZ(4.5px);
-  z-index: 2;
+  transform: translateZ(7px);
+  z-index: 4;
 }
 
 .envelope-3d-back {
-  transform: rotateY(180deg) translateZ(4.5px);
+  transform: rotateY(180deg) translateZ(7px);
   z-index: 1;
 }
 
-/* Layered Volumetric Depth Slices for Solid Cushion Body Thickness */
+/* Layered Volumetric Depth Slices for Solid Tactile Body Thickness */
 .envelope-3d-depth-slice {
   position: absolute;
   inset: 2px;
@@ -9103,39 +9092,39 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
   border: 1px solid rgba(185, 130, 25, 0.45);
   box-sizing: border-box;
   pointer-events: none;
-  transition: background 1.6s ease, border-color 1.6s ease;
 }
-.envelope-3d-depth-slice.slice-1 { transform: translateZ(3px); }
-.envelope-3d-depth-slice.slice-2 { transform: translateZ(1px); }
-.envelope-3d-depth-slice.slice-3 { transform: translateZ(-1px); }
-.envelope-3d-depth-slice.slice-4 { transform: translateZ(-3px); }
+.envelope-3d-depth-slice.slice-1 { transform: translateZ(5px); }
+.envelope-3d-depth-slice.slice-2 { transform: translateZ(3px); }
+.envelope-3d-depth-slice.slice-3 { transform: translateZ(1px); }
+.envelope-3d-depth-slice.slice-4 { transform: translateZ(-1px); }
+.envelope-3d-depth-slice.slice-5 { transform: translateZ(-3px); }
+.envelope-3d-depth-slice.slice-6 { transform: translateZ(-5px); }
 
-/* Physical 3D Edge Panels: Visible at 90° & 270° Rotation */
+/* Physical 3D Edge Panels: Chunky 14px Beveled Walls */
 .envelope-3d-edge {
   position: absolute;
   pointer-events: none;
-  transition: background 1.6s ease;
 }
 
 .envelope-3d-edge.edge-left {
   left: 2px;
   top: 10px;
-  width: 9px;
+  width: 14px;
   height: 56px;
-  background: linear-gradient(to right, #B98219, #E8BD4B);
+  background: linear-gradient(to right, #B98219, #F5D879);
   transform-origin: left center;
-  transform: rotateY(-90deg) translateX(-4.5px);
+  transform: rotateY(-90deg) translateX(-7px);
   border-radius: 3px;
 }
 
 .envelope-3d-edge.edge-right {
   right: 2px;
   top: 10px;
-  width: 9px;
+  width: 14px;
   height: 56px;
-  background: linear-gradient(to left, #B98219, #E8BD4B);
+  background: linear-gradient(to left, #8C6210, #D5A52E);
   transform-origin: right center;
-  transform: rotateY(90deg) translateX(4.5px);
+  transform: rotateY(90deg) translateX(7px);
   border-radius: 3px;
 }
 
@@ -9143,10 +9132,10 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
   top: 2px;
   left: 10px;
   width: 74px;
-  height: 9px;
-  background: linear-gradient(to bottom, #F5D879, #D5A52E);
+  height: 14px;
+  background: linear-gradient(to bottom, #FFF8DB, #F5D879);
   transform-origin: center top;
-  transform: rotateX(90deg) translateY(-4.5px);
+  transform: rotateX(90deg) translateY(-7px);
   border-radius: 3px;
 }
 
@@ -9154,56 +9143,74 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
   bottom: 2px;
   left: 10px;
   width: 74px;
-  height: 9px;
-  background: linear-gradient(to top, #B98219, #8C6210);
+  height: 14px;
+  background: linear-gradient(to top, #734F08, #8C6210);
   transform-origin: center bottom;
-  transform: rotateX(-90deg) translateY(4.5px);
+  transform: rotateX(-90deg) translateY(7px);
   border-radius: 3px;
 }
 
-/* In .envelope-silver-state, 3D volume turns to sophisticated white-grayish cashmere */
-.floating-envelope-widget.envelope-silver-state .envelope-3d-depth-slice {
-  background: linear-gradient(135deg, #E2E8F0 0%, #CBD5E1 50%, #94A3B8 100%);
-  border-color: rgba(148, 163, 184, 0.4);
-}
-.floating-envelope-widget.envelope-silver-state .envelope-3d-edge.edge-left,
-.floating-envelope-widget.envelope-silver-state .envelope-3d-edge.edge-right,
-.floating-envelope-widget.envelope-silver-state .envelope-3d-edge.edge-top,
-.floating-envelope-widget.envelope-silver-state .envelope-3d-edge.edge-bottom {
-  background: linear-gradient(to bottom, #E2E8F0, #94A3B8);
-}
-
-/* Sophisticated White-Grayish Cotton Fabric State */
-.envelope-svg {
-  width: 100%;
-  height: 100%;
-  display: block;
-  overflow: visible;
-  transition: filter 1.6s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.floating-envelope-widget.envelope-silver-state .envelope-svg {
-  filter: grayscale(100%) brightness(1.22) contrast(0.92) drop-shadow(0 0 2px rgba(255, 255, 255, 0.7));
+/* Tactile 3D Letter Card inside pocket */
+.envelope-letter-card {
+  position: absolute;
+  top: 8px;
+  left: 14px;
+  right: 14px;
+  height: 44px;
+  background: #FFFFFF;
+  border-radius: 8px;
+  border: 1px solid rgba(185, 130, 25, 0.25);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  transform: translateZ(2px);
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+  pointer-events: none;
+  z-index: 3;
 }
 
-.floating-envelope-widget.envelope-silver-state .envelope-tilt-layer {
-  filter: drop-shadow(0 12px 24px rgba(60, 65, 75, 0.32));
+.envelope-letter-card .letter-stamp {
+  font-size: 11px;
+  color: #FFBD12;
 }
 
-.floating-envelope-widget.envelope-silver-state .floating-envelope-link:hover .envelope-tilt-layer {
-  filter: drop-shadow(0 24px 32px rgba(60, 65, 75, 0.45));
+.envelope-letter-card .letter-text {
+  font-family: var(--font-display, 'Cabinet Grotesk', sans-serif);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #1A1C20;
 }
 
-.floating-envelope-widget.envelope-silver-state .envelope-floor-shadow {
-  background: radial-gradient(ellipse at center, rgba(60, 65, 75, 0.35) 0%, rgba(60, 65, 75, 0.12) 45%, rgba(0, 0, 0, 0) 75%);
+/* Notification Pulse Badge */
+.envelope-notification-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #EF4444;
+  color: #FFFFFF;
+  font-family: var(--font-display, sans-serif);
+  font-size: 11px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #FFFFFF;
+  box-shadow: 0 3px 10px rgba(239, 68, 68, 0.5);
+  transform: translateZ(14px);
+  pointer-events: none;
+  z-index: 10;
+  animation: badgeHeartbeat 2.4s ease-in-out infinite;
 }
 
-/* Floor Shadow reacts when envelope lifts high into the air */
-.floating-envelope-widget.envelope-airborne .envelope-floor-shadow {
-  transform: scale(0.35);
-  opacity: 0.06;
-  filter: blur(12px);
-  transition: transform 2.0s ease, opacity 2.0s ease, filter 2.0s ease;
+@keyframes badgeHeartbeat {
+  0%, 100% { transform: translateZ(14px) scale(1); }
+  50% { transform: translateZ(14px) scale(1.15); box-shadow: 0 4px 14px rgba(239, 68, 68, 0.7); }
 }
 
 .floating-envelope-link {
@@ -9220,59 +9227,67 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
   transform-style: preserve-3d;
 }
 
-/* Layer A: Continuous Vertical Floating Animation (Vertical Bob & Landing Cushion) */
+/* Layer A: Continuous Vertical Floating Animation (Harmonic 3D Float) */
 .envelope-float-layer {
   position: relative;
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
-  animation: fabricFloatCycle 3.8s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+  animation: tactile3dFloat 3.8s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
 }
 
-/* Layer B: Occasional Organic Rotation & Rocking (5.6s - out of phase with float) */
+@keyframes tactile3dFloat {
+  0%, 100% {
+    transform: translateY(0px) rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+  }
+  50% {
+    transform: translateY(-11px) rotateX(-2deg) rotateY(3deg) rotateZ(1deg);
+  }
+}
+
+/* Layer B: Occasional Organic Rotation & Rocking */
 .envelope-rock-layer {
   position: relative;
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
-  animation: fabricRockCycle 5.6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-/* Layer C: Occasional Electric-Like Shaking Burst (7.3s cycle, ~0.35s burst) */
+/* Layer C: Occasional Electric-Like Shaking Burst */
 .envelope-shake-layer {
   position: relative;
   width: 100%;
   height: 100%;
   transform-style: preserve-3d;
-  animation: fabricElectricShake 7.3s ease-in-out infinite;
 }
 
-/* Layer D: 3D Tilt & Interactive Orientation */
+/* Layer D: 3D Tilt & Isometric Resting Orientation (Never flat!) */
 .envelope-tilt-layer {
   position: relative;
   width: 100%;
   height: 100%;
   transform-origin: center bottom;
-  transform: rotateX(8deg) rotateY(-8deg) rotateZ(-5deg);
-  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.4s ease;
-  filter: drop-shadow(0 10px 18px rgba(185, 130, 25, 0.32));
+  transform: rotateX(14deg) rotateY(-18deg) rotateZ(-4deg);
+  will-change: transform;
+  filter: drop-shadow(0 14px 24px rgba(185, 130, 25, 0.38));
+  transition: filter 0.4s ease;
 }
 
-/* Hover State: Rotate and Move Shakingly a Little Above */
-.floating-envelope-link:hover .envelope-shake-layer {
-  animation: fabricHoverShaking 0.16s ease-in-out infinite alternate !important;
+/* Hover State: Letter peeks up and shadow responds */
+.floating-envelope-link:hover .envelope-letter-card {
+  transform: translateZ(2px) translateY(-14px);
 }
 
 .floating-envelope-link:hover .envelope-tilt-layer {
-  transform: translateY(-24px) rotateX(15deg) rotateY(-14deg) rotateZ(-9deg) scale(1.1);
-  filter: drop-shadow(0 24px 32px rgba(185, 130, 25, 0.45));
+  filter: drop-shadow(0 26px 36px rgba(185, 130, 25, 0.48));
 }
 
 .floating-envelope-link:hover .envelope-floor-shadow {
-  transform: scale(0.62);
-  opacity: 0.14;
-  filter: blur(7.5px);
+  transform: scale(0.68);
+  opacity: 0.16;
+  filter: blur(7px);
 }
+
 
 /* Hover Shaking Vibration Keyframes */
 @keyframes fabricHoverShaking {
