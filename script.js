@@ -1819,7 +1819,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const rect = link.getBoundingClientRect();
         const x = (e.clientX - rect.left) / rect.width - 0.5;
         const y = (e.clientY - rect.top) / rect.height - 0.5;
-        tiltLayer.style.transform = `translateY(-24px) rotateX(${18 - y * 18}deg) rotateY(${-18 + x * 22}deg) rotateZ(${-6 + x * 8}deg) scale(1.1)`;
+        tiltLayer.style.transform = `translateY(-24px) rotateX(${18 - y * 20}deg) rotateY(${-22 + x * 26}deg) rotateZ(${-6 + x * 8}deg) scale(1.08)`;
       });
       link.addEventListener('pointerleave', () => {
         tiltLayer.style.transform = '';
@@ -1867,11 +1867,11 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {
         if (!isFlightInProgress) return;
 
-        // Perform playful 3D rotation pirouette with pitch and roll to show full 3D breadth
+        // Perform playful 3D rotation pirouette with pitch and roll to show full 36px 3D box breadth
         totalSpinAngle += isGoingLeft ? 360 : -360;
         if (spinLayer) {
-          const pitchX = 14;
-          const rollZ = isGoingLeft ? -8 : 8;
+          const pitchX = 16;
+          const rollZ = isGoingLeft ? -10 : 10;
           spinLayer.style.transform = `rotateX(${pitchX}deg) rotateY(${totalSpinAngle}deg) rotateZ(${rollZ}deg)`;
         }
 
