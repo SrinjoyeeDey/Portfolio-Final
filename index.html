@@ -75,15 +75,21 @@
     <div class="bg-noise"></div>
   </div>
 
-  <!-- Header / Navigation -->
+  <!-- Header / Navigation (VAni-style Dynamic Floating Island Navbar) -->
   <header class="navbar-header" id="navbar">
-    <div class="container nav-container">
+    <div class="nav-container" id="nav-container">
 
-      <!-- Brand Logo with CircularText Studio Seal -->
+      <!-- Brand Logo with VAni-Style Squircle Badge & Ambient Glow Ring -->
       <a href="#hero" class="brand-logo cursor-target" aria-label="Srinjoyee Dey - Home" data-cursor-label="Home">
-        <div id="nav-circular-logo-root" class="nav-circular-logo-wrap"></div>
+        <div class="brand-icon-wrapper" aria-hidden="true">
+          <div class="brand-icon-pulse"></div>
+          <div class="brand-icon-box">
+            <span class="brand-sparkle-star">✦</span>
+          </div>
+        </div>
         <span class="logo-text">PORTO<span class="logo-dot">.</span></span>
       </a>
+      <div id="nav-circular-logo-root" style="display:none;" aria-hidden="true"></div>
 
       <nav class="nav-menu" id="nav-menu">
         <ul class="nav-list">
@@ -99,7 +105,7 @@
 
       <div class="nav-actions">
         <!-- Global Sound ON/OFF Toggle -->
-        <button type="button" class="sound-toggle-btn" id="sound-toggle-btn" aria-label="Toggle Sound Effects" aria-pressed="false" title="Sound Effects: OFF (Click to Enable)">
+        <button type="button" class="sound-toggle-btn cursor-target" id="sound-toggle-btn" aria-label="Toggle Sound Effects" aria-pressed="false" title="Sound Effects: OFF (Click to Enable)" data-cursor-label="SFX">
           <span class="sound-toggle-icon-wrap" aria-hidden="true">
             <i class="fa-solid fa-volume-xmark sound-icon-muted"></i>
             <i class="fa-solid fa-volume-high sound-icon-active"></i>
@@ -112,20 +118,9 @@
           <span class="sound-toggle-label">SFX: OFF</span>
         </button>
 
-        <a href="#contact" class="btn btn-pill-dark interactive-hover-btn">
-          <span class="btn-text-initial">
-            <span>Let's Connect</span>
-            <i class="fa-solid fa-arrow-right-long"></i>
-          </span>
-          <span class="btn-hover-reveal">
-            <span>Let's Connect</span>
-            <svg class="lucide-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
-              fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M5 12h14" />
-              <path d="m12 5 7 7-7 7" />
-            </svg>
-          </span>
-          <span class="btn-expanding-dot" aria-hidden="true"></span>
+        <a href="#contact" class="btn-connect-vani cursor-target" data-cursor-label="Connect">
+          <span>Let's Connect</span>
+          <i class="fa-solid fa-arrow-right-long"></i>
         </a>
         <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle Navigation Menu">
           <i class="fa-solid fa-bars"></i>
