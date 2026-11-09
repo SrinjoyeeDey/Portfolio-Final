@@ -16,10 +16,13 @@
 
     try {
       const lenis = new Lenis({
-        lerp: 0.1, // Optimal buttery inertial response
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Ultra-smooth exponential decay
+        orientation: 'vertical',
+        gestureOrientation: 'vertical',
         smoothWheel: true,
-        wheelMultiplier: 1.0,
-        touchMultiplier: 1.2,
+        wheelMultiplier: 1.05,
+        touchMultiplier: 1.4,
         autoRaf: false,
         allowNestedScroll: true,
         prevent: (node) => {

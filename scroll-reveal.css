@@ -16,6 +16,17 @@ html, body {
   box-sizing: border-box;
   background-color: var(--color-bg-light, #ECECE7);
   background-image: var(--color-bg-studio, linear-gradient(135deg, #f0f0eb 0%, #e2e3dd 50%, #e9e8e3 100%));
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Eliminate hover hit-test recalculations during active scroll for 60/120fps lock */
+html.lenis-scrolling * {
+  pointer-events: none !important;
+}
+
+html.lenis-scrolling {
+  pointer-events: auto !important;
 }
 
 /* Melt Mask disabled so sections do not get top cutoff */

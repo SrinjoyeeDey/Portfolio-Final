@@ -60,7 +60,7 @@
           end: 'top top',
           pin: heroLayer,
           pinSpacing: false,
-          scrub: 0.5,
+          scrub: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
           onUpdate: (self) => {
@@ -88,18 +88,18 @@
         }
       });
 
-      // Outgoing Hero: subtle depth lift & soft fade
+      // Outgoing Hero: GPU-accelerated depth lift & soft fade (zero blur rasterization overhead)
       tl.fromTo(heroLayer, {
         y: '0%',
         opacity: 1,
         scale: 1,
-        filter: 'blur(0px)'
+        force3D: true
       }, {
-        y: '-10%',
-        opacity: 0.35,
-        scale: 0.97,
-        filter: 'blur(4px)',
+        y: '-8%',
+        opacity: 0.28,
+        scale: 0.965,
         ease: 'none',
+        force3D: true,
         duration: 1
       }, 0);
 
