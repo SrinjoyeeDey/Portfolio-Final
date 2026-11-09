@@ -9091,7 +9091,6 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
   width: 94px;
   height: 76px;
   transform-style: preserve-3d;
-  perspective: 900px;
 }
 
 .envelope-3d-face {
@@ -9105,32 +9104,40 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
 }
 
 .envelope-3d-front {
-  transform: translateZ(4.5px);
+  transform: translateZ(11px);
   z-index: 2;
 }
 
 .envelope-3d-back {
-  transform: rotateY(180deg) translateZ(4.5px);
+  transform: rotateY(180deg) translateZ(11px);
   z-index: 1;
 }
 
-/* Layered Volumetric Depth Slices for Solid Cushion Body Thickness */
+/* Layered Volumetric Depth Slices for Solid Tactile Body Thickness */
 .envelope-3d-depth-slice {
   position: absolute;
   inset: 2px;
   border-radius: 16px;
   background: linear-gradient(135deg, #F0C755 0%, #D8A52F 50%, #B98219 100%);
   border: 1px solid rgba(185, 130, 25, 0.45);
+  box-shadow: inset 0 0 3px rgba(140, 98, 16, 0.35);
   box-sizing: border-box;
   pointer-events: none;
   transition: background 1.6s ease, border-color 1.6s ease;
 }
-.envelope-3d-depth-slice.slice-1 { transform: translateZ(3px); }
-.envelope-3d-depth-slice.slice-2 { transform: translateZ(1px); }
-.envelope-3d-depth-slice.slice-3 { transform: translateZ(-1px); }
-.envelope-3d-depth-slice.slice-4 { transform: translateZ(-3px); }
+.envelope-3d-depth-slice.slice-1  { transform: translateZ(9px); }
+.envelope-3d-depth-slice.slice-2  { transform: translateZ(7.2px); }
+.envelope-3d-depth-slice.slice-3  { transform: translateZ(5.4px); }
+.envelope-3d-depth-slice.slice-4  { transform: translateZ(3.6px); }
+.envelope-3d-depth-slice.slice-5  { transform: translateZ(1.8px); }
+.envelope-3d-depth-slice.slice-6  { transform: translateZ(0px); }
+.envelope-3d-depth-slice.slice-7  { transform: translateZ(-1.8px); }
+.envelope-3d-depth-slice.slice-8  { transform: translateZ(-3.6px); }
+.envelope-3d-depth-slice.slice-9  { transform: translateZ(-5.4px); }
+.envelope-3d-depth-slice.slice-10 { transform: translateZ(-7.2px); }
+.envelope-3d-depth-slice.slice-11 { transform: translateZ(-9px); }
 
-/* Physical 3D Edge Panels: Visible at 90° & 270° Rotation */
+/* Physical 3D Edge Panels: Chunky 22px Beveled Walls Visible at Any Angle */
 .envelope-3d-edge {
   position: absolute;
   pointer-events: none;
@@ -9139,58 +9146,69 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
 
 .envelope-3d-edge.edge-left {
   left: 2px;
-  top: 10px;
-  width: 9px;
-  height: 56px;
-  background: linear-gradient(to right, #B98219, #E8BD4B);
+  top: 8px;
+  width: 22px;
+  height: 60px;
+  background: linear-gradient(to right, #8C6210 0%, #B98219 40%, #E8BD4B 85%, #F5D879 100%);
   transform-origin: left center;
-  transform: rotateY(-90deg) translateX(-4.5px);
-  border-radius: 3px;
+  transform: rotateY(-90deg) translateX(-11px);
+  border-radius: 4px;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.25);
 }
 
 .envelope-3d-edge.edge-right {
   right: 2px;
-  top: 10px;
-  width: 9px;
-  height: 56px;
-  background: linear-gradient(to left, #B98219, #E8BD4B);
+  top: 8px;
+  width: 22px;
+  height: 60px;
+  background: linear-gradient(to left, #8C6210 0%, #B98219 40%, #D5A52E 85%, #F5D879 100%);
   transform-origin: right center;
-  transform: rotateY(90deg) translateX(4.5px);
-  border-radius: 3px;
+  transform: rotateY(90deg) translateX(11px);
+  border-radius: 4px;
+  box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.25);
 }
 
 .envelope-3d-edge.edge-top {
   top: 2px;
-  left: 10px;
-  width: 74px;
-  height: 9px;
-  background: linear-gradient(to bottom, #F5D879, #D5A52E);
+  left: 8px;
+  width: 78px;
+  height: 22px;
+  background: linear-gradient(to bottom, #FFFBF0 0%, #F5D879 50%, #D5A52E 100%);
   transform-origin: center top;
-  transform: rotateX(90deg) translateY(-4.5px);
-  border-radius: 3px;
+  transform: rotateX(90deg) translateY(-11px);
+  border-radius: 4px;
+  box-shadow: inset 0 0 4px rgba(255, 255, 255, 0.5);
 }
 
 .envelope-3d-edge.edge-bottom {
   bottom: 2px;
-  left: 10px;
-  width: 74px;
-  height: 9px;
-  background: linear-gradient(to top, #B98219, #8C6210);
+  left: 8px;
+  width: 78px;
+  height: 22px;
+  background: linear-gradient(to top, #5E3F05 0%, #8C6210 50%, #B98219 100%);
   transform-origin: center bottom;
-  transform: rotateX(-90deg) translateY(4.5px);
-  border-radius: 3px;
+  transform: rotateX(-90deg) translateY(11px);
+  border-radius: 4px;
+  box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.4);
 }
 
 /* In .envelope-silver-state, 3D volume turns to sophisticated white-grayish cashmere */
 .floating-envelope-widget.envelope-silver-state .envelope-3d-depth-slice {
-  background: linear-gradient(135deg, #E2E8F0 0%, #CBD5E1 50%, #94A3B8 100%);
-  border-color: rgba(148, 163, 184, 0.4);
+  background: linear-gradient(135deg, #F8FAFC 0%, #E2E8F0 45%, #CBD5E1 75%, #94A3B8 100%);
+  border-color: rgba(148, 163, 184, 0.45);
+  box-shadow: inset 0 0 3px rgba(100, 116, 139, 0.35);
 }
-.floating-envelope-widget.envelope-silver-state .envelope-3d-edge.edge-left,
-.floating-envelope-widget.envelope-silver-state .envelope-3d-edge.edge-right,
-.floating-envelope-widget.envelope-silver-state .envelope-3d-edge.edge-top,
+.floating-envelope-widget.envelope-silver-state .envelope-3d-edge.edge-left {
+  background: linear-gradient(to right, #64748B 0%, #94A3B8 45%, #CBD5E1 85%, #E2E8F0 100%);
+}
+.floating-envelope-widget.envelope-silver-state .envelope-3d-edge.edge-right {
+  background: linear-gradient(to left, #64748B 0%, #94A3B8 45%, #CBD5E1 85%, #E2E8F0 100%);
+}
+.floating-envelope-widget.envelope-silver-state .envelope-3d-edge.edge-top {
+  background: linear-gradient(to bottom, #FFFFFF 0%, #E2E8F0 50%, #CBD5E1 100%);
+}
 .floating-envelope-widget.envelope-silver-state .envelope-3d-edge.edge-bottom {
-  background: linear-gradient(to bottom, #E2E8F0, #94A3B8);
+  background: linear-gradient(to top, #475569 0%, #64748B 50%, #94A3B8 100%);
 }
 
 /* Sophisticated White-Grayish Cotton Fabric State */
@@ -9207,11 +9225,11 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
 }
 
 .floating-envelope-widget.envelope-silver-state .envelope-tilt-layer {
-  filter: drop-shadow(0 12px 24px rgba(60, 65, 75, 0.32));
+  filter: drop-shadow(0 14px 26px rgba(60, 65, 75, 0.35));
 }
 
 .floating-envelope-widget.envelope-silver-state .floating-envelope-link:hover .envelope-tilt-layer {
-  filter: drop-shadow(0 24px 32px rgba(60, 65, 75, 0.45));
+  filter: drop-shadow(0 26px 36px rgba(60, 65, 75, 0.48));
 }
 
 .floating-envelope-widget.envelope-silver-state .envelope-floor-shadow {
@@ -9267,15 +9285,15 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
   animation: fabricElectricShake 7.3s ease-in-out infinite;
 }
 
-/* Layer D: 3D Tilt & Interactive Orientation */
+/* Layer D: 3D Tilt & Interactive Orientation (Rich Isometric Resting Angle Showcasing 22px Depth) */
 .envelope-tilt-layer {
   position: relative;
   width: 100%;
   height: 100%;
   transform-origin: center bottom;
-  transform: rotateX(8deg) rotateY(-8deg) rotateZ(-5deg);
+  transform: rotateX(12deg) rotateY(-16deg) rotateZ(-4deg);
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), filter 0.4s ease;
-  filter: drop-shadow(0 10px 18px rgba(185, 130, 25, 0.32));
+  filter: drop-shadow(0 14px 22px rgba(185, 130, 25, 0.38));
 }
 
 /* Hover State: Rotate and Move Shakingly a Little Above */
@@ -9284,8 +9302,8 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
 }
 
 .floating-envelope-link:hover .envelope-tilt-layer {
-  transform: translateY(-24px) rotateX(15deg) rotateY(-14deg) rotateZ(-9deg) scale(1.1);
-  filter: drop-shadow(0 24px 32px rgba(185, 130, 25, 0.45));
+  transform: translateY(-24px) rotateX(18deg) rotateY(-22deg) rotateZ(-6deg) scale(1.1);
+  filter: drop-shadow(0 26px 36px rgba(185, 130, 25, 0.48));
 }
 
 .floating-envelope-link:hover .envelope-floor-shadow {

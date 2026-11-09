@@ -1819,7 +1819,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const rect = link.getBoundingClientRect();
         const x = (e.clientX - rect.left) / rect.width - 0.5;
         const y = (e.clientY - rect.top) / rect.height - 0.5;
-        tiltLayer.style.transform = `translateY(-24px) rotateX(${15 - y * 16}deg) rotateY(${-14 + x * 16}deg) rotateZ(${-9 + x * 6}deg) scale(1.1)`;
+        tiltLayer.style.transform = `translateY(-24px) rotateX(${18 - y * 18}deg) rotateY(${-18 + x * 22}deg) rotateZ(${-6 + x * 8}deg) scale(1.1)`;
       });
       link.addEventListener('pointerleave', () => {
         tiltLayer.style.transform = '';
@@ -1867,10 +1867,12 @@ document.addEventListener('DOMContentLoaded', () => {
       setTimeout(() => {
         if (!isFlightInProgress) return;
 
-        // Perform playful 3D rotation pirouette
+        // Perform playful 3D rotation pirouette with pitch and roll to show full 3D breadth
         totalSpinAngle += isGoingLeft ? 360 : -360;
         if (spinLayer) {
-          spinLayer.style.transform = `rotateY(${totalSpinAngle}deg)`;
+          const pitchX = 14;
+          const rollZ = isGoingLeft ? -8 : 8;
+          spinLayer.style.transform = `rotateX(${pitchX}deg) rotateY(${totalSpinAngle}deg) rotateZ(${rollZ}deg)`;
         }
 
         // Color change: shift to sophisticated white-grayish if moving to left, or back to butter-yellow if returning
@@ -1898,6 +1900,10 @@ document.addEventListener('DOMContentLoaded', () => {
             envelopeWidget.style.setProperty('--flight-x', destX);
             envelopeWidget.style.setProperty('--flight-y', '0px');
             envelopeWidget.classList.remove('envelope-airborne');
+
+            if (spinLayer) {
+              spinLayer.style.transform = `rotateY(${totalSpinAngle}deg)`;
+            }
 
             // 5. TOUCHDOWN: Update state and rest
             setTimeout(() => {
