@@ -26,7 +26,7 @@
   <link rel="stylesheet" href="lib/lenis.css">
 
   <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=84">
+  <link rel="stylesheet" href="styles.css?v=91">
   <link rel="stylesheet" href="journey-timeline.css?v=2">
   <link rel="stylesheet" href="grid-scan-bundle.css">
   <link rel="stylesheet" href="projects-showcase-bundle.css?v=74">
@@ -75,9 +75,9 @@
     <div class="bg-noise"></div>
   </div>
 
-  <!-- Header / Navigation (VAni-style Dynamic Floating Island Navbar) -->
+  <!-- Header / Navigation (Merged with BG on Home, Animated Navbar on Scroll) -->
   <header class="navbar-header" id="navbar">
-    <div class="nav-container" id="nav-container">
+    <div class="container nav-container" id="nav-container">
 
       <!-- Brand Logo with CircularText Studio Seal -->
       <a href="#hero" class="brand-logo cursor-target" aria-label="Srinjoyee Dey - Home" data-cursor-label="Home">
@@ -112,9 +112,20 @@
           <span class="sound-toggle-label">SFX: OFF</span>
         </button>
 
-        <a href="#contact" class="btn-connect-vani cursor-target" data-cursor-label="Connect">
-          <span>Let's Connect</span>
-          <i class="fa-solid fa-arrow-right-long"></i>
+        <a href="#contact" class="btn btn-pill-dark interactive-hover-btn cursor-target" data-cursor-label="Connect">
+          <span class="btn-text-initial">
+            <span>Let's Connect</span>
+            <i class="fa-solid fa-arrow-right-long"></i>
+          </span>
+          <span class="btn-hover-reveal">
+            <span>Let's Connect</span>
+            <svg class="lucide-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 12h14" />
+              <path d="m12 5 7 7-7 7" />
+            </svg>
+          </span>
+          <span class="btn-expanding-dot" aria-hidden="true"></span>
         </a>
         <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle Navigation Menu">
           <i class="fa-solid fa-bars"></i>
