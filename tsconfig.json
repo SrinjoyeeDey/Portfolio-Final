@@ -15,10 +15,11 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "baseUrl": ".",
     "paths": {
-      "@/*": ["./*"]
+      "@/*": ["./*"],
+      "@studio-freight/lenis": ["./node_modules/lenis"],
+      "*": ["./*"]
     }
   },
-  "include": ["src", "components", "lib"]
+  "include": ["src", "components", "lib", "declarations.d.ts"]
 }

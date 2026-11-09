@@ -1,178 +1,38 @@
 /* ==========================================================================
-   MEMORY WALL SECTION (Spatial DriftWall + Circular 3D Carousel from React Bits)
-   Full Viewport Immersive Experience:
-   - Layer 1 (Background): Spatial DriftWall drifting mural across full screen
-   - Layer 2 (Foreground): 3D Cylindrical rotating carousel of cards
+   MEMORY WALL SECTION (Physical Photographic Wall Installation)
+   - Dense full-viewport composition of 34 authentic physical photographic prints
+   - Seamless card stacking transition over Projects section (matching Hero -> About)
+   - Warm paper background with elegant top drop shadow
+   - Interlocking height-balanced masonry packing (no row gaps)
+   - Warm monochrome to full-color smooth transition on hover
    ========================================================================== */
+#story-layer-snapshots,
 .memory-wall-section {
   position: relative;
-  width: 100vw;
   width: 100%;
   min-height: 100vh;
-  padding: 36px 0 24px 0;
-  background: transparent;
+  padding: clamp(36px, 5vh, 64px) clamp(12px, 2.5vw, 36px);
+  background-color: var(--color-bg-light, #ECECE7) !important;
+  box-shadow: 0 -25px 60px -15px rgba(24, 24, 27, 0.16);
+  border-top: 1px solid rgba(34, 36, 40, 0.08);
   overflow: hidden;
-  z-index: 10;
+  z-index: 38;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   box-sizing: border-box;
 }
 
-/* Header & Badges */
-.memory-wall-header {
-  text-align: center;
-  margin-bottom: 16px;
+.memory-wall-fullwidth-stage {
+  width: 100%;
+  margin: 0 auto;
   position: relative;
-  z-index: 5;
-}
-
-.memory-wall-badge-box {
   display: flex;
   justify-content: center;
-  align-items: center;
-  margin-bottom: 10px;
-}
-
-.memory-wall-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 16px;
-  background: #FFFFFF;
-  border: 2px solid #222428;
-  border-radius: 999px;
-  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #222428;
-  box-shadow: 3px 3px 0px #222428;
-}
-
-.memory-wall-pill i {
-  color: #FFBD12;
-  font-size: 12px;
-}
-
-.memory-wall-heading {
-  font-family: var(--font-heading, 'Fredoka', cursive, sans-serif);
-  font-size: clamp(2.1rem, 4vw, 3.4rem);
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--color-charcoal, #222428);
-  line-height: 1.15;
-  margin: 0 0 6px 0;
-}
-
-.memory-wall-heading .yellow-dot {
-  color: #FFBD12;
-}
-
-.memory-wall-sub {
-  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
-  font-size: clamp(0.9rem, 1.25vw, 1.05rem);
-  color: var(--color-charcoal-muted, #5C6069);
-  max-width: 620px;
-  margin: 0 auto;
-  line-height: 1.5;
-}
-
-/* Full Viewport Stage Container */
-.memory-wall-fullwidth-stage {
-  width: 100vw;
-  width: 100%;
-  max-width: 100vw;
-  overflow: visible;
-  position: relative;
-  margin: 0 auto;
-  flex: 1 1 auto;
-  display: flex;
-  align-items: center;
 }
 
 .memory-wall-carousel-mount {
   position: relative;
-  width: 100vw;
   width: 100%;
-  max-width: 100vw;
-  height: auto;
-  min-height: clamp(700px, 86vh, 960px);
   margin: 0 auto;
-  touch-action: none;
-  overflow: hidden;
-}
-
-/* Composite 2-Layer Stage: DriftWall Background + CircularCarousel Front */
-.memory-wall-composite-stage {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-}
-
-/* Layer 1: Background Drifting Wall (Edge-to-edge drifting mural) */
-.memory-wall-drift-backdrop {
-  position: absolute;
-  inset: -15px;
-  z-index: 1;
-  filter: contrast(1.03) brightness(0.96);
-  opacity: 0.95;
-  transform: scale(1.01);
-  pointer-events: none !important;
-  user-select: none !important;
-  -webkit-user-select: none !important;
-  -webkit-user-drag: none !important;
-  -webkit-touch-callout: none !important;
-  cursor: default !important;
-}
-
-.memory-wall-drift-backdrop img,
-.memory-wall-drift-backdrop * {
-  pointer-events: none !important;
-  user-select: none !important;
-  -webkit-user-select: none !important;
-  -webkit-user-drag: none !important;
-  -webkit-touch-callout: none !important;
-  cursor: default !important;
-}
-
-/* Layer 2: Foreground 3D Circular Reel (Removed as requested) */
-.memory-wall-carousel-front {
-  display: none !important;
-}
-
-/* Interaction Hint Pill */
-.memory-wall-hint {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  margin-top: 14px;
-  position: relative;
-  z-index: 5;
-  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #767B85;
-}
-
-.memory-wall-hint .hint-dot {
-  color: #FFBD12;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .memory-wall-section {
-    padding: 30px 0 20px 0;
-  }
-  .memory-wall-carousel-mount {
-    height: 560px;
-  }
-  .memory-wall-header {
-    margin-bottom: 14px;
-  }
 }

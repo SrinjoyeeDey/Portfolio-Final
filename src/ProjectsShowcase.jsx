@@ -117,11 +117,11 @@ const SHOWCASE_PROJECTS = [
     timeline: 'Core Architecture',
     year: '2025 / 2026',
     platform: 'Web Backend • REST API',
-    theme: 'green',
-    solidBg: '#059669', // Completely Green Solid (NOT blackish green!)
-    textColor: '#FFFFFF',
-    accentColor: '#FFFFFF', // Clean White Accent on Vibrant Green
-    accentRgb: '255, 255, 255',
+    theme: 'lavender',
+    solidBg: '#251E32', // Deep muted plum purple (Dark card)
+    textColor: '#FFFFFF', // Crisp light contrast on dark muted purple
+    accentColor: '#F5DF77', // Primary accent: buttery yellow
+    accentRgb: '245, 223, 119',
     narrative: 'A news verification backend pipeline transforming raw community reports into verified intelligence. Integrates geospatial Haversine clustering, LLM semantic event deduplication, reverse-image search, and an administrative moderation ledger.',
     metrics: [
       { stat: 'Geospatial Radar', desc: 'Haversine event clustering across geographic radiuses' },
@@ -185,11 +185,11 @@ const SHOWCASE_PROJECTS = [
     timeline: 'Circular Platform',
     year: '2025 / 2026',
     platform: 'Web Platform • Eco-Tech',
-    theme: 'charcoal',
-    solidBg: '#16171B', // Dark Charcoal Solid with Grid
+    theme: 'purple',
+    solidBg: '#5B21B6', // Vibrant Royal Purple Solid
     textColor: '#FFFFFF',
-    accentColor: '#14B8A6', // Circular Eco Teal
-    accentRgb: '20, 184, 166',
+    accentColor: '#C084FC', // Luminous Lilac / Purple Accent
+    accentRgb: '192, 132, 252',
     narrative: 'Smart circular-economy platform focused on making e-waste recycling intuitive and engaging. Couples AI-assisted e-waste classification with a gamified reward ecosystem, turning discarded electronics into recognized recyclable resources.',
     metrics: [
       { stat: 'AI Classifier', desc: 'Vision models identifying and categorizing consumer e-waste' },
@@ -914,6 +914,15 @@ export default function ProjectsShowcase() {
   const [soundOn, setSoundOn] = useState(false);
   const containerRef = useRef(null);
 
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.ScrollTrigger) {
+      const timer = setTimeout(() => {
+        window.ScrollTrigger.refresh();
+      }, 480);
+      return () => clearTimeout(timer);
+    }
+  }, [expandedIndex]);
+
   const total = SHOWCASE_PROJECTS.length;
 
   const handleToggleSound = () => {
@@ -1063,9 +1072,14 @@ export default function ProjectsShowcase() {
               <div className="editorial-row-bar">
                 <div className="editorial-row-left">
                   <span className="editorial-row-number">{project.number}</span>
-                  <h3 className="editorial-row-title">
-                    {project.title}
-                  </h3>
+                  <div className="editorial-row-titles-wrap">
+                    <h3 className="editorial-row-title">
+                      {project.title}
+                    </h3>
+                    <span className="editorial-row-subtitle">
+                      {project.subtitle}
+                    </span>
+                  </div>
                   <span className="editorial-row-category-pill">
                     {project.categoryTag}
                   </span>

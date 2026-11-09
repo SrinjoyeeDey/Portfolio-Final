@@ -26,6 +26,8 @@
 
     const heroLayer = document.getElementById('story-layer-hero');
     const aboutLayer = document.getElementById('story-layer-about');
+    const projectsLayer = document.getElementById('story-layer-projects');
+    const snapshotsLayer = document.getElementById('story-layer-snapshots');
 
     if (!heroLayer || !aboutLayer) {
       console.warn('Hero or About story layers not found in DOM.');
@@ -50,9 +52,9 @@
         clearProps: 'all'
       });
 
-      // Pinned transition:
+      // Pinned transition 1: HERO → ABOUT
       // Hero stays pinned at top: 0 while About scrolls UP into the same viewport!
-      const tl = gsap.timeline({
+      const tlHeroAbout = gsap.timeline({
         scrollTrigger: {
           id: 'hero-about-transition-pin',
           trigger: aboutLayer,
@@ -89,7 +91,7 @@
       });
 
       // Outgoing Hero: GPU-accelerated depth lift & soft fade (zero blur rasterization overhead)
-      tl.fromTo(heroLayer, {
+      tlHeroAbout.fromTo(heroLayer, {
         y: '0%',
         opacity: 1,
         scale: 1,
@@ -103,9 +105,48 @@
         duration: 1
       }, 0);
 
+      // Pinned transition 2: PROJECTS → COLLECTION OF MOMENTS (SNAPSHOTS)
+      // Projects stays pinned while Snapshots scrolls UP into the same viewport!
+      let tlProjectsSnapshots = null;
+      if (projectsLayer && snapshotsLayer) {
+        gsap.set(snapshotsLayer, {
+          clearProps: 'all'
+        });
+
+        tlProjectsSnapshots = gsap.timeline({
+          scrollTrigger: {
+            id: 'projects-snapshots-transition-pin',
+            trigger: snapshotsLayer,
+            start: 'top bottom',
+            end: 'top top',
+            pin: projectsLayer,
+            pinSpacing: false,
+            scrub: true,
+            anticipatePin: 1,
+            invalidateOnRefresh: true
+          }
+        });
+
+        // Outgoing Projects: GPU-accelerated depth lift & soft fade identical to Hero
+        tlProjectsSnapshots.fromTo(projectsLayer, {
+          y: '0%',
+          opacity: 1,
+          scale: 1,
+          force3D: true
+        }, {
+          y: '-8%',
+          opacity: 0.28,
+          scale: 0.965,
+          ease: 'none',
+          force3D: true,
+          duration: 1
+        }, 0);
+      }
+
       return () => {
-        tl.kill();
-        gsap.set([heroLayer, aboutLayer], {
+        tlHeroAbout.kill();
+        if (tlProjectsSnapshots) tlProjectsSnapshots.kill();
+        gsap.set([heroLayer, aboutLayer, projectsLayer, snapshotsLayer].filter(Boolean), {
           clearProps: 'all'
         });
       };

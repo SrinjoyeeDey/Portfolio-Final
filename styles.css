@@ -2873,7 +2873,7 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
 }
 
 .banner-nobodristhi {
-  background: linear-gradient(135deg, #06281D 0%, #064E3B 100%);
+  background: linear-gradient(135deg, #1C1627 0%, #2A203B 100%);
   position: relative;
 }
 
@@ -2881,14 +2881,14 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(52, 211, 153, 0.18) 0%, transparent 70%);
+  background: radial-gradient(circle at 50% 50%, rgba(245, 223, 119, 0.16) 0%, transparent 70%);
   pointer-events: none;
 }
 
 .banner-nobodristhi .banner-icon-circle {
-  background: #10B981;
-  color: #064E3B;
-  box-shadow: 0 10px 25px rgba(16, 185, 129, 0.35);
+  background: #F5DF77;
+  color: #251E32;
+  box-shadow: 0 10px 25px rgba(245, 223, 119, 0.35);
 }
 
 .banner-nexvyapaar {
@@ -2911,7 +2911,7 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
 }
 
 .banner-punarchakra {
-  background: linear-gradient(135deg, #042F2E 0%, #115E59 100%);
+  background: linear-gradient(135deg, #3B0764 0%, #581C87 100%);
   position: relative;
 }
 
@@ -2919,14 +2919,14 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at 50% 50%, rgba(45, 212, 191, 0.22) 0%, transparent 70%);
+  background: radial-gradient(circle at 50% 50%, rgba(192, 132, 252, 0.25) 0%, transparent 70%);
   pointer-events: none;
 }
 
 .banner-punarchakra .banner-icon-circle {
-  background: #14B8A6;
-  color: #042F2E;
-  box-shadow: 0 10px 25px rgba(20, 184, 166, 0.4);
+  background: #A855F7;
+  color: #FFFFFF;
+  box-shadow: 0 10px 25px rgba(168, 85, 247, 0.4);
 }
 
 .project-card:hover .banner-icon-circle {
@@ -4127,8 +4127,8 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
 /* ==========================================================================
    CONTACT SECTION: SIDE-BY-SIDE FORM & TERMINAL (Match raghawshukla.xyz)
    ========================================================================== */
-#contact,
-.story-layer-contact {
+.legacy-contact-section,
+.legacy-story-layer-contact {
   position: relative;
   padding: 60px 0 140px;
 }
@@ -5624,7 +5624,7 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
 }
 
 .punarchakra-hero-banner {
-  background: linear-gradient(135deg, #042F2E 0%, #115E59 100%);
+  background: linear-gradient(135deg, #3B0764 0%, #581C87 100%);
   position: relative;
 }
 
@@ -5635,7 +5635,7 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
   right: -40px;
   width: 180px;
   height: 180px;
-  background: radial-gradient(circle, rgba(45, 212, 191, 0.25) 0%, transparent 70%);
+  background: radial-gradient(circle, rgba(192, 132, 252, 0.28) 0%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
 }
@@ -5650,14 +5650,14 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
   width: 74px;
   height: 74px;
   border-radius: 18px;
-  background: #14B8A6;
-  color: #042F2E;
+  background: #A855F7;
+  color: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 2.2rem;
   flex-shrink: 0;
-  box-shadow: 0 8px 20px rgba(20, 184, 166, 0.4);
+  box-shadow: 0 8px 20px rgba(168, 85, 247, 0.4);
   border: 2px solid #18181B;
 }
 
@@ -5675,12 +5675,12 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
 }
 
 .punarchakra-brand-dot {
-  color: #2DD4BF;
+  color: #C084FC;
 }
 
 .punarchakra-hero-tagline {
   font-size: 0.94rem;
-  color: #CCFBF1;
+  color: #F3E8FF;
   font-weight: 600;
   margin: 4px 0 10px 0;
 }
@@ -5694,11 +5694,11 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
 .punarchakra-hero-capsules span {
   font-size: 0.74rem;
   font-weight: 700;
-  background: rgba(255, 255, 255, 0.1);
-  color: #99F6E4;
+  background: rgba(255, 255, 255, 0.12);
+  color: #E9D5FF;
   padding: 4px 10px;
   border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   letter-spacing: 0.3px;
 }
 
@@ -9033,34 +9033,34 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
   box-shadow: inset 0 0 8px rgba(186, 128, 24, 0.25);
 }
 
-/* In .envelope-silver-state, 3D volume turns to sweet marshmallow cashmere */
+/* In .envelope-silver-state, 3D volume turns to ethereal "fairy whitish grey" with clean edge separation */
 .floating-envelope-widget.envelope-silver-state .envelope-3d-depth-slice {
-  background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 45%, #EDF2F7 75%, #E2E8F0 100%);
-  border: 0.8px solid rgba(226, 232, 240, 0.45);
-  box-shadow: 0 0 5px rgba(226, 232, 240, 0.5), inset 0 0 5px rgba(255, 255, 255, 0.65);
+  background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 35%, #EDF2F7 70%, #E2E8F0 100%);
+  border: 0.8px solid rgba(203, 213, 225, 0.75);
+  box-shadow: 0 0 4px rgba(226, 232, 240, 0.5), inset 0 0 4px rgba(255, 255, 255, 0.95);
 }
 .floating-envelope-widget.envelope-silver-state .envelope-3d-edge.edge-left {
-  background: linear-gradient(to right, #94A3B8 0%, #CBD5E1 30%, #E2E8F0 65%, #F8FAFC 88%, #FFFFFF 100%);
+  background: linear-gradient(to right, #CBD5E1 0%, #E2E8F0 35%, #F1F5F9 70%, #FFFFFF 100%);
   border-radius: 14px;
-  box-shadow: inset 0 0 8px rgba(148, 163, 184, 0.25);
+  box-shadow: inset 0 0 6px rgba(148, 163, 184, 0.2);
 }
 .floating-envelope-widget.envelope-silver-state .envelope-3d-edge.edge-right {
-  background: linear-gradient(to left, #94A3B8 0%, #CBD5E1 30%, #E2E8F0 65%, #F8FAFC 88%, #FFFFFF 100%);
+  background: linear-gradient(to left, #CBD5E1 0%, #E2E8F0 35%, #F1F5F9 70%, #FFFFFF 100%);
   border-radius: 14px;
-  box-shadow: inset 0 0 8px rgba(148, 163, 184, 0.25);
+  box-shadow: inset 0 0 6px rgba(148, 163, 184, 0.2);
 }
 .floating-envelope-widget.envelope-silver-state .envelope-3d-edge.edge-top {
-  background: linear-gradient(to bottom, #FFFFFF 0%, #F8FAFC 25%, #EDF2F7 65%, #E2E8F0 100%);
+  background: linear-gradient(to bottom, #FFFFFF 0%, #F8FAFC 40%, #EDF2F7 75%, #E2E8F0 100%);
   border-radius: 14px;
-  box-shadow: inset 0 0 8px rgba(255, 255, 255, 0.95);
+  box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.98);
 }
 .floating-envelope-widget.envelope-silver-state .envelope-3d-edge.edge-bottom {
-  background: linear-gradient(to top, #64748B 0%, #94A3B8 32%, #CBD5E1 68%, #E2E8F0 100%);
+  background: linear-gradient(to top, #94A3B8 0%, #CBD5E1 35%, #E2E8F0 70%, #F8FAFC 100%);
   border-radius: 14px;
-  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.15);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.12);
 }
 
-/* Sophisticated White-Grayish Cotton Fabric State */
+/* Luminous Fairy Whitish-Grey Fabric State (Separates from Surrounding with Crisp Micro-Contour) */
 .envelope-svg {
   width: 100%;
   height: 100%;
@@ -9070,7 +9070,23 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
 }
 
 .floating-envelope-widget.envelope-silver-state .envelope-svg {
-  filter: grayscale(100%) brightness(1.22) contrast(0.92) drop-shadow(0 0 2px rgba(255, 255, 255, 0.7));
+  filter: grayscale(100%) brightness(1.24) contrast(0.98)
+          drop-shadow(0 0 1px rgba(71, 85, 105, 0.45))
+          drop-shadow(0 6px 18px rgba(15, 23, 42, 0.14));
+}
+
+.floating-envelope-widget.envelope-silver-state .floating-envelope-link:hover .envelope-svg {
+  filter: grayscale(100%) brightness(1.28) contrast(1.0)
+          drop-shadow(0 0 1.5px rgba(71, 85, 105, 0.55))
+          drop-shadow(0 10px 24px rgba(15, 23, 42, 0.18));
+}
+
+.floating-envelope-widget.envelope-silver-state .cute-heart-seal-wrapper path:first-child {
+  fill: #D8DFE8 !important;
+}
+
+.floating-envelope-widget.envelope-silver-state .cute-heart-seal-wrapper {
+  filter: drop-shadow(0 1px 2px rgba(100, 116, 139, 0.4)) !important;
 }
 
 .floating-envelope-widget.envelope-silver-state .envelope-tilt-layer {
@@ -9082,7 +9098,7 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
 }
 
 .floating-envelope-widget.envelope-silver-state .envelope-floor-shadow {
-  background: radial-gradient(ellipse at center, rgba(60, 65, 75, 0.45) 0%, rgba(60, 65, 75, 0.18) 45%, rgba(0, 0, 0, 0) 75%);
+  background: radial-gradient(ellipse at center, rgba(45, 52, 64, 0.42) 0%, rgba(45, 52, 64, 0.16) 45%, rgba(0, 0, 0, 0) 75%);
 }
 
 /* Floor Shadow reacts when envelope lifts high into the air */
@@ -9145,9 +9161,13 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
   transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* Hover State: Joyful Bouncy Float & Playful Waggle */
+/* Hover State: Continuous 3D Rotation Pirouette & Active Energetic Shake Simultaneously */
+.floating-envelope-link:hover .envelope-spin-layer {
+  animation: envelopeHoverRotate 2.2s linear infinite !important;
+}
+
 .floating-envelope-link:hover .envelope-shake-layer {
-  animation: cuteHoverJoyBounce 0.85s cubic-bezier(0.34, 1.56, 0.64, 1) infinite alternate !important;
+  animation: cuteHoverEnergeticShake 0.38s ease-in-out infinite alternate !important;
 }
 
 .floating-envelope-link:hover .envelope-tilt-layer {
@@ -9188,16 +9208,35 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
   }
 }
 
-/* Cute Joyful Bouncy Float Keyframes on Hover */
-@keyframes cuteHoverJoyBounce {
+/* Continuous 3D Rotation Pirouette on Hover */
+@keyframes envelopeHoverRotate {
   0% {
-    transform: translateY(0px) rotateZ(-2.5deg) scale(1, 1);
-  }
-  50% {
-    transform: translateY(-4px) rotateZ(2.5deg) scale(1.03, 0.97);
+    transform: rotateY(0deg) rotateX(6deg);
   }
   100% {
-    transform: translateY(1.5px) rotateZ(-1.5deg) scale(0.98, 1.02);
+    transform: rotateY(360deg) rotateX(6deg);
+  }
+}
+
+/* Playful Energetic Mascot Shake on Hover */
+@keyframes cuteHoverEnergeticShake {
+  0% {
+    transform: translate(0, 0) rotateZ(0deg);
+  }
+  20% {
+    transform: translate(-3.5px, -2px) rotateZ(-4.5deg);
+  }
+  40% {
+    transform: translate(3px, 1.5px) rotateZ(4.5deg);
+  }
+  60% {
+    transform: translate(-2.5px, 1px) rotateZ(-3.5deg);
+  }
+  80% {
+    transform: translate(2.5px, -1.5px) rotateZ(3.5deg);
+  }
+  100% {
+    transform: translate(-1px, 1px) rotateZ(-1.5deg);
   }
 }
 
@@ -11415,9 +11454,9 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
 .swap-card-banner.banner-vani .swap-banner-icon-circle { background: #FFBD12; color: #18181B; }
 .swap-card-banner.banner-fire .swap-banner-icon-circle { background: #F97316; color: #18181B; }
 .swap-card-banner.banner-anchor .swap-banner-icon-circle { background: #38BDF8; color: #0F172A; }
-.swap-card-banner.banner-nobodristhi .swap-banner-icon-circle { background: #10B981; color: #064E3B; }
+.swap-card-banner.banner-nobodristhi .swap-banner-icon-circle { background: #F5DF77; color: #251E32; }
 .swap-card-banner.banner-nexvyapaar .swap-banner-icon-circle { background: #6366F1; color: #FFFFFF; }
-.swap-card-banner.banner-punarchakra .swap-banner-icon-circle { background: #14B8A6; color: #042F2E; }
+.swap-card-banner.banner-punarchakra .swap-banner-icon-circle { background: #A855F7; color: #FFFFFF; }
 
 .swap-card-body {
   flex: 1;
@@ -11876,5 +11915,170 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
   0% { transform: translate3d(-50%, 0, 0); }
   100% { transform: translate3d(0, 0, 0); }
 }
+
+/* ==========================================================================
+   GLOBAL 3D GLOBE SECTION (Aceternity UI 3D Globe Integration)
+   ========================================================================== */
+.global-globe-section {
+  position: relative;
+  width: 100%;
+  background-color: var(--color-bg-light, #ECECE7);
+  padding: clamp(60px, 8vh, 100px) clamp(16px, 3.5vw, 48px);
+  box-sizing: border-box;
+  overflow: hidden;
+  z-index: 10;
+  border-top: none;
+}
+
+.globe-section-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.globe-editorial-side {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.globe-status-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+.globe-bracket-tag {
+  font-family: var(--font-display, 'Fredoka', cursive, sans-serif);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--color-charcoal, #222428);
+}
+
+.globe-live-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(34, 36, 40, 0.05);
+  border: 1px solid rgba(34, 36, 40, 0.12);
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-family: var(--font-display, 'Fredoka', cursive, sans-serif);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--color-charcoal, #222428);
+}
+
+.globe-title-row-1,
+.globe-title-row-2 {
+  font-family: var(--font-display, 'Fredoka', cursive, sans-serif);
+  font-size: clamp(2.4rem, 4.8vw, 4.5rem);
+  font-weight: 900;
+  line-height: 0.92;
+  letter-spacing: -2px;
+  text-transform: uppercase;
+}
+
+.globe-title-row-3 {
+  margin-top: 10px;
+}
+
+.globe-star-doodle {
+  font-size: 0.65em;
+  color: var(--color-yellow, #FFBD12);
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+.globe-narrative-text {
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: clamp(1rem, 1.25vw, 1.15rem);
+  line-height: 1.6;
+  color: var(--color-charcoal-muted, #5C6069);
+  margin: 18px 0 24px 0;
+  max-width: 580px;
+}
+
+.globe-telemetry-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 22px;
+}
+
+.globe-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1.5px solid rgba(34, 36, 40, 0.12);
+  box-shadow: 2px 2px 0px rgba(34, 36, 40, 0.08);
+  border-radius: 999px;
+  padding: 6px 14px;
+  font-family: var(--font-display, 'Fredoka', cursive, sans-serif);
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--color-charcoal, #222428);
+}
+
+.globe-chip i {
+  color: var(--color-yellow, #FFBD12);
+  font-size: 0.9rem;
+}
+
+.globe-interaction-hint {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--color-charcoal-muted, #5C6069);
+  opacity: 0.85;
+}
+
+.globe-canvas-side {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.globe-canvas-card {
+  position: relative;
+  width: 100%;
+  min-height: 640px;
+  background: radial-gradient(circle at center, rgba(255, 255, 255, 0.6) 0%, rgba(236, 236, 231, 0.3) 70%, transparent 100%);
+  border-radius: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+}
+
+.globe-react-root {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+@media (max-width: 991px) {
+  .globe-section-container {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  .globe-canvas-card {
+    min-height: 440px;
+  }
+}
+
 
 

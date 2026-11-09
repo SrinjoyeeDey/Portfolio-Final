@@ -116,7 +116,7 @@ const PROJECTS = [
     bannerClass: 'banner-punarchakra',
     iconClass: 'fa-recycle',
     title: 'Punarchakra',
-    subtitle: 'AI E-Waste Recycling Platform',
+    subtitle: 'AI-Powered E-Waste Recycling Platform',
     excerpt: 'Smart recycling platform blending AI e-waste classification with gamified rewards for eco-disposal.',
     tags: ['Computer Vision', 'Classification', 'Eco-Tech', 'Web'],
     primaryAction: {
