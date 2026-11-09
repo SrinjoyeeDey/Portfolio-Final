@@ -803,13 +803,16 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Update floating email envelope visibility (anchored cleanly on right side)
+    // Update floating email envelope visibility & initiate choreographed flight if needed
     const envelopeWidget = document.getElementById('floating-envelope-widget');
     if (envelopeWidget) {
       const aboutEl = document.getElementById('about');
+      const projectsEl = document.getElementById('projects');
+      const projectsRect = projectsEl ? projectsEl.getBoundingClientRect() : null;
 
       // In Home section: not visible
       const isHome = (window.scrollY < 120) || (aboutEl && window.getComputedStyle(aboutEl).opacity === '0');
+      const isProjectsOrBeyond = projectsRect ? projectsRect.top <= window.innerHeight * 0.55 : false;
 
       if (isHome) {
         envelopeWidget.classList.add('envelope-hidden');
@@ -817,6 +820,11 @@ document.addEventListener('DOMContentLoaded', () => {
       } else {
         envelopeWidget.classList.remove('envelope-hidden');
         envelopeWidget.classList.add('envelope-visible');
+
+        // When scrolling to Projects section, if envelope is on the right, trigger flight to left
+        if (isProjectsOrBeyond && typeof window._triggerEnvelopeFlight === 'function' && window._envelopeCurrentSide === 'right') {
+          window._triggerEnvelopeFlight('left');
+        }
       }
     }
   }
@@ -1797,74 +1805,124 @@ document.addEventListener('DOMContentLoaded', () => {
   // Card remains completely still as requested
 
   /* --------------------------------------------------------------------------
-     11. TACTILE 3D EMAIL ENVELOPE (Stationary Right Anchor & Smooth Damped Physics)
+     11. FLOATING 3D EMAIL ENVELOPE (Choreographed Flight, Rotation & Color Shift)
      -------------------------------------------------------------------------- */
   const envelopeWidget = document.getElementById('floating-envelope-widget');
   if (envelopeWidget) {
     const link = envelopeWidget.querySelector('.floating-envelope-link');
     const tiltLayer = envelopeWidget.querySelector('.envelope-tilt-layer');
+    const spinLayer = envelopeWidget.querySelector('.envelope-spin-layer');
 
+    // Pointer hover parallax
     if (link && tiltLayer) {
-      let isHovered = false;
-      let targetX = 0;
-      let targetY = 0;
-      let currentX = 0;
-      let currentY = 0;
-      let currentLift = 0;
-      let targetLift = 0;
-      let currentScale = 1;
-      let targetScale = 1;
-      let rafId = null;
-
-      const baseRotX = 14;
-      const baseRotY = -18;
-      const baseRotZ = -4;
-
-      const animateTilt = () => {
-        // High-precision damped spring lerp
-        const lerpFactor = isHovered ? 0.1 : 0.07;
-        currentX += (targetX - currentX) * lerpFactor;
-        currentY += (targetY - currentY) * lerpFactor;
-        currentLift += (targetLift - currentLift) * lerpFactor;
-        currentScale += (targetScale - currentScale) * lerpFactor;
-
-        const rx = baseRotX - currentY * 16;
-        const ry = baseRotY + currentX * 18;
-        const rz = baseRotZ + currentX * 5;
-
-        tiltLayer.style.transform = `translateY(${currentLift.toFixed(2)}px) rotateX(${rx.toFixed(2)}deg) rotateY(${ry.toFixed(2)}deg) rotateZ(${rz.toFixed(2)}deg) scale(${currentScale.toFixed(3)})`;
-
-        const delta = Math.abs(targetX - currentX) + Math.abs(targetY - currentY) + Math.abs(targetLift - currentLift);
-        if (isHovered || delta > 0.005) {
-          rafId = requestAnimationFrame(animateTilt);
-        } else {
-          rafId = null;
-        }
-      };
-
-      link.addEventListener('pointerenter', () => {
-        isHovered = true;
-        targetLift = -14;
-        targetScale = 1.08;
-        if (!rafId) rafId = requestAnimationFrame(animateTilt);
-      });
-
       link.addEventListener('pointermove', (e) => {
         const rect = link.getBoundingClientRect();
-        targetX = (e.clientX - rect.left) / rect.width - 0.5;
-        targetY = (e.clientY - rect.top) / rect.height - 0.5;
-        if (!rafId) rafId = requestAnimationFrame(animateTilt);
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        tiltLayer.style.transform = `translateY(-24px) rotateX(${15 - y * 16}deg) rotateY(${-14 + x * 16}deg) rotateZ(${-9 + x * 6}deg) scale(1.1)`;
       });
-
       link.addEventListener('pointerleave', () => {
-        isHovered = false;
-        targetX = 0;
-        targetY = 0;
-        targetLift = 0;
-        targetScale = 1;
-        if (!rafId) rafId = requestAnimationFrame(animateTilt);
+        tiltLayer.style.transform = '';
       });
     }
+
+    // Flight state & choreography controller:
+    // "move like up and stay ther and then go other sode and then come down"
+    // "rotate sometimes and even change colour to some othe sphosticated white grayish after some time"
+    window._envelopeCurrentSide = 'right';
+    let isFlightInProgress = false;
+    let totalSpinAngle = 0;
+
+    const getSideX = (side) => {
+      const isMobile = window.innerWidth < 640;
+      if (side === 'left') {
+        return isMobile ? 'calc(-100vw + 118px)' : 'calc(-100vw + 154px)';
+      }
+      return '0px';
+    };
+
+    const triggerFlight = (preferredDestination) => {
+      if (envelopeWidget.classList.contains('envelope-hidden') || isFlightInProgress || document.hidden) {
+        return;
+      }
+
+      const dest = preferredDestination || (window._envelopeCurrentSide === 'right' ? 'left' : 'right');
+      if (dest === window._envelopeCurrentSide && preferredDestination) {
+        return;
+      }
+
+      isFlightInProgress = true;
+      const startX = getSideX(window._envelopeCurrentSide);
+      const destX = getSideX(dest);
+      const isGoingLeft = dest === 'left';
+
+      // 1. MOVE UP: Ascend high into the upper viewport
+      envelopeWidget.classList.add('envelope-airborne');
+      envelopeWidget.style.setProperty('--flight-duration', '2.2s');
+      envelopeWidget.style.setProperty('--flight-easing', 'cubic-bezier(0.25, 1, 0.4, 1)');
+      envelopeWidget.style.setProperty('--flight-x', startX);
+      envelopeWidget.style.setProperty('--flight-y', '-48vh');
+
+      // 2. STAY THERE & ROTATE & COLOR SHIFT
+      setTimeout(() => {
+        if (!isFlightInProgress) return;
+
+        // Perform playful 3D rotation pirouette
+        totalSpinAngle += isGoingLeft ? 360 : -360;
+        if (spinLayer) {
+          spinLayer.style.transform = `rotateY(${totalSpinAngle}deg)`;
+        }
+
+        // Color change: shift to sophisticated white-grayish if moving to left, or back to butter-yellow if returning
+        if (isGoingLeft) {
+          envelopeWidget.classList.add('envelope-silver-state');
+        } else {
+          envelopeWidget.classList.remove('envelope-silver-state');
+        }
+
+        // 3. GO TO OTHER SIDE: Horizontal flight across the sky
+        setTimeout(() => {
+          if (!isFlightInProgress) return;
+
+          envelopeWidget.style.setProperty('--flight-duration', '2.8s');
+          envelopeWidget.style.setProperty('--flight-easing', 'cubic-bezier(0.35, 0, 0.25, 1)');
+          envelopeWidget.style.setProperty('--flight-x', destX);
+          envelopeWidget.style.setProperty('--flight-y', '-48vh');
+
+          // 4. COME DOWN: Gently float down to resting bottom position on new side
+          setTimeout(() => {
+            if (!isFlightInProgress) return;
+
+            envelopeWidget.style.setProperty('--flight-duration', '2.0s');
+            envelopeWidget.style.setProperty('--flight-easing', 'cubic-bezier(0.25, 1, 0.5, 1)');
+            envelopeWidget.style.setProperty('--flight-x', destX);
+            envelopeWidget.style.setProperty('--flight-y', '0px');
+            envelopeWidget.classList.remove('envelope-airborne');
+
+            // 5. TOUCHDOWN: Update state and rest
+            setTimeout(() => {
+              window._envelopeCurrentSide = dest;
+              isFlightInProgress = false;
+            }, 2100);
+
+          }, 2900); // Wait for horizontal glide to finish
+
+        }, 3600); // Stay/hover duration in the air
+
+      }, 2300); // Rise duration
+    };
+
+    window._triggerEnvelopeFlight = triggerFlight;
+
+    // Periodic autonomous flight cycles (runs every ~22s when visible)
+    setInterval(() => {
+      triggerFlight();
+    }, 22000);
+
+    // Initial autonomous flight shortly after loading
+    setTimeout(() => {
+      triggerFlight();
+    }, 7500);
   }
 
   /* --------------------------------------------------------------------------
