@@ -13,7 +13,7 @@
   let audioCtx = null;
   let masterGain = null;
   let noiseBuffer = null;
-  let isSoundEnabled = false;
+  let isSoundEnabled = true;
   let lastHoverTime = 0;
   let lastHoverElement = null;
   let lastSoundTime = 0;
@@ -90,10 +90,13 @@
     if (!isSoundEnabled) return;
     const ctx = getAudioContext();
     if (!ctx) return;
+    if (ctx.state === 'suspended') {
+      ctx.resume().catch(() => {});
+    }
     const now = ctx.currentTime;
 
     // Strict throttle to prevent rapid machine-gunning across links
-    if (now - lastHoverTime < 0.065) return;
+    if (now - lastHoverTime < 0.05) return;
     lastHoverTime = now;
 
     try {
@@ -139,6 +142,10 @@
     if (!isSoundEnabled) return;
     const ctx = getAudioContext();
     if (!ctx) return;
+    if (ctx.state === 'suspended') {
+      ctx.resume().then(() => playClick(isPrimary)).catch(() => {});
+      return;
+    }
     const now = ctx.currentTime;
     const vol = isPrimary ? VOLUMES.clickPrimary : VOLUMES.click;
 
@@ -402,7 +409,36 @@
   }
 
   /* --------------------------------------------------------------------------
-     GLOBAL SOUND ON / OFF TOGGLE CONTROLLER
+     6. ERROR ACTIONS: Low-frequency subtle tactile double-thump
+     -------------------------------------------------------------------------- */
+  function playError() {
+    if (!isSoundEnabled) return;
+    const ctx = getAudioContext();
+    if (!ctx) return;
+    if (ctx.state === 'suspended') {
+      ctx.resume().then(() => playError()).catch(() => {});
+      return;
+    }
+    const now = ctx.currentTime;
+    try {
+      [0, 0.08].forEach((delay) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(140, now + delay);
+        osc.frequency.exponentialRampToValueAtTime(70, now + delay + 0.06);
+        gain.gain.setValueAtTime(VOLUMES.click * 0.7, now + delay);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + delay + 0.06);
+        osc.connect(gain);
+        gain.connect(masterGain);
+        osc.start(now + delay);
+        osc.stop(now + delay + 0.065);
+      });
+    } catch (e) {}
+  }
+
+  /* --------------------------------------------------------------------------
+     GLOBAL SOUND ON / OFF CONTROLLER
      -------------------------------------------------------------------------- */
   function setSoundEnabled(enable, triggerFeedback = true) {
     isSoundEnabled = !!enable;
@@ -439,6 +475,21 @@
     setSoundEnabled(!isSoundEnabled, true);
   }
 
+  /**
+   * Auto-unlock Web Audio context on any first user gesture
+   */
+  function installUserGestureAudioUnlock() {
+    const unlock = () => {
+      const ctx = getAudioContext();
+      if (ctx && ctx.state === 'suspended') {
+        ctx.resume().catch(() => {});
+      }
+    };
+    ['pointerdown', 'mousedown', 'click', 'keydown', 'touchstart'].forEach((evt) => {
+      window.addEventListener(evt, unlock, { passive: true });
+    });
+  }
+
   /* --------------------------------------------------------------------------
      INTERACTION EVENT BINDINGS
      -------------------------------------------------------------------------- */
@@ -453,11 +504,15 @@
       if (e.target.closest('input, textarea, select, [contenteditable="true"], .terminal-input')) return;
 
       const interactive = e.target.closest(
-        'a, button, [role="button"], ' +
+        'a, button, [role="button"], input[type="button"], input[type="submit"], ' +
         '.term-chip, .project-card, .polaroid-item, .skill-card, ' +
         '.dock-toggle-btn, .interactive-hover-btn, .nav-link, .brand-logo, ' +
         '.mood-pill, .filter-btn, .uplink-icon-btn, .color-dot, .sound-toggle-btn, ' +
-        '.clay-cmd-chip, .quick-chip'
+        '.clay-cmd-chip, .quick-chip, .tech-logo-item, .tech-card, .service-card, ' +
+        '.bento-card, .studio-keyboard-stage, .hero-cta-btn, .tag-pill, ' +
+        '.dock-action-btn, .studio-lets-work-wrapper, .studio-lets-work-wrapper button, ' +
+        '.editorial-project-row, .social-icon, .uplink-action, .editorial-arrow-btn, ' +
+        '.editorial-jump-link, .photo-stack-card, .curator-badge, .badge-pill'
       );
 
       if (interactive && interactive !== lastHoverElement) {
@@ -478,7 +533,8 @@
       if (e.target.closest('input:not([type="radio"]):not([type="checkbox"]):not([type="submit"]):not([type="button"]), textarea, [contenteditable="true"], .terminal-input')) return;
 
       const primaryCta = e.target.closest(
-        '.btn-pill-dark, #submit-btn, .uplink-submit-btn, [data-sfx="primary"]'
+        '.btn-pill-dark, #submit-btn, .uplink-submit-btn, [data-sfx="primary"], ' +
+        '.hero-cta-primary, .studio-meet-trigger, .studio-lets-work-wrapper button, [type="submit"]'
       );
       if (primaryCta) {
         playClick(true);
@@ -486,9 +542,11 @@
       }
 
       const regularClickable = e.target.closest(
-        'button:not(#sound-toggle-btn), [role="button"], .term-chip, ' +
+        'button, [role="button"], a:not([href^="#"]), .term-chip, ' +
         '.dock-toggle-btn, .filter-btn, .uplink-icon-btn, .color-dot, ' +
-        '.quick-chip, .clay-cmd-chip, input[type="radio"], input[type="checkbox"]'
+        '.quick-chip, .clay-cmd-chip, input[type="radio"], input[type="checkbox"], ' +
+        '.tech-sound-toggle-btn, .tech-logo-item, .dock-action-btn, label[for], ' +
+        '.editorial-arrow-btn, .editorial-jump-link, .photo-stack-card'
       );
       if (regularClickable) {
         playClick(false);
@@ -571,7 +629,7 @@
       });
     }
 
-    // Toggle button click listener
+    // Toggle button click listener (if present anywhere in DOM)
     const toggleBtn = document.getElementById('sound-toggle-btn');
     if (toggleBtn) {
       toggleBtn.addEventListener('click', (e) => {
@@ -582,18 +640,17 @@
   }
 
   /**
-   * Initialize on DOM Ready
+   * Initialize on DOM Ready - Sound is active by default
    */
   function init() {
-    // Respect requirement: Start disabled until user explicitly enables it
-    // Check if user previously enabled it in this browser session
-    let savedState = false;
+    isSoundEnabled = true;
     try {
-      savedState = localStorage.getItem('porto_sfx_enabled') === 'true';
+      localStorage.setItem('porto_sfx_enabled', 'true');
     } catch (e) {}
 
-    setSoundEnabled(savedState, false);
+    setSoundEnabled(true, false);
     initEventBindings();
+    installUserGestureAudioUnlock();
   }
 
   if (document.readyState === 'loading') {
@@ -613,7 +670,8 @@
     playExpand,
     playCollapse,
     playNav: playNavSweep,
-    playSuccess: playSuccessChime
+    playSuccess: playSuccessChime,
+    playError
   };
 
 })();

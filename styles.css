@@ -1314,6 +1314,8 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
   max-width: 680px;
   position: relative;
   z-index: 10;
+  margin-left: clamp(56px, 7.5vw, 136px);
+  transition: margin-left 0.3s ease;
 }
 
 .hero-edition-row {
@@ -1537,7 +1539,7 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
 
 .hero-3d-model-stage {
   position: absolute;
-  right: -60px;
+  right: clamp(15px, 4vw, 55px);
   top: -35px;
   width: 720px;
   height: 820px;
@@ -1545,6 +1547,7 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
   pointer-events: auto;
   cursor: grab;
   overflow: visible;
+  transition: right 0.3s ease;
 }
 
 .hero-3d-model-stage:active {
@@ -1629,7 +1632,7 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
   .hero-3d-model-stage {
     width: 540px;
     height: 600px;
-    right: -40px;
+    right: clamp(0px, 2vw, 25px);
   }
   .hero-curved-arrow {
     left: 400px;
@@ -1637,6 +1640,9 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
 }
 
 @media (max-width: 1024px) {
+  .hero-ref-content {
+    margin-left: 0;
+  }
   .hero-3d-model-stage {
     position: relative;
     right: auto;
@@ -12535,7 +12541,7 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
 .studio-keyboard-stage {
   position: relative;
   width: 100%;
-  max-width: clamp(520px, 58%, 780px);
+  max-width: clamp(630px, 70%, 960px);
   height: clamp(300px, 36vh, 400px);
   display: flex;
   align-items: center;
@@ -12554,7 +12560,7 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
 
 /* Soft Realistic Floor Shadow beneath the 3D Keyboard */
 .studio-keyboard-ground-shadow {
-  width: clamp(380px, 50%, 620px);
+  width: clamp(460px, 62%, 760px);
   height: 24px;
   border-radius: 50%;
   background: radial-gradient(ellipse at center, rgba(17, 18, 21, 0.20) 0%, rgba(17, 18, 21, 0.05) 50%, transparent 75%);
@@ -12625,7 +12631,7 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
     padding: 40px 24px 30px;
   }
   .studio-keyboard-stage {
-    max-width: 74%;
+    max-width: 82%;
     height: 380px;
   }
   .cursor-tag-purple {
@@ -12659,8 +12665,8 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
     flex: 0 0 110px;
   }
   .studio-keyboard-stage {
-    max-width: 90%;
-    height: 240px;
+    max-width: 95%;
+    height: 260px;
   }
   .studio-cursor-tag {
     transform: scale(0.85);

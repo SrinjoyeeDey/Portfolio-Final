@@ -169,28 +169,45 @@ function playKeyClick(seed = 0) {
       installAudioUnlock();
     }
     const ctx = audioCtx;
-    if (ctx.state === "suspended") {
-      ctx.resume().catch(() => {});
-      return;
-    }
+
     const trigger = () => {
       const available = keySoundBuffers.filter((b): b is AudioBuffer => b !== null);
-      if (available.length === 0) return;
-      const buffer = available[Math.floor(Math.random() * available.length)];
-      const detune = 1 + (((seed * 9301 + 49297) % 233280) / 233280 - 0.5) * 0.08;
-      const src = ctx.createBufferSource();
-      src.buffer = buffer;
-      src.playbackRate.value = detune;
-      const gain = ctx.createGain();
-      gain.gain.value = 0.65;
-      src.connect(gain);
-      gain.connect(ctx.destination);
-      src.start();
+      if (available.length > 0) {
+        const buffer = available[Math.floor(Math.random() * available.length)];
+        const detune = 1 + (((seed * 9301 + 49297) % 233280) / 233280 - 0.5) * 0.08;
+        const src = ctx.createBufferSource();
+        src.buffer = buffer;
+        src.playbackRate.value = detune;
+        const gain = ctx.createGain();
+        gain.gain.value = 0.65;
+        src.connect(gain);
+        gain.connect(ctx.destination);
+        src.start();
+      } else if (typeof window !== "undefined" && (window as any).PortoSound?.playClick) {
+        (window as any).PortoSound.playClick(true);
+      } else {
+        const osc = ctx.createOscillator();
+        const g = ctx.createGain();
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(260 + (seed % 5) * 20, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + 0.04);
+        g.gain.setValueAtTime(0.5, ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
+        osc.connect(g);
+        g.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.045);
+      }
     };
-    if (keySoundBuffers.some((b) => b !== null)) {
-      trigger();
+
+    if (ctx.state === "suspended") {
+      ctx.resume().then(() => trigger()).catch(() => {});
     } else {
-      loadKeySounds(ctx).then(trigger);
+      if (keySoundBuffers.some((b) => b !== null)) {
+        trigger();
+      } else {
+        loadKeySounds(ctx).then(trigger).catch(trigger);
+      }
     }
   } catch {
     // Fail silently without breaking 3D rendering
@@ -202,6 +219,7 @@ function Keycap({
   position,
   icon,
   onHoverChange,
+  onPress,
   hovered,
   accent,
   isMobile,
@@ -210,6 +228,7 @@ function Keycap({
   position: [number, number, number];
   icon: SkillIcon;
   onHoverChange: (hovered: boolean) => void;
+  onPress?: () => void;
   hovered: boolean;
   accent: string;
   isMobile: boolean;
@@ -266,8 +285,9 @@ function Keycap({
     (e: { stopPropagation: () => void }) => {
       e.stopPropagation();
       onHoverChange(true);
+      onPress?.();
     },
-    [onHoverChange]
+    [onHoverChange, onPress]
   );
   const handleUp = useCallback(() => onHoverChange(false), [onHoverChange]);
 
@@ -299,6 +319,7 @@ function Keycap({
         <mesh
           position={[0, iconY, 0]}
           rotation={[-Math.PI / 2, 0, 0]}
+          scale={[1 / 1.22, 1, 1]}
           raycast={() => null}
         >
           <planeGeometry args={[ICON_PLANE_SIZE, ICON_PLANE_SIZE]} />
@@ -408,13 +429,18 @@ function KeyboardModel({
           onHoverChange={(h) =>
             setHoveredKey((prev) => (h ? id : prev === id ? null : prev))
           }
+          onPress={() => playKeyClick(row * COLS + col)}
         />
       );
     }
   }
 
+  const widthFactor = 1.22; // Increase overall horizontal width by ~22% while keeping height and depth intact
   return (
-    <group scale={isMobile ? 1.30 : 1.48} position={[0, isMobile ? -0.02 : -0.05, 0]}>
+    <group 
+      scale={isMobile ? [1.30 * widthFactor, 1.30, 1.30] : [1.48 * widthFactor, 1.48, 1.48]} 
+      position={[0, isMobile ? -0.02 : -0.05, 0]}
+    >
       <group ref={ref}>
         <mesh geometry={baseGeom}>
           <meshStandardMaterial

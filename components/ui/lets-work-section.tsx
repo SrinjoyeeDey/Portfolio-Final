@@ -6,10 +6,12 @@ import { ArrowUpRight, Calendar } from "lucide-react"
 
 export function LetsWorkTogether({ 
   className,
-  compact = false
+  compact = false,
+  showTitle = false
 }: { 
   className?: string
-  compact?: boolean 
+  compact?: boolean
+  showTitle?: boolean
 } = {}) {
   const [isHovered, setIsHovered] = useState(false)
   const [isClicked, setIsClicked] = useState(false)
@@ -18,14 +20,23 @@ export function LetsWorkTogether({
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement | HTMLDivElement>) => {
     e.preventDefault()
+    if (typeof window !== "undefined" && (window as any).PortoSound?.playClick) {
+      (window as any).PortoSound.playClick(true)
+    }
     setIsClicked(true)
 
     setTimeout(() => {
       setShowSuccess(true)
+      if (typeof window !== "undefined" && (window as any).PortoSound?.playSuccess) {
+        (window as any).PortoSound.playSuccess()
+      }
     }, 500)
   }
 
   const handleBookCall = () => {
+    if (typeof window !== "undefined" && (window as any).PortoSound?.playClick) {
+      (window as any).PortoSound.playClick(true)
+    }
     window.open("https://cal.com/jatin-yadav05/15min", "_blank")
   }
 
@@ -173,36 +184,38 @@ export function LetsWorkTogether({
           }}
         >
           <div className={`flex flex-col items-center ${compact ? "gap-3 sm:gap-4" : "gap-6"}`}>
-            <h2
-              className={`relative text-center ${compact ? "text-3xl sm:text-4xl md:text-5xl" : "text-5xl sm:text-6xl md:text-7xl lg:text-8xl"} font-light tracking-tight text-foreground transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]`}
-              style={{
-                opacity: isClicked ? 0 : 1,
-                transform: isClicked ? "translateY(-40px) scale(0.95)" : "translateY(0) scale(1)",
-              }}
-            >
-              <span className="block overflow-hidden">
-                <span
-                  className="block transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
-                  style={{
-                    transform: isHovered && !isClicked ? "translateY(-8%)" : "translateY(0)",
-                  }}
-                >
-                  Let's work
+            {showTitle && (
+              <h2
+                className={`relative text-center ${compact ? "text-3xl sm:text-4xl md:text-5xl" : "text-5xl sm:text-6xl md:text-7xl lg:text-8xl"} font-light tracking-tight text-foreground transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]`}
+                style={{
+                  opacity: isClicked ? 0 : 1,
+                  transform: isClicked ? "translateY(-40px) scale(0.95)" : "translateY(0) scale(1)",
+                }}
+              >
+                <span className="block overflow-hidden">
+                  <span
+                    className="block transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                    style={{
+                      transform: isHovered && !isClicked ? "translateY(-8%)" : "translateY(0)",
+                    }}
+                  >
+                    Let's work
+                  </span>
                 </span>
-              </span>
-              <span className="block overflow-hidden">
-                <span
-                  className="block transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] delay-75"
-                  style={{
-                    transform: isHovered && !isClicked ? "translateY(-8%)" : "translateY(0)",
-                  }}
-                >
-                  <span className="text-muted-foreground/60">together</span>
+                <span className="block overflow-hidden">
+                  <span
+                    className="block transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] delay-75"
+                    style={{
+                      transform: isHovered && !isClicked ? "translateY(-8%)" : "translateY(0)",
+                    }}
+                  >
+                    <span className="text-muted-foreground/60">together</span>
+                  </span>
                 </span>
-              </span>
-            </h2>
+              </h2>
+            )}
 
-            <div className={`relative ${compact ? "mt-1 sm:mt-2 size-12 sm:size-14" : "mt-4 size-16 sm:size-20"} flex items-center justify-center`}>
+            <div className={`relative ${compact ? "size-12 sm:size-14" : "mt-4 size-16 sm:size-20"} flex items-center justify-center`}>
               <div
                 className="pointer-events-none absolute inset-0 rounded-full border transition-all ease-out"
                 style={{

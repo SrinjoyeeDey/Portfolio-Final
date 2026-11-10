@@ -77,7 +77,7 @@ html.lenis-scrolling {
   box-shadow: none;
   overflow: visible;
   will-change: transform, opacity;
-  padding-bottom: clamp(320px, 42vh, 520px);
+  padding-bottom: 0;
 }
 
 #story-layer-snapshots {

@@ -20,7 +20,7 @@
   background-color: var(--editorial-master-bg);
   color: #1E293B;
   font-family: var(--editorial-font-body);
-  padding: clamp(60px, 8vh, 100px) clamp(24px, 5vw, 64px) clamp(180px, 22vh, 300px) clamp(24px, 5vw, 64px);
+  padding: clamp(60px, 8vh, 100px) clamp(24px, 5vw, 64px) clamp(60px, 8vh, 90px) clamp(24px, 5vw, 64px);
   box-sizing: border-box;
   overflow: hidden;
   transition: background-color 0.4s ease;
@@ -162,7 +162,7 @@
   max-width: 1360px;
   margin: 0 auto;
   border-top: 1px solid var(--editorial-border);
-  padding-bottom: clamp(220px, 28vh, 380px);
+  padding-bottom: 0;
 }
 
 /* Individual Row */
