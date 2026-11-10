@@ -27,3 +27,4 @@ export interface SlingButtonProps extends ComponentPropsWithoutRef<'span'> {
 declare const SlingButton: FC<SlingButtonProps>;
 
 export default SlingButton;
+
