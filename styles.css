@@ -5219,9 +5219,6 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
   position: relative;
   overflow: hidden;
 }
-  position: relative;
-  overflow: hidden;
-}
 
 .vani-hero-banner {
   background: linear-gradient(135deg, #18181B 0%, #0F172A 100%);
