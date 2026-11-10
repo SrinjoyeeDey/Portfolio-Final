@@ -60,6 +60,19 @@ const UNIFIED_STYLES = `
 
 .editorial-footer-stage {
   margin-bottom: 0 !important;
+  border-top: none !important;
+}
+
+.editorial-footer-stage .dcf,
+.editorial-footer-stage .dcf-world {
+  background: transparent !important;
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.editorial-footer-stage .dcf-world {
+  padding-top: 0 !important;
 }
 `;
 
@@ -86,7 +99,7 @@ export default function UnifiedFooter() {
       style={{
         backgroundColor: "var(--color-bg-light, #ECECE7)",
         color: "var(--color-charcoal, #222428)",
-        paddingTop: "clamp(48px, 6vh, 72px)",
+        paddingTop: "clamp(32px, 4vh, 48px)",
         paddingBottom: "24px",
       }}
     >
@@ -133,7 +146,7 @@ export default function UnifiedFooter() {
             </MagneticButton>
             <MagneticButton
               as="a"
-              href="https://github.com/SrinjoyeeDey"
+              href="https://github.com/SrinjoyeeDey/"
               target="_blank"
               rel="noopener noreferrer"
               className="cursor-target"
@@ -143,13 +156,13 @@ export default function UnifiedFooter() {
             </MagneticButton>
             <MagneticButton
               as="a"
-              href="https://twitter.com/SrinjoyeeDey"
+              href="https://x.com/Srinjoyee__bee"
               target="_blank"
               rel="noopener noreferrer"
               className="cursor-target"
-              data-cursor-label="Twitter"
+              data-cursor-label="X (Twitter)"
             >
-              TWITTER
+              X (TWITTER)
             </MagneticButton>
             <MagneticButton
               as="a"
@@ -220,17 +233,7 @@ export default function UnifiedFooter() {
         </nav>
       </div>
 
-      {/* 2. DEDICATED SPACE FOR UPCOMING "TRY SOMETHING NEW" CTA */}
-      <div
-        id="try-something-new-slot"
-        className="relative w-full my-6 md:my-8 flex justify-center items-center"
-        style={{ minHeight: "44px" }}
-        data-cta-slot="try-something-new"
-      >
-        {/* Dedicated breathing space prepared for upcoming Try Something New CTA component */}
-      </div>
-
-      {/* 3. LARGE "SRINJOYEE DEY" TYPOGRAPHY WITH EXISTING ILLUSTRATIONS */}
+      {/* 2. LARGE "SRINJOYEE DEY" TYPOGRAPHY WITH EXISTING ILLUSTRATIONS */}
       <div className="relative w-full mt-2">
         {/* Soft Breathing Ambient Aurora Glow Behind Doodle Characters */}
         <div

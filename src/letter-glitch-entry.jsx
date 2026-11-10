@@ -10,7 +10,7 @@ export function initLetterGlitch() {
       <LetterGlitch
         glitchColors={['#FFBD12', '#E8BD4B', '#F5D879', '#D5A52E', '#27272A']}
         baseColor="#27272A"
-        characters="ABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$&*()-_+=/[]{};:<>.,0123456789"
+        characters="0123456789"
         fontFamily="'Space Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace"
         fontSize={14}
         spacing={0.65}

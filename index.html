@@ -16,7 +16,7 @@
     rel="stylesheet">
 
   <!-- FontAwesome Icons for UI & Doodles -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
   <!-- Three.js & GLTF Loader for 3D Character Model -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -26,27 +26,29 @@
   <link rel="stylesheet" href="lib/lenis.css">
 
   <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=98">
+  <link rel="stylesheet" href="styles.css?v=111">
   <link rel="stylesheet" href="journey-timeline.css?v=2">
   <link rel="stylesheet" href="grid-scan-bundle.css">
-  <link rel="stylesheet" href="projects-showcase-bundle.css?v=79">
-  <link rel="stylesheet" href="scroll-reveal.css?v=19">
+  <link rel="stylesheet" href="projects-showcase-bundle.css?v=84">
+  <link rel="stylesheet" href="scroll-reveal.css?v=20">
   <link rel="stylesheet" href="circular-text-bundle.css?v=2">
   <link rel="stylesheet" href="target-cursor-bundle.css?v=29">
-  <link rel="stylesheet" href="memory-wall-bundle.css?v=80">
+  <link rel="stylesheet" href="memory-wall-bundle.css?v=81">
   <link rel="stylesheet" href="memory-wall.css?v=80">
   <link rel="stylesheet" href="pixel-transition-bundle.css?v=2">
-  <link rel="stylesheet" href="letter-glitch-bundle.css?v=1">
+  <link rel="stylesheet" href="letter-glitch-bundle.css?v=2">
   <link rel="stylesheet" href="tech-arsenal.css?v=6">
   <link rel="stylesheet" href="footer-shuffle-bundle.css?v=1">
-  <link rel="stylesheet" href="preloader-bundle.css?v=7">
+  <link rel="stylesheet" href="preloader-bundle.css?v=8">
+  <link rel="stylesheet" href="elastic-mesh-bundle.css?v=1">
+  <link rel="stylesheet" href="tailwind-bundle.css?v=1">
 </head>
 
 <body>
 
   <!-- TextType Multi-Lingual Greeting Preloader Root -->
   <div id="preloader-root"></div>
-  <script src="preloader-bundle.js?v=7"></script>
+  <script src="preloader-bundle.js?v=8"></script>
 
 
   <!-- Background Decorative Tech & Studio Elements (Matches User Image) -->
@@ -361,12 +363,7 @@
 
         <!-- Floating Neumorphic App Notification Badges (Moved to About Section) -->
         <div class="about-notif-column" data-speed="1.2">
-          <a href="mailto:deysrinjoyee28@gmail.com" class="neumorph-icon-badge"
-            title="Send Email (deysrinjoyee28@gmail.com)" aria-label="Send Email">
-            <i class="fa-solid fa-envelope"></i>
-            <span class="count-badge-black">99+</span>
-          </a>
-          <a href="https://github.com/SrinjoyeeDey" target="_blank" rel="noopener noreferrer"
+          <a href="https://github.com/SrinjoyeeDey/" target="_blank" rel="noopener noreferrer"
             class="neumorph-icon-badge" title="GitHub (SrinjoyeeDey)" aria-label="GitHub Profile">
             <i class="fa-brands fa-github"></i>
           </a>
@@ -374,6 +371,12 @@
             class="neumorph-icon-badge" title="LinkedIn (srinjoyee-dey)" aria-label="LinkedIn Profile">
             <i class="fa-brands fa-linkedin-in"></i>
             <span class="count-badge-black">99+</span>
+          </a>
+          <a href="https://x.com/Srinjoyee__bee" target="_blank" rel="noopener noreferrer"
+            class="neumorph-icon-badge" title="X (Twitter) (Srinjoyee__bee)" aria-label="X (Twitter) Profile">
+            <svg class="x-twitter-svg" viewBox="0 0 24 24" width="22" height="22" fill="#111111" style="display:block;width:22px;height:22px;fill:#111111;margin:auto;" aria-hidden="true">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" fill="#111111"/>
+            </svg>
           </a>
         </div>
 
@@ -479,7 +482,7 @@
                       href="mailto:deysrinjoyee28@gmail.com">deysrinjoyee28@gmail.com</a></li>
                   <li><i class="fa-brands fa-linkedin-in"></i> <a href="https://www.linkedin.com/in/srinjoyee-dey/"
                       target="_blank" rel="noopener noreferrer">srinjoyee-dey</a></li>
-                  <li><i class="fa-brands fa-github"></i> <a href="https://github.com/SrinjoyeeDey" target="_blank"
+                  <li><i class="fa-brands fa-github"></i> <a href="https://github.com/SrinjoyeeDey/" target="_blank"
                       rel="noopener noreferrer">SrinjoyeeDey</a></li>
                   <li><i class="fa-solid fa-location-dot"></i> Kolkata, India</li>
                 </ul>
@@ -591,6 +594,26 @@
     <section class="projects-section-immersive" id="projects" style="position: relative; padding: 0; margin: 0; min-height: 100vh; width: 100%;">
       <!-- Interactive Expandable Editorial Projects Showcase Root -->
       <div id="projects-showcase-root"></div>
+
+      <!-- Centered ScrollExpandMedia Cinematic Bridge Element (Projects → Snapshot) -->
+      <div class="projects-cinematic-bridge" id="projects-cinematic-bridge" aria-hidden="true">
+        <div class="projects-bridge-media">
+          <div class="bridge-viewfinder-corners">
+            <span class="corner top-left"></span>
+            <span class="corner top-right"></span>
+            <span class="corner bottom-left"></span>
+            <span class="corner bottom-right"></span>
+          </div>
+          <div class="bridge-lens-content">
+            <div class="bridge-badge">
+              <span class="bridge-badge-dot"></span>
+              <span>EXPANDING ARCHIVE</span>
+            </div>
+            <div class="bridge-title">COLLECTION OF MOMENTS</div>
+            <div class="bridge-crosshair"><i class="fa-solid fa-camera"></i></div>
+          </div>
+        </div>
+      </div>
     </section>
   </div><!-- /story-layer-projects -->
 
@@ -648,15 +671,71 @@
       </div>
     </section>
 
-    <!-- GLOBAL 3D GLOBE PRESENCE VIEWPORT STAGE (Seamlessly Merged) -->
-    <section class="global-globe-section" id="global-reach" aria-label="3D Globe & Worldwide Presence">
-      <div class="container globe-section-container">
-        <!-- Interactive 3D Globe Stage -->
-        <div class="globe-canvas-side">
-          <div class="globe-canvas-card">
-            <div id="globe-root" class="globe-react-root"></div>
+    <!-- ==========================================================================
+         EDITORIAL STUDIO SHOWCASE SECTION (Matches Reference Design)
+         ========================================================================== -->
+    <section class="studio-editorial-section" id="studio" aria-label="Creative Studio Showcase">
+      <div class="studio-main-panel">
+        
+        <!-- Floating Cursor Name Tag: Left Purple ("Amirali") -->
+        <div class="studio-cursor-tag cursor-tag-purple" aria-hidden="true">
+          <svg class="cursor-pointer-arrow" viewBox="0 0 16 18" width="16" height="18" fill="none">
+            <path d="M 1.5 1.5 L 14.5 8 L 7.5 10.2 L 5 16.5 Z" fill="#6366F1" stroke="#FFFFFF" stroke-width="1.5" stroke-linejoin="round" />
+          </svg>
+          <span class="cursor-tag-pill">Amirali</span>
+        </div>
+
+        <!-- Floating Cursor Name Tag: Right Orange ("Sina") -->
+        <div class="studio-cursor-tag cursor-tag-orange" aria-hidden="true">
+          <svg class="cursor-pointer-arrow" viewBox="0 0 16 18" width="16" height="18" fill="none">
+            <path d="M 1.5 1.5 L 14.5 8 L 7.5 10.2 L 5 16.5 Z" fill="#EA580C" stroke="#FFFFFF" stroke-width="1.5" stroke-linejoin="round" />
+          </svg>
+          <span class="cursor-tag-pill">Sina</span>
+        </div>
+
+        <!-- Top Header Cluster: Small Tag + Two-Line Interactive ElasticMesh Heading -->
+        <div class="studio-header-cluster">
+          <div class="studio-label">
+            <span class="studio-star-glyph">&#10022;</span> Design Wizard
+          </div>
+          <div class="studio-elastic-heading-wrapper" aria-label="I craft Ideas through Design">
+            <div id="elastic-mesh-root" class="studio-elastic-mesh-root"></div>
+            <h2 class="sr-only">I craft Ideas through Design</h2>
           </div>
         </div>
+
+        <!-- Interactive "Let's work together" Section (Replaces Let's meet button) -->
+        <div id="lets-work-root" class="studio-lets-work-wrapper"></div>
+
+        <!-- Central Visual Centerpiece: 3D Interactive Mechanical Keyboard Stage -->
+        <div class="studio-keyboard-stage-wrapper">
+          <div class="studio-keyboard-stage">
+            <div id="keyboard-3d-root" class="studio-keyboard-react-root"></div>
+          </div>
+          <!-- Soft Realistic Ground Floor Shadow -->
+          <div class="studio-keyboard-ground-shadow" aria-hidden="true"></div>
+        </div>
+
+        <!-- Bottom Horizontal Legend -->
+        <nav class="studio-legend-bar" aria-label="Studio Navigation Legend">
+          <a href="#projects" class="studio-legend-link cursor-target" data-cursor-label="Portfolio">
+            <span class="legend-dot-sq sq-green" aria-hidden="true"></span>
+            <span>Portfolio</span>
+          </a>
+          <a href="#about" class="studio-legend-link cursor-target" data-cursor-label="Achievements">
+            <span class="legend-dot-sq sq-blue" aria-hidden="true"></span>
+            <span>Achievements</span>
+          </a>
+          <a href="#snapshots" class="studio-legend-link cursor-target" data-cursor-label="Feedback">
+            <span class="legend-dot-sq sq-yellow" aria-hidden="true"></span>
+            <span>Client's Feedback</span>
+          </a>
+          <a href="#contact" class="studio-legend-link cursor-target" data-cursor-label="FAQ">
+            <span class="legend-dot-sq sq-red" aria-hidden="true"></span>
+            <span>FAQ</span>
+          </a>
+        </nav>
+
       </div>
     </section>
   </div><!-- /story-layer-skills -->
@@ -694,10 +773,10 @@
           <div class="dock-icon"><i class="fa-solid fa-camera-retro"></i></div>
           <div class="dock-label">Snapshots</div>
         </div>
-        <div class="dock-item" data-label="Skills & Tools" data-cursor-label="Skills & Tools" data-href="#skills" tabindex="0" role="button"
-          aria-label="Skills & Tools">
-          <div class="dock-icon"><i class="fa-solid fa-bolt"></i></div>
-          <div class="dock-label">Skills & Tools</div>
+        <div class="dock-item" data-label="Mailbox" data-cursor-label="Email Me" data-href="mailto:deysrinjoyee28@gmail.com" tabindex="0" role="button"
+          aria-label="Send an email to deysrinjoyee28@gmail.com">
+          <div class="dock-icon"><i class="fa-solid fa-envelope"></i></div>
+          <div class="dock-label">Mailbox</div>
         </div>
         <div class="dock-item" data-label="Get In Touch" data-cursor-label="Get In Touch" data-href="#contact" tabindex="0" role="button"
           aria-label="Get In Touch">
@@ -1007,28 +1086,30 @@
       }
     </script>
 
-    <!-- Magic UI Interactive Globe & DotField Bundles -->
+    <!-- 3D Interactive Mechanical Keyboard Bundle (from Txemalon 3D Portfolio) -->
     <script src="grid-scan-bundle.js?v=4"></script>
-    <script src="globe-bundle.js?v=9"></script>
-    <script src="projects-showcase-bundle.js?v=79"></script>
+    <script src="keyboard-bundle.js?v=9"></script>
+    <script src="projects-showcase-bundle.js?v=85"></script>
     <script src="dot-field-bundle.js"></script>
     <script src="text-pressure-bundle.js?v=5"></script>
     <script src="tech-text-bundle.js?v=12"></script>
     <script src="circular-text-bundle.js?v=2"></script>
     <script src="target-cursor-bundle.js?v=29"></script>
-    <script src="memory-wall-bundle.js?v=80"></script>
+    <script src="memory-wall-bundle.js?v=82"></script>
 
     <!-- Sound Design System (Procedural Web Audio Engine) -->
-    <script src="sound-system.js?v=1"></script>
+    <script src="sound-system.js?v=2"></script>
 
     <!-- Main Interactive Scripts -->
-    <script src="script.js?v=32"></script>
-    <script src="letter-glitch-bundle.js?v=1"></script>
+    <script src="script.js?v=38"></script>
+    <script src="letter-glitch-bundle.js?v=2"></script>
     <script src="pixel-transition-bundle.js?v=2"></script>
     <script src="tech-arsenal.js?v=6"></script>
-    <script src="footer-shuffle-bundle.js?v=1"></script>
-    <script src="unified-footer-bundle.js?v=4"></script>
-    <script src="hero-3d-model.js?v=8"></script>
-    <script src="scroll-reveal.js?v=17"></script>
+    <script src="footer-shuffle-bundle.js?v=2"></script>
+    <script src="unified-footer-bundle.js?v=8"></script>
+    <script src="elastic-mesh-bundle.js?v=3"></script>
+    <script src="lets-work-bundle.js?v=1"></script>
+    <script src="hero-3d-model.js?v=9"></script>
+    <script src="scroll-reveal.js?v=23"></script>
   </body>
 </html>

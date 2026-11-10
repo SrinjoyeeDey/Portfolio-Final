@@ -5,13 +5,33 @@
  */
 
 (function () {
+  // Global 3D Model lifecycle state for preloader coordination
+  window.__hero3DState = window.__hero3DState || {
+    status: 'loading',
+    progress: 0,
+    error: null
+  };
+
+  let threeCheckRetries = 0;
   function initHero3D() {
     const container = document.getElementById('hero-3d-model-stage');
     const canvas = document.getElementById('hero-3d-canvas');
-    if (!container || !canvas) return;
+    if (!container || !canvas) {
+      setTimeout(initHero3D, 100);
+      return;
+    }
 
     if (typeof THREE === 'undefined' || typeof THREE.GLTFLoader === 'undefined') {
-      console.warn('Three.js or GLTFLoader not loaded yet, retrying...');
+      threeCheckRetries++;
+      if (threeCheckRetries > 40) {
+        window.__hero3DState = {
+          status: 'error',
+          progress: 0,
+          error: new Error('Three.js or GLTFLoader library unavailable')
+        };
+        window.dispatchEvent(new CustomEvent('hero-3d:error', { detail: { error: window.__hero3DState.error } }));
+        return;
+      }
       setTimeout(initHero3D, 150);
       return;
     }
@@ -173,14 +193,33 @@
           camera.position.set(0, 0.28, 3.8);
           camera.lookAt(0, -0.05, 0);
 
+          // Render one frame immediately to compile shaders & upload geometry to GPU
+          try {
+            renderer.render(scene, camera);
+          } catch (renderErr) {
+            console.warn('Initial 3D render warning:', renderErr);
+          }
+
           // Fade in canvas
           canvas.classList.add('loaded');
+
+          // Signal successful 3D model initialization
+          window.__hero3DState = {
+            status: 'success',
+            progress: 100,
+            error: null
+          };
+          window.dispatchEvent(new CustomEvent('hero-3d:loaded', { detail: { model } }));
         },
         (xhr) => {
-          if (xhr.lengthComputable && loaderStatus) {
-            const percent = Math.round((xhr.loaded / xhr.total) * 100);
-            const text = loaderStatus.querySelector('.indicator-text');
-            if (text) text.textContent = `Loading 3D Model ${percent}%`;
+          if (xhr.lengthComputable) {
+            const percent = Math.min(99, Math.round((xhr.loaded / xhr.total) * 100));
+            window.__hero3DState.progress = percent;
+            window.dispatchEvent(new CustomEvent('hero-3d:progress', { detail: { progress: percent } }));
+            if (loaderStatus) {
+              const text = loaderStatus.querySelector('.indicator-text');
+              if (text) text.textContent = `Loading 3D Model ${percent}%`;
+            }
           }
         },
         (error) => {
@@ -189,14 +228,31 @@
           if (currentUrlIndex < modelUrls.length) {
             loadModel(modelUrls[currentUrlIndex]);
           } else {
+            window.__hero3DState = {
+              status: 'error',
+              progress: 0,
+              error: error || new Error('Failed to load 3D character model')
+            };
+            window.dispatchEvent(new CustomEvent('hero-3d:error', { detail: { error: window.__hero3DState.error } }));
             if (loaderStatus) {
               const text = loaderStatus.querySelector('.indicator-text');
-              if (text) text.textContent = 'Ready';
+              if (text) text.textContent = 'Error loading 3D Model';
             }
           }
         }
       );
     }
+
+    // Expose retry function if needed by error fallback
+    window.__hero3DRetry = function () {
+      currentUrlIndex = 0;
+      window.__hero3DState = {
+        status: 'loading',
+        progress: 0,
+        error: null
+      };
+      loadModel(modelUrls[0]);
+    };
 
     loadModel(modelUrls[currentUrlIndex]);
 

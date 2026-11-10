@@ -364,12 +364,12 @@ document.addEventListener('DOMContentLoaded', () => {
         primary: {
           label: "Explore Project",
           icon: "fa-solid fa-arrow-up-right-from-square",
-          url: "https://github.com/SrinjoyeeDey"
+          url: "https://github.com/SrinjoyeeDey/"
         },
         secondary: {
           label: "View Source",
           icon: "fa-brands fa-github",
-          url: "https://github.com/SrinjoyeeDey"
+          url: "https://github.com/SrinjoyeeDey/"
         }
       }
     },
@@ -440,7 +440,7 @@ document.addEventListener('DOMContentLoaded', () => {
         secondary: {
           label: "View Source",
           icon: "fa-brands fa-github",
-          url: "https://github.com/SrinjoyeeDey"
+          url: "https://github.com/SrinjoyeeDey/"
         }
       }
     },
@@ -1546,6 +1546,21 @@ document.addEventListener('DOMContentLoaded', () => {
       document.documentElement.style.setProperty('--current-grid-glow', gridGlowColor);
       document.documentElement.style.setProperty('--current-grid-bg', gridSoftBg);
 
+      // Expose globally and notify components (e.g. 3D Studio Keyboard) of active palette
+      window.__portfolioCurrentColor = rgbColor;
+      if (window.__lastDispatchedPortfolioColor !== rgbColor) {
+        window.__lastDispatchedPortfolioColor = rgbColor;
+        window.dispatchEvent(new CustomEvent('site-color-change', {
+          detail: {
+            color: rgbColor,
+            r: colorData.r,
+            g: colorData.g,
+            b: colorData.b,
+            name: colorData.name
+          }
+        }));
+      }
+
       if (tooltipName) tooltipName.textContent = colorData.name;
       if (tooltipValue) tooltipValue.textContent = `${percentInt}%`;
 
@@ -1716,9 +1731,13 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     dockItems.forEach(item => {
-      item.addEventListener('click', () => {
+      const handleDockActivation = () => {
         const targetHref = item.getAttribute('data-href');
         if (targetHref) {
+          if (targetHref.startsWith('mailto:')) {
+            window.location.href = targetHref;
+            return;
+          }
           const targetId = targetHref.startsWith('#') ? targetHref.slice(1) : targetHref;
           if (targetId === 'hero') {
             if (window.lenis) {
@@ -1737,23 +1756,66 @@ document.addEventListener('DOMContentLoaded', () => {
             }
           }
         }
+      };
+
+      item.addEventListener('click', handleDockActivation);
+      item.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleDockActivation();
+        }
       });
     });
 
-    // Auto-hide Mac Dock when in Contact Section so inputs & social links are 100% unobstructed
+    // Auto-hide Mac Dock when in CTA (Studio) or Contact Section so content & legend links are 100% unobstructed
     const macDockOuter = document.getElementById('mac-dock');
-    const contactSectionEl = document.getElementById('contact');
-    if (macDockOuter && contactSectionEl) {
+    const ctaSectionEl = document.getElementById('studio') || document.getElementById('story-layer-skills');
+    const contactSectionEl = document.getElementById('story-layer-contact') || document.getElementById('unified-footer-root') || document.getElementById('contact');
+    
+    if (macDockOuter) {
+      let isCtaInView = false;
+      let isContactInView = false;
+
+      const checkDockScroll = () => {
+        const studio = document.getElementById('studio');
+        const contact = document.getElementById('contact') || document.getElementById('story-layer-contact');
+        const vh = window.innerHeight;
+        let hide = false;
+        if (studio) {
+          const rect = studio.getBoundingClientRect();
+          if (rect.top < vh && rect.bottom > 80) hide = true;
+        }
+        if (contact) {
+          const rect = contact.getBoundingClientRect();
+          if (rect.top < vh && rect.bottom > 80) hide = true;
+        }
+        if (hide || isCtaInView || isContactInView) {
+          macDockOuter.classList.add('dock-hide-contact');
+        } else {
+          macDockOuter.classList.remove('dock-hide-contact');
+        }
+      };
+
+      window.addEventListener('scroll', checkDockScroll, { passive: true });
+      if (typeof lenis !== 'undefined') {
+        lenis.on('scroll', checkDockScroll);
+      }
+      checkDockScroll();
+
       const dockObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            macDockOuter.classList.add('dock-hide-contact');
-          } else {
-            macDockOuter.classList.remove('dock-hide-contact');
+          if (entry.target === ctaSectionEl) {
+            isCtaInView = entry.isIntersecting;
+          }
+          if (entry.target === contactSectionEl) {
+            isContactInView = entry.isIntersecting;
           }
         });
-      }, { threshold: 0.12 });
-      dockObserver.observe(contactSectionEl);
+        updateDockVisibility();
+      }, { threshold: 0.08 });
+
+      if (ctaSectionEl) dockObserver.observe(ctaSectionEl);
+      if (contactSectionEl) dockObserver.observe(contactSectionEl);
     }
   }
 
@@ -2103,9 +2165,10 @@ document.addEventListener('DOMContentLoaded', () => {
         case 'contact':
           respLine.innerHTML = `
             <p>📩 <strong class="term-yellow">DIRECT UPLINK CHANNELS:</strong></p>
-            <p>• Email: <span class="term-green">srinjoyeedey@gmail.com</span></p>
-            <p>• GitHub: <a href="https://github.com/SrinjoyeeDey" target="_blank" style="color:#FFBD12; text-decoration:underline;">github.com/SrinjoyeeDey</a></p>
-            <p>• LinkedIn: <a href="https://linkedin.com/in/srinjoyee-dey" target="_blank" style="color:#FFBD12; text-decoration:underline;">linkedin.com/in/srinjoyee-dey</a></p>
+            <p>• Email: <span class="term-green">deysrinjoyee28@gmail.com</span></p>
+            <p>• GitHub: <a href="https://github.com/SrinjoyeeDey/" target="_blank" rel="noopener noreferrer" style="color:#FFBD12; text-decoration:underline;">github.com/SrinjoyeeDey</a></p>
+            <p>• LinkedIn: <a href="https://www.linkedin.com/in/srinjoyee-dey/" target="_blank" rel="noopener noreferrer" style="color:#FFBD12; text-decoration:underline;">linkedin.com/in/srinjoyee-dey</a></p>
+            <p>• X (Twitter): <a href="https://x.com/Srinjoyee__bee" target="_blank" rel="noopener noreferrer" style="color:#FFBD12; text-decoration:underline;">x.com/Srinjoyee__bee</a></p>
             <p>• Fill out the form on the left to transmit your payload directly!</p>
           `;
           break;
@@ -3139,10 +3202,315 @@ document.addEventListener('DOMContentLoaded', () => {
     updateShutters();
   }
 
+  // Studio section: Subtle floating cursor tags parallax responsiveness
+  function setupStudioCursorParallax() {
+    const panel = document.querySelector('.studio-main-panel');
+    const purpleTag = document.querySelector('.cursor-tag-purple');
+    const orangeTag = document.querySelector('.cursor-tag-orange');
+    if (!panel || !purpleTag || !orangeTag) return;
+
+    let targetX1 = 0, targetY1 = 0;
+    let targetX2 = 0, targetY2 = 0;
+    let currentX1 = 0, currentY1 = 0;
+    let currentX2 = 0, currentY2 = 0;
+    let isHovering = false;
+
+    panel.addEventListener('pointermove', (e) => {
+      const rect = panel.getBoundingClientRect();
+      const normX = (e.clientX - rect.left) / rect.width - 0.5;
+      const normY = (e.clientY - rect.top) / rect.height - 0.5;
+
+      targetX1 = normX * 26;
+      targetY1 = normY * 18;
+      targetX2 = -normX * 22;
+      targetY2 = normY * 16;
+
+      if (!isHovering) {
+        isHovering = true;
+        renderParallax();
+      }
+    });
+
+    panel.addEventListener('pointerleave', () => {
+      targetX1 = 0; targetY1 = 0;
+      targetX2 = 0; targetY2 = 0;
+    });
+
+    function renderParallax() {
+      currentX1 += (targetX1 - currentX1) * 0.08;
+      currentY1 += (targetY1 - currentY1) * 0.08;
+      currentX2 += (targetX2 - currentX2) * 0.08;
+      currentY2 += (targetY2 - currentY2) * 0.08;
+
+      purpleTag.style.transform = `translate(${currentX1.toFixed(2)}px, ${currentY1.toFixed(2)}px)`;
+      orangeTag.style.transform = `translate(${currentX2.toFixed(2)}px, ${currentY2.toFixed(2)}px)`;
+
+      if (Math.abs(targetX1 - currentX1) > 0.05 || Math.abs(targetY1 - currentY1) > 0.05) {
+        requestAnimationFrame(renderParallax);
+      } else {
+        isHovering = false;
+      }
+    }
+  }
+
+  /* ==========================================================================
+     STUDIO SECTION: "LET'S MEET" INTERACTIVE POPOVER & REAL MESSAGE DISPATCH
+     ========================================================================== */
+  function setupStudioLetsMeet() {
+    const container = document.getElementById('studio-lets-meet-container');
+    const triggerBtn = document.getElementById('studio-meet-trigger');
+    const popover = document.getElementById('studio-meet-popover');
+    const closeBtn = document.getElementById('studio-meet-close');
+    const form = document.getElementById('studio-meet-form');
+    const nameInput = document.getElementById('meet-name-input');
+    const emailInput = document.getElementById('meet-email-input');
+    const msgInput = document.getElementById('meet-msg-input');
+    const hpInput = document.getElementById('meet-hp-field');
+    const nameError = document.getElementById('meet-name-error');
+    const emailError = document.getElementById('meet-email-error');
+    const msgError = document.getElementById('meet-msg-error');
+    const submitBtn = document.getElementById('studio-meet-submit');
+    const statusMsg = document.getElementById('meet-submission-status');
+    const successCard = document.getElementById('meet-success-card');
+    const successDoneBtn = document.getElementById('meet-success-done');
+    const successEmailEcho = document.getElementById('meet-success-email-echo');
+
+    if (!triggerBtn || !popover || !form) return;
+
+    let isOpen = false;
+    let closeTimeout = null;
+
+    function openPopover() {
+      if (closeTimeout) clearTimeout(closeTimeout);
+      isOpen = true;
+      popover.removeAttribute('hidden');
+      // Force reflow for CSS transition
+      void popover.offsetWidth;
+      popover.classList.add('is-open');
+      triggerBtn.setAttribute('aria-expanded', 'true');
+      
+      // Focus name input shortly after open
+      setTimeout(() => {
+        if (nameInput) nameInput.focus();
+      }, 100);
+    }
+
+    function closePopover() {
+      isOpen = false;
+      popover.classList.remove('is-open');
+      triggerBtn.setAttribute('aria-expanded', 'false');
+      closeTimeout = setTimeout(() => {
+        if (!isOpen) popover.setAttribute('hidden', '');
+      }, 240);
+    }
+
+    triggerBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (isOpen) {
+        closePopover();
+      } else {
+        openPopover();
+      }
+    });
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closePopover();
+        triggerBtn.focus();
+      });
+    }
+
+    if (successDoneBtn) {
+      successDoneBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        closePopover();
+        triggerBtn.focus();
+      });
+    }
+
+    // Dismiss on click outside
+    document.addEventListener('click', (e) => {
+      if (!isOpen) return;
+      if (container && !container.contains(e.target)) {
+        closePopover();
+      }
+    });
+
+    // Dismiss on Escape key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        closePopover();
+        triggerBtn.focus();
+      }
+    });
+
+    // Prevent clicks inside popover from closing it
+    popover.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+
+    // Clear field errors on input
+    if (nameInput) {
+      nameInput.addEventListener('input', () => {
+        nameInput.classList.remove('has-error');
+        if (nameError) nameError.textContent = '';
+      });
+    }
+
+    if (emailInput) {
+      emailInput.addEventListener('input', () => {
+        emailInput.classList.remove('has-error');
+        if (emailError) emailError.textContent = '';
+      });
+    }
+
+    if (msgInput) {
+      msgInput.addEventListener('input', () => {
+        msgInput.classList.remove('has-error');
+        if (msgError) msgError.textContent = '';
+      });
+    }
+
+    // Validation helper
+    function validateForm() {
+      let isValid = true;
+      let firstErrorEl = null;
+
+      const nameVal = nameInput ? nameInput.value.trim() : '';
+      const emailVal = emailInput ? emailInput.value.trim() : '';
+      const msgVal = msgInput ? msgInput.value.trim() : '';
+
+      // Validate Name
+      if (!nameVal || nameVal.length < 2) {
+        isValid = false;
+        if (nameInput) nameInput.classList.add('has-error');
+        if (nameError) nameError.textContent = 'Please enter your name (at least 2 characters).';
+        if (!firstErrorEl) firstErrorEl = nameInput;
+      } else {
+        if (nameInput) nameInput.classList.remove('has-error');
+        if (nameError) nameError.textContent = '';
+      }
+
+      // Validate Email
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+      if (!emailVal || !emailRegex.test(emailVal)) {
+        isValid = false;
+        if (emailInput) emailInput.classList.add('has-error');
+        if (emailError) emailError.textContent = 'Please provide a valid email address.';
+        if (!firstErrorEl) firstErrorEl = emailInput;
+      } else {
+        if (emailInput) emailInput.classList.remove('has-error');
+        if (emailError) emailError.textContent = '';
+      }
+
+      // Validate Message
+      if (!msgVal || msgVal.length < 5) {
+        isValid = false;
+        if (msgInput) msgInput.classList.add('has-error');
+        if (msgError) msgError.textContent = 'Please enter a message (at least 5 characters).';
+        if (!firstErrorEl) firstErrorEl = msgInput;
+      } else {
+        if (msgInput) msgInput.classList.remove('has-error');
+        if (msgError) msgError.textContent = '';
+      }
+
+      if (firstErrorEl) {
+        firstErrorEl.focus();
+        if (window.PortoSound && typeof window.PortoSound.playError === 'function') {
+          window.PortoSound.playError();
+        }
+      }
+
+      return isValid;
+    }
+
+    // Form submission handling
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      // Check honeypot spam filter
+      if (hpInput && hpInput.value.trim().length > 0) {
+        // Silent bot discard
+        if (form) form.style.display = 'none';
+        if (successCard) successCard.removeAttribute('hidden');
+        return;
+      }
+
+      if (!validateForm()) return;
+
+      const nameVal = nameInput.value.trim();
+      const emailVal = emailInput.value.trim();
+      const msgVal = msgInput.value.trim();
+
+      if (statusMsg) statusMsg.textContent = '';
+      if (submitBtn) {
+        submitBtn.classList.add('is-loading');
+        submitBtn.disabled = true;
+      }
+
+      const payload = {
+        name: nameVal,
+        email: emailVal,
+        message: msgVal,
+        _subject: `[Portfolio Studio / Let's meet] Message from ${nameVal}`,
+        _template: 'table'
+      };
+
+      try {
+        const response = await fetch('https://formsubmit.co/ajax/srinjoyeedey@gmail.com', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await response.json();
+
+        if (response.ok && (data.success === 'true' || data.success === true || data.message)) {
+          // Success
+          if (window.PortoSound && typeof window.PortoSound.playSuccess === 'function') {
+            window.PortoSound.playSuccess();
+          }
+
+          form.style.display = 'none';
+          if (successEmailEcho) successEmailEcho.textContent = emailVal;
+          if (successCard) {
+            successCard.removeAttribute('hidden');
+            successCard.style.display = 'flex';
+          }
+        } else {
+          throw new Error(data.message || 'Submission failed');
+        }
+      } catch (err) {
+        console.warn('Let\'s meet submission error:', err);
+        if (statusMsg) {
+          statusMsg.innerHTML = 'Unable to send. Please email directly to <a href="mailto:deysrinjoyee28@gmail.com" style="text-decoration:underline;color:#EF4444;">deysrinjoyee28@gmail.com</a>';
+        }
+        if (window.PortoSound && typeof window.PortoSound.playError === 'function') {
+          window.PortoSound.playError();
+        }
+      } finally {
+        if (submitBtn) {
+          submitBtn.classList.remove('is-loading');
+          submitBtn.disabled = false;
+        }
+      }
+    });
+  }
+
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupVaniShutters);
+    document.addEventListener('DOMContentLoaded', () => {
+      setupVaniShutters();
+      setupStudioCursorParallax();
+      setupStudioLetsMeet();
+    });
   } else {
     setupVaniShutters();
+    setupStudioCursorParallax();
+    setupStudioLetsMeet();
   }
 })();
 

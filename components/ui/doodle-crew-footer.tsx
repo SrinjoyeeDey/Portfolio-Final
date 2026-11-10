@@ -363,7 +363,7 @@ const ART: { [k: string]: Art } = {
         <path d="M3 -6 L15 -6 C17 6 19 16 22 27 L12 30 C10 18 6 6 3 -6 Z" />
         <path className="k" d="M-17 30 C-20 34 -20 40 -14 41 L-2 41 C2 40 0 34 -5 30 Z" />
         <path className="k" d="M11 29 C8 34 10 40 16 40 L26 38 C29 36 27 30 22 27 Z" />
-        <path className="a" fill="#FFBD12" d="M-20 -4 C-22 -20 -18 -38 -10 -44 L10 -44 C18 -38 22 -20 20 -4 Z" />
+        <path className="a" style={{ fill: '#FFD028' }} fill="#FFD028" d="M-20 -4 C-22 -20 -18 -38 -10 -44 L10 -44 C18 -38 22 -20 20 -4 Z" />
         <path className="n" d="M-18 -36 C-28 -28 -30 -14 -26 -5" />
         <circle cx="-26" cy="-3" r="4" />
         <path className="n" d="M18 -36 C27 -30 30 -18 28 -7" />
@@ -563,7 +563,12 @@ const useIso = typeof window !== "undefined" ? React.useLayoutEffect : React.use
 
 const Link = ({ link, className }: { link: FooterLink; className?: string }) =>
   link.href ? (
-    <a className={className} href={link.href}>
+    <a
+      className={className}
+      href={link.href}
+      target={link.href.startsWith("http") ? "_blank" : undefined}
+      rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
+    >
       <span>{link.label}</span>
       <svg className="dcf-squiggle" viewBox="0 0 100 8" preserveAspectRatio="none" aria-hidden="true">
         <path pathLength={1} d="M1 5 C10 1 16 7 25 4 S40 1 50 4 S66 7 75 4 S90 1 99 4" />
@@ -582,7 +587,7 @@ export function DoodleCrewFooter({
   actions = DEFAULT_ACTIONS,
   copyright = "© 2026 Srinjoyee Dey. All rights reserved.",
   legal = [{ label: "Portfolio", href: "#hero" }, { label: "Work", href: "#projects" }, { label: "Memories", href: "#memory-wall" }],
-  socials = [{ label: "LinkedIn", href: "https://www.linkedin.com/in/srinjoyee-dey/" }, { label: "GitHub", href: "https://github.com/SrinjoyeeDey" }, { label: "Twitter", href: "https://twitter.com/SrinjoyeeDey" }, { label: "Substack", href: "https://srinjoyeedey.substack.com" }],
+  socials = [{ label: "LinkedIn", href: "https://www.linkedin.com/in/srinjoyee-dey/" }, { label: "GitHub", href: "https://github.com/SrinjoyeeDey/" }, { label: "X (Twitter)", href: "https://x.com/Srinjoyee__bee" }, { label: "Substack", href: "https://srinjoyeedey.substack.com" }],
   backToTop = true,
   crew = DEFAULT_CREW,
   doodles = DEFAULT_DOODLES,

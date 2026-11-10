@@ -570,6 +570,10 @@ export default function PhotographicMemoryWall() {
       if (node) observer.observe(node);
     });
 
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('memory-wall-ready'));
+    }
+
     return () => observer.disconnect();
   }, [columns]);
 
@@ -609,7 +613,7 @@ export default function PhotographicMemoryWall() {
         </div>
 
         <p className="pmw-supporting-desc">
-          Authentic printed photo collage • Hover any photograph to bring its authentic colors to life
+          Outside the screen  • A little piece of everything that made me
         </p>
       </header>
 

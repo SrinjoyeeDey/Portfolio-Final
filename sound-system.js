@@ -449,8 +449,11 @@
       // Ignore touch moves
       if (e.pointerType === 'touch') return;
 
+      // Do NOT play SFX when hovering or focusing writing/typing inputs
+      if (e.target.closest('input, textarea, select, [contenteditable="true"], .terminal-input')) return;
+
       const interactive = e.target.closest(
-        'a, button, [role="button"], input, textarea, select, ' +
+        'a, button, [role="button"], ' +
         '.term-chip, .project-card, .polaroid-item, .skill-card, ' +
         '.dock-toggle-btn, .interactive-hover-btn, .nav-link, .brand-logo, ' +
         '.mood-pill, .filter-btn, .uplink-icon-btn, .color-dot, .sound-toggle-btn, ' +
@@ -470,6 +473,9 @@
     // 2. Delegated Click Listener (Distinguishes Regular vs Primary CTAs)
     document.addEventListener('click', (e) => {
       if (!isSoundEnabled) return;
+
+      // Do NOT play SFX on typing/writing fields
+      if (e.target.closest('input:not([type="radio"]):not([type="checkbox"]):not([type="submit"]):not([type="button"]), textarea, [contenteditable="true"], .terminal-input')) return;
 
       const primaryCta = e.target.closest(
         '.btn-pill-dark, #submit-btn, .uplink-submit-btn, [data-sfx="primary"]'

@@ -19,8 +19,24 @@
   overflow: hidden;
   user-select: none;
   font-family: 'Fredoka', 'Plus Jakarta Sans', sans-serif;
-  cursor: pointer;
+  cursor: default;
+  touch-action: none;
   pointer-events: auto;
+}
+
+.tt-preloader__system-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #222428;
+  opacity: 0.75;
+  background: rgba(34, 36, 40, 0.04);
+  border: 1px solid rgba(34, 36, 40, 0.08);
+  padding: 6px 14px;
+  border-radius: 100px;
 }
 
 /* Fullscreen SVG Mask & Cutout Portal */

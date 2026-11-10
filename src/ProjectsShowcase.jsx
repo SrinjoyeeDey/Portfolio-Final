@@ -101,9 +101,9 @@ const SHOWCASE_PROJECTS = [
     secondaryAction: {
       label: 'Explore Project',
       icon: 'fa-solid fa-arrow-up-right-from-square',
-      url: 'https://github.com/SrinjoyeeDey'
+      url: 'https://github.com/SrinjoyeeDey/'
     },
-    githubUrl: 'https://github.com/SrinjoyeeDey',
+    githubUrl: 'https://github.com/SrinjoyeeDey/',
     visualType: 'vault'
   },
   {
@@ -137,7 +137,7 @@ const SHOWCASE_PROJECTS = [
       icon: 'fa-solid fa-play',
       url: 'https://drive.google.com/file/d/1G6v34ZHr6KDTvnT2ezIzofBHMVTiMkUc/view?usp=drivesdk'
     },
-    githubUrl: 'https://github.com/SrinjoyeeDey',
+    githubUrl: 'https://github.com/SrinjoyeeDey/',
     visualType: 'nobodristhi'
   },
   {
@@ -185,11 +185,11 @@ const SHOWCASE_PROJECTS = [
     timeline: 'Circular Platform',
     year: '2025 / 2026',
     platform: 'Web Platform • Eco-Tech',
-    theme: 'purple',
-    solidBg: '#5B21B6', // Vibrant Royal Purple Solid
-    textColor: '#FFFFFF',
-    accentColor: '#C084FC', // Luminous Lilac / Purple Accent
-    accentRgb: '192, 132, 252',
+    theme: 'lime',
+    solidBg: '#D5E859', // Matching Anchor's electric lime solid background
+    textColor: '#1A1C1E',
+    accentColor: '#1A1C1E', // Dark Contrast on Lime
+    accentRgb: '26, 28, 30',
     narrative: 'Smart circular-economy platform focused on making e-waste recycling intuitive and engaging. Couples AI-assisted e-waste classification with a gamified reward ecosystem, turning discarded electronics into recognized recyclable resources.',
     metrics: [
       { stat: 'AI Classifier', desc: 'Vision models identifying and categorizing consumer e-waste' },
@@ -406,35 +406,63 @@ const DASHBOARD_CONFIGS = {
 
 
 function Interactive3DStage({ children, className = '' }) {
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
+  const stageRef = useRef(null);
+  const rafRef = useRef(null);
+  const targetTiltRef = useRef({ x: 0, y: 0 });
 
-  const handleMouseMove = (e) => {
-    const rect = e.currentTarget.getBoundingClientRect();
+  const applyTilt = useCallback(() => {
+    if (stageRef.current) {
+      const { x, y } = targetTiltRef.current;
+      stageRef.current.style.setProperty('--tilt-x', `${x}deg`);
+      stageRef.current.style.setProperty('--tilt-y', `${y}deg`);
+    }
+    rafRef.current = null;
+  }, []);
+
+  const handleMouseMove = useCallback((e) => {
+    if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      return;
+    }
+    const currentTarget = e.currentTarget;
+    const rect = currentTarget.getBoundingClientRect();
+    if (!rect.width || !rect.height) return;
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
-    setTilt({ x: y * -14, y: x * 18 });
-  };
+    targetTiltRef.current = {
+      x: Number((y * -14).toFixed(2)),
+      y: Number((x * 18).toFixed(2))
+    };
+    if (!rafRef.current) {
+      rafRef.current = requestAnimationFrame(applyTilt);
+    }
+  }, [applyTilt]);
 
-  const handleMouseLeave = () => {
-    setTilt({ x: 0, y: 0 });
-  };
+  const handleMouseLeave = useCallback(() => {
+    targetTiltRef.current = { x: 0, y: 0 };
+    if (!rafRef.current) {
+      rafRef.current = requestAnimationFrame(applyTilt);
+    }
+  }, [applyTilt]);
+
+  useEffect(() => {
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, []);
 
   return (
     <div
+      ref={stageRef}
       className={`interactive-3d-stage ${className}`}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      style={{
-        '--tilt-x': `${tilt.x}deg`,
-        '--tilt-y': `${tilt.y}deg`
-      }}
     >
       {children}
     </div>
   );
 }
 
-function DesktopDashboardScreen({ config, project }) {
+const DesktopDashboardScreen = React.memo(function DesktopDashboardScreen({ config, project }) {
   return (
     <Interactive3DStage className="tablet-3d-stage">
       <div className="desktop-dashboard-frame">
@@ -697,15 +725,32 @@ function DesktopDashboardScreen({ config, project }) {
       <div className="device-3d-ground-shadow" aria-hidden="true" />
     </Interactive3DStage>
   );
-}
+});
 
-function MobilePhoneScreen({ project }) {
+const MobilePhoneScreen = React.memo(function MobilePhoneScreen({ project }) {
   const isFire = project.title === 'Agnivaarak' || project.visualType === 'agnivaarak';
-  const roleTitle = isFire ? 'Fire Systems AI Lead' : 'Senior Product Designer';
-  const starIcon = isFire ? 'fa-solid fa-fire-flame-curved' : 'fa-solid fa-star';
-  const toastText = isFire ? 'Sector Alpha rated as Verified Safe' : 'Daniel rated as Good fit';
-  const starBg = isFire ? '#FFF7ED' : '#EFF6FF';
-  const starColor = isFire ? '#EA580C' : '#2563EB';
+  const isPunar = project.title === 'Punarchakra' || project.visualType === 'ballpit';
+
+  const roleTitle = isPunar
+    ? 'E-Waste Circular AI Hub'
+    : isFire
+    ? 'Fire Systems AI Lead'
+    : 'Senior Product Designer';
+
+  const starIcon = isPunar
+    ? 'fa-solid fa-recycle'
+    : isFire
+    ? 'fa-solid fa-fire-flame-curved'
+    : 'fa-solid fa-star';
+
+  const toastText = isPunar
+    ? 'Recycling Order #PC-8842 Dispatched'
+    : isFire
+    ? 'Sector Alpha rated as Verified Safe'
+    : 'Daniel rated as Good fit';
+
+  const starBg = isPunar ? '#ECFDF5' : isFire ? '#FFF7ED' : '#EFF6FF';
+  const starColor = isPunar ? '#059669' : isFire ? '#EA580C' : '#2563EB';
 
   return (
     <Interactive3DStage className="mobile-3d-stage">
@@ -731,93 +776,125 @@ function MobilePhoneScreen({ project }) {
               </span>
               <div className="phone-hub-titles">
                 <span className="phone-hub-role">{roleTitle}</span>
-                <span className="phone-hub-status-tag">Active</span>
+                <span className="phone-hub-status-tag" style={isPunar ? { backgroundColor: '#D1FAE5', color: '#065F46' } : undefined}>
+                  {isPunar ? 'Verified' : 'Active'}
+                </span>
               </div>
-              <span className="phone-manage-link">Manage job</span>
+              <span className="phone-manage-link">{isPunar ? 'Track Hub' : 'Manage job'}</span>
             </div>
 
             {/* Filter Pills */}
             <div className="phone-filter-row">
-              <span className="phone-filter-pill active">Sort by Relevance <i className="fa-solid fa-chevron-down"></i></span>
-              <span className="phone-filter-pill">Ratings <i className="fa-solid fa-chevron-down"></i></span>
-              <span className="phone-filter-pill">Years of exp <i className="fa-solid fa-chevron-down"></i></span>
+              <span className="phone-filter-pill active">
+                {isPunar ? 'PCB & Batteries' : 'Sort by Relevance'} <i className="fa-solid fa-chevron-down"></i>
+              </span>
+              <span className="phone-filter-pill">{isPunar ? 'Recovery Rate' : 'Ratings'} <i className="fa-solid fa-chevron-down"></i></span>
+              <span className="phone-filter-pill">{isPunar ? 'Pickup Slot' : 'Years of exp'} <i className="fa-solid fa-chevron-down"></i></span>
             </div>
           </div>
 
-          {/* Candidates Feed */}
+          {/* Candidates / Items Feed */}
           <div className="phone-feed-list">
-            <div className="phone-feed-card">
-              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80" alt="Daniel" className="phone-user-avatar" />
-              <div className="phone-feed-info">
-                <div className="phone-feed-headline">
-                  <span className="phone-user-name">Daniel Reyes <span className="phone-deg">• 3rd</span></span>
-                  <span className="phone-fit-badge good">Good fit</span>
-                </div>
-                <span className="phone-user-title">Product Designer at Lumen Labs</span>
-                <span className="phone-user-loc">Austin, Texas</span>
-                <button type="button" className="phone-message-btn">
-                  <i className="fa-regular fa-paper-plane"></i> Message
-                </button>
-              </div>
-            </div>
-
-            <div className="phone-feed-card">
-              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Priya" className="phone-user-avatar" />
-              <div className="phone-feed-info">
-                <div className="phone-feed-headline">
-                  <span className="phone-user-name">Priya Nair <span className="phone-deg">• 3rd</span></span>
-                  <span className="phone-fit-badge maybe">Maybe</span>
-                </div>
-                <span className="phone-user-title">Senior UX Designer at Cobalt</span>
-                <span className="phone-user-loc">New York, NY</span>
-                <button type="button" className="phone-message-btn">
-                  <i className="fa-regular fa-paper-plane"></i> Message
-                </button>
-              </div>
-            </div>
-
-            <div className="phone-feed-card">
-              <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80" alt="Tom" className="phone-user-avatar" />
-              <div className="phone-feed-info">
-                <div className="phone-feed-headline">
-                  <span className="phone-user-name">Tom Halvorsen <span className="phone-deg">• 3rd</span></span>
-                  <div className="phone-thumbs-row">
-                    <i className="fa-regular fa-thumbs-up"></i>
-                    <i className="fa-regular fa-thumbs-down"></i>
+            {isPunar ? (
+              <>
+                <div className="phone-feed-card">
+                  <div className="phone-eco-icon-badge" style={{ background: '#ECFDF5', color: '#059669', width: '38px', height: '38px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px', flexShrink: 0 }}>
+                    <i className="fa-solid fa-microchip"></i>
+                  </div>
+                  <div className="phone-feed-info">
+                    <div className="phone-feed-headline">
+                      <span className="phone-user-name">Lithium &amp; Gold Core <span className="phone-deg">• 94.2%</span></span>
+                      <span className="phone-fit-badge good" style={{ background: '#D1FAE5', color: '#065F46' }}>High Yield</span>
+                    </div>
+                    <span className="phone-user-title">Circuit Boards &amp; GPU Units</span>
+                    <span className="phone-user-loc">Automated CV Optical Sorting</span>
+                    <button type="button" className="phone-message-btn" style={{ borderColor: '#059669', color: '#059669' }}>
+                      <i className="fa-solid fa-truck-fast"></i> Schedule Pickup
+                    </button>
                   </div>
                 </div>
-                <span className="phone-user-title">UI Designer at Brightfan</span>
-                <span className="phone-user-loc">Seattle, WA</span>
-              </div>
-            </div>
 
-            <div className="phone-feed-card">
-              <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=100&auto=format&fit=crop&q=80" alt="Aisha" className="phone-user-avatar" />
-              <div className="phone-feed-info">
-                <div className="phone-feed-headline">
-                  <span className="phone-user-name">Aisha Bello <span className="phone-deg">• 2nd</span></span>
-                  <span className="phone-fit-badge good">Good fit</span>
-                </div>
-                <span className="phone-user-title">Staff Product Designer at Meridian</span>
-                <span className="phone-user-loc">Remote • United States</span>
-                <span className="phone-sent-note">Message sent 1d ago</span>
-              </div>
-            </div>
-
-            <div className="phone-feed-card">
-              <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&auto=format&fit=crop&q=80" alt="Liang" className="phone-user-avatar" />
-              <div className="phone-feed-info">
-                <div className="phone-feed-headline">
-                  <span className="phone-user-name">Liang Wei <span className="phone-deg">• 3rd</span></span>
-                  <div className="phone-thumbs-row">
-                    <i className="fa-regular fa-thumbs-up"></i>
-                    <i className="fa-regular fa-thumbs-down"></i>
+                <div className="phone-feed-card">
+                  <div className="phone-eco-icon-badge" style={{ background: '#FEF3C7', color: '#D97706', width: '38px', height: '38px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px', flexShrink: 0 }}>
+                    <i className="fa-solid fa-battery-half"></i>
+                  </div>
+                  <div className="phone-feed-info">
+                    <div className="phone-feed-headline">
+                      <span className="phone-user-name">Li-Ion Cell Packs <span className="phone-deg">• 88.6%</span></span>
+                      <span className="phone-fit-badge maybe" style={{ background: '#FEF3C7', color: '#92400E' }}>Hazard Safe</span>
+                    </div>
+                    <span className="phone-user-title">Secondary Energy Storage</span>
+                    <span className="phone-user-loc">BMS Health Diagnostic Passed</span>
+                    <button type="button" className="phone-message-btn">
+                      <i className="fa-solid fa-qrcode"></i> Scan QR
+                    </button>
                   </div>
                 </div>
-                <span className="phone-user-title">Product Designer at Foundry</span>
-                <span className="phone-user-loc">San Francisco, CA</span>
-              </div>
-            </div>
+
+                <div className="phone-feed-card">
+                  <div className="phone-eco-icon-badge" style={{ background: '#EFF6FF', color: '#2563EB', width: '38px', height: '38px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '16px', flexShrink: 0 }}>
+                    <i className="fa-solid fa-leaf"></i>
+                  </div>
+                  <div className="phone-feed-info">
+                    <div className="phone-feed-headline">
+                      <span className="phone-user-name">Carbon Offsets Earned</span>
+                      <div className="phone-thumbs-row">
+                        <i className="fa-solid fa-award" style={{ color: '#059669' }}></i>
+                      </div>
+                    </div>
+                    <span className="phone-user-title">284.5 kg CO₂ Diverted</span>
+                    <span className="phone-user-loc">Verified Circular Credit</span>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="phone-feed-card">
+                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80" alt="Daniel" className="phone-user-avatar" />
+                  <div className="phone-feed-info">
+                    <div className="phone-feed-headline">
+                      <span className="phone-user-name">Daniel Reyes <span className="phone-deg">• 3rd</span></span>
+                      <span className="phone-fit-badge good">Good fit</span>
+                    </div>
+                    <span className="phone-user-title">Product Designer at Lumen Labs</span>
+                    <span className="phone-user-loc">Austin, Texas</span>
+                    <button type="button" className="phone-message-btn">
+                      <i className="fa-regular fa-paper-plane"></i> Message
+                    </button>
+                  </div>
+                </div>
+
+                <div className="phone-feed-card">
+                  <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Priya" className="phone-user-avatar" />
+                  <div className="phone-feed-info">
+                    <div className="phone-feed-headline">
+                      <span className="phone-user-name">Priya Nair <span className="phone-deg">• 3rd</span></span>
+                      <span className="phone-fit-badge maybe">Maybe</span>
+                    </div>
+                    <span className="phone-user-title">Senior UX Designer at Cobalt</span>
+                    <span className="phone-user-loc">New York, NY</span>
+                    <button type="button" className="phone-message-btn">
+                      <i className="fa-regular fa-paper-plane"></i> Message
+                    </button>
+                  </div>
+                </div>
+
+                <div className="phone-feed-card">
+                  <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80" alt="Tom" className="phone-user-avatar" />
+                  <div className="phone-feed-info">
+                    <div className="phone-feed-headline">
+                      <span className="phone-user-name">Tom Halvorsen <span className="phone-deg">• 3rd</span></span>
+                      <div className="phone-thumbs-row">
+                        <i className="fa-regular fa-thumbs-up"></i>
+                        <i className="fa-regular fa-thumbs-down"></i>
+                      </div>
+                    </div>
+                    <span className="phone-user-title">UI Designer at Brightfan</span>
+                    <span className="phone-user-loc">Seattle, WA</span>
+                  </div>
+                </div>
+              </>
+            )}
           </div>
 
           {/* Floating Toast Pill */}
@@ -876,28 +953,51 @@ function MobilePhoneScreen({ project }) {
             <button type="button" className="phone-close-btn" aria-label="Close">
               <i className="fa-solid fa-xmark"></i>
             </button>
-            <span className="phone-msg-header-title">New message</span>
+            <span className="phone-msg-header-title">{isPunar ? 'Recycling Route #48' : 'New message'}</span>
           </div>
 
           <div className="phone-recipient-card">
-            <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=120&auto=format&fit=crop&q=80" alt="Maya" className="phone-recipient-avatar" />
+            {isPunar ? (
+              <div style={{ width: '42px', height: '42px', borderRadius: '12px', background: '#D1FAE5', color: '#065F46', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', flexShrink: 0 }}>
+                <i className="fa-solid fa-truck-moving"></i>
+              </div>
+            ) : (
+              <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=120&auto=format&fit=crop&q=80" alt="Maya" className="phone-recipient-avatar" />
+            )}
             <div className="phone-recipient-meta">
-              <span className="phone-recipient-name">Maya Okonkwo</span>
-              <span className="phone-recipient-sub">Lead Product Designer at Northwind</span>
+              <span className="phone-recipient-name">{isPunar ? 'Eco-Fleet Alpha 04' : 'Maya Okonkwo'}</span>
+              <span className="phone-recipient-sub">{isPunar ? 'En route to Sector 7 Facility' : 'Lead Product Designer at Northwind'}</span>
             </div>
           </div>
 
           <div className="phone-msg-divider" />
 
           <div className="phone-msg-content-area">
-            <p className="phone-draft-text">
-              Hi<span className="phone-blinking-cursor">|</span>
-            </p>
+            {isPunar ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', fontSize: '11px', color: '#334155' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 600 }}>
+                  <span>Batch Weight:</span>
+                  <span style={{ color: '#059669' }}>42.8 kg E-Waste</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 600 }}>
+                  <span>Purity Grade:</span>
+                  <span style={{ color: '#059669' }}>Class A Industrial</span>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontWeight: 600 }}>
+                  <span>Verification Hash:</span>
+                  <span style={{ fontFamily: 'monospace', fontSize: '10px' }}>0x8F4C...31B</span>
+                </div>
+              </div>
+            ) : (
+              <p className="phone-draft-text">
+                Hi<span className="phone-blinking-cursor">|</span>
+              </p>
+            )}
           </div>
 
           <div className="phone-msg-bottom-action">
-            <button type="button" className="phone-send-btn">
-              Send message
+            <button type="button" className="phone-send-btn" style={isPunar ? { background: '#059669', color: '#FFFFFF' } : undefined}>
+              {isPunar ? 'Confirm Delivery ✓' : 'Send message'}
             </button>
             <div className="iphone-home-indicator" />
           </div>
@@ -907,62 +1007,328 @@ function MobilePhoneScreen({ project }) {
       <div className="mobile-3d-ground-shadow" aria-hidden="true" />
     </Interactive3DStage>
   );
-}
+});
+
+const ProjectRow = React.memo(function ProjectRow({
+  project,
+  index,
+  isExpanded,
+  onHover,
+  onLeave,
+  onClick,
+  onKeyDown,
+  onOpenModal
+}) {
+  return (
+    <article
+      className={`editorial-row ${isExpanded ? 'is-expanded' : 'is-collapsed'}`}
+      data-theme={project.theme}
+      style={{
+        '--accent-color': project.accentColor,
+        '--accent-rgb': project.accentRgb,
+        '--row-solid-bg': project.solidBg,
+        '--row-text-color': project.textColor
+      }}
+      onMouseEnter={() => onHover(index)}
+      onMouseLeave={() => onLeave(index)}
+      onClick={(e) => onClick(index, e)}
+      onKeyDown={(e) => onKeyDown(e, index)}
+      tabIndex={0}
+      role="button"
+      aria-expanded={isExpanded}
+      aria-label={`${project.title} — ${isExpanded ? 'Expanded' : 'Click or hover to expand'}`}
+    >
+      {/* Subtle Blueprint Grid Overlay per Project */}
+      <div className="editorial-row-bg-grid" aria-hidden="true" />
+
+      {/* Atmospheric Ambient Glow per Project */}
+      <div
+        className="editorial-row-ambient-glow"
+        style={{ backgroundColor: project.accentColor }}
+        aria-hidden="true"
+      />
+
+      {/* Default Row Summary Bar (Always Visible) */}
+      <div className="editorial-row-bar">
+        <div className="editorial-row-left">
+          <span className="editorial-row-number">{project.number}</span>
+          <div className="editorial-row-titles-wrap">
+            <h3 className="editorial-row-title">
+              {project.title}
+            </h3>
+            <span className="editorial-row-subtitle">
+              {project.subtitle}
+            </span>
+          </div>
+          <span className="editorial-row-category-pill">
+            {project.categoryTag}
+          </span>
+        </div>
+
+        <div className="editorial-row-right">
+          <button
+            type="button"
+            className="editorial-jump-btn cursor-target"
+            onClick={(e) => onOpenModal(project.numericId, e)}
+            data-cursor-label="View"
+            aria-label={`Jump To ${project.title} Project Details`}
+          >
+            <span>Jump To Project</span>
+            <i className="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+
+      {/* Expandable Project Details Stage */}
+      <div
+        className="editorial-row-expansion"
+        aria-hidden={!isExpanded}
+      >
+        <div className="editorial-expansion-inner">
+          {/* Left Column: Rich Metadata & Editorial Content */}
+          <div className="editorial-info-column">
+            <div className="editorial-meta-grid">
+              <div className="editorial-meta-cell">
+                <span className="editorial-meta-label">ROLE</span>
+                <span className="editorial-meta-val">{project.role}</span>
+              </div>
+              <div className="editorial-meta-cell">
+                <span className="editorial-meta-label">TIMELINE</span>
+                <span className="editorial-meta-val">{project.timeline}</span>
+              </div>
+              <div className="editorial-meta-cell">
+                <span className="editorial-meta-label">YEAR</span>
+                <span className="editorial-meta-val">{project.year}</span>
+              </div>
+              <div className="editorial-meta-cell">
+                <span className="editorial-meta-label">PLATFORM</span>
+                <span className="editorial-meta-val">{project.platform}</span>
+              </div>
+            </div>
+
+            <h4 className="editorial-expanded-subtitle">
+              {project.subtitle}
+            </h4>
+
+            <p className="editorial-expanded-narrative">
+              {project.narrative}
+            </p>
+
+            {/* Prominent Metric Badges */}
+            <div className="editorial-metrics-grid">
+              {project.metrics.map((m, mIdx) => (
+                <div key={mIdx} className="editorial-metric-box">
+                  <span className="editorial-metric-stat">{m.stat}</span>
+                  <span className="editorial-metric-desc">{m.desc}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Tech Stack Pills */}
+            <div className="editorial-tech-list">
+              {project.techStack.map((tech, tIdx) => (
+                <span key={tIdx} className="editorial-tech-tag">
+                  {tech}
+                </span>
+              ))}
+            </div>
+
+            {/* Action Group */}
+            <div className="editorial-actions-bar">
+              <button
+                type="button"
+                className="editorial-action-primary cursor-target"
+                onClick={(e) => onOpenModal(project.numericId, e)}
+                data-cursor-label="Details"
+              >
+                <span>View Full Details</span>
+                <i className="fa-solid fa-arrow-up-right-from-square"></i>
+              </button>
+
+              {project.secondaryAction && (
+                <a
+                  href={project.secondaryAction.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="editorial-action-secondary cursor-target"
+                  data-cursor-label="Open"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {project.secondaryAction.icon && (
+                    <i className={project.secondaryAction.icon}></i>
+                  )}
+                  <span>{project.secondaryAction.label}</span>
+                </a>
+              )}
+
+              {project.liveUrl && (
+                <a
+                  href={project.liveUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="editorial-action-icon cursor-target"
+                  title="Open Live Website"
+                  data-cursor-label="Live"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <i className="fa-solid fa-globe"></i>
+                </a>
+              )}
+
+              {project.githubUrl && (
+                <a
+                  href={project.githubUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="editorial-action-icon cursor-target"
+                  title="View GitHub Repository"
+                  data-cursor-label="GitHub"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <i className="fa-brands fa-github"></i>
+                </a>
+              )}
+            </div>
+          </div>
+
+          {/* Right Column: Visual Stage / High-Fidelity Mockup */}
+          <div className="editorial-visual-column">
+            {project.title === 'Punarchakra' || project.visualType === 'ballpit' || project.title === 'Agnivaarak' || project.visualType === 'agnivaarak' ? (
+              <MobilePhoneScreen project={project} />
+            ) : (
+              <DesktopDashboardScreen
+                config={DASHBOARD_CONFIGS[project.numericId] || DASHBOARD_CONFIGS['1']}
+                project={project}
+              />
+            )}
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+});
 
 export default function ProjectsShowcase() {
   const [expandedIndex, setExpandedIndex] = useState(null);
   const [soundOn, setSoundOn] = useState(false);
   const containerRef = useRef(null);
+  const userCollapsedIndexRef = useRef(null);
+  const hoverTimerRef = useRef(null);
 
   useEffect(() => {
-    if (typeof window !== 'undefined' && window.ScrollTrigger) {
-      const timer = setTimeout(() => {
-        window.ScrollTrigger.refresh();
-      }, 480);
-      return () => clearTimeout(timer);
+    if (typeof window !== 'undefined') {
+      if (window.ScrollTrigger) {
+        if (typeof window.ScrollTrigger.update === 'function') {
+          window.ScrollTrigger.update();
+        }
+        // Force refresh trigger heights as rows expand/contract
+        setTimeout(() => {
+          if (typeof window.ScrollTrigger.refresh === 'function') {
+            window.ScrollTrigger.refresh();
+          }
+        }, 100);
+        setTimeout(() => {
+          if (typeof window.ScrollTrigger.refresh === 'function') {
+            window.ScrollTrigger.refresh();
+          }
+        }, 360);
+      }
     }
   }, [expandedIndex]);
 
+  useEffect(() => {
+    return () => {
+      if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+    };
+  }, []);
+
   const total = SHOWCASE_PROJECTS.length;
 
-  const handleToggleSound = () => {
-    const newState = !soundOn;
-    setSoundOn(newState);
-    setSoundEnabled(newState);
-    if (newState) {
-      playSlideSound();
+  const handleToggleSound = useCallback(() => {
+    setSoundOn((prev) => {
+      const next = !prev;
+      setSoundEnabled(next);
+      if (next) playSlideSound();
+      return next;
+    });
+  }, []);
+
+  const handleRowHover = useCallback((index) => {
+    // If the user explicitly collapsed this row by click, do not re-expand while mouse lingers over it
+    if (userCollapsedIndexRef.current === index) {
+      return;
     }
-  };
+    userCollapsedIndexRef.current = null;
+    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+    hoverTimerRef.current = setTimeout(() => {
+      setExpandedIndex((prev) => {
+        if (prev !== index) {
+          playSlideSound();
+          return index;
+        }
+        return prev;
+      });
+    }, 35);
+  }, []);
 
-  const handleRowHover = (index) => {
-    if (expandedIndex !== index) {
-      setExpandedIndex(index);
-      playSlideSound();
+  const handleRowLeave = useCallback((index) => {
+    if (hoverTimerRef.current) {
+      clearTimeout(hoverTimerRef.current);
+      hoverTimerRef.current = null;
     }
-  };
+    // Clear userCollapsedIndex when mouse leaves that specific row so future entries can expand
+    if (userCollapsedIndexRef.current === index) {
+      userCollapsedIndexRef.current = null;
+    }
+  }, []);
 
-  const handleRowLeave = () => {
-    setExpandedIndex(null);
-  };
-
-  const handleRowClick = (index, e) => {
+  const handleRowClick = useCallback((index, e) => {
+    // Don't toggle row if clicking inside buttons or links
     if (e.target.closest('a') || e.target.closest('button')) {
       return;
     }
-    if (expandedIndex === index) {
-      setExpandedIndex(null);
-    } else {
-      setExpandedIndex(index);
-      playSlideSound();
+    if (hoverTimerRef.current) {
+      clearTimeout(hoverTimerRef.current);
+      hoverTimerRef.current = null;
     }
-  };
+    setExpandedIndex((prev) => {
+      if (prev === index) {
+        // Collapsed by user
+        userCollapsedIndexRef.current = index;
+        return null;
+      } else {
+        // Expanded by user
+        userCollapsedIndexRef.current = null;
+        playSlideSound();
 
-  const handleOpenModal = (numericId, e) => {
+        // Ensure newly expanded row is comfortably framed within viewport
+        setTimeout(() => {
+          const rowEl = document.querySelector(`.editorial-row[data-row-id="${SHOWCASE_PROJECTS[index]?.numericId}"]`);
+          if (rowEl) {
+            const rect = rowEl.getBoundingClientRect();
+            const dockOffset = 110; // Mac dock clearance
+            if (rect.bottom > window.innerHeight - dockOffset || rect.top < 70) {
+              const targetY = window.pageYOffset + rect.top - 80;
+              if (window.lenis && typeof window.lenis.scrollTo === 'function') {
+                window.lenis.scrollTo(targetY, { duration: 0.8 });
+              } else {
+                window.scrollTo({ top: targetY, behavior: 'smooth' });
+              }
+            }
+          }
+        }, 140);
+
+        return index;
+      }
+    });
+  }, []);
+
+  const handleOpenModal = useCallback((numericId, e) => {
     if (e) {
       e.preventDefault();
       e.stopPropagation();
     }
-    if (typeof window.openProjectModalById === 'function') {
+    if (typeof window !== 'undefined' && typeof window.openProjectModalById === 'function') {
       window.openProjectModalById(numericId);
     } else {
       const modal = document.getElementById('project-modal');
@@ -971,32 +1337,41 @@ export default function ProjectsShowcase() {
         document.body.classList.add('modal-open');
       }
     }
-  };
+  }, []);
 
-  const handleKeyDown = (e, index) => {
+  const handleKeyDown = useCallback((e, index) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      setExpandedIndex(prev => (prev === index ? null : index));
-      playSlideSound();
+      setExpandedIndex((prev) => {
+        if (prev === index) {
+          userCollapsedIndexRef.current = index;
+          return null;
+        } else {
+          userCollapsedIndexRef.current = null;
+          playSlideSound();
+          return index;
+        }
+      });
     } else if (e.key === 'ArrowDown') {
       e.preventDefault();
       const next = (index + 1) % total;
+      userCollapsedIndexRef.current = null;
       setExpandedIndex(next);
       playSlideSound();
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       const prev = (index - 1 + total) % total;
+      userCollapsedIndexRef.current = null;
       setExpandedIndex(prev);
       playSlideSound();
     }
-  };
+  }, [total]);
 
   return (
     <div
       className="editorial-showcase-wrapper"
       id="projects-showcase-container"
       ref={containerRef}
-      onMouseLeave={handleRowLeave}
     >
       {/* Top Header Bar */}
       <header className="editorial-top-header" aria-label="Projects Section Header">
@@ -1036,197 +1411,19 @@ export default function ProjectsShowcase() {
 
       {/* Six Horizontal Expandable Rows */}
       <div className="editorial-rows-container" role="region" aria-label="Selected Projects Showcase">
-        {SHOWCASE_PROJECTS.map((project, index) => {
-          const isExpanded = expandedIndex === index;
-
-          return (
-            <article
-              key={project.id}
-              className={`editorial-row ${isExpanded ? 'is-expanded' : 'is-collapsed'}`}
-              data-theme={project.theme}
-              style={{
-                '--accent-color': project.accentColor,
-                '--accent-rgb': project.accentRgb,
-                '--row-solid-bg': project.solidBg,
-                '--row-text-color': project.textColor
-              }}
-              onMouseEnter={() => handleRowHover(index)}
-              onClick={(e) => handleRowClick(index, e)}
-              onKeyDown={(e) => handleKeyDown(e, index)}
-              tabIndex={0}
-              role="button"
-              aria-expanded={isExpanded}
-              aria-label={`${project.title} — ${isExpanded ? 'Expanded' : 'Click or hover to expand'}`}
-            >
-              {/* Subtle Blueprint Grid Overlay per Project */}
-              <div className="editorial-row-bg-grid" aria-hidden="true" />
-
-              {/* Atmospheric Ambient Glow per Project */}
-              <div
-                className="editorial-row-ambient-glow"
-                style={{ backgroundColor: project.accentColor }}
-                aria-hidden="true"
-              />
-
-              {/* Default Row Summary Bar (Always Visible) */}
-              <div className="editorial-row-bar">
-                <div className="editorial-row-left">
-                  <span className="editorial-row-number">{project.number}</span>
-                  <div className="editorial-row-titles-wrap">
-                    <h3 className="editorial-row-title">
-                      {project.title}
-                    </h3>
-                    <span className="editorial-row-subtitle">
-                      {project.subtitle}
-                    </span>
-                  </div>
-                  <span className="editorial-row-category-pill">
-                    {project.categoryTag}
-                  </span>
-                </div>
-
-                <div className="editorial-row-right">
-                  <button
-                    type="button"
-                    className="editorial-jump-btn cursor-target"
-                    onClick={(e) => handleOpenModal(project.numericId, e)}
-                    data-cursor-label="View"
-                    aria-label={`Jump To ${project.title} Project Details`}
-                  >
-                    <span>Jump To Project</span>
-                    <i className="fa-solid fa-arrow-right"></i>
-                  </button>
-                </div>
-              </div>
-
-              {/* Expandable Project Details Stage */}
-              <div
-                className="editorial-row-expansion"
-                aria-hidden={!isExpanded}
-              >
-                <div className="editorial-expansion-inner">
-                  {/* Left Column: Rich Metadata & Editorial Content */}
-                  <div className="editorial-info-column">
-                    <div className="editorial-meta-grid">
-                      <div className="editorial-meta-cell">
-                        <span className="editorial-meta-label">ROLE</span>
-                        <span className="editorial-meta-val">{project.role}</span>
-                      </div>
-                      <div className="editorial-meta-cell">
-                        <span className="editorial-meta-label">TIMELINE</span>
-                        <span className="editorial-meta-val">{project.timeline}</span>
-                      </div>
-                      <div className="editorial-meta-cell">
-                        <span className="editorial-meta-label">YEAR</span>
-                        <span className="editorial-meta-val">{project.year}</span>
-                      </div>
-                      <div className="editorial-meta-cell">
-                        <span className="editorial-meta-label">PLATFORM</span>
-                        <span className="editorial-meta-val">{project.platform}</span>
-                      </div>
-                    </div>
-
-                    <h4 className="editorial-expanded-subtitle">
-                      {project.subtitle}
-                    </h4>
-
-                    <p className="editorial-expanded-narrative">
-                      {project.narrative}
-                    </p>
-
-                    {/* Prominent Metric Badges */}
-                    <div className="editorial-metrics-grid">
-                      {project.metrics.map((m, mIdx) => (
-                        <div key={mIdx} className="editorial-metric-box">
-                          <span className="editorial-metric-stat">{m.stat}</span>
-                          <span className="editorial-metric-desc">{m.desc}</span>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Tech Stack Pills */}
-                    <div className="editorial-tech-list">
-                      {project.techStack.map((tech, tIdx) => (
-                        <span key={tIdx} className="editorial-tech-tag">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Action Group */}
-                    <div className="editorial-actions-bar">
-                      <button
-                        type="button"
-                        className="editorial-action-primary cursor-target"
-                        onClick={(e) => handleOpenModal(project.numericId, e)}
-                        data-cursor-label="Details"
-                      >
-                        <span>View Full Details</span>
-                        <i className="fa-solid fa-arrow-up-right-from-square"></i>
-                      </button>
-
-                      {project.secondaryAction && (
-                        <a
-                          href={project.secondaryAction.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="editorial-action-secondary cursor-target"
-                          data-cursor-label="Open"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          {project.secondaryAction.icon && (
-                            <i className={project.secondaryAction.icon}></i>
-                          )}
-                          <span>{project.secondaryAction.label}</span>
-                        </a>
-                      )}
-
-                      {project.liveUrl && (
-                        <a
-                          href={project.liveUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="editorial-action-icon cursor-target"
-                          title="Open Live Website"
-                          data-cursor-label="Live"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <i className="fa-solid fa-globe"></i>
-                        </a>
-                      )}
-
-                      {project.githubUrl && (
-                        <a
-                          href={project.githubUrl}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="editorial-action-icon cursor-target"
-                          title="View GitHub Repository"
-                          data-cursor-label="GitHub"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          <i className="fa-brands fa-github"></i>
-                        </a>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Right Column: Visual Stage / High-Fidelity Mockup */}
-                  <div className="editorial-visual-column">
-                    {project.title === 'Punarchakra' || project.visualType === 'ballpit' || project.title === 'Agnivaarak' || project.visualType === 'agnivaarak' ? (
-                      <MobilePhoneScreen project={project} />
-                    ) : (
-                      <DesktopDashboardScreen
-                        config={DASHBOARD_CONFIGS[project.numericId] || DASHBOARD_CONFIGS['1']}
-                        project={project}
-                      />
-                    )}
-                  </div>
-                </div>
-              </div>
-            </article>
-          );
-        })}
+        {SHOWCASE_PROJECTS.map((project, index) => (
+          <ProjectRow
+            key={project.id}
+            project={project}
+            index={index}
+            isExpanded={expandedIndex === index}
+            onHover={handleRowHover}
+            onLeave={handleRowLeave}
+            onClick={handleRowClick}
+            onKeyDown={handleKeyDown}
+            onOpenModal={handleOpenModal}
+          />
+        ))}
       </div>
     </div>
   );

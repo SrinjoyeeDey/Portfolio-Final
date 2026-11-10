@@ -20,6 +20,13 @@ export default function TextTypePreloader() {
   const [phase, setPhase] = useState('typing'); // 'typing' | 'masked'
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
+  const [modelStatus, setModelStatus] = useState(() => (
+    typeof window !== 'undefined' && window.__hero3DState ? window.__hero3DState.status : 'loading'
+  ));
+  const [modelProgress, setModelProgress] = useState(() => (
+    typeof window !== 'undefined' && window.__hero3DState ? window.__hero3DState.progress : 0
+  ));
+  const [greetingsDone, setGreetingsDone] = useState(false);
 
   const containerRef = useRef(null);
   const maskHoleRef = useRef(null);
@@ -31,9 +38,13 @@ export default function TextTypePreloader() {
   const isZoomingRef = useRef(false);
 
   const activeGreeting = GREETINGS[currentIndex % GREETINGS.length] || GREETINGS[0];
+
+  // Progress reflects both greeting sequence (50%) and 3D model load (50%)
+  const greetingProgress = ((currentIndex + 1) / GREETINGS.length) * 50;
+  const modelProgressContribution = (modelProgress || 0) * 0.5;
   const progressPercent = phase === 'masked'
     ? 100
-    : Math.min(100, Math.round(((currentIndex + 1) / GREETINGS.length) * 100));
+    : Math.min(100, Math.round(greetingProgress + modelProgressContribution));
 
   // Check mobile screen size
   useEffect(() => {
@@ -41,6 +52,42 @@ export default function TextTypePreloader() {
     check();
     window.addEventListener('resize', check, { passive: true });
     return () => window.removeEventListener('resize', check);
+  }, []);
+
+  // Listen to 3D model lifecycle events dispatched by hero-3d-model.js
+  useEffect(() => {
+    const handleProgress = (e) => {
+      if (e.detail && typeof e.detail.progress === 'number') {
+        setModelProgress(e.detail.progress);
+      }
+    };
+    const handleLoaded = () => {
+      setModelStatus('success');
+      setModelProgress(100);
+    };
+    const handleError = () => {
+      setModelStatus('error');
+    };
+
+    window.addEventListener('hero-3d:progress', handleProgress);
+    window.addEventListener('hero-3d:loaded', handleLoaded);
+    window.addEventListener('hero-3d:error', handleError);
+
+    // Initial check in case model loaded before preloader mounted
+    if (typeof window !== 'undefined' && window.__hero3DState) {
+      if (window.__hero3DState.status === 'success') {
+        setModelStatus('success');
+        setModelProgress(100);
+      } else if (window.__hero3DState.status === 'error') {
+        setModelStatus('error');
+      }
+    }
+
+    return () => {
+      window.removeEventListener('hero-3d:progress', handleProgress);
+      window.removeEventListener('hero-3d:loaded', handleLoaded);
+      window.removeEventListener('hero-3d:error', handleError);
+    };
   }, []);
 
   // Buttery Smooth Zoom-In Portal Transition directly into the Hero Section
@@ -113,8 +160,15 @@ export default function TextTypePreloader() {
 
   // When all multilingual greetings finish typing
   const handleTypingComplete = useCallback(() => {
-    setPhase('masked');
+    setGreetingsDone(true);
   }, []);
+
+  // Transition into masked hero aperture ONLY when BOTH greetings and 3D model are ready
+  useEffect(() => {
+    if (greetingsDone && modelStatus === 'success' && phase === 'typing') {
+      setPhase('masked');
+    }
+  }, [greetingsDone, modelStatus, phase]);
 
   // In 'masked' phase, animate HELLO cutout entrance and mouse parallax
   useEffect(() => {
@@ -161,20 +215,7 @@ export default function TextTypePreloader() {
     }
   }, [phase, startZoomExit]);
 
-  // Click / Wheel / Key / Skip handler -> Triggers the Zoom-In into Hero immediately!
-  const handleInteraction = useCallback(() => {
-    if (hasExitedRef.current || isZoomingRef.current) return;
-    if (phase === 'typing') {
-      setPhase('masked');
-      setTimeout(() => {
-        startZoomExit();
-      }, 120);
-    } else {
-      startZoomExit();
-    }
-  }, [phase, startZoomExit]);
-
-  // Lock scroll on mount & attach key/wheel listener to jump into zoom
+  // Strictly block keyboard, wheel, touch-scroll, or bypass while loader is active
   useEffect(() => {
     document.body.style.overflow = 'hidden';
     if (window.lenis && typeof window.lenis.stop === 'function') {
@@ -182,36 +223,33 @@ export default function TextTypePreloader() {
     }
 
     const handleKeyDown = (e) => {
-      if (['Escape', 'Enter', ' ', 'ArrowDown', 'PageDown'].includes(e.key)) {
+      if (['Escape', 'Enter', ' ', 'ArrowDown', 'ArrowUp', 'PageDown', 'PageUp', 'Home', 'End', 'Tab'].includes(e.key)) {
         e.preventDefault();
-        handleInteraction();
+        e.stopPropagation();
       }
     };
 
     const handleWheel = (e) => {
-      if (Math.abs(e.deltaY) > 12 || Math.abs(e.deltaX) > 12) {
-        handleInteraction();
-      }
+      e.preventDefault();
+      e.stopPropagation();
     };
 
-    const handleTouchMove = () => {
-      handleInteraction();
+    const handleTouchMove = (e) => {
+      e.preventDefault();
+      e.stopPropagation();
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    window.addEventListener('wheel', handleWheel, { passive: true });
-    window.addEventListener('touchmove', handleTouchMove, { passive: true });
+    window.addEventListener('keydown', handleKeyDown, { passive: false });
+    window.addEventListener('wheel', handleWheel, { passive: false });
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
 
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('wheel', handleWheel);
       window.removeEventListener('touchmove', handleTouchMove);
-      document.body.style.overflow = '';
-      if (window.lenis && typeof window.lenis.start === 'function') {
-        window.lenis.start();
-      }
+      // Normal scrolling is restored strictly after transition completes in startZoomExit
     };
-  }, [handleInteraction]);
+  }, []);
 
   // Handle TextType index update
   const handleIndexChange = useCallback((idx) => {
@@ -224,7 +262,6 @@ export default function TextTypePreloader() {
     <div
       ref={containerRef}
       className="tt-preloader"
-      onClick={handleInteraction}
       data-lenis-prevent
       aria-label="Interactive Preloader"
     >
@@ -371,17 +408,10 @@ export default function TextTypePreloader() {
             )}
           </div>
 
-          <button
-            type="button"
-            className="tt-preloader__skip-btn"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleInteraction();
-            }}
-          >
-            <span>ENTER</span>
-            <i className="fa-solid fa-arrow-right"></i>
-          </button>
+          <div className="tt-preloader__system-badge">
+            <span className="tt-preloader__brand-dot" style={{ backgroundColor: modelStatus === 'error' ? '#EF4444' : '#FFBD12' }} />
+            <span>{modelStatus === 'error' ? '3D OFFLINE' : (modelStatus === 'success' ? '3D READY' : 'LOADING 3D')}</span>
+          </div>
         </header>
 
         {/* Center Stage: TextType for Phase 1 */}
@@ -410,12 +440,92 @@ export default function TextTypePreloader() {
           <div ref={subtitleRef} className="tt-preloader__subtitle">
             <span className="tt-preloader__subtitle-line" />
             <span>
-              {phase === 'typing'
-                ? `${activeGreeting.code} • CREATIVE VISUAL DEVELOPER`
-                : 'PEEKING INTO THE CREATIVE STUDIO • 2026'}
+              {modelStatus === 'error'
+                ? '3D ENGINE INITIALIZATION ERROR'
+                : (phase === 'typing'
+                  ? (greetingsDone ? 'PREPARING 3D STUDIO SCENE...' : `${activeGreeting.code} • CREATIVE VISUAL DEVELOPER`)
+                  : 'PEEKING INTO THE CREATIVE STUDIO • 2026')}
             </span>
             <span className="tt-preloader__subtitle-line" />
           </div>
+
+          {/* Graceful Fallback if 3D Model fails to load */}
+          {modelStatus === 'error' && (
+            <div
+              className="tt-preloader__error-panel"
+              style={{
+                marginTop: '18px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '12px',
+                pointerEvents: 'auto'
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  background: 'rgba(239, 68, 68, 0.08)',
+                  border: '1px solid rgba(239, 68, 68, 0.25)',
+                  color: '#B91C1C',
+                  padding: '6px 14px',
+                  borderRadius: '100px',
+                  fontSize: '12px',
+                  fontWeight: 600
+                }}
+              >
+                <i className="fa-solid fa-circle-exclamation"></i>
+                <span>3D avatar model could not be loaded</span>
+              </div>
+              <div style={{ display: 'flex', gap: '10px' }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setModelStatus('loading');
+                    if (typeof window !== 'undefined' && typeof window.__hero3DRetry === 'function') {
+                      window.__hero3DRetry();
+                    }
+                  }}
+                  style={{
+                    background: '#FFBD12',
+                    color: '#222428',
+                    border: 'none',
+                    borderRadius: '24px',
+                    padding: '8px 20px',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    letterSpacing: '0.04em',
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 12px rgba(255, 189, 18, 0.25)'
+                  }}
+                >
+                  <i className="fa-solid fa-rotate-right" style={{ marginRight: '6px' }}></i>
+                  Retry 3D Load
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setPhase('masked');
+                    setTimeout(() => startZoomExit(), 150);
+                  }}
+                  style={{
+                    background: '#222428',
+                    color: '#ECECE7',
+                    border: 'none',
+                    borderRadius: '24px',
+                    padding: '8px 20px',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    cursor: 'pointer'
+                  }}
+                >
+                  Enter Portfolio
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Bottom Footer */}
@@ -425,7 +535,13 @@ export default function TextTypePreloader() {
           style={{ pointerEvents: 'auto' }}
         >
           <div className="tt-preloader__status">
-            <span>● INITIALIZING VISUAL ENGINE</span>
+            <span>
+              {modelStatus === 'error'
+                ? '● 3D SYSTEM ERROR'
+                : (modelStatus === 'loading'
+                  ? (greetingsDone ? '● FINALIZING 3D ENVIRONMENT' : '● LOADING 3D ASSETS')
+                  : '● 3D STUDIO READY')}
+            </span>
           </div>
 
           <div className="tt-preloader__progress-container">
@@ -439,7 +555,13 @@ export default function TextTypePreloader() {
           </div>
 
           <div className="tt-preloader__hint">
-            <span>{phase === 'typing' ? 'SCROLL OR CLICK TO ENTER' : 'DIVING INTO STUDIO'}</span>
+            <span>
+              {modelStatus === 'error'
+                ? 'SELECTION REQUIRED'
+                : (phase === 'typing'
+                  ? (greetingsDone ? 'SYNCING 3D CANVAS' : 'PLEASE WAIT FOR ASSETS')
+                  : 'ENTERING STUDIO')}
+            </span>
             <i className="fa-solid fa-arrow-turn-down"></i>
           </div>
         </footer>

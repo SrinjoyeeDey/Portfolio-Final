@@ -19,8 +19,8 @@ export default function DoodleCrewDemo() {
         ]}
         socials={[
           { label: "LinkedIn", href: "https://www.linkedin.com/in/srinjoyee-dey/" },
-          { label: "GitHub", href: "https://github.com/SrinjoyeeDey" },
-          { label: "Twitter", href: "https://twitter.com/SrinjoyeeDey" },
+          { label: "GitHub", href: "https://github.com/SrinjoyeeDey/" },
+          { label: "X (Twitter)", href: "https://x.com/Srinjoyee__bee" },
           { label: "Substack", href: "https://srinjoyeedey.substack.com" }
         ]}
         backToTop={true}

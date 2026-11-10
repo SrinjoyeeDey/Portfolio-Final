@@ -61,19 +61,7 @@ export function initFooterShuffle() {
     });
   }
 
-  // 2. Studio Ribbon
-  const ribbonText = footer.querySelector('.ribbon-text');
-  if (ribbonText) {
-    mountShuffle(ribbonText, {
-      text: 'Nominee',
-      shuffleDirection: 'right',
-      duration: 0.3,
-      stagger: 0.02,
-      accentColor: '#FFBD12'
-    });
-  }
-
-  // 3. Hero Brand Name & Last
+  // 2. Hero Brand Name & Last
   const heroName = footer.querySelector('.footer-hero-name');
   if (heroName) {
     mountShuffle(heroName, {
