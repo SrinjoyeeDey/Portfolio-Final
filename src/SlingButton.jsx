@@ -209,6 +209,7 @@ export default function SlingButton({
   };
 
   const onPointerDown = e => {
+    e.stopPropagation();
     if (disabled || grip.current || e.button !== 0) return;
     const el = rootRef.current;
     if (!el) return;
@@ -391,7 +392,8 @@ export default function SlingButton({
           onKeyDown={e => {
             if (e.key === 'Escape' && grip.current) release(grip.current.id, true);
           }}
-          onClick={() => {
+          onClick={e => {
+            e.stopPropagation();
             if (skipClick.current) {
               skipClick.current = false;
               return;

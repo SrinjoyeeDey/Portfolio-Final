@@ -26,8 +26,8 @@ const THEMES = {
 };
 
 const PILLS = {
-  dark: { color: '#FFBD12', hover: 'rgba(255, 189, 18, 0.12)', shadow: 0.35 },
-  light: { color: '#FFBD12', hover: 'rgba(255, 189, 18, 0.15)', shadow: 0.18 }
+  dark: { color: '#FFE500', hover: 'rgba(255, 229, 0, 0.16)', shadow: 0.15 },
+  light: { color: '#FFE500', hover: 'rgba(255, 229, 0, 0.18)', shadow: 0.10 }
 };
 
 const SIZES = { sm: 'gooey-nav--sm', md: 'gooey-nav--md', lg: 'gooey-nav--lg' };
@@ -118,9 +118,9 @@ void main() {
   vec2 grad = vec2(dFdx(d), -dFdy(d));
   vec2 n = length(grad) > 0.0001 ? normalize(grad) : vec2(0.0, 1.0);
   // Warm golden specular rim that stays yellow, never bleaching white
-  float rim = (1.0 - smoothstep(0.0, 1.6, -d)) * max(0.0, -n.y) * 0.25;
-  vec3 rimTint = vec3(1.0, 0.94, 0.45);
-  vec3 fill = mix(shape.rgb, rimTint, rim) * (1.0 - 0.05 * max(0.0, n.y) * (1.0 - smoothstep(0.0, 6.0, -d)));
+  float rim = (1.0 - smoothstep(0.0, 1.6, -d)) * max(0.0, -n.y) * 0.22;
+  vec3 rimTint = vec3(1.0, 0.98, 0.60);
+  vec3 fill = mix(shape.rgb, rimTint, rim) * (1.0 - 0.02 * max(0.0, n.y) * (1.0 - smoothstep(0.0, 6.0, -d)));
 
   float lifted = field(p - vec2(0.0, 3.0)).w;
   float shadow = (1.0 - smoothstep(-3.0, 9.0, lifted)) * uShadow * (1.0 - body);
@@ -145,7 +145,7 @@ const parse = value => {
     const parts = rgba[1].split(',').map(part => parseFloat(part));
     return [parts[0] / 255, parts[1] / 255, parts[2] / 255, parts[3] ?? 1];
   }
-  return [1.0, 0.741, 0.07, 1]; // Fallback to warm yellow
+  return [1.0, 0.90, 0.0, 1]; // Fallback to bright radiant yellow
 };
 
 const contrastInk = rgb => (0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2] > 0.55 ? '#222428' : '#ffffff');
@@ -212,9 +212,9 @@ const GooeyNav = ({
   activeIndex,
   onChange,
   theme = 'light',
-  color = '#FFBD12',
+  color = '#FFE500',
   activeTextColor = '#222428',
-  colors = ['#FFBD12', '#FACC15', '#FFC837', '#F59E0B'],
+  colors = ['#FFE500', '#FFEA2E', '#FFF056', '#FFDF00'],
   size = 'md',
   frame = true,
   animationTime = 600,

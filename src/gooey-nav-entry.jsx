@@ -107,9 +107,9 @@ function NavContainer() {
       activeIndex={activeIndex}
       onChange={handleChange}
       theme="light"
-      color="#FFBD12"
+      color="#FFE500"
       activeTextColor="#222428"
-      colors={['#FFBD12', '#FACC15', '#FFD028', '#F59E0B']}
+      colors={['#FFE500', '#FFEA2E', '#FFF056', '#FFDF00']}
       frame={true}
       size="md"
       animationTime={600}

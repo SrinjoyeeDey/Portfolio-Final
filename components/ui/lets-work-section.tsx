@@ -3,6 +3,7 @@
 import type React from "react"
 import { useState } from "react"
 import { ArrowUpRight, Calendar } from "lucide-react"
+import SlingButton from "../../src/SlingButton"
 
 export function LetsWorkTogether({ 
   className,
@@ -18,8 +19,10 @@ export function LetsWorkTogether({
   const [showSuccess, setShowSuccess] = useState(false)
   const [isButtonHovered, setIsButtonHovered] = useState(false)
 
-  const handleClick = (e: React.MouseEvent<HTMLAnchorElement | HTMLDivElement>) => {
-    e.preventDefault()
+  const handleClick = (e?: React.MouseEvent<HTMLAnchorElement | HTMLDivElement>) => {
+    if (e && typeof e.preventDefault === 'function') {
+      e.preventDefault()
+    }
     if (typeof window !== "undefined" && (window as any).PortoSound?.playClick) {
       (window as any).PortoSound.playClick(true)
     }
@@ -215,29 +218,24 @@ export function LetsWorkTogether({
               </h2>
             )}
 
-            <div className={`relative ${compact ? "size-12 sm:size-14" : "mt-4 size-16 sm:size-20"} flex items-center justify-center`}>
-              <div
-                className="pointer-events-none absolute inset-0 rounded-full border transition-all ease-out"
-                style={{
-                  borderColor: isClicked ? "var(--foreground)" : isHovered ? "var(--foreground)" : "var(--border)",
-                  backgroundColor: isClicked ? "transparent" : isHovered ? "var(--foreground)" : "transparent",
-                  transform: isClicked ? "scale(3)" : isHovered ? "scale(1.1)" : "scale(1)",
-                  opacity: isClicked ? 0 : 1,
-                  transitionDuration: isClicked ? "700ms" : "500ms",
-                }}
-              />
-              <ArrowUpRight
-                className={`${compact ? "size-5 sm:size-6" : "size-6 sm:size-7"} transition-all ease-[cubic-bezier(0.16,1,0.3,1)]`}
-                style={{
-                  transform: isClicked
-                    ? "translate(100px, -100px) scale(0.5)"
-                    : isHovered
-                      ? "translate(2px, -2px)"
-                      : "translate(0, 0)",
-                  opacity: isClicked ? 0 : 1,
-                  color: isHovered && !isClicked ? "var(--background)" : "var(--foreground)",
-                  transitionDuration: isClicked ? "600ms" : "500ms",
-                }}
+            <div 
+              className={`relative ${compact ? "size-14 sm:size-16" : "mt-4 size-16 sm:size-20"} flex items-center justify-center transition-all duration-500`}
+              style={{
+                opacity: isClicked ? 0 : 1,
+                transform: isClicked ? "scale(0.8) translateY(-20px)" : "scale(1) translateY(0)",
+                pointerEvents: isClicked ? "none" : "auto"
+              }}
+            >
+              <SlingButton
+                onSend={() => handleClick()}
+                size={compact ? 52 : 60}
+                padColor="#FFE500"
+                iconColor="#18181B"
+                accentColor="#FFE500"
+                wellColor="#27272A"
+                bandColor="#71717A"
+                tapSends={true}
+                ariaLabel="Let's work together"
               />
             </div>
           </div>
