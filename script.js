@@ -743,6 +743,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (navMenu && navMenu.classList.contains('active')) {
           navMenu.classList.remove('active');
           if (hamburgerBtn) hamburgerBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
+          document.body.classList.remove('nav-open');
         }
       }
     });
@@ -753,6 +754,17 @@ document.addEventListener('DOMContentLoaded', () => {
       navMenu.classList.toggle('active');
       const isExpanded = navMenu.classList.contains('active');
       hamburgerBtn.innerHTML = isExpanded ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-bars"></i>';
+      // Lock body scroll when mobile nav is open
+      document.body.classList.toggle('nav-open', isExpanded);
+    });
+
+    // Close nav when clicking outside of it (on the backdrop)
+    navMenu.addEventListener('click', (e) => {
+      if (e.target === navMenu) {
+        navMenu.classList.remove('active');
+        hamburgerBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
+        document.body.classList.remove('nav-open');
+      }
     });
   }
 
@@ -806,25 +818,16 @@ document.addEventListener('DOMContentLoaded', () => {
     // Update floating email envelope visibility & initiate choreographed flight if needed
     const envelopeWidget = document.getElementById('floating-envelope-widget');
     if (envelopeWidget) {
-      const aboutEl = document.getElementById('about');
       const projectsEl = document.getElementById('projects');
       const projectsRect = projectsEl ? projectsEl.getBoundingClientRect() : null;
-
-      // In Home section: not visible
-      const isHome = (window.scrollY < 120) || (aboutEl && window.getComputedStyle(aboutEl).opacity === '0');
       const isProjectsOrBeyond = projectsRect ? projectsRect.top <= window.innerHeight * 0.55 : false;
 
-      if (isHome) {
-        envelopeWidget.classList.add('envelope-hidden');
-        envelopeWidget.classList.remove('envelope-visible');
-      } else {
-        envelopeWidget.classList.remove('envelope-hidden');
-        envelopeWidget.classList.add('envelope-visible');
+      envelopeWidget.classList.remove('envelope-hidden');
+      envelopeWidget.classList.add('envelope-visible');
 
-        // When scrolling to Projects section, if envelope is on the right, trigger flight to left
-        if (isProjectsOrBeyond && typeof window._triggerEnvelopeFlight === 'function' && window._envelopeCurrentSide === 'right') {
-          window._triggerEnvelopeFlight('left');
-        }
+      // When scrolling to Projects section, if envelope is on the right, trigger flight to left
+      if (isProjectsOrBeyond && typeof window._triggerEnvelopeFlight === 'function' && window._envelopeCurrentSide === 'right') {
+        window._triggerEnvelopeFlight('left');
       }
     }
   }
@@ -873,7 +876,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const modalBodyContent = document.getElementById('modal-body-content');
 
   function openProjectModalById(projectId) {
-    const data = projectsData[projectId];
+    const data = projectsData[projectId] || Object.values(projectsData).find(p => p && p.id === projectId);
 
     if (data) {
       // Hero Media Panel: Use authentic project mark/title without fake screenshots
@@ -1014,7 +1017,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <div class="modal-header-info">
             <span class="pill-badge-tag">${data.category}</span>
             <h2 class="modal-project-title">${data.title}</h2>
-            ${data.subtitle ? `<p class="modal-project-subtitle">${data.subtitle}</p>` : ''}
+            ${(!heroMediaHtml && data.subtitle) ? `<p class="modal-project-subtitle">${data.subtitle}</p>` : ''}
           </div>
           
           <!-- Hero Media Panel -->
@@ -1134,6 +1137,9 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         projectModal.classList.add('active');
         document.body.style.overflow = 'hidden';
+        if (window.lenis && typeof window.lenis.stop === 'function') {
+          window.lenis.stop();
+        }
       }
   }
   window.openProjectModalById = openProjectModalById;
@@ -1151,6 +1157,9 @@ document.addEventListener('DOMContentLoaded', () => {
   function closeModal() {
     projectModal.classList.remove('active');
     document.body.style.overflow = 'auto';
+    if (window.lenis && typeof window.lenis.start === 'function') {
+      window.lenis.start();
+    }
   }
   window.closeModal = closeModal;
 
@@ -1811,7 +1820,7 @@ document.addEventListener('DOMContentLoaded', () => {
             isContactInView = entry.isIntersecting;
           }
         });
-        updateDockVisibility();
+        checkDockScroll();
       }, { threshold: 0.08 });
 
       if (ctaSectionEl) dockObserver.observe(ctaSectionEl);

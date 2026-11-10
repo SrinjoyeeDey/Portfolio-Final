@@ -37,7 +37,7 @@ export function LetsWorkTogether({
     if (typeof window !== "undefined" && (window as any).PortoSound?.playClick) {
       (window as any).PortoSound.playClick(true)
     }
-    window.open("https://cal.com/jatin-yadav05/15min", "_blank")
+    window.open("mailto:deysrinjoyee28@gmail.com", "_blank")
   }
 
   return (
@@ -273,7 +273,7 @@ export function LetsWorkTogether({
           <p className="max-w-md text-xs sm:text-sm leading-relaxed text-muted-foreground">
             Have a project in mind? I'd love to hear about it. Let's create something exceptional together.
           </p>
-          <span className="text-[11px] sm:text-xs tracking-widest uppercase text-muted-foreground/60">hello@example.com</span>
+          <span className="text-[11px] sm:text-xs tracking-widest uppercase text-muted-foreground/60">deysrinjoyee28@gmail.com</span>
         </div>
       </div>
     </section>

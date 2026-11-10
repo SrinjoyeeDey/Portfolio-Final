@@ -83,17 +83,12 @@
               const projectsRect = projectsEl ? projectsEl.getBoundingClientRect() : null;
               const isProjects = projectsRect ? projectsRect.top <= window.innerHeight * 0.55 : false;
 
-              if (self.progress < 0.25) {
-                envelopeWidget.classList.add('envelope-hidden');
-                envelopeWidget.classList.remove('envelope-visible', 'envelope-side-left');
+              envelopeWidget.classList.remove('envelope-hidden');
+              envelopeWidget.classList.add('envelope-visible');
+              if (isProjects) {
+                envelopeWidget.classList.add('envelope-side-left');
               } else {
-                envelopeWidget.classList.remove('envelope-hidden');
-                envelopeWidget.classList.add('envelope-visible');
-                if (isProjects) {
-                  envelopeWidget.classList.add('envelope-side-left');
-                } else {
-                  envelopeWidget.classList.remove('envelope-side-left');
-                }
+                envelopeWidget.classList.remove('envelope-side-left');
               }
             }
           }
@@ -356,6 +351,42 @@
 
     // Mobile: Fluid, responsive transitions without rigid scroll trapping
     mm.add('(max-width: 768px)', () => {
+      // Mobile Hero → About transition: smooth slide-up over hero just like website
+      const tlHeroAboutMobile = gsap.timeline({
+        scrollTrigger: {
+          id: 'hero-about-transition-mobile-pin',
+          trigger: aboutLayer,
+          start: 'top bottom',
+          end: 'top top',
+          pin: heroLayer,
+          pinSpacing: false,
+          scrub: true,
+          anticipatePin: 1,
+          invalidateOnRefresh: true,
+          onUpdate: (self) => {
+            const envelopeWidget = document.getElementById('floating-envelope-widget');
+            if (envelopeWidget) {
+              envelopeWidget.classList.remove('envelope-hidden');
+              envelopeWidget.classList.add('envelope-visible');
+            }
+          }
+        }
+      });
+
+      tlHeroAboutMobile.fromTo(heroLayer, {
+        y: '0%',
+        opacity: 1,
+        scale: 1,
+        force3D: true
+      }, {
+        y: '-6%',
+        opacity: 0.35,
+        scale: 0.97,
+        ease: 'none',
+        force3D: true,
+        duration: 1
+      }, 0);
+
       if (projectsLayer && snapshotsLayer) {
         gsap.fromTo(snapshotsLayer, {
           opacity: 0.82,

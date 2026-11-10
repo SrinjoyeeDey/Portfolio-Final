@@ -22,8 +22,10 @@
     "build:preloader": "node scripts/build-preloader.js",
     "build:elastic-mesh": "node scripts/build-elastic-mesh.js",
     "build:lets-work": "node scripts/build-lets-work.js",
+    "build:gooey-nav": "node scripts/build-gooey-nav.js",
+    "build:pulse-heart": "node scripts/build-pulse-heart.js",
     "build:tailwind": "npx tailwindcss -i src/tailwind-input.css -o tailwind-bundle.css --minify",
-    "build:all": "npm run build:text-pressure && npm run build:target-cursor && npm run build:projects-showcase && npm run build:circular-text && npm run build:tech-text && npm run build:memory-wall && npm run build:grid-scan && npm run build:pixel-transition && npm run build:letter-glitch && npm run build:footer-shuffle && npm run build:keyboard && npm run build:unified-footer && npm run build:preloader && npm run build:elastic-mesh && npm run build:lets-work && npm run build:tailwind",
+    "build:all": "npm run build:text-pressure && npm run build:target-cursor && npm run build:projects-showcase && npm run build:circular-text && npm run build:tech-text && npm run build:memory-wall && npm run build:grid-scan && npm run build:pixel-transition && npm run build:letter-glitch && npm run build:footer-shuffle && npm run build:keyboard && npm run build:unified-footer && npm run build:preloader && npm run build:elastic-mesh && npm run build:lets-work && npm run build:gooey-nav && npm run build:pulse-heart && npm run build:tailwind",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -32,6 +34,8 @@
   "type": "commonjs",
   "dependencies": {
     "@gsap/react": "^2.1.2",
+    "@hugeicons/core-free-icons": "^4.4.0",
+    "@hugeicons/react": "^1.1.10",
     "@react-three/drei": "^10.7.8",
     "@react-three/fiber": "^9.7.0",
     "@react-three/rapier": "^2.2.0",

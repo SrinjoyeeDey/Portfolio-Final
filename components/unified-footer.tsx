@@ -229,6 +229,10 @@ export default function UnifiedFooter() {
               <span className="nav-item-title">CONTACT</span>
               <span className="nav-item-num">07</span>
             </a>
+            <a href="images/Srinjoyee_Dey_Resume.pdf" target="_blank" rel="noopener noreferrer" className="footer-nav-item cursor-target" data-cursor-label="Resume">
+              <span className="nav-item-title">RESUME</span>
+              <span className="nav-item-num">08</span>
+            </a>
           </div>
         </nav>
       </div>

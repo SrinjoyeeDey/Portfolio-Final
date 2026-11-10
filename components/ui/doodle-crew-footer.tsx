@@ -617,7 +617,7 @@ export function DoodleCrewFooter({
   const doodleRefs = React.useRef([] as (HTMLDivElement | null)[])
 
   const [metrics, setMetrics] = React.useState(() => estimate(word))
-  const [play, setPlay] = React.useState(false)
+  const [play, setPlay] = React.useState(true)
   const [reduced, setReduced] = React.useState(false)
   const [talking, setTalking] = React.useState(-1)
   const [hopping, setHopping] = React.useState(-1)

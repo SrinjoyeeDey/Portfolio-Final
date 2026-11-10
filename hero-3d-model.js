@@ -40,9 +40,12 @@
     const scene = new THREE.Scene();
 
     // Camera: portrait focal length (~38 deg FOV) to avoid perspective distortion
+    const aspect = (container.clientWidth > 0 && container.clientHeight > 0)
+      ? (container.clientWidth / container.clientHeight)
+      : (window.innerWidth < 768 ? 1 : 720 / 820);
     const camera = new THREE.PerspectiveCamera(
       38,
-      container.clientWidth / container.clientHeight,
+      aspect,
       0.1,
       1000
     );
@@ -55,7 +58,9 @@
       powerPreference: 'high-performance'
     });
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-    renderer.setSize(container.clientWidth, container.clientHeight);
+    const initW = container.clientWidth || (window.innerWidth < 768 ? 290 : 720);
+    const initH = container.clientHeight || (window.innerWidth < 768 ? 290 : 820);
+    renderer.setSize(initW, initH);
     if (renderer.outputEncoding !== undefined) {
       renderer.outputEncoding = THREE.sRGBEncoding;
     } else if (renderer.outputColorSpace !== undefined) {
@@ -121,7 +126,7 @@
 
     // Load Model
     const loader = new THREE.GLTFLoader();
-    const modelUrls = ['3d character model.glb', 'character_model.glb'];
+    const modelUrls = ['character_model.glb', '3d%20character%20model.glb', '3d character model.glb'];
     let currentUrlIndex = 0;
 
     const loaderStatus = document.getElementById('hero-3d-loading-indicator');
@@ -192,6 +197,9 @@
           // Initial position camera with wider vertical clearance for hair and head
           camera.position.set(0, 0.28, 3.8);
           camera.lookAt(0, -0.05, 0);
+
+          // Force resize to current layout dimensions
+          handleResize();
 
           // Render one frame immediately to compile shaders & upload geometry to GPU
           try {
@@ -332,13 +340,19 @@
     // Resize Handler
     function handleResize() {
       if (!container || !renderer || !camera) return;
-      const width = container.clientWidth;
-      const height = container.clientHeight;
+      const width = container.clientWidth || (window.innerWidth < 768 ? 290 : 720);
+      const height = container.clientHeight || (window.innerWidth < 768 ? 290 : 820);
+      if (width <= 0 || height <= 0) return;
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
     }
     window.addEventListener('resize', handleResize);
+    window.addEventListener('load', handleResize);
+    window.addEventListener('orientationchange', () => setTimeout(handleResize, 150));
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) handleResize();
+    });
 
     // Animation Loop
     let clock = new THREE.Clock();

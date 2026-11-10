@@ -171,6 +171,14 @@
   box-shadow: 4px 5px 0px rgba(34, 36, 40, 0.3);
 }
 
+.tt-preloader--masked .tt-preloader__subtitle,
+.tt-preloader--masked .tt-preloader__footer,
+.tt-preloader--masked .tt-preloader__crosshair {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
 .tt-preloader__lang-index {
   color: #FFBD12;
   font-weight: 800;
@@ -320,15 +328,7 @@
 }
 
 .tt-preloader__hint {
-  font-family: 'Fredoka', cursive, sans-serif;
-  font-size: 0.82rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(34, 36, 40, 0.6);
-  display: flex;
-  align-items: center;
-  gap: 0.45rem;
+  display: none !important;
 }
 
 .tt-preloader__hint i {

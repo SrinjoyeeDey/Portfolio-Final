@@ -2652,13 +2652,16 @@
 
 @media (max-width: 768px) {
   .editorial-showcase-wrapper {
-    padding: 48px 16px;
+    padding: 32px 14px 40px 14px;
   }
 
   .editorial-top-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0 auto 16px auto;
+    padding-bottom: 14px;
   }
 
   .editorial-row-bar {

@@ -436,9 +436,10 @@ function KeyboardModel({
   }
 
   const widthFactor = 1.22; // Increase overall horizontal width by ~22% while keeping height and depth intact
+  const mobileScale = 0.94; // Elegantly scaled down on mobile so entire keyboard is visible
   return (
     <group 
-      scale={isMobile ? [1.30 * widthFactor, 1.30, 1.30] : [1.48 * widthFactor, 1.48, 1.48]} 
+      scale={isMobile ? [mobileScale * widthFactor, mobileScale, mobileScale] : [1.48 * widthFactor, 1.48, 1.48]} 
       position={[0, isMobile ? -0.02 : -0.05, 0]}
     >
       <group ref={ref}>
@@ -544,7 +545,7 @@ export default function Interactive3DKeyboard() {
       <Canvas
         camera={
           isMobile
-            ? { position: [0, 1.55, 4.1], fov: 34 }
+            ? { position: [0, 1.58, 4.35], fov: 33 }
             : { position: [0, 1.45, 3.95], fov: 33 }
         }
         dpr={isMobile ? [1, 1.5] : [1, 2]}

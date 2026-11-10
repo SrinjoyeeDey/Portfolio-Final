@@ -437,17 +437,17 @@ export default function TextTypePreloader() {
             <div style={{ height: isMobile ? '120px' : '180px' }} />
           )}
 
-          <div ref={subtitleRef} className="tt-preloader__subtitle">
-            <span className="tt-preloader__subtitle-line" />
-            <span>
-              {modelStatus === 'error'
-                ? '3D ENGINE INITIALIZATION ERROR'
-                : (phase === 'typing'
-                  ? (greetingsDone ? 'PREPARING 3D STUDIO SCENE...' : `${activeGreeting.code} • CREATIVE VISUAL DEVELOPER`)
-                  : 'PEEKING INTO THE CREATIVE STUDIO • 2026')}
-            </span>
-            <span className="tt-preloader__subtitle-line" />
-          </div>
+          {phase === 'typing' && (
+            <div ref={subtitleRef} className="tt-preloader__subtitle">
+              <span className="tt-preloader__subtitle-line" />
+              <span>
+                {modelStatus === 'error'
+                  ? '3D ENGINE INITIALIZATION ERROR'
+                  : (greetingsDone ? 'PREPARING 3D STUDIO SCENE...' : `${activeGreeting.code} • CREATIVE VISUAL DEVELOPER`)}
+              </span>
+              <span className="tt-preloader__subtitle-line" />
+            </div>
+          )}
 
           {/* Graceful Fallback if 3D Model fails to load */}
           {modelStatus === 'error' && (
@@ -544,6 +544,7 @@ export default function TextTypePreloader() {
             </span>
           </div>
 
+          {/* Progress Bar Container */}
           <div className="tt-preloader__progress-container">
             <div className="tt-preloader__progress-bar">
               <div
@@ -552,17 +553,6 @@ export default function TextTypePreloader() {
               />
             </div>
             <span className="tt-preloader__progress-text">{progressPercent}%</span>
-          </div>
-
-          <div className="tt-preloader__hint">
-            <span>
-              {modelStatus === 'error'
-                ? 'SELECTION REQUIRED'
-                : (phase === 'typing'
-                  ? (greetingsDone ? 'SYNCING 3D CANVAS' : 'PLEASE WAIT FOR ASSETS')
-                  : 'ENTERING STUDIO')}
-            </span>
-            <i className="fa-solid fa-arrow-turn-down"></i>
           </div>
         </footer>
       </div>

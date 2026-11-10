@@ -318,7 +318,7 @@
   position: relative;
   width: 100%;
   overflow: hidden;
-  background: #1C1824;
+  background: #E5E5DF;
   border-radius: 1px;
 }
 
@@ -337,15 +337,14 @@
   aspect-ratio: 3 / 4;
 }
 
-/* Smart India Hackathon full uncropped portrait print (771x1024 camera ratio) */
+/* Smart India Hackathon & Victory Prints */
 .photo-print-card.format-hackathon-portrait .photo-media-container {
-  aspect-ratio: 771 / 1024;
+  aspect-ratio: 16 / 9;
 }
 
 .photo-print-card.format-hackathon-portrait .photo-actual-image {
-  object-fit: contain;
-  object-position: top center;
-  background-color: #FAF8F5;
+  object-fit: cover;
+  object-position: center;
 }
 
 /* Milestone Victory & Championship Photo uncropped full landscape prints */
@@ -356,8 +355,8 @@
 
 .photo-print-card.format-milestone-full .photo-actual-image,
 .photo-print-card.format-championship-full .photo-actual-image {
-  object-fit: contain;
-  background-color: #FAF8F5;
+  object-fit: cover;
+  object-position: center;
 }
 
 /* --------------------------------------------------------------------------
@@ -459,7 +458,7 @@
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: rgba(14, 11, 20, 0.88);
+  background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   display: flex;
@@ -481,11 +480,9 @@
   max-height: min(92vh, 880px);
   background: #FAF8F5;
   padding: 12px 12px 24px 12px;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 
-    0 32px 70px -16px rgba(0, 0, 0, 0.75),
-    0 12px 28px rgba(0, 0, 0, 0.45);
+  border-radius: 12px;
+  border: 2px solid #222428;
+  box-shadow: 6px 8px 0px #222428, 0 20px 40px rgba(0, 0, 0, 0.25);
   cursor: default;
   display: flex;
   flex-direction: column;
@@ -507,26 +504,27 @@
   position: absolute;
   top: -14px;
   right: -14px;
-  width: 36px;
-  height: 36px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  background: #211B2C;
-  color: #FFFFFF;
-  border: 2px solid #FAF8F5;
-  font-size: 14px;
+  background: #FFFFFF;
+  color: #222428;
+  border: 2px solid #222428;
+  font-size: 15px;
+  font-weight: 800;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  box-shadow: 2px 2px 0px #222428;
   transition: transform 0.2s ease, background-color 0.2s ease;
   z-index: 10;
 }
 
 .wall-lightbox-close-btn:hover {
   transform: scale(1.1);
-  background: #F5DF77;
-  color: #211B2C;
+  background: #FFBD12;
+  color: #222428;
 }
 
 .wall-lightbox-media {
@@ -587,12 +585,414 @@
 }
 
 /* --------------------------------------------------------------------------
+   RESPONSIVE VIEWPORT SWITCHING (Mobile Grid vs Desktop Masonry)
+   -------------------------------------------------------------------------- */
+.pmw-mobile-view-container {
+  display: none;
+}
+
+.pmw-desktop-view-container {
+  display: block;
+}
+
+@media (max-width: 767px) {
+  .pmw-mobile-view-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0 4px;
+  }
+
+  .pmw-desktop-view-container {
+    display: none !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   MOBILE EXPERIENCE: CATEGORY FILTER TABS
+   -------------------------------------------------------------------------- */
+.pmw-filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  padding: 4px 2px 14px 2px;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.pmw-filter-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.pmw-filter-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 999px;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  background: rgba(34, 36, 40, 0.05);
+  color: #5C6069;
+  border: 1px solid rgba(34, 36, 40, 0.14);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.pmw-filter-btn:hover {
+  background: rgba(34, 36, 40, 0.1);
+  color: #222428;
+}
+
+.pmw-filter-btn.is-active {
+  background: #222428;
+  color: #FAF8F5;
+  border-color: #222428;
+}
+
+.pmw-filter-count {
+  font-size: 9.5px;
+  font-weight: 800;
+  background: rgba(34, 36, 40, 0.1);
+  border-radius: 999px;
+  padding: 1px 6px;
+}
+
+.pmw-filter-btn.is-active .pmw-filter-count {
+  background: rgba(255, 255, 255, 0.22);
+  color: #FAF8F5;
+}
+
+/* --------------------------------------------------------------------------
+   MOBILE EXPERIENCE: COMPACT 3-COLUMN SQUARE THUMBNAIL GRID
+   -------------------------------------------------------------------------- */
+.pmw-mobile-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.pmw-mobile-thumb-card {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 4px;
+  background: #dedad4;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: none;
+  outline: none;
+}
+
+.pmw-mobile-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: grayscale(1) sepia(0.06) brightness(0.97) contrast(1.03);
+  transition: transform 0.25s ease, filter 0.25s ease;
+}
+
+.pmw-mobile-thumb-card:active .pmw-mobile-thumb-img {
+  transform: scale(0.96);
+  filter: grayscale(0) brightness(1);
+}
+
+/* View More Button */
+.pmw-view-all-btn-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 16px;
+  margin-bottom: 8px;
+  width: 100%;
+}
+
+.pmw-view-all-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  background: rgba(34, 36, 40, 0.06);
+  border: 1.5px solid rgba(34, 36, 40, 0.18);
+  border-radius: 999px;
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #222428;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pmw-view-all-btn:hover,
+.pmw-view-all-btn:active {
+  background: #222428;
+  color: #FAF8F5;
+  border-color: #222428;
+}
+
+.pmw-view-all-arrow {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+/* --------------------------------------------------------------------------
+   FULLSCREEN IMAGE VIEWER (PORTALLED TO DOCUMENT.BODY)
+   -------------------------------------------------------------------------- */
+.pmw-fullscreen-viewer-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999999;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  box-sizing: border-box;
+  animation: pmwViewerFadeIn 0.22s ease-out;
+  touch-action: pan-y;
+}
+
+@keyframes pmwViewerFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.pmw-viewer-top-bar {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 20;
+  pointer-events: auto;
+}
+
+.pmw-viewer-counter {
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 12px;
+  font-weight: 700;
+  color: #222428;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1.5px solid #222428;
+  box-shadow: 2px 2px 0px #222428;
+  padding: 5px 14px;
+  border-radius: 999px;
+  letter-spacing: 0.06em;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.pmw-viewer-counter-sep {
+  opacity: 0.6;
+}
+
+.pmw-viewer-close-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  color: #222428;
+  border: 1.5px solid #222428;
+  box-shadow: 2px 2px 0px #222428;
+  font-size: 16px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.pmw-viewer-close-btn:hover {
+  transform: scale(1.08);
+  background: #FFBD12;
+}
+
+.pmw-viewer-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  color: #222428;
+  border: 1.5px solid #222428;
+  font-size: 28px;
+  line-height: 1;
+  font-weight: 400;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  box-shadow: 2.5px 2.5px 0px #222428;
+  transition: all 0.2s ease;
+  padding: 0;
+}
+
+.pmw-viewer-nav-btn:hover {
+  background: #FFBD12;
+  color: #111215;
+  transform: translateY(-50%) scale(1.08);
+}
+
+.pmw-nav-prev {
+  left: 12px;
+}
+
+.pmw-nav-next {
+  right: 12px;
+}
+
+@media (max-width: 480px) {
+  .pmw-viewer-nav-btn {
+    width: 36px;
+    height: 36px;
+    font-size: 24px;
+    background: #FFFFFF;
+  }
+  .pmw-nav-prev {
+    left: 8px;
+  }
+  .pmw-nav-next {
+    right: 8px;
+  }
+}
+
+.pmw-viewer-content-card {
+  position: relative;
+  max-width: min(92vw, 860px);
+  max-height: calc(100vh - 120px);
+  background: #FAF8F5;
+  padding: 10px 10px 16px 10px;
+  border-radius: 12px;
+  border: 2px solid #222428;
+  box-shadow: 4px 6px 0px #222428, 0 20px 40px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  animation: pmwCardPop 0.28s cubic-bezier(0.25, 1, 0.5, 1);
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+@keyframes pmwCardPop {
+  from {
+    opacity: 0;
+    transform: scale(0.94) translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.pmw-viewer-media-box {
+  position: relative;
+  max-height: calc(75vh - 120px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 6px;
+  background: transparent;
+}
+
+.pmw-viewer-image {
+  max-width: 100%;
+  max-height: calc(75vh - 120px);
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.pmw-viewer-caption {
+  padding: 10px 6px 0 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: left;
+}
+
+.pmw-viewer-title-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.pmw-viewer-title {
+  font-family: var(--font-heading, 'Fredoka', cursive, sans-serif);
+  font-size: clamp(14px, 3.8vw, 18px);
+  font-weight: 800;
+  color: #222428;
+  margin: 0;
+  line-height: 1.25;
+}
+
+.pmw-viewer-date {
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 11px;
+  font-weight: 700;
+  color: #5C6069;
+  background: rgba(34, 36, 40, 0.08);
+  padding: 2px 7px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.pmw-viewer-desc {
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: clamp(11.5px, 2.9vw, 13px);
+  color: #5C6069;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Hide target cursor when viewer is open so corners don't obstruct view */
+body.memory-viewer-open .target-cursor {
+  display: none !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+body.memory-viewer-open {
+  overflow: hidden !important;
+}
+
+/* --------------------------------------------------------------------------
    ACCESSIBILITY: REDUCED MOTION PREFERENCES
    -------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   .photo-print-card,
   .photo-actual-image,
-  .wall-lightbox-card {
+  .wall-lightbox-card,
+  .pmw-viewer-content-card,
+  .pmw-fullscreen-viewer-overlay {
     transition: none !important;
     animation: none !important;
   }

@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useMemo, useRef } from 'react';
+import React, { useState, useEffect, useMemo, useRef, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import './PhotographicMemoryWall.css';
 
 /**
@@ -18,7 +19,8 @@ export const ARCHIVAL_PHOTOS = [
     rotation: -1.8,
     overlapX: -3,
     overlapY: 2,
-    zIndex: 2
+    zIndex: 2,
+    category: 'Hackathons'
   },
   {
     id: 2,
@@ -31,7 +33,8 @@ export const ARCHIVAL_PHOTOS = [
     rotation: 1.4,
     overlapX: 2,
     overlapY: -3,
-    zIndex: 3
+    zIndex: 3,
+    category: 'Events'
   },
   {
     id: 4,
@@ -44,7 +47,8 @@ export const ARCHIVAL_PHOTOS = [
     rotation: 2.1,
     overlapX: 3,
     overlapY: -2,
-    zIndex: 3
+    zIndex: 3,
+    category: 'Friends'
   },
   {
     id: 5,
@@ -57,7 +61,8 @@ export const ARCHIVAL_PHOTOS = [
     rotation: -1.5,
     overlapX: -3,
     overlapY: 2,
-    zIndex: 2
+    zIndex: 2,
+    category: 'Events'
   },
   {
     id: 6,
@@ -70,7 +75,8 @@ export const ARCHIVAL_PHOTOS = [
     rotation: 0.9,
     overlapX: 2,
     overlapY: -3,
-    zIndex: 3
+    zIndex: 3,
+    category: 'Events'
   },
   {
     id: 7,
@@ -83,7 +89,8 @@ export const ARCHIVAL_PHOTOS = [
     rotation: -2.2,
     overlapX: -2,
     overlapY: 3,
-    zIndex: 2
+    zIndex: 2,
+    category: 'Campus'
   },
   {
     id: 8,
@@ -96,7 +103,8 @@ export const ARCHIVAL_PHOTOS = [
     rotation: 1.6,
     overlapX: 3,
     overlapY: -2,
-    zIndex: 3
+    zIndex: 3,
+    category: 'Campus'
   },
   {
     id: 9,
@@ -104,12 +112,13 @@ export const ARCHIVAL_PHOTOS = [
     title: 'Department Hackathon',
     subtitle: 'College Mini-Hackathon Triumph with Four Friends',
     date: 'Dec 2024',
-    format: 'milestone-full',
-    aspectRatio: 1600 / 1059,
-    rotation: -1.2,
+    format: 'wide',
+    aspectRatio: 1.45,
+    rotation: -1.4,
     overlapX: -3,
     overlapY: 2,
-    zIndex: 4
+    zIndex: 3,
+    category: 'Hackathons'
   },
   {
     id: 20,
@@ -118,11 +127,12 @@ export const ARCHIVAL_PHOTOS = [
     subtitle: 'Awards Ceremony at AOT Tech Fest for VANI',
     date: 'Oct 2024',
     format: 'wide',
-    aspectRatio: 1.45,
-    rotation: -1.6,
-    overlapX: -2,
-    overlapY: 3,
-    zIndex: 2
+    aspectRatio: 16 / 9,
+    rotation: 2.3,
+    overlapX: 3,
+    overlapY: -3,
+    zIndex: 4,
+    category: 'Hackathons'
   },
   {
     id: 11,
@@ -132,10 +142,11 @@ export const ARCHIVAL_PHOTOS = [
     date: 'Dec 2024',
     format: 'standard',
     aspectRatio: 1.33,
-    rotation: -1.4,
+    rotation: -1.2,
     overlapX: -2,
     overlapY: 3,
-    zIndex: 2
+    zIndex: 2,
+    category: 'Hackathons'
   },
   {
     id: 13,
@@ -143,12 +154,13 @@ export const ARCHIVAL_PHOTOS = [
     title: 'Kshitij Achievements',
     subtitle: 'Certificates & Memorabilia from IIT Kharagpur',
     date: 'Jan 2025',
-    format: 'tall',
-    aspectRatio: 0.75,
-    rotation: -2.0,
-    overlapX: -3,
-    overlapY: 2,
-    zIndex: 4
+    format: 'wide',
+    aspectRatio: 1.45,
+    rotation: 2.0,
+    overlapX: 2,
+    overlapY: -2,
+    zIndex: 3,
+    category: 'Events'
   },
   {
     id: 12,
@@ -158,10 +170,11 @@ export const ARCHIVAL_PHOTOS = [
     date: 'Oct 2024',
     format: 'standard',
     aspectRatio: 1.33,
-    rotation: 0.8,
-    overlapX: 3,
-    overlapY: -2,
-    zIndex: 3
+    rotation: -1.7,
+    overlapX: -3,
+    overlapY: 2,
+    zIndex: 2,
+    category: 'Hackathons'
   },
   {
     id: 14,
@@ -169,12 +182,13 @@ export const ARCHIVAL_PHOTOS = [
     title: 'IIM Calcutta Arena',
     subtitle: 'Hackathon Floor & Event Atmosphere at IIM Calcutta',
     date: 'Dec 2024',
-    format: 'tall',
-    aspectRatio: 0.75,
-    rotation: 2.3,
-    overlapX: 2,
+    format: 'wide',
+    aspectRatio: 1.45,
+    rotation: 1.3,
+    overlapX: 3,
     overlapY: -3,
-    zIndex: 2
+    zIndex: 3,
+    category: 'Hackathons'
   },
   {
     id: 15,
@@ -184,10 +198,11 @@ export const ARCHIVAL_PHOTOS = [
     date: 'Dec 2024',
     format: 'standard',
     aspectRatio: 1.33,
-    rotation: -1.1,
+    rotation: -1.9,
     overlapX: -2,
     overlapY: 3,
-    zIndex: 3
+    zIndex: 2,
+    category: 'Hackathons'
   },
   {
     id: 23,
@@ -195,12 +210,13 @@ export const ARCHIVAL_PHOTOS = [
     title: 'Synchronicity Gathering',
     subtitle: 'Group Photo with Mentors, Friends & Volunteers',
     date: 'Dec 2024',
-    format: 'standard',
-    aspectRatio: 1.33,
-    rotation: 1.0,
-    overlapX: 3,
+    format: 'milestone-full',
+    aspectRatio: 4160 / 2755,
+    rotation: 1.5,
+    overlapX: 2,
     overlapY: -2,
-    zIndex: 3
+    zIndex: 4,
+    category: 'Friends'
   },
   {
     id: 17,
@@ -210,10 +226,11 @@ export const ARCHIVAL_PHOTOS = [
     date: 'Dec 2024',
     format: 'standard',
     aspectRatio: 1.33,
-    rotation: 1.2,
-    overlapX: 2,
-    overlapY: -3,
-    zIndex: 3
+    rotation: -1.1,
+    overlapX: -3,
+    overlapY: 2,
+    zIndex: 2,
+    category: 'Events'
   },
   {
     id: 18,
@@ -221,12 +238,13 @@ export const ARCHIVAL_PHOTOS = [
     title: 'Google Solution Showcase',
     subtitle: 'Top 100 Presentation Before Board & Trustee',
     date: 'Dec 2024',
-    format: 'standard',
-    aspectRatio: 1.33,
-    rotation: -0.7,
-    overlapX: -3,
-    overlapY: 2,
-    zIndex: 2
+    format: 'wide',
+    aspectRatio: 1.45,
+    rotation: 2.2,
+    overlapX: 3,
+    overlapY: -3,
+    zIndex: 3,
+    category: 'Events'
   },
   {
     id: 19,
@@ -234,12 +252,13 @@ export const ARCHIVAL_PHOTOS = [
     title: 'Boardroom Presentation',
     subtitle: 'Presenting Architecture in the College Boardroom',
     date: 'Sep 2024',
-    format: 'wide',
-    aspectRatio: 1.45,
-    rotation: 2.0,
-    overlapX: 3,
-    overlapY: -2,
-    zIndex: 3
+    format: 'standard',
+    aspectRatio: 1.33,
+    rotation: -1.6,
+    overlapX: -2,
+    overlapY: 3,
+    zIndex: 2,
+    category: 'Campus'
   },
   {
     id: 10,
@@ -247,12 +266,13 @@ export const ARCHIVAL_PHOTOS = [
     title: 'Campus Memories',
     subtitle: 'Early Semester Reflections at AOT',
     date: 'Dec 2024',
-    format: 'tall',
-    aspectRatio: 0.75,
-    rotation: 1.9,
+    format: 'wide',
+    aspectRatio: 1.45,
+    rotation: 1.4,
     overlapX: 2,
-    overlapY: -3,
-    zIndex: 3
+    overlapY: -2,
+    zIndex: 3,
+    category: 'Campus'
   },
   {
     id: 21,
@@ -262,10 +282,11 @@ export const ARCHIVAL_PHOTOS = [
     date: 'Dec 2024',
     format: 'standard',
     aspectRatio: 1.33,
-    rotation: 1.8,
-    overlapX: 2,
-    overlapY: -3,
-    zIndex: 4
+    rotation: -2.1,
+    overlapX: -3,
+    overlapY: 2,
+    zIndex: 2,
+    category: 'Events'
   },
   {
     id: 22,
@@ -273,12 +294,13 @@ export const ARCHIVAL_PHOTOS = [
     title: 'First Hackathon Win',
     subtitle: 'Emotionally Significant First Victory at AOT Tech Fest',
     date: 'Dec 2024',
-    format: 'tall',
-    aspectRatio: 0.75,
-    rotation: -2.4,
-    overlapX: -3,
-    overlapY: 2,
-    zIndex: 2
+    format: 'standard',
+    aspectRatio: 1.33,
+    rotation: 1.8,
+    overlapX: 3,
+    overlapY: -3,
+    zIndex: 3,
+    category: 'Hackathons'
   },
   {
     id: 16,
@@ -286,12 +308,13 @@ export const ARCHIVAL_PHOTOS = [
     title: 'Kshitij Moments',
     subtitle: 'Celebrating Milestones & Accolades at IIT Kharagpur',
     date: 'Dec 2024',
-    format: 'tall',
-    aspectRatio: 0.75,
-    rotation: 1.5,
-    overlapX: 3,
-    overlapY: -2,
-    zIndex: 4
+    format: 'wide',
+    aspectRatio: 1.45,
+    rotation: -1.3,
+    overlapX: -2,
+    overlapY: 3,
+    zIndex: 2,
+    category: 'Events'
   },
   {
     id: 24,
@@ -301,10 +324,11 @@ export const ARCHIVAL_PHOTOS = [
     date: 'Dec 2024',
     format: 'championship-full',
     aspectRatio: 4160 / 2755,
-    rotation: -1.3,
-    overlapX: -2,
-    overlapY: 3,
-    zIndex: 4
+    rotation: 2.1,
+    overlapX: 3,
+    overlapY: -2,
+    zIndex: 4,
+    category: 'Friends'
   },
   {
     id: 25,
@@ -312,12 +336,13 @@ export const ARCHIVAL_PHOTOS = [
     title: 'Build Club Innovation',
     subtitle: 'IoT Hardware & Edge Computing Development',
     date: 'Nov 2024',
-    format: 'standard',
-    aspectRatio: 1.33,
-    rotation: 2.2,
-    overlapX: 2,
-    overlapY: -3,
-    zIndex: 2
+    format: 'tall',
+    aspectRatio: 0.75,
+    rotation: -1.7,
+    overlapX: -3,
+    overlapY: 2,
+    zIndex: 3,
+    category: 'Events'
   },
   {
     id: 26,
@@ -325,12 +350,13 @@ export const ARCHIVAL_PHOTOS = [
     title: 'Hacktropica Sprint',
     subtitle: 'Rapid Prototyping & Sprint Deployment at Hacktropica',
     date: 'Dec 2024',
-    format: 'tall',
-    aspectRatio: 0.75,
-    rotation: -0.9,
-    overlapX: -2,
-    overlapY: 3,
-    zIndex: 3
+    format: 'wide',
+    aspectRatio: 1.45,
+    rotation: 1.6,
+    overlapX: 2,
+    overlapY: -3,
+    zIndex: 3,
+    category: 'Hackathons'
   },
   {
     id: 27,
@@ -338,12 +364,13 @@ export const ARCHIVAL_PHOTOS = [
     title: 'Hacktropica Overview',
     subtitle: 'Top-View Arrangement & Venue Atmosphere',
     date: 'Feb 2025',
-    format: 'tall',
-    aspectRatio: 0.75,
-    rotation: 1.7,
-    overlapX: 3,
-    overlapY: -2,
-    zIndex: 2
+    format: 'standard',
+    aspectRatio: 1.33,
+    rotation: -2.0,
+    overlapX: -2,
+    overlapY: 3,
+    zIndex: 2,
+    category: 'Hackathons'
   },
   {
     id: 28,
@@ -351,12 +378,13 @@ export const ARCHIVAL_PHOTOS = [
     title: 'Hacktropica Goodies',
     subtitle: 'Swag & Memorabilia Received from Hacktropica',
     date: 'Dec 2024',
-    format: 'standard',
-    aspectRatio: 1.33,
-    rotation: -2.1,
-    overlapX: -3,
-    overlapY: 2,
-    zIndex: 4
+    format: 'wide',
+    aspectRatio: 1.45,
+    rotation: 1.9,
+    overlapX: 3,
+    overlapY: -2,
+    zIndex: 3,
+    category: 'Hackathons'
   },
   {
     id: 30,
@@ -367,9 +395,10 @@ export const ARCHIVAL_PHOTOS = [
     format: 'standard',
     aspectRatio: 1.33,
     rotation: -1.5,
-    overlapX: -2,
-    overlapY: 3,
-    zIndex: 3
+    overlapX: -3,
+    overlapY: 2,
+    zIndex: 2,
+    category: 'Events'
   },
   {
     id: 31,
@@ -377,148 +406,163 @@ export const ARCHIVAL_PHOTOS = [
     title: 'Hacktechnique Memories',
     subtitle: 'Cherished Memories from Our First Offline Hackathon',
     date: '2025/2026',
-    format: 'tall',
-    aspectRatio: 0.75,
-    rotation: 2.0,
-    overlapX: 3,
-    overlapY: -2,
-    zIndex: 4
+    format: 'wide',
+    aspectRatio: 1.45,
+    rotation: 2.3,
+    overlapX: 2,
+    overlapY: -3,
+    zIndex: 3,
+    category: 'Hackathons'
   },
   {
     id: 40,
     src: 'images/boardroom-showcase.jpg',
     title: 'No Code Website Presentation',
-    subtitle: 'Another photograph from the same boardroom event where I presented our Google Solution Challenge project before the college board members and trustee.',
+    subtitle: 'Presenting Google Solution Challenge project before college board members and trustee',
     date: 'Sep 2024',
-    format: 'standard',
-    aspectRatio: 1.33,
-    rotation: 1.3,
-    overlapX: 2,
-    overlapY: -2,
-    zIndex: 3
+    format: 'wide',
+    aspectRatio: 1.45,
+    rotation: -1.8,
+    overlapX: -2,
+    overlapY: 3,
+    zIndex: 3,
+    category: 'Campus'
   },
   {
     id: 41,
     src: 'images/synchronicity-experience.jpg',
     title: 'Synchronicity Experience',
-    subtitle: 'A photograph from Synchronicity, where our team and friends spent the entire day working together. It was a memorable, fun-filled hackathon experience that represents exactly why I love participating in hackathons.',
+    subtitle: 'Memorable, fun-filled hackathon experience with teammates and friends',
     date: 'Dec 2024',
     format: 'standard',
     aspectRatio: 1.33,
-    rotation: -1.4,
-    overlapX: -2,
-    overlapY: 2,
-    zIndex: 2
+    rotation: 1.7,
+    overlapX: 3,
+    overlapY: -2,
+    zIndex: 3,
+    category: 'Friends'
   },
   {
     id: 42,
     src: 'images/hacktropica-squad.jpg',
     title: 'Hacktropica Squad',
-    subtitle: 'A group photograph with my friends and teammates during Hacktropica.',
+    subtitle: 'Group photograph with friends and teammates during Hacktropica',
     date: 'Oct 2024',
-    format: 'standard',
-    aspectRatio: 1.33,
-    rotation: 1.8,
-    overlapX: 3,
-    overlapY: -3,
-    zIndex: 4
+    format: 'wide',
+    aspectRatio: 1.45,
+    rotation: -1.4,
+    overlapX: -3,
+    overlapY: 2,
+    zIndex: 3,
+    category: 'Friends'
   },
   {
     id: 43,
     src: 'images/uxopia-design.jpg',
     title: 'UXopia Design',
-    subtitle: 'A memorable photograph from UXopia, working on building a design as one of my early design experiences in college.',
+    subtitle: 'Early design sprint and interface exploration in college',
     date: '2024',
-    format: 'wide',
-    aspectRatio: 1.5,
-    rotation: -1.7,
-    overlapX: -3,
-    overlapY: 1,
-    zIndex: 3
+    format: 'standard',
+    aspectRatio: 1.33,
+    rotation: 2.0,
+    overlapX: 2,
+    overlapY: -3,
+    zIndex: 2,
+    category: 'Events'
   },
   {
     id: 44,
     src: 'images/induction-memories.jpg',
     title: 'Induction Memories',
-    subtitle: 'A photograph from the induction program organized during my first semester at AOT.',
+    subtitle: 'Induction program organized during first semester at AOT',
     date: '2023',
     format: 'standard',
     aspectRatio: 1.33,
     rotation: 1.1,
     overlapX: 2,
     overlapY: -2,
-    zIndex: 2
+    zIndex: 2,
+    category: 'Campus'
   }
 ];
+
+const CATEGORIES = ['All', 'Hackathons', 'Events', 'Campus', 'Friends'];
 
 function getEstimatedHeight(photo) {
   let ratio = 1.33;
   if (photo.aspectRatio) ratio = photo.aspectRatio;
-  else if (photo.format === 'tall' || photo.format === 'hackathon-portrait') ratio = 0.75;
+  else if (photo.format === 'tall') ratio = 0.75;
+  else if (photo.format === 'hackathon-portrait') ratio = 771 / 1024;
   else if (photo.format === 'wide') ratio = 1.45;
-  else if (photo.format === 'milestone-full') ratio = 1600 / 1059;
+  else if (photo.format === 'milestone-full') ratio = 4160 / 2755;
   else if (photo.format === 'championship-full') ratio = 4160 / 2755;
   return (220 / ratio) + 38;
 }
 
-function useColumnCount() {
-  const [columns, setColumns] = useState(() => {
+function useViewportMode() {
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth < 768;
+  });
+
+  const [columnCount, setColumnCount] = useState(() => {
     if (typeof window === 'undefined') return 6;
     const w = window.innerWidth;
     if (w >= 1350) return 6;
     if (w >= 1050) return 5;
     if (w >= 768) return 4;
-    if (w >= 500) return 3;
-    return 2;
+    return 3;
   });
 
   useEffect(() => {
     const handleResize = () => {
       const w = window.innerWidth;
-      let c = 2;
+      setIsMobile(w < 768);
+      let c = 3;
       if (w >= 1350) c = 6;
       else if (w >= 1050) c = 5;
       else if (w >= 768) c = 4;
-      else if (w >= 500) c = 3;
-      setColumns((prev) => (prev !== c ? c : prev));
+      setColumnCount(c);
     };
 
     window.addEventListener('resize', handleResize, { passive: true });
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  return columns;
+  return { isMobile, columnCount };
 }
 
 export default function PhotographicMemoryWall() {
+  const { isMobile, columnCount } = useViewportMode();
   const [activePhoto, setActivePhoto] = useState(null);
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [isExpanded, setIsExpanded] = useState(false);
   const [hoveredId, setHoveredId] = useState(null);
   const [revealedIds, setRevealedIds] = useState(() => new Set());
   const wallRef = useRef(null);
   const cardElementsRef = useRef(new Map());
-  const columnCount = useColumnCount();
 
-  // Close lightbox on Escape key
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (e.key === 'Escape') {
-        setActivePhoto(null);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  // Filtered photos for category
+  const filteredPhotos = useMemo(() => {
+    if (activeCategory === 'All') return ARCHIVAL_PHOTOS;
+    return ARCHIVAL_PHOTOS.filter((p) => p.category === activeCategory);
+  }, [activeCategory]);
 
-  // Interlocking Bin-Packing Layout Calculation
+  // Mobile displayed photos (initial 12 items, or all if expanded)
+  const mobileDisplayedPhotos = useMemo(() => {
+    if (isExpanded || filteredPhotos.length <= 12) {
+      return filteredPhotos;
+    }
+    return filteredPhotos.slice(0, 12);
+  }, [filteredPhotos, isExpanded]);
+
+  // Interlocking Bin-Packing Layout Calculation for Desktop Masonry
   const { columns, STAGGER_OFFSETS } = useMemo(() => {
-    const colCount = columnCount;
+    const colCount = Math.max(3, columnCount);
     const cols = Array.from({ length: colCount }, () => []);
-    // Natural organic offsets so the top edge looks casually collected over time
     const offsets = [0, 16, 6, 22, 12, 18];
     const heights = offsets.slice(0, colCount).map((o) => o);
 
-    // Greedy bin-packing: places each photo into the shortest column
-    // This guarantees that adjacent items touch and columns end evenly with no gaps
     ARCHIVAL_PHOTOS.forEach((photo) => {
       let minCol = 0;
       let minH = heights[0];
@@ -528,15 +572,14 @@ export default function PhotographicMemoryWall() {
           minCol = c;
         }
       }
-
       cols[minCol].push(photo);
-      heights[minCol] += getEstimatedHeight(photo) + 10; // 10px target spacing
+      heights[minCol] += getEstimatedHeight(photo) + 10;
     });
 
     return { columns: cols, STAGGER_OFFSETS: offsets };
   }, [columnCount]);
 
-  // Reveal On Scroll via IntersectionObserver (animates tiles as user scrolls down)
+  // Reveal On Scroll via IntersectionObserver
   useEffect(() => {
     if (typeof IntersectionObserver === 'undefined') {
       setRevealedIds(new Set(ARCHIVAL_PHOTOS.map((p) => p.id)));
@@ -560,10 +603,7 @@ export default function PhotographicMemoryWall() {
           }
         });
       },
-      {
-        rootMargin: '0px 0px -4% 0px',
-        threshold: 0.05
-      }
+      { rootMargin: '0px 0px -4% 0px', threshold: 0.05 }
     );
 
     cardElementsRef.current.forEach((node) => {
@@ -575,7 +615,82 @@ export default function PhotographicMemoryWall() {
     }
 
     return () => observer.disconnect();
-  }, [columns]);
+  }, [columns, isMobile]);
+
+  // Lightbox Navigation Functions
+  const activeList = isMobile ? filteredPhotos : ARCHIVAL_PHOTOS;
+  const currentIndex = activePhoto ? activeList.findIndex((p) => p.id === activePhoto.id) : -1;
+
+  const showPrev = useCallback(() => {
+    if (currentIndex <= 0) {
+      setActivePhoto(activeList[activeList.length - 1]);
+    } else {
+      setActivePhoto(activeList[currentIndex - 1]);
+    }
+  }, [currentIndex, activeList]);
+
+  const showNext = useCallback(() => {
+    if (currentIndex >= activeList.length - 1 || currentIndex === -1) {
+      setActivePhoto(activeList[0]);
+    } else {
+      setActivePhoto(activeList[currentIndex + 1]);
+    }
+  }, [currentIndex, activeList]);
+
+  const closeViewer = useCallback(() => {
+    setActivePhoto(null);
+  }, []);
+
+  // Lock body scroll and stop Lenis when viewer is open; hide target cursor
+  useEffect(() => {
+    if (activePhoto) {
+      document.body.classList.add('memory-viewer-open');
+      if (window.lenis && typeof window.lenis.stop === 'function') {
+        window.lenis.stop();
+      }
+    } else {
+      document.body.classList.remove('memory-viewer-open');
+      if (window.lenis && typeof window.lenis.start === 'function') {
+        window.lenis.start();
+      }
+    }
+    return () => {
+      document.body.classList.remove('memory-viewer-open');
+    };
+  }, [activePhoto]);
+
+  // Keyboard navigation for lightbox
+  useEffect(() => {
+    if (!activePhoto) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') closeViewer();
+      else if (e.key === 'ArrowLeft') showPrev();
+      else if (e.key === 'ArrowRight') showNext();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activePhoto, closeViewer, showPrev, showNext]);
+
+  // Swipe gesture handling for mobile viewer
+  const touchStartX = useRef(0);
+  const touchStartY = useRef(0);
+
+  const handleTouchStart = (e) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e) => {
+    const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+    const deltaY = e.changedTouches[0].clientY - touchStartY.current;
+    if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (deltaX < 0) {
+        showNext();
+      } else {
+        showPrev();
+      }
+    }
+  };
 
   return (
     <div className="photographic-wall-installation" ref={wallRef}>
@@ -613,13 +728,71 @@ export default function PhotographicMemoryWall() {
         </div>
 
         <p className="pmw-supporting-desc">
-          Outside the screen  • A little piece of everything that made me
+          Outside the screen • A little piece of everything that made me
         </p>
       </header>
 
-      {/* Main Dense Wall Composition */}
-      <div className="wall-canvas-stage">
-        {/* Interlocking Masonry Columns with minimal 8-14px gaps */}
+      {/* MOBILE EXPERIENCE (< 768px): Compact 3-Column Square Grid + Filters */}
+      <div className="pmw-mobile-view-container">
+        {/* Horizontally scrollable category filter bar */}
+        <nav className="pmw-filter-bar" aria-label="Memory Categories">
+          {CATEGORIES.map((cat) => {
+            const count = cat === 'All' ? ARCHIVAL_PHOTOS.length : ARCHIVAL_PHOTOS.filter((p) => p.category === cat).length;
+            const isActive = activeCategory === cat;
+            return (
+              <button
+                key={cat}
+                type="button"
+                className={`pmw-filter-btn ${isActive ? 'is-active' : ''}`}
+                onClick={() => {
+                  setActiveCategory(cat);
+                  setIsExpanded(false);
+                }}
+              >
+                <span>{cat}</span>
+                <span className="pmw-filter-count">{count}</span>
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* Compact 3-Column Square Thumbnail Grid */}
+        <div className="pmw-mobile-grid" role="region" aria-label="Square memory thumbnails">
+          {mobileDisplayedPhotos.map((photo, idx) => (
+            <button
+              key={photo.id}
+              type="button"
+              className="pmw-mobile-thumb-card"
+              onClick={() => setActivePhoto(photo)}
+              aria-label={`View photo: ${photo.title}`}
+            >
+              <img
+                src={photo.src}
+                alt={photo.title}
+                loading={idx < 9 ? 'eager' : 'lazy'}
+                className="pmw-mobile-thumb-img"
+              />
+            </button>
+          ))}
+        </div>
+
+        {/* View All / Collapse Button */}
+        {filteredPhotos.length > 12 && (
+          <div className="pmw-view-all-btn-wrapper">
+            <button
+              type="button"
+              className="pmw-view-all-btn"
+              onClick={() => setIsExpanded(!isExpanded)}
+            >
+              <span>{isExpanded ? 'Show Less' : `View All Memories (${filteredPhotos.length})`}</span>
+              <span className="pmw-view-all-arrow">{isExpanded ? '↑' : '↓'}</span>
+            </button>
+          </div>
+        )}
+      </div>
+
+      {/* DESKTOP EXPERIENCE (>= 768px): Authentic Pinterest-style Masonry Wall */}
+      <div className="pmw-desktop-view-container wall-canvas-stage">
         <div
           className="wall-columns-container"
           role="region"
@@ -668,9 +841,7 @@ export default function PhotographicMemoryWall() {
                       }
                     }}
                   >
-                    {/* Physical Photo Paper Border Frame */}
                     <div className="photo-paper-surface">
-                      {/* Image Frame with Film Grain Texture */}
                       <div className="photo-media-container">
                         <img
                           src={photo.src}
@@ -679,10 +850,8 @@ export default function PhotographicMemoryWall() {
                           className="photo-actual-image"
                           draggable={false}
                         />
-                        <div className="photo-paper-grain" aria-hidden="true"></div>
+                        <div className="photo-paper-grain" aria-hidden="true" />
                       </div>
-
-                      {/* Physical Bottom White Margin with Archival Pencil Stamp */}
                       <figcaption className="photo-bottom-margin">
                         <span className="photo-margin-title">{photo.title}</span>
                         <span className="photo-margin-date">{photo.date}</span>
@@ -694,51 +863,95 @@ export default function PhotographicMemoryWall() {
             </div>
           ))}
         </div>
+
+        {/* Wall Installation Bottom Clean Registration */}
+        <footer className="wall-architectural-footer">
+          <span className="wall-reg-mark" aria-hidden="true">⌞</span>
+          <span className="wall-footer-note">PRINTED PHOTOGRAPHIC ARCHIVE • CLICK ANY PRINT TO ENLARGE</span>
+          <span className="wall-reg-mark" aria-hidden="true">⌟</span>
+        </footer>
       </div>
 
-      {/* Wall Installation Bottom Clean Registration */}
-      <footer className="wall-architectural-footer">
-        <span className="wall-reg-mark" aria-hidden="true">⌞</span>
-        <span className="wall-footer-note">PRINTED PHOTOGRAPHIC ARCHIVE • CLICK ANY PRINT TO ENLARGE</span>
-        <span className="wall-reg-mark" aria-hidden="true">⌟</span>
-      </footer>
-
-      {/* Full-Res Lightbox Modal */}
-      {activePhoto && (
+      {/* ROBUST FULL-SCREEN IMAGE VIEWER PORTALLED DIRECTLY TO DOCUMENT.BODY */}
+      {activePhoto && typeof document !== 'undefined' && createPortal(
         <div
-          className="wall-lightbox-overlay"
-          onClick={() => setActivePhoto(null)}
+          className="pmw-fullscreen-viewer-overlay"
+          onClick={closeViewer}
           role="dialog"
           aria-modal="true"
           aria-label={activePhoto.title}
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
         >
-          <div
-            className="wall-lightbox-card"
-            onClick={(e) => e.stopPropagation()}
-          >
+          {/* Top Control Bar */}
+          <div className="pmw-viewer-top-bar" onClick={(e) => e.stopPropagation()}>
+            <div className="pmw-viewer-counter">
+              <span>{currentIndex + 1}</span>
+              <span className="pmw-viewer-counter-sep">/</span>
+              <span>{activeList.length}</span>
+            </div>
+
             <button
-              className="wall-lightbox-close-btn"
-              onClick={() => setActivePhoto(null)}
-              aria-label="Close photo preview"
+              type="button"
+              className="pmw-viewer-close-btn"
+              onClick={closeViewer}
+              aria-label="Close photo viewer"
             >
               ✕
             </button>
-            <div className="wall-lightbox-media">
+          </div>
+
+          {/* Navigation Prev Button */}
+          <button
+            type="button"
+            className="pmw-viewer-nav-btn pmw-nav-prev"
+            onClick={(e) => {
+              e.stopPropagation();
+              showPrev();
+            }}
+            aria-label="Previous photo"
+          >
+            ‹
+          </button>
+
+          {/* Navigation Next Button */}
+          <button
+            type="button"
+            className="pmw-viewer-nav-btn pmw-nav-next"
+            onClick={(e) => {
+              e.stopPropagation();
+              showNext();
+            }}
+            aria-label="Next photo"
+          >
+            ›
+          </button>
+
+          {/* Centered Image Card with Natural Aspect Ratio & Metadata */}
+          <div
+            className="pmw-viewer-content-card"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="pmw-viewer-media-box">
               <img
                 src={activePhoto.src}
                 alt={activePhoto.title}
-                className="wall-lightbox-image"
+                className="pmw-viewer-image"
               />
             </div>
-            <div className="wall-lightbox-meta">
-              <div className="wall-lightbox-header-row">
-                <h3 className="wall-lightbox-title">{activePhoto.title}</h3>
-                <span className="wall-lightbox-date">{activePhoto.date}</span>
+
+            <div className="pmw-viewer-caption">
+              <div className="pmw-viewer-title-row">
+                <h3 className="pmw-viewer-title">{activePhoto.title}</h3>
+                <span className="pmw-viewer-date">{activePhoto.date}</span>
               </div>
-              <p className="wall-lightbox-subtitle">{activePhoto.subtitle}</p>
+              {activePhoto.subtitle && (
+                <p className="pmw-viewer-desc">{activePhoto.subtitle}</p>
+              )}
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

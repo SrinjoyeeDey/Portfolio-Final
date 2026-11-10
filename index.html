@@ -7,6 +7,7 @@
   <title>Creative Visual Portfolio</title>
   <meta name="description"
     content="A premium creative visual portfolio featuring brand identity, UI/UX design, and digital art with high-impact typography.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✨</text></svg>">
 
   <!-- Google Fonts: Fredoka, Plus Jakarta Sans, Caveat, Cedarville Cursive, Homemade Apple, Gochi Hand, Architects Daughter & Patrick Hand -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -26,29 +27,32 @@
   <link rel="stylesheet" href="lib/lenis.css">
 
   <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=111">
+  <link rel="stylesheet" href="styles.css?v=120">
   <link rel="stylesheet" href="journey-timeline.css?v=2">
   <link rel="stylesheet" href="grid-scan-bundle.css">
-  <link rel="stylesheet" href="projects-showcase-bundle.css?v=84">
+  <link rel="stylesheet" href="projects-showcase-bundle.css?v=90">
   <link rel="stylesheet" href="scroll-reveal.css?v=20">
   <link rel="stylesheet" href="circular-text-bundle.css?v=2">
-  <link rel="stylesheet" href="target-cursor-bundle.css?v=29">
-  <link rel="stylesheet" href="memory-wall-bundle.css?v=81">
+  <link rel="stylesheet" href="gooey-nav-bundle.css?v=2">
+  <link rel="stylesheet" href="pulse-heart-bundle.css?v=2">
+  <link rel="stylesheet" href="target-cursor-bundle.css?v=30">
+  <link rel="stylesheet" href="memory-wall-bundle.css?v=90">
   <link rel="stylesheet" href="memory-wall.css?v=80">
   <link rel="stylesheet" href="pixel-transition-bundle.css?v=2">
   <link rel="stylesheet" href="letter-glitch-bundle.css?v=2">
   <link rel="stylesheet" href="tech-arsenal.css?v=6">
   <link rel="stylesheet" href="footer-shuffle-bundle.css?v=1">
-  <link rel="stylesheet" href="preloader-bundle.css?v=8">
+  <link rel="stylesheet" href="preloader-bundle.css?v=30">
   <link rel="stylesheet" href="elastic-mesh-bundle.css?v=1">
   <link rel="stylesheet" href="tailwind-bundle.css?v=1">
+  <link rel="stylesheet" href="responsive-mobile.css?v=20">
 </head>
 
 <body>
 
   <!-- TextType Multi-Lingual Greeting Preloader Root -->
   <div id="preloader-root"></div>
-  <script src="preloader-bundle.js?v=8"></script>
+  <script src="preloader-bundle.js?v=12"></script>
 
 
   <!-- Background Decorative Tech & Studio Elements (Matches User Image) -->
@@ -115,6 +119,7 @@
           </span>
           <span class="btn-expanding-dot" aria-hidden="true"></span>
         </a>
+        <div id="nav-pulse-heart-root" class="nav-pulse-heart-wrap"></div>
         <button class="hamburger-btn" id="hamburger-btn" aria-label="Toggle Navigation Menu">
           <i class="fa-solid fa-bars"></i>
         </button>
@@ -733,10 +738,10 @@
 </main>
 
     <!-- Project Detail Modal Popup -->
-    <div class="modal-overlay" id="project-modal" aria-hidden="true">
-      <div class="modal-card">
+    <div class="modal-overlay" id="project-modal" data-lenis-prevent="true" aria-hidden="true">
+      <div class="modal-card" data-lenis-prevent="true">
         <button class="modal-close-btn" id="modal-close-btn" aria-label="Close Modal">&times;</button>
-        <div class="modal-body" id="modal-body-content"></div>
+        <div class="modal-body" id="modal-body-content" data-lenis-prevent="true"></div>
       </div>
     </div>
 
@@ -773,7 +778,7 @@
     </div>
 
     <!-- Floating 3D Fabric Email Envelope (worksruthi-style tactile cotton object) -->
-    <aside class="floating-envelope-widget envelope-hidden" id="floating-envelope-widget">
+    <aside class="floating-envelope-widget envelope-visible" id="floating-envelope-widget">
       <a href="mailto:deysrinjoyee28@gmail.com" class="floating-envelope-link" aria-label="Send me an email" data-cursor-label="Email Me">
         <!-- Layer 0: 3D Rotation & Spin Layer -->
         <div class="envelope-spin-layer">
@@ -1074,28 +1079,30 @@
 
     <!-- 3D Interactive Mechanical Keyboard Bundle (from Txemalon 3D Portfolio) -->
     <script src="grid-scan-bundle.js?v=4"></script>
-    <script src="keyboard-bundle.js?v=10"></script>
-    <script src="projects-showcase-bundle.js?v=85"></script>
+    <script src="keyboard-bundle.js?v=20"></script>
+    <script src="projects-showcase-bundle.js?v=90"></script>
     <script src="dot-field-bundle.js"></script>
     <script src="text-pressure-bundle.js?v=5"></script>
     <script src="tech-text-bundle.js?v=12"></script>
     <script src="circular-text-bundle.js?v=2"></script>
-    <script src="target-cursor-bundle.js?v=29"></script>
-    <script src="memory-wall-bundle.js?v=82"></script>
+    <script src="gooey-nav-bundle.js?v=2"></script>
+    <script src="pulse-heart-bundle.js?v=2"></script>
+    <script src="target-cursor-bundle.js?v=30"></script>
+    <script src="memory-wall-bundle.js?v=90"></script>
 
     <!-- Sound Design System (Procedural Web Audio Engine) -->
     <script src="sound-system.js?v=3"></script>
 
     <!-- Main Interactive Scripts -->
-    <script src="script.js?v=39"></script>
+    <script src="script.js?v=50"></script>
     <script src="letter-glitch-bundle.js?v=2"></script>
     <script src="pixel-transition-bundle.js?v=2"></script>
     <script src="tech-arsenal.js?v=7"></script>
     <script src="footer-shuffle-bundle.js?v=2"></script>
-    <script src="unified-footer-bundle.js?v=8"></script>
+    <script src="unified-footer-bundle.js?v=20"></script>
     <script src="elastic-mesh-bundle.js?v=3"></script>
-    <script src="lets-work-bundle.js?v=2"></script>
-    <script src="hero-3d-model.js?v=9"></script>
-    <script src="scroll-reveal.js?v=23"></script>
+    <script src="lets-work-bundle.js?v=3"></script>
+    <script src="hero-3d-model.js?v=10"></script>
+    <script src="scroll-reveal.js?v=25"></script>
   </body>
 </html>

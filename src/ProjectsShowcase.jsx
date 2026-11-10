@@ -1388,10 +1388,6 @@ export default function ProjectsShowcase() {
             <h2 className="editorial-section-title">
               PROJECTS<span className="editorial-accent-dot">.</span>
             </h2>
-            <div className="editorial-header-line" aria-hidden="true" />
-            <span className="editorial-section-tagline">
-              Featured Innovations & Interactive Systems
-            </span>
           </div>
         </div>
 
