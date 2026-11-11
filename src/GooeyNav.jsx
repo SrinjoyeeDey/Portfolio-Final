@@ -300,6 +300,7 @@ const GooeyNav = ({
     let last = 0;
     let disposed = false;
     let lastClipPath = '';
+    let lastListClipPath = '';
 
     const measure = () => {
       const box = stage.getBoundingClientRect();
@@ -478,9 +479,14 @@ const GooeyNav = ({
       }
 
       let nextClipPath;
+      let nextListClipPath = '';
       if (boxes.length === 1 && !blobs.length) {
         const box = boxes[0];
-        nextClipPath = `path('${pillPath(box.cx - box.hw, box.cy - box.hh, box.hw * 2, box.hh * 2)}')`;
+        const p = pillPath(box.cx - box.hw, box.cy - box.hh, box.hw * 2, box.hh * 2);
+        nextClipPath = `path('${p}')`;
+        if (view.width > 0 && view.height > 0 && p) {
+          nextListClipPath = `path(evenodd, 'M-64,-64H${(view.width + 64).toFixed(1)}V${(view.height + 64).toFixed(1)}H-64Z ${p}')`;
+        }
       } else {
         const segs = [];
         for (let i = 0; i < boxes.length; i++) {
@@ -498,6 +504,10 @@ const GooeyNav = ({
       if (nextClipPath !== lastClipPath) {
         lastClipPath = nextClipPath;
         overlay.style.clipPath = nextClipPath;
+      }
+      if (nextListClipPath !== lastListClipPath) {
+        lastListClipPath = nextListClipPath;
+        list.style.clipPath = nextListClipPath;
       }
       overlay.style.visibility = 'visible';
 
@@ -740,8 +750,12 @@ const GooeyNav = ({
     });
 
     engineRef.current = {
-      go: index => go(index, true),
+      go: index => {
+        measure();
+        go(index, true);
+      },
       refresh: () => {
+        measure();
         render();
         wake();
       }
@@ -761,7 +775,7 @@ const GooeyNav = ({
     };
   }, [items.length]);
 
-  useEffect(() => {
+  useIsomorphicLayoutEffect(() => {
     engineRef.current?.go(current);
   }, [current]);
 
@@ -781,7 +795,11 @@ const GooeyNav = ({
       );
       if (!interactive) {
         return (
-          <li key={index} className="gooey-nav__item">
+          <li
+            key={index}
+            className="gooey-nav__item"
+            data-active={index === current ? '' : undefined}
+          >
             <span className="gooey-nav__link">{content}</span>
           </li>
         );
@@ -820,7 +838,7 @@ const GooeyNav = ({
 
   return (
     <nav
-      className={`gooey-nav ${SIZES[size] ?? SIZES.md}${frame ? ' gooey-nav--framed' : ''} ${className}`.trim()}
+      className={`gooey-nav gooey-nav--ready ${SIZES[size] ?? SIZES.md}${frame ? ' gooey-nav--framed' : ''} ${className}`.trim()}
       style={{ ...THEMES[palette], '--gn-pill': pillColor, '--gn-active-ink': textColor, ...style }}
     >
       {frame && <span className="gooey-nav__rim" />}

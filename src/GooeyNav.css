@@ -93,7 +93,7 @@
   color: var(--gn-muted);
   font: inherit;
   font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
-  font-weight: 600;
+  font-weight: 500;
   font-size: 0.92rem;
   letter-spacing: -0.01em;
   text-decoration: none;
@@ -103,14 +103,42 @@
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Match per-item font-weight identically between base list and active overlay
+   so active siblings never drift horizontally or double-render */
+.gooey-nav__list--active .gooey-nav__item[data-active] .gooey-nav__link,
+.gooey-nav__item[data-active] .gooey-nav__link {
+  font-weight: 600;
+}
+
 .gooey-nav__list--active .gooey-nav__link {
   color: inherit;
-  font-weight: 700;
 }
 
 .gooey-nav__item[data-active] .gooey-nav__link {
   color: var(--gn-active-ink);
-  font-weight: 700;
+}
+
+.gooey-nav--ready .gooey-nav__list:not(.gooey-nav__list--active) .gooey-nav__item[data-active] .gooey-nav__link {
+  color: var(--gn-muted);
+}
+
+@media (min-width: 769px) {
+  .gooey-nav__list {
+    flex-wrap: nowrap;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1120px) {
+  .gooey-nav {
+    --gn-pad: 5px;
+    --gn-gap: 2px;
+    --gn-x: 11px;
+    --gn-y: 7px;
+  }
+
+  .gooey-nav__link {
+    font-size: 0.85rem;
+  }
 }
 
 .gooey-nav__link:focus-visible {
