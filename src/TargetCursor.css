@@ -6,11 +6,13 @@
   contain: layout style;
 }
 
-html.tc-active,
-html.tc-active *,
-html.tc-active *::before,
-html.tc-active *::after {
-  cursor: none !important;
+@media (hover: hover) and (pointer: fine) {
+  html.tc-active,
+  html.tc-active *,
+  html.tc-active *::before,
+  html.tc-active *::after {
+    cursor: none !important;
+  }
 }
 
 .target-cursor__orb {
@@ -20,16 +22,14 @@ html.tc-active *::after {
   box-sizing: border-box;
   pointer-events: none;
   transform-origin: center center;
-  will-change: transform, width, height, border-radius;
+  will-change: transform;
   border: 1.5px solid rgba(34, 36, 40, 0.72);
   background: radial-gradient(
     circle at 32% 30%,
-    rgba(255, 255, 255, 0.45) 0%,
-    rgba(255, 189, 18, 0.16) 62%,
-    rgba(34, 36, 40, 0.06) 100%
+    rgba(255, 255, 255, 0.36) 0%,
+    rgba(255, 189, 18, 0.14) 62%,
+    rgba(34, 36, 40, 0.05) 100%
   );
-  -webkit-backdrop-filter: contrast(1.08) saturate(1.15);
-  backdrop-filter: contrast(1.08) saturate(1.15);
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.72),
     inset 0 1px 0 rgba(255, 255, 255, 0.55),
@@ -45,12 +45,12 @@ html.tc-active *::after {
   border-color: #FFBD12;
   background: linear-gradient(
     135deg,
-    rgba(255, 189, 18, 0.2) 0%,
-    rgba(255, 255, 255, 0.12) 100%
+    rgba(255, 189, 18, 0.18) 0%,
+    rgba(255, 255, 255, 0.1) 100%
   );
   box-shadow:
     0 0 0 1px rgba(34, 36, 40, 0.26),
-    0 10px 26px rgba(255, 189, 18, 0.24);
+    0 10px 24px rgba(255, 189, 18, 0.22);
 }
 
 /* Expanded over dark charcoal buttons (#222428) */
@@ -59,7 +59,7 @@ html.tc-active *::after {
   background: rgba(255, 189, 18, 0.14);
   box-shadow:
     0 0 0 1px rgba(255, 255, 255, 0.32),
-    0 0 24px rgba(255, 189, 18, 0.36);
+    0 0 22px rgba(255, 189, 18, 0.34);
 }
 
 /* Expanded over sunshine-yellow accents (#FFBD12 / #FFE500) */
@@ -68,7 +68,7 @@ html.tc-active *::after {
   background: rgba(34, 36, 40, 0.1);
   box-shadow:
     0 0 0 1.5px rgba(255, 255, 255, 0.65),
-    0 8px 22px rgba(34, 36, 40, 0.2);
+    0 8px 20px rgba(34, 36, 40, 0.18);
 }
 
 .target-cursor__label {
@@ -101,7 +101,9 @@ html.tc-active *::after {
 }
 
 @media (hover: none), (pointer: coarse) {
-  .target-cursor {
+  #target-cursor-mount,
+  .target-cursor,
+  .smooth-cursor {
     display: none !important;
   }
 }

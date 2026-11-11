@@ -537,7 +537,6 @@ export default function PhotographicMemoryWall() {
   const [activePhoto, setActivePhoto] = useState(null);
   const [activeCategory, setActiveCategory] = useState('All');
   const [isExpanded, setIsExpanded] = useState(false);
-  const [hoveredId, setHoveredId] = useState(null);
   const [revealedIds, setRevealedIds] = useState(() => new Set());
   const wallRef = useRef(null);
   const cardElementsRef = useRef(new Map());
@@ -579,42 +578,126 @@ export default function PhotographicMemoryWall() {
     return { columns: cols, STAGGER_OFFSETS: offsets };
   }, [columnCount]);
 
-  // Reveal On Scroll via IntersectionObserver
+  // Reveal On Scroll via IntersectionObserver (eager margin + batched state update)
   useEffect(() => {
     if (typeof IntersectionObserver === 'undefined') {
       setRevealedIds(new Set(ARCHIVAL_PHOTOS.map((p) => p.id)));
       return;
     }
 
+    const revealBatch = (ids) => {
+      if (!ids.length) return;
+      setRevealedIds((prev) => {
+        let changed = false;
+        const next = new Set(prev);
+        for (const id of ids) {
+          if (!next.has(id)) {
+            next.add(id);
+            changed = true;
+          }
+        }
+        return changed ? next : prev;
+      });
+    };
+
     const observer = new IntersectionObserver(
       (entries) => {
+        const newlyVisible = [];
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             const id = Number(entry.target.getAttribute('data-id'));
             if (id) {
-              setRevealedIds((prev) => {
-                if (prev.has(id)) return prev;
-                const next = new Set(prev);
-                next.add(id);
-                return next;
-              });
+              newlyVisible.push(id);
               observer.unobserve(entry.target);
             }
           }
         });
+        revealBatch(newlyVisible);
       },
-      { rootMargin: '0px 0px -4% 0px', threshold: 0.05 }
+      { rootMargin: '260px 0px 260px 0px', threshold: 0.01 }
     );
 
+    const immediateIds = [];
+    const vh = typeof window !== 'undefined' ? window.innerHeight : 900;
+
     cardElementsRef.current.forEach((node) => {
-      if (node) observer.observe(node);
+      if (!node) return;
+      const rect = node.getBoundingClientRect();
+      if (rect.top <= vh + 260 && rect.bottom >= -260) {
+        const id = Number(node.getAttribute('data-id'));
+        if (id) {
+          immediateIds.push(id);
+          return;
+        }
+      }
+      observer.observe(node);
     });
+
+    revealBatch(immediateIds);
 
     if (typeof window !== 'undefined') {
       window.dispatchEvent(new CustomEvent('memory-wall-ready'));
     }
 
     return () => observer.disconnect();
+  }, [columns, isMobile]);
+
+  // Gently promote and pre-decode remaining masonry print images one-by-one in idle slices after load
+  useEffect(() => {
+    if (isMobile || typeof window === 'undefined') return;
+    let cancelled = false;
+    let idleId = 0;
+    let timerId = 0;
+    const queue = Array.from(cardElementsRef.current.values())
+      .map((card) => card?.querySelector('img'))
+      .filter(Boolean);
+    let idx = 0;
+
+    const decodeNext = () => {
+      if (cancelled || idx >= queue.length) return;
+      if (document.hidden) {
+        timerId = window.setTimeout(decodeNext, 300);
+        return;
+      }
+      const img = queue[idx++];
+      if (img) {
+        if (img.loading === 'lazy') img.loading = 'eager';
+        const p = img.decode ? img.decode() : Promise.resolve();
+        p.catch(() => {}).finally(() => {
+          if (cancelled || idx >= queue.length) return;
+          if ('requestIdleCallback' in window) {
+            idleId = window.requestIdleCallback(decodeNext, { timeout: 600 });
+          } else {
+            timerId = window.setTimeout(decodeNext, 32);
+          }
+        });
+      }
+    };
+
+    const startQueue = () => {
+      if (cancelled) return;
+      if ('requestIdleCallback' in window) {
+        idleId = window.requestIdleCallback(decodeNext, { timeout: 800 });
+      } else {
+        timerId = window.setTimeout(decodeNext, 120);
+      }
+    };
+
+    const preloaderEl = document.querySelector('.tt-preloader');
+    const preloaderDone = !preloaderEl || getComputedStyle(preloaderEl).display === 'none';
+    if (preloaderDone) {
+      timerId = window.setTimeout(startQueue, 250);
+    } else {
+      window.addEventListener('preloader:completed', startQueue, { once: true });
+      timerId = window.setTimeout(startQueue, 2200);
+    }
+
+    return () => {
+      cancelled = true;
+      window.removeEventListener('preloader:completed', startQueue);
+      if (timerId) window.clearTimeout(timerId);
+      if (idleId && 'cancelIdleCallback' in window) window.cancelIdleCallback(idleId);
+    };
   }, [columns, isMobile]);
 
   // Lightbox Navigation Functions
@@ -641,7 +724,7 @@ export default function PhotographicMemoryWall() {
     setActivePhoto(null);
   }, []);
 
-  // Lock body scroll and stop Lenis when viewer is open; hide target cursor
+  // Lock body scroll and stop Lenis when viewer is open
   useEffect(() => {
     if (activePhoto) {
       document.body.classList.add('memory-viewer-open');
@@ -770,6 +853,7 @@ export default function PhotographicMemoryWall() {
                 src={photo.src}
                 alt={photo.title}
                 loading={idx < 9 ? 'eager' : 'lazy'}
+                decoding="async"
                 className="pmw-mobile-thumb-img"
               />
             </button>
@@ -806,8 +890,7 @@ export default function PhotographicMemoryWall() {
                 paddingTop: `${STAGGER_OFFSETS[colIndex % STAGGER_OFFSETS.length]}px`
               }}
             >
-              {columnPhotos.map((photo) => {
-                const isHovered = hoveredId === photo.id;
+              {columnPhotos.map((photo, rowIndex) => {
                 const isRevealed = revealedIds.has(photo.id);
                 const colDelay = `${(colIndex * 0.05).toFixed(2)}s`;
                 const style = {
@@ -826,10 +909,8 @@ export default function PhotographicMemoryWall() {
                       if (el) cardElementsRef.current.set(photo.id, el);
                       else cardElementsRef.current.delete(photo.id);
                     }}
-                    className={`photo-print-card format-${photo.format} ${isRevealed ? 'is-revealed' : ''} ${isHovered ? 'is-active' : ''}`}
+                    className={`photo-print-card format-${photo.format} ${isRevealed ? 'is-revealed' : ''}`}
                     style={style}
-                    onMouseEnter={() => setHoveredId(photo.id)}
-                    onMouseLeave={() => setHoveredId(null)}
                     onClick={() => setActivePhoto(photo)}
                     tabIndex={0}
                     role="button"
@@ -846,7 +927,9 @@ export default function PhotographicMemoryWall() {
                         <img
                           src={photo.src}
                           alt={photo.title}
-                          loading="lazy"
+                          loading={rowIndex < 2 ? 'eager' : 'lazy'}
+                          fetchPriority="low"
+                          decoding="async"
                           className="photo-actual-image"
                           draggable={false}
                         />

@@ -23,6 +23,7 @@
     }
 
     gsap.registerPlugin(ScrollTrigger);
+    ScrollTrigger.config({ ignoreMobileResize: true });
 
     const heroLayer = document.getElementById('story-layer-hero');
     const aboutLayer = document.getElementById('story-layer-about');
@@ -64,6 +65,9 @@
 
       // Pinned transition 1: HERO → ABOUT
       // Hero stays pinned at top: 0 while About scrolls UP into the same viewport!
+      const envelopeWidget = document.getElementById('floating-envelope-widget');
+      let envelopeInitVisible = false;
+
       const tlHeroAbout = gsap.timeline({
         scrollTrigger: {
           id: 'hero-about-transition-pin',
@@ -75,22 +79,11 @@
           scrub: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
-          onUpdate: (self) => {
-            // Coordinate floating email envelope widget
-            const envelopeWidget = document.getElementById('floating-envelope-widget');
-            if (envelopeWidget) {
-              const projectsEl = document.getElementById('projects');
-              const projectsRect = projectsEl ? projectsEl.getBoundingClientRect() : null;
-              const isProjects = projectsRect ? projectsRect.top <= window.innerHeight * 0.55 : false;
-
-              envelopeWidget.classList.remove('envelope-hidden');
-              envelopeWidget.classList.add('envelope-visible');
-              if (isProjects) {
-                envelopeWidget.classList.add('envelope-side-left');
-              } else {
-                envelopeWidget.classList.remove('envelope-side-left');
-              }
-            }
+          onUpdate: () => {
+            if (!envelopeWidget || envelopeInitVisible) return;
+            envelopeInitVisible = true;
+            envelopeWidget.classList.remove('envelope-hidden');
+            envelopeWidget.classList.add('envelope-visible');
           }
         }
       });
@@ -494,11 +487,21 @@
     }
   }
 
-  window.addEventListener('memory-wall-ready', () => {
+  const refreshScrollTriggersAndLenis = () => {
+    if (window.lenis && typeof window.lenis.resize === 'function') {
+      window.lenis.resize();
+    }
     if (typeof ScrollTrigger !== 'undefined') {
       ScrollTrigger.refresh();
     }
-  });
+  };
+
+  window.addEventListener('preloader:completed', () => {
+    requestAnimationFrame(refreshScrollTriggersAndLenis);
+  }, { once: true });
+
+  window.addEventListener('memory-wall-ready', refreshScrollTriggersAndLenis);
+  document.fonts?.ready?.then(refreshScrollTriggersAndLenis);
 
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', setupLoaderCoordination);

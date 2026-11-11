@@ -22,5 +22,5 @@
       "*": ["./*"]
     }
   },
-  "include": ["src", "components", "lib", "declarations.d.ts"]
+  "include": ["src", "components", "registry", "lib", "declarations.d.ts"]
 }

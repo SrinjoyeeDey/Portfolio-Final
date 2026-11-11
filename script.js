@@ -16,22 +16,21 @@
 
     try {
       const lenis = new Lenis({
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Ultra-smooth exponential decay
+        lerp: 0.085,
         orientation: 'vertical',
         gestureOrientation: 'vertical',
         smoothWheel: true,
-        wheelMultiplier: 1.05,
-        touchMultiplier: 1.4,
+        wheelMultiplier: 1.0,
+        touchMultiplier: 1.35,
         autoRaf: false,
-        allowNestedScroll: true,
+        allowNestedScroll: false,
         prevent: (node) => {
           if (!node || typeof node.closest !== 'function') return false;
-          return (
+          return Boolean(
             node.hasAttribute?.('data-lenis-prevent') ||
-            Boolean(node.closest('[data-lenis-prevent]')) ||
-            Boolean(node.closest('#project-modal')) ||
-            Boolean(node.closest('.clay-screen-body'))
+              node.closest(
+                '[data-lenis-prevent], #project-modal, .modal-card, .modal-body, .clay-screen-body, #terminal-output, #clay-terminal-output, .terminal-output-area, .muchi-cli-scrollable, .pmw-filter-bar, .pmw-fullscreen-viewer-overlay'
+              )
           );
         }
       });
@@ -40,6 +39,7 @@
 
       // Sync with GSAP ScrollTrigger
       if (typeof ScrollTrigger !== 'undefined') {
+        ScrollTrigger.config({ ignoreMobileResize: true });
         lenis.on('scroll', ScrollTrigger.update);
       }
 
@@ -56,6 +56,45 @@
           requestAnimationFrame(raf);
         }
         requestAnimationFrame(raf);
+      }
+
+      let syncTimer = 0;
+      let isSyncRefreshing = false;
+      let lastObservedHeight = document.documentElement.scrollHeight;
+
+      const syncLenisAndScrollTrigger = () => {
+        if (isSyncRefreshing) return;
+        clearTimeout(syncTimer);
+        syncTimer = setTimeout(() => {
+          isSyncRefreshing = true;
+          try {
+            if (typeof lenis.resize === 'function') {
+              lenis.resize();
+            }
+            if (typeof ScrollTrigger !== 'undefined') {
+              ScrollTrigger.refresh();
+            }
+            lastObservedHeight = document.documentElement.scrollHeight;
+          } finally {
+            isSyncRefreshing = false;
+          }
+        }, 120);
+      };
+
+      window.addEventListener('preloader:completed', syncLenisAndScrollTrigger, { once: true });
+      window.addEventListener('memory-wall-ready', syncLenisAndScrollTrigger);
+      document.fonts?.ready?.then(syncLenisAndScrollTrigger);
+
+      const stageEl = document.getElementById('story-stage-main') || document.body;
+      if (typeof ResizeObserver !== 'undefined' && stageEl) {
+        const ro = new ResizeObserver(() => {
+          if (isSyncRefreshing) return;
+          const nextHeight = document.documentElement.scrollHeight;
+          if (Math.abs(nextHeight - lastObservedHeight) > 2) {
+            syncLenisAndScrollTrigger();
+          }
+        });
+        ro.observe(stageEl);
       }
 
       console.log('✨ Lenis smooth scroll engine initialized');
@@ -774,15 +813,26 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   let navTicking = false;
+  let lastNavbarScrolled = null;
+  let lastPastHeroState = null;
+  let lastActiveSectionId = null;
+  let envelopeShownOnce = false;
+
+  const cachedNavSections = Array.from(document.querySelectorAll('section[id]'));
+  const cachedNavLinks = Array.from(document.querySelectorAll('.nav-menu .nav-link'));
+  const cachedHeroEl = document.getElementById('hero');
+  const cachedProjectsEl = document.getElementById('projects');
+  const cachedEnvelopeWidget = document.getElementById('floating-envelope-widget');
+
   window.addEventListener('scroll', () => {
     if (!navTicking) {
       navTicking = true;
       requestAnimationFrame(() => {
         if (navbar) {
-          if (window.scrollY > 40) {
-            navbar.classList.add('scrolled');
-          } else {
-            navbar.classList.remove('scrolled');
+          const isScrolled = window.scrollY > 40;
+          if (isScrolled !== lastNavbarScrolled) {
+            lastNavbarScrolled = isScrolled;
+            navbar.classList.toggle('scrolled', isScrolled);
           }
         }
         highlightNavOnScroll();
@@ -792,46 +842,55 @@ document.addEventListener('DOMContentLoaded', () => {
   }, { passive: true });
 
   function highlightNavOnScroll() {
-    const sections = document.querySelectorAll('section[id]');
-    const navItems = document.querySelectorAll('.nav-menu .nav-link');
-    const vhPoint = window.innerHeight * 0.45;
-    const heroEl = document.getElementById('hero');
-    const heroBottom = heroEl ? heroEl.getBoundingClientRect().bottom : window.innerHeight;
+    const vh = window.innerHeight;
+    const vhPoint = vh * 0.45;
+    const heroBottom = cachedHeroEl ? cachedHeroEl.getBoundingClientRect().bottom : vh;
 
-    // Toggle global background blur scrim when user scrolls past hero
-    const isPastHero = heroBottom < window.innerHeight * 0.5;
-    document.body.classList.toggle('scrolled-past-hero', isPastHero);
-
-    sections.forEach(current => {
+    let activeSectionId = null;
+    for (let i = 0; i < cachedNavSections.length; i++) {
+      const current = cachedNavSections[i];
       const rect = current.getBoundingClientRect();
-      const sectionId = current.getAttribute('id');
-
       if (rect.top <= vhPoint && rect.bottom >= vhPoint) {
-        document.body.setAttribute('data-active-section', sectionId);
-
-        navItems.forEach(link => {
-          const href = link.getAttribute('href');
-          if (href === `#${sectionId}`) {
-            link.classList.add('active');
-          } else {
-            link.classList.remove('active');
-          }
-        });
+        activeSectionId = current.getAttribute('id');
       }
-    });
+    }
+
+    const shouldFlyLeft =
+      Boolean(
+        cachedEnvelopeWidget &&
+          window._envelopeCurrentSide === 'right' &&
+          typeof window._triggerEnvelopeFlight === 'function' &&
+          cachedProjectsEl &&
+          cachedProjectsEl.getBoundingClientRect().top <= vh * 0.55
+      );
+
+    // Perform DOM mutations strictly after all layout reads
+    const isPastHero = heroBottom < vh * 0.5;
+    if (isPastHero !== lastPastHeroState) {
+      lastPastHeroState = isPastHero;
+      document.body.classList.toggle('scrolled-past-hero', isPastHero);
+    }
+
+    if (activeSectionId && activeSectionId !== lastActiveSectionId) {
+      lastActiveSectionId = activeSectionId;
+      document.body.setAttribute('data-active-section', activeSectionId);
+
+      const expectedHref = `#${activeSectionId}`;
+      for (let i = 0; i < cachedNavLinks.length; i++) {
+        const link = cachedNavLinks[i];
+        link.classList.toggle('active', link.getAttribute('href') === expectedHref);
+      }
+    }
 
     // Update floating email envelope visibility & initiate choreographed flight if needed
-    const envelopeWidget = document.getElementById('floating-envelope-widget');
-    if (envelopeWidget) {
-      const projectsEl = document.getElementById('projects');
-      const projectsRect = projectsEl ? projectsEl.getBoundingClientRect() : null;
-      const isProjectsOrBeyond = projectsRect ? projectsRect.top <= window.innerHeight * 0.55 : false;
+    if (cachedEnvelopeWidget) {
+      if (!envelopeShownOnce) {
+        envelopeShownOnce = true;
+        cachedEnvelopeWidget.classList.remove('envelope-hidden');
+        cachedEnvelopeWidget.classList.add('envelope-visible');
+      }
 
-      envelopeWidget.classList.remove('envelope-hidden');
-      envelopeWidget.classList.add('envelope-visible');
-
-      // When scrolling to Projects section, if envelope is on the right, trigger flight to left
-      if (isProjectsOrBeyond && typeof window._triggerEnvelopeFlight === 'function' && window._envelopeCurrentSide === 'right') {
+      if (shouldFlyLeft) {
         window._triggerEnvelopeFlight('left');
       }
     }
@@ -1501,6 +1560,18 @@ document.addEventListener('DOMContentLoaded', () => {
     let isDragging = false;
     let targetRatio = 0.52; // Default starting position (52%)
     let currentRatio = 0.52;
+    let regRafId = null;
+    let cachedTrackRect = track.getBoundingClientRect();
+    let lastThumbY = -1;
+    let lastRgbStr = '';
+    let lastPercentInt = -1;
+    let lastColorName = '';
+    let hadParticles = false;
+
+    function refreshTrackRect() {
+      cachedTrackRect = track.getBoundingClientRect();
+    }
+    window.addEventListener('resize', refreshTrackRect, { passive: true });
 
     function resizeCanvas() {
       if (particleCanvas) {
@@ -1532,63 +1603,91 @@ document.addEventListener('DOMContentLoaded', () => {
       return { r, g, b, name: nearestName, rgbStr: `rgb(${r}, ${g}, ${b})` };
     }
 
+    function scheduleRegulatorFrame() {
+      if (regRafId === null) {
+        regRafId = requestAnimationFrame(updateRegulatorUI);
+      }
+    }
+
     function updateRegulatorUI() {
-      // Lerp for smooth spring movement
-      currentRatio += (targetRatio - currentRatio) * 0.18;
+      regRafId = null;
+      const diff = targetRatio - currentRatio;
+      if (!isDragging && Math.abs(diff) < 0.0005) {
+        currentRatio = targetRatio;
+      } else {
+        currentRatio += diff * 0.18;
+      }
 
-      const trackRect = track.getBoundingClientRect();
-      const thumbY = currentRatio * trackRect.height;
+      const trackHeight = cachedTrackRect.height || 240;
+      const thumbY = currentRatio * trackHeight;
 
-      thumb.style.top = `${thumbY}px`;
-      tooltip.style.top = `${thumbY}px`;
+      if (Math.abs(thumbY - lastThumbY) > 0.05) {
+        lastThumbY = thumbY;
+        thumb.style.top = `${thumbY}px`;
+        if (tooltip) tooltip.style.top = `${thumbY}px`;
+      }
 
       const colorData = interpolateColor(currentRatio);
       const percentInt = Math.round(currentRatio * 100);
-
-      // Dynamic CSS variables for glowing elements & adaptive theme
       const rgbColor = colorData.rgbStr;
-      const glowColor = `rgba(${colorData.r}, ${colorData.g}, ${colorData.b}, 0.65)`;
-      const gridLineColor = `rgba(${colorData.r}, ${colorData.g}, ${colorData.b}, 0.55)`;
-      const gridGlowColor = `rgba(${colorData.r}, ${colorData.g}, ${colorData.b}, 0.30)`;
-      const gridSoftBg = `rgba(${colorData.r}, ${colorData.g}, ${colorData.b}, 0.12)`;
 
-      document.documentElement.style.setProperty('--color-yellow', rgbColor);
-      document.documentElement.style.setProperty('--color-yellow-hover', `rgba(${colorData.r}, ${colorData.g}, ${colorData.b}, 0.85)`);
-      document.documentElement.style.setProperty('--current-color', rgbColor);
-      document.documentElement.style.setProperty('--current-glow-color', glowColor);
-      document.documentElement.style.setProperty('--current-grid-line', gridLineColor);
-      document.documentElement.style.setProperty('--current-grid-glow', gridGlowColor);
-      document.documentElement.style.setProperty('--current-grid-bg', gridSoftBg);
+      if (rgbColor !== lastRgbStr) {
+        lastRgbStr = rgbColor;
+        const glowColor = `rgba(${colorData.r}, ${colorData.g}, ${colorData.b}, 0.65)`;
+        const gridLineColor = `rgba(${colorData.r}, ${colorData.g}, ${colorData.b}, 0.55)`;
+        const gridGlowColor = `rgba(${colorData.r}, ${colorData.g}, ${colorData.b}, 0.30)`;
+        const gridSoftBg = `rgba(${colorData.r}, ${colorData.g}, ${colorData.b}, 0.12)`;
 
-      // Expose globally and notify components (e.g. 3D Studio Keyboard) of active palette
-      window.__portfolioCurrentColor = rgbColor;
-      if (window.__lastDispatchedPortfolioColor !== rgbColor) {
-        window.__lastDispatchedPortfolioColor = rgbColor;
-        window.dispatchEvent(new CustomEvent('site-color-change', {
-          detail: {
-            color: rgbColor,
-            r: colorData.r,
-            g: colorData.g,
-            b: colorData.b,
-            name: colorData.name
-          }
-        }));
+        const rootStyle = document.documentElement.style;
+        rootStyle.setProperty('--color-yellow', rgbColor);
+        rootStyle.setProperty('--color-yellow-hover', `rgba(${colorData.r}, ${colorData.g}, ${colorData.b}, 0.85)`);
+        rootStyle.setProperty('--current-color', rgbColor);
+        rootStyle.setProperty('--current-glow-color', glowColor);
+        rootStyle.setProperty('--current-grid-line', gridLineColor);
+        rootStyle.setProperty('--current-grid-glow', gridGlowColor);
+        rootStyle.setProperty('--current-grid-bg', gridSoftBg);
+
+        window.__portfolioCurrentColor = rgbColor;
+        if (window.__lastDispatchedPortfolioColor !== rgbColor) {
+          window.__lastDispatchedPortfolioColor = rgbColor;
+          window.dispatchEvent(new CustomEvent('site-color-change', {
+            detail: {
+              color: rgbColor,
+              r: colorData.r,
+              g: colorData.g,
+              b: colorData.b,
+              name: colorData.name
+            }
+          }));
+        }
+
+        // Adaptive background subtle tint shift (only when color actually changes)
+        document.body.style.backgroundImage = `radial-gradient(circle at 50% 30%, rgba(${colorData.r}, ${colorData.g}, ${colorData.b}, 0.12) 0%, transparent 60%), linear-gradient(135deg, #ecece7 0%, #e1e2dd 50%, #eaeaea 100%)`;
       }
 
-      if (tooltipName) tooltipName.textContent = colorData.name;
-      if (tooltipValue) tooltipValue.textContent = `${percentInt}%`;
+      if (tooltipName && colorData.name !== lastColorName) {
+        lastColorName = colorData.name;
+        tooltipName.textContent = colorData.name;
+      }
+      if (tooltipValue && percentInt !== lastPercentInt) {
+        lastPercentInt = percentInt;
+        tooltipValue.textContent = `${percentInt}%`;
+      }
 
-      // Adaptive background subtle tint shift
-      document.body.style.backgroundImage = `radial-gradient(circle at 50% 30%, rgba(${colorData.r}, ${colorData.g}, ${colorData.b}, 0.12) 0%, transparent 60%), linear-gradient(135deg, #ecece7 0%, #e1e2dd 50%, #eaeaea 100%)`;
+      // Render Particle Canvas only when active
+      if (ctx && (isDragging || particles.length > 0 || hadParticles)) {
+        renderParticles(thumbY);
+      }
 
-      // Render Particle Canvas
-      renderParticles(thumbY);
-
-      requestAnimationFrame(updateRegulatorUI);
+      // Continue RAF only while dragging, spring settling, or particles remain alive
+      if (isDragging || Math.abs(targetRatio - currentRatio) >= 0.0005 || particles.length > 0) {
+        scheduleRegulatorFrame();
+      }
     }
 
     function spawnParticles(thumbY, count = 2) {
       if (!ctx) return;
+      const color = lastRgbStr || '#F59E0B';
       for (let i = 0; i < count; i++) {
         particles.push({
           x: 60 + (Math.random() - 0.5) * 20,
@@ -1597,7 +1696,7 @@ document.addEventListener('DOMContentLoaded', () => {
           vy: -Math.random() * 2 - 0.5,
           size: Math.random() * 5 + 2.5,
           opacity: 1,
-          color: document.documentElement.style.getPropertyValue('--current-color') || '#F59E0B'
+          color
         });
       }
     }
@@ -1629,30 +1728,34 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.fill();
         ctx.restore();
       }
+      hadParticles = particles.length > 0;
     }
 
     function handleMove(e) {
       if (!isDragging) return;
-      const rect = track.getBoundingClientRect();
-      const trackHeight = rect.height || 240;
+      const trackHeight = cachedTrackRect.height || 240;
       const clientY = (e.touches && e.touches.length > 0) ? e.touches[0].clientY : e.clientY;
-      const y = clientY - rect.top;
+      const y = clientY - cachedTrackRect.top;
       targetRatio = Math.max(0, Math.min(1, y / trackHeight));
+      scheduleRegulatorFrame();
     }
 
     function startDrag(e) {
       isDragging = true;
       thumb.classList.add('dragging');
+      refreshTrackRect();
       if (e.type === 'mousedown') {
         e.preventDefault();
       }
       handleMove(e);
+      scheduleRegulatorFrame();
     }
 
     function stopDrag() {
       if (isDragging) {
         isDragging = false;
         thumb.classList.remove('dragging');
+        scheduleRegulatorFrame();
       }
     }
 
@@ -1664,36 +1767,50 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    window.addEventListener('mousemove', handleMove);
+    window.addEventListener('mousemove', handleMove, { passive: true });
     window.addEventListener('mouseup', stopDrag);
 
     window.addEventListener('touchmove', handleMove, { passive: true });
     window.addEventListener('touchend', stopDrag);
     window.addEventListener('touchcancel', stopDrag);
 
-    // Start UI Loop
-    requestAnimationFrame(updateRegulatorUI);
+    // Apply initial settled palette & thumb state once without an infinite idle loop
+    updateRegulatorUI();
   }
 
   /* --------------------------------------------------------------------------
      7. MOUSE PARALLAX EFFECT FOR HERO DOODLES
      -------------------------------------------------------------------------- */
-  const doodles = document.querySelectorAll('.doodle-item, .camera-doodle-wrapper');
+  const doodles = Array.from(document.querySelectorAll('.doodle-item, .camera-doodle-wrapper')).map(el => ({
+    el,
+    speed: parseFloat(el.getAttribute('data-speed')) || 1
+  }));
   const heroSection = document.getElementById('hero');
 
-  if (heroSection && window.innerWidth > 768) {
-    heroSection.addEventListener('mousemove', (e) => {
-      const { clientX, clientY } = e;
-      const centerX = window.innerWidth / 2;
-      const centerY = window.innerHeight / 2;
+  if (heroSection && doodles.length > 0 && window.innerWidth > 768) {
+    let doodleRaf = null;
+    let lastMouseX = 0;
+    let lastMouseY = 0;
 
-      doodles.forEach(doodle => {
-        const speed = parseFloat(doodle.getAttribute('data-speed')) || 1;
-        const x = (clientX - centerX) * speed * 0.02;
-        const y = (clientY - centerY) * speed * 0.02;
-        doodle.style.transform = `translate(${x}px, ${y}px)`;
+    heroSection.addEventListener('mousemove', (e) => {
+      if (document.body.classList.contains('scrolled-past-hero')) return;
+      lastMouseX = e.clientX;
+      lastMouseY = e.clientY;
+      if (doodleRaf !== null) return;
+      doodleRaf = requestAnimationFrame(() => {
+        doodleRaf = null;
+        const centerX = window.innerWidth / 2;
+        const centerY = window.innerHeight / 2;
+        const dx = lastMouseX - centerX;
+        const dy = lastMouseY - centerY;
+        for (let i = 0; i < doodles.length; i++) {
+          const item = doodles[i];
+          const x = dx * item.speed * 0.02;
+          const y = dy * item.speed * 0.02;
+          item.el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
+        }
       });
-    });
+    }, { passive: true });
   }
 
   /* --------------------------------------------------------------------------
@@ -1735,7 +1852,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!animFrameId) {
         animFrameId = requestAnimationFrame(updateDockScale);
       }
-    });
+    }, { passive: true });
 
     dockPanel.addEventListener('mouseleave', () => {
       mouseX = Infinity;
@@ -1783,53 +1900,54 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Auto-hide Mac Dock when in CTA (Studio) or Contact Section so content & legend links are 100% unobstructed
     const macDockOuter = document.getElementById('mac-dock');
-    const ctaSectionEl = document.getElementById('studio') || document.getElementById('story-layer-skills');
-    const contactSectionEl = document.getElementById('story-layer-contact') || document.getElementById('unified-footer-root') || document.getElementById('contact');
+    const ctaSectionEl = document.getElementById('studio');
+    const contactSectionEl = document.getElementById('story-layer-contact') || document.getElementById('contact');
     
     if (macDockOuter) {
       let isCtaInView = false;
       let isContactInView = false;
+      let lastHideDock = null;
 
-      const checkDockScroll = () => {
-        const studio = document.getElementById('studio');
-        const contact = document.getElementById('contact') || document.getElementById('story-layer-contact');
-        const vh = window.innerHeight;
-        let hide = false;
-        if (studio) {
-          const rect = studio.getBoundingClientRect();
-          if (rect.top < vh && rect.bottom > 80) hide = true;
-        }
-        if (contact) {
-          const rect = contact.getBoundingClientRect();
-          if (rect.top < vh && rect.bottom > 80) hide = true;
-        }
-        if (hide || isCtaInView || isContactInView) {
-          macDockOuter.classList.add('dock-hide-contact');
-        } else {
-          macDockOuter.classList.remove('dock-hide-contact');
+      const syncDockVisibility = () => {
+        const hide = isCtaInView || isContactInView;
+        if (hide !== lastHideDock) {
+          lastHideDock = hide;
+          macDockOuter.classList.toggle('dock-hide-contact', hide);
         }
       };
 
-      window.addEventListener('scroll', checkDockScroll, { passive: true });
-      if (typeof lenis !== 'undefined') {
-        lenis.on('scroll', checkDockScroll);
+      const checkDockInitial = () => {
+        const vh = window.innerHeight;
+        if (ctaSectionEl) {
+          const rect = ctaSectionEl.getBoundingClientRect();
+          isCtaInView = rect.top < vh && rect.bottom > 80;
+        }
+        if (contactSectionEl) {
+          const rect = contactSectionEl.getBoundingClientRect();
+          isContactInView = rect.top < vh && rect.bottom > 80;
+        }
+        syncDockVisibility();
+      };
+
+      if ('IntersectionObserver' in window) {
+        const dockObserver = new IntersectionObserver((entries) => {
+          for (let i = 0; i < entries.length; i++) {
+            const entry = entries[i];
+            if (entry.target === ctaSectionEl) {
+              isCtaInView = entry.isIntersecting;
+            } else if (entry.target === contactSectionEl) {
+              isContactInView = entry.isIntersecting;
+            }
+          }
+          syncDockVisibility();
+        }, { rootMargin: '0px 0px -80px 0px', threshold: 0 });
+
+        if (ctaSectionEl) dockObserver.observe(ctaSectionEl);
+        if (contactSectionEl) dockObserver.observe(contactSectionEl);
       }
-      checkDockScroll();
 
-      const dockObserver = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.target === ctaSectionEl) {
-            isCtaInView = entry.isIntersecting;
-          }
-          if (entry.target === contactSectionEl) {
-            isContactInView = entry.isIntersecting;
-          }
-        });
-        checkDockScroll();
-      }, { threshold: 0.08 });
-
-      if (ctaSectionEl) dockObserver.observe(ctaSectionEl);
-      if (contactSectionEl) dockObserver.observe(contactSectionEl);
+      window.addEventListener('resize', checkDockInitial, { passive: true });
+      checkDockInitial();
     }
   }
 
@@ -1889,15 +2007,35 @@ document.addEventListener('DOMContentLoaded', () => {
     const tiltLayer = envelopeWidget.querySelector('.envelope-tilt-layer');
     const spinLayer = envelopeWidget.querySelector('.envelope-spin-layer');
 
-    // Pointer hover parallax
+    // Pointer hover parallax (cached rect + RAF write)
     if (link && tiltLayer) {
+      let envRect = null;
+      let envRaf = null;
+      let envX = 0;
+      let envY = 0;
+
+      link.addEventListener('pointerenter', () => {
+        envRect = link.getBoundingClientRect();
+      }, { passive: true });
+
       link.addEventListener('pointermove', (e) => {
-        const rect = link.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width - 0.5;
-        const y = (e.clientY - rect.top) / rect.height - 0.5;
-        tiltLayer.style.transform = `translateY(-24px) rotateX(${18 - y * 20}deg) rotateY(${-22 + x * 26}deg) rotateZ(${-6 + x * 8}deg) scale(1.08)`;
-      });
+        if (!envRect) envRect = link.getBoundingClientRect();
+        envX = (e.clientX - envRect.left) / (envRect.width || 94) - 0.5;
+        envY = (e.clientY - envRect.top) / (envRect.height || 76) - 0.5;
+        if (envRaf === null) {
+          envRaf = requestAnimationFrame(() => {
+            envRaf = null;
+            tiltLayer.style.transform = `translateY(-24px) rotateX(${(18 - envY * 20).toFixed(1)}deg) rotateY(${(-22 + envX * 26).toFixed(1)}deg) rotateZ(${(-6 + envX * 8).toFixed(1)}deg) scale(1.08)`;
+          });
+        }
+      }, { passive: true });
+
       link.addEventListener('pointerleave', () => {
+        if (envRaf !== null) {
+          cancelAnimationFrame(envRaf);
+          envRaf = null;
+        }
+        envRect = null;
         tiltLayer.style.transform = '';
       });
     }
@@ -2155,7 +2293,14 @@ document.addEventListener('DOMContentLoaded', () => {
               <button type="button" class="term-chip" data-cmd="roast">roast 🔥</button>
             </div>
           `;
-          document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' });
+          const projectsTargetEl = document.getElementById('projects');
+          if (projectsTargetEl) {
+            if (window.lenis) {
+              window.lenis.scrollTo(projectsTargetEl, { offset: 0, duration: 1.0 });
+            } else {
+              projectsTargetEl.scrollIntoView({ behavior: 'smooth' });
+            }
+          }
           if (window.PortoSound) {
             window.PortoSound.playNav();
           }
@@ -2499,15 +2644,16 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Live IST Chronometer for Live Terminal & Studio Headers
-  function updateTerminalClock() {
-    const clockEl = document.getElementById('live-terminal-clock') || document.getElementById('liveKolkataTime');
-    if (!clockEl) return;
-    const now = new Date();
+  const cachedClockEl = document.getElementById('live-terminal-clock') || document.getElementById('liveKolkataTime');
+  if (cachedClockEl) {
     const istOptions = { timeZone: 'Asia/Kolkata', hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false };
-    clockEl.textContent = now.toLocaleTimeString('en-US', istOptions) + ' IST';
+    function updateTerminalClock() {
+      if (document.hidden) return;
+      cachedClockEl.textContent = new Date().toLocaleTimeString('en-US', istOptions) + ' IST';
+    }
+    setInterval(updateTerminalClock, 1000);
+    updateTerminalClock();
   }
-  setInterval(updateTerminalClock, 1000);
-  updateTerminalClock();
 
   /* --------------------------------------------------------------------------
      14. SCRAPBOOK PERSONA EMPTY IMAGE SLOTS (Upload & Drag-and-Drop)
@@ -2682,7 +2828,11 @@ document.addEventListener('DOMContentLoaded', () => {
     btnExpand.addEventListener('click', () => {
       const targetSec = document.getElementById('editorial-overview');
       if (targetSec) {
-        targetSec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        if (window.lenis) {
+          window.lenis.scrollTo(targetSec, { offset: -80, duration: 0.9 });
+        } else {
+          targetSec.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
         targetSec.style.transition = 'transform 0.3s ease';
         targetSec.style.transform = 'scale(1.01)';
         setTimeout(() => {
@@ -2718,7 +2868,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (andScroll) {
       setTimeout(() => {
-        scrapbookSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (window.lenis) {
+          window.lenis.scrollTo(scrapbookSection, { offset: 0, duration: 1.0 });
+        } else {
+          scrapbookSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
       }, 50);
     }
   }
@@ -2739,7 +2893,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (scrollBack && motionLauncher) {
-      motionLauncher.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (window.lenis) {
+        window.lenis.scrollTo(motionLauncher, { offset: -120, duration: 0.9 });
+      } else {
+        motionLauncher.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
     }
   }
 
@@ -3044,9 +3202,7 @@ document.addEventListener('DOMContentLoaded', () => {
         progress = Math.min(100, Math.max(0, (currentScroll / totalDist) * 100));
       }
 
-      spineFill.style.height = progress + '%';
-
-      // Active Milestone Detection
+      // Active Milestone Detection (read all row rects before any DOM write)
       let closestRow = null;
       let closestDist = Infinity;
       const viewportCenter = windowHeight * 0.45;
@@ -3061,6 +3217,8 @@ document.addEventListener('DOMContentLoaded', () => {
           closestRow = row;
         }
       });
+
+      spineFill.style.height = progress + '%';
 
       milestoneRows.forEach(row => {
         if (row === closestRow) {
@@ -3227,42 +3385,70 @@ document.addEventListener('DOMContentLoaded', () => {
     let targetX2 = 0, targetY2 = 0;
     let currentX1 = 0, currentY1 = 0;
     let currentX2 = 0, currentY2 = 0;
-    let isHovering = false;
+    let parallaxRafId = null;
+    let panelRect = null;
+
+    function scheduleParallax() {
+      if (parallaxRafId === null) {
+        parallaxRafId = requestAnimationFrame(renderParallax);
+      }
+    }
+
+    panel.addEventListener('pointerenter', () => {
+      panelRect = panel.getBoundingClientRect();
+    }, { passive: true });
+
+    window.addEventListener('resize', () => {
+      panelRect = null;
+    }, { passive: true });
 
     panel.addEventListener('pointermove', (e) => {
-      const rect = panel.getBoundingClientRect();
-      const normX = (e.clientX - rect.left) / rect.width - 0.5;
-      const normY = (e.clientY - rect.top) / rect.height - 0.5;
+      if (!panelRect) panelRect = panel.getBoundingClientRect();
+      const w = panelRect.width || 1;
+      const h = panelRect.height || 1;
+      const normX = (e.clientX - panelRect.left) / w - 0.5;
+      const normY = (e.clientY - panelRect.top) / h - 0.5;
 
       targetX1 = normX * 26;
       targetY1 = normY * 18;
       targetX2 = -normX * 22;
       targetY2 = normY * 16;
 
-      if (!isHovering) {
-        isHovering = true;
-        renderParallax();
-      }
-    });
+      scheduleParallax();
+    }, { passive: true });
 
     panel.addEventListener('pointerleave', () => {
+      panelRect = null;
       targetX1 = 0; targetY1 = 0;
       targetX2 = 0; targetY2 = 0;
+      scheduleParallax();
     });
 
     function renderParallax() {
+      parallaxRafId = null;
       currentX1 += (targetX1 - currentX1) * 0.08;
       currentY1 += (targetY1 - currentY1) * 0.08;
       currentX2 += (targetX2 - currentX2) * 0.08;
       currentY2 += (targetY2 - currentY2) * 0.08;
 
-      purpleTag.style.transform = `translate(${currentX1.toFixed(2)}px, ${currentY1.toFixed(2)}px)`;
-      orangeTag.style.transform = `translate(${currentX2.toFixed(2)}px, ${currentY2.toFixed(2)}px)`;
+      const settled =
+        Math.abs(targetX1 - currentX1) <= 0.05 &&
+        Math.abs(targetY1 - currentY1) <= 0.05 &&
+        Math.abs(targetX2 - currentX2) <= 0.05 &&
+        Math.abs(targetY2 - currentY2) <= 0.05;
 
-      if (Math.abs(targetX1 - currentX1) > 0.05 || Math.abs(targetY1 - currentY1) > 0.05) {
-        requestAnimationFrame(renderParallax);
-      } else {
-        isHovering = false;
+      if (settled) {
+        currentX1 = targetX1;
+        currentY1 = targetY1;
+        currentX2 = targetX2;
+        currentY2 = targetY2;
+      }
+
+      purpleTag.style.transform = `translate3d(${currentX1.toFixed(2)}px, ${currentY1.toFixed(2)}px, 0)`;
+      orangeTag.style.transform = `translate3d(${currentX2.toFixed(2)}px, ${currentY2.toFixed(2)}px, 0)`;
+
+      if (!settled) {
+        scheduleParallax();
       }
     }
   }

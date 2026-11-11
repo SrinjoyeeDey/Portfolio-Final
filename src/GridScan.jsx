@@ -646,7 +646,7 @@ export const GridScan = ({
       const s = settingsRef.current;
       view.width = Math.max(1, container.clientWidth);
       view.height = Math.max(1, container.clientHeight);
-      view.ratio = Math.min(s.dpr || window.devicePixelRatio || 1, 2);
+      view.ratio = Math.min(s.dpr || window.devicePixelRatio || 1, 1.2);
       canvas.width = Math.max(1, Math.round(view.width * view.ratio));
       canvas.height = Math.max(1, Math.round(view.height * view.ratio));
       sizeTarget(gl, scene, canvas.width, canvas.height);
@@ -808,14 +808,30 @@ export const GridScan = ({
       if (!raf && visible && !document.hidden) raf = requestAnimationFrame(frame);
     }
 
+    let cachedRect = null;
+    let rectDirty = true;
+    const markRectDirty = () => {
+      rectDirty = true;
+    };
+
     const locate = event => {
-      const rect = container.getBoundingClientRect();
-      const u = (event.clientX - rect.left) / Math.max(1, rect.width);
-      const v = 1 - (event.clientY - rect.top) / Math.max(1, rect.height);
+      if (rectDirty || !cachedRect) {
+        cachedRect = container.getBoundingClientRect();
+        rectDirty = false;
+      }
+      const u = (event.clientX - cachedRect.left) / Math.max(1, cachedRect.width);
+      const v = 1 - (event.clientY - cachedRect.top) / Math.max(1, cachedRect.height);
       return { u, v, inside: u >= 0 && u <= 1 && v >= 0 && v <= 1 };
     };
 
     const onPointerMove = event => {
+      if (!visible || document.hidden) {
+        if (pointer.inside) {
+          pointer.inside = false;
+          if (!headRef.current?.active) look.held = false;
+        }
+        return;
+      }
       const s = settingsRef.current;
       const { u, v, inside } = locate(event);
       pointer.x = u;
@@ -878,10 +894,15 @@ export const GridScan = ({
       wake();
     };
 
-    const resizeObserver = new ResizeObserver(resize);
+    const handleResize = () => {
+      rectDirty = true;
+      resize();
+    };
+    const resizeObserver = new ResizeObserver(handleResize);
     resizeObserver.observe(container);
     const intersection = new IntersectionObserver(entries => {
       visible = entries.some(entry => entry.isIntersecting);
+      rectDirty = true;
       if (visible) {
         last = 0;
         wake();
@@ -890,6 +911,7 @@ export const GridScan = ({
     intersection.observe(container);
     window.addEventListener('pointermove', onPointerMove, { passive: true });
     window.addEventListener('pointerdown', onPointerDown, { passive: true });
+    window.addEventListener('scroll', markRectDirty, { passive: true });
     window.addEventListener('deviceorientation', onOrientation);
     window.addEventListener('click', onClick);
     document.documentElement.addEventListener('pointerleave', onPointerLeave);
@@ -920,6 +942,7 @@ export const GridScan = ({
       intersection.disconnect();
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerdown', onPointerDown);
+      window.removeEventListener('scroll', markRectDirty);
       window.removeEventListener('deviceorientation', onOrientation);
       window.removeEventListener('click', onClick);
       document.documentElement.removeEventListener('pointerleave', onPointerLeave);

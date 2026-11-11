@@ -1270,15 +1270,28 @@ const ElasticMesh = ({
       if (!raf && alive && visible && !document.hidden) raf = requestAnimationFrame(frame);
     };
 
+    let cachedRect = null;
+    let rectDirty = true;
+    const markRectDirty = () => {
+      rectDirty = true;
+    };
+
     const locatePointer = event => {
-      const rect = container.getBoundingClientRect();
-      state.pointer.x = event.clientX - rect.left;
-      state.pointer.y = event.clientY - rect.top;
+      if (rectDirty || !cachedRect) {
+        cachedRect = container.getBoundingClientRect();
+        rectDirty = false;
+      }
+      state.pointer.x = event.clientX - cachedRect.left;
+      state.pointer.y = event.clientY - cachedRect.top;
       state.pointer.inside =
-        state.pointer.x >= 0 && state.pointer.y >= 0 && state.pointer.x <= rect.width && state.pointer.y <= rect.height;
+        state.pointer.x >= 0 && state.pointer.y >= 0 && state.pointer.x <= cachedRect.width && state.pointer.y <= cachedRect.height;
     };
 
     const onPointerMove = event => {
+      if (!visible || document.hidden) {
+        state.pointer.inside = false;
+        return;
+      }
       locatePointer(event);
       wake();
     };
@@ -1318,10 +1331,15 @@ const ElasticMesh = ({
       wake();
     };
 
-    const resizeObserver = new ResizeObserver(resize);
+    const handleResize = () => {
+      rectDirty = true;
+      resize();
+    };
+    const resizeObserver = new ResizeObserver(handleResize);
     resizeObserver.observe(container);
     const intersection = new IntersectionObserver(entries => {
       visible = entries.some(entry => entry.isIntersecting);
+      rectDirty = true;
       if (visible) {
         last = 0;
         wake();
@@ -1332,6 +1350,7 @@ const ElasticMesh = ({
     window.addEventListener('pointermove', onPointerMove, { passive: true });
     window.addEventListener('pointerup', onPointerUp);
     window.addEventListener('pointercancel', onPointerUp);
+    window.addEventListener('scroll', markRectDirty, { passive: true });
     container.addEventListener('pointerleave', onPointerLeave);
     document.addEventListener('visibilitychange', onVisibility);
     resize();
@@ -1359,6 +1378,7 @@ const ElasticMesh = ({
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('pointercancel', onPointerUp);
+      window.removeEventListener('scroll', markRectDirty);
       container.removeEventListener('pointerleave', onPointerLeave);
       document.removeEventListener('visibilitychange', onVisibility);
       gl.deleteBuffer(restBuffer);

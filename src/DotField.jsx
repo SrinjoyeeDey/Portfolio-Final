@@ -580,21 +580,34 @@ const DotField = ({
       wake();
     };
 
+    let cachedRect = null;
+    let rectDirty = true;
+    const markRectDirty = () => {
+      rectDirty = true;
+    };
+
     const locate = event => {
-      const rect = container.getBoundingClientRect();
+      if (rectDirty || !cachedRect) {
+        cachedRect = container.getBoundingClientRect();
+        rectDirty = false;
+      }
       const pad = 120;
       return {
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top,
+        x: event.clientX - cachedRect.left,
+        y: event.clientY - cachedRect.top,
         inside:
-          event.clientX >= rect.left - pad &&
-          event.clientX <= rect.right + pad &&
-          event.clientY >= rect.top - pad &&
-          event.clientY <= rect.bottom + pad
+          event.clientX >= cachedRect.left - pad &&
+          event.clientX <= cachedRect.right + pad &&
+          event.clientY >= cachedRect.top - pad &&
+          event.clientY <= cachedRect.bottom + pad
       };
     };
 
     const onPointerMove = event => {
+      if (!visible || !pageVisible) {
+        pointer.inside = false;
+        return;
+      }
       const spot = locate(event);
       pointer.x = spot.x;
       pointer.y = spot.y;
@@ -620,10 +633,10 @@ const DotField = ({
       wake();
     };
     window.addEventListener('pointermove', onPointerMove, { passive: true });
-    window.addEventListener('mousemove', onPointerMove, { passive: true });
     window.addEventListener('pointerdown', onPointerDown, { passive: true });
     window.addEventListener('pointerup', onPointerUp, { passive: true });
     window.addEventListener('pointercancel', onPointerUp, { passive: true });
+    window.addEventListener('scroll', markRectDirty, { passive: true });
     document.documentElement.addEventListener('pointerleave', onLeave);
 
     const onLost = event => {
@@ -637,6 +650,7 @@ const DotField = ({
     canvas.addEventListener('webglcontextrestored', onRestored);
 
     const resizeObserver = new ResizeObserver(() => {
+      rectDirty = true;
       resize();
       wake();
     });
@@ -644,6 +658,7 @@ const DotField = ({
 
     const intersection = new IntersectionObserver(entries => {
       visible = entries.some(entry => entry.isIntersecting);
+      rectDirty = true;
       wake();
     });
     intersection.observe(container);
@@ -666,6 +681,7 @@ const DotField = ({
       window.removeEventListener('pointerdown', onPointerDown);
       window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('pointercancel', onPointerUp);
+      window.removeEventListener('scroll', markRectDirty);
       document.documentElement.removeEventListener('pointerleave', onLeave);
       document.removeEventListener('visibilitychange', onVisibility);
       canvas.removeEventListener('webglcontextlost', onLost);

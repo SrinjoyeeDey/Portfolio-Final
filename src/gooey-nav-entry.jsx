@@ -19,6 +19,15 @@ function NavContainer() {
   // Synchronize active item with page scroll (Scroll-Spy)
   useEffect(() => {
     let ticking = false;
+    const sectionEls = navItems.map((item) =>
+      document.getElementById(item.href.replace('#', ''))
+    );
+    const contactEl = document.getElementById('contact');
+    let cachedDocHeight = document.documentElement.scrollHeight;
+
+    const refreshDocHeight = () => {
+      cachedDocHeight = document.documentElement.scrollHeight;
+    };
 
     const onScroll = () => {
       if (isClickingRef.current) return;
@@ -32,19 +41,17 @@ function NavContainer() {
           if (window.scrollY < 120) {
             currentIdx = 0;
           } else {
-            navItems.forEach((item, idx) => {
-              const targetId = item.href.replace('#', '');
-              const el = document.getElementById(targetId);
+            for (let idx = 0; idx < sectionEls.length; idx++) {
+              const el = sectionEls[idx];
               if (el) {
                 const rect = el.getBoundingClientRect();
                 if (rect.top <= vhPoint && rect.bottom >= vhPoint) {
                   currentIdx = idx;
                 }
               }
-            });
+            }
 
-            const contactEl = document.getElementById('contact');
-            const atBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 40;
+            const atBottom = window.scrollY + window.innerHeight >= cachedDocHeight - 40;
             if (atBottom) {
               currentIdx = navItems.length - 1;
             } else if (contactEl) {
@@ -64,11 +71,15 @@ function NavContainer() {
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', refreshDocHeight, { passive: true });
+    window.addEventListener('memory-wall-ready', refreshDocHeight);
     // Run once on mount
     onScroll();
 
     return () => {
       window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', refreshDocHeight);
+      window.removeEventListener('memory-wall-ready', refreshDocHeight);
       if (clickTimeoutRef.current) clearTimeout(clickTimeoutRef.current);
     };
   }, []);

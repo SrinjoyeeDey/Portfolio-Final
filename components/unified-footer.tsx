@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import DoodleCrewFooter, { type CrewMember } from "./ui/doodle-crew-footer";
 import { MagneticButton } from "./ui/motion-footer";
 
@@ -10,35 +11,43 @@ const UNIFIED_STYLES = `
 }
 
 @keyframes footer-heartbeat {
-  0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px rgba(255, 77, 77, 0.4)); }
-  15%, 45% { transform: scale(1.2); filter: drop-shadow(0 0 8px rgba(255, 77, 77, 0.7)); }
+  0%, 100% { transform: scale(1); }
+  15%, 45% { transform: scale(1.2); }
   30% { transform: scale(1); }
 }
 
 .animate-footer-breathe {
+  will-change: transform, opacity;
   animation: footer-breathe 7s ease-in-out infinite alternate;
 }
 
 .animate-footer-heartbeat {
+  display: inline-block;
+  will-change: transform;
+  filter: drop-shadow(0 0 6px rgba(255, 77, 77, 0.55));
   animation: footer-heartbeat 2s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+}
+
+.editorial-footer-stage[data-visible="0"] .animate-footer-breathe,
+.editorial-footer-stage[data-visible="0"] .animate-footer-heartbeat {
+  animation-play-state: paused !important;
 }
 
 .unified-footer-aurora {
   background: radial-gradient(
-    circle at 50% 50%, 
-    rgba(255, 189, 18, 0.18) 0%, 
-    rgba(34, 36, 40, 0.04) 45%, 
-    transparent 70%
+    ellipse 68% 64% at 50% 50%,
+    rgba(255, 189, 18, 0.16) 0%,
+    rgba(255, 189, 18, 0.08) 32%,
+    rgba(34, 36, 40, 0.03) 56%,
+    transparent 74%
   );
 }
 
 .unified-glass-pill {
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.92);
   box-shadow: 2px 2px 0px rgba(34, 36, 40, 0.12);
   border: 1.5px solid rgba(34, 36, 40, 0.2);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.28s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.28s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .unified-glass-pill:hover {
@@ -87,12 +96,34 @@ const srinjoyeeCrew: CrewMember[] = [
 ];
 
 export default function UnifiedFooter() {
+  const footerRef = React.useRef<HTMLElement>(null);
+
+  React.useEffect(() => {
+    const el = footerRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        el.dataset.visible = entry?.isIntersecting ? "1" : "0";
+      },
+      { rootMargin: "160px 0px", threshold: 0 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    const lenis = (window as any).lenis;
+    if (lenis && typeof lenis.scrollTo === "function") {
+      lenis.scrollTo(0, { duration: 1.0 });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
   };
 
   return (
     <footer
+      ref={footerRef}
+      data-visible="0"
       className="editorial-footer-stage relative w-full overflow-hidden"
       id="contact"
       aria-label="Editorial Studio &amp; Doodle Crew Footer"
@@ -239,13 +270,13 @@ export default function UnifiedFooter() {
 
       {/* 2. LARGE "SRINJOYEE DEY" TYPOGRAPHY WITH EXISTING ILLUSTRATIONS */}
       <div className="relative w-full mt-2">
-        {/* Soft Breathing Ambient Aurora Glow Behind Doodle Characters */}
+        {/* Soft Breathing Ambient Aurora Glow Behind Doodle Characters (feathered radial gradient, zero GPU blur filter) */}
         <div
-          className="unified-footer-aurora absolute left-1/2 top-1/2 h-[340px] w-[80vw] max-w-[1200px] -translate-x-1/2 -translate-y-1/2 animate-footer-breathe rounded-[50%] blur-[80px] pointer-events-none z-0"
+          className="unified-footer-aurora absolute left-1/2 top-1/2 h-[340px] w-[80vw] max-w-[1200px] -translate-x-1/2 -translate-y-1/2 animate-footer-breathe rounded-[50%] pointer-events-none z-0"
           aria-hidden="true"
         />
 
-        <div className="relative z-10 w-full">
+        <div className="relative z-10 w-full" style={{ transform: "translateZ(0)" }}>
           <DoodleCrewFooter
             wordmark="SRINJOYEE DEY"
             crew={srinjoyeeCrew}

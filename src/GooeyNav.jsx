@@ -164,7 +164,13 @@ const bezier = (a, b, c, d, t) => {
 const pillPath = (x, y, w, h) => {
   if (w <= 0.5 || h <= 0.5) return '';
   const r = Math.min(w, h) / 2;
-  return `M${x + r},${y}H${x + w - r}A${r},${r} 0 0 1 ${x + w},${y + r}V${y + h - r}A${r},${r} 0 0 1 ${x + w - r},${y + h}H${x + r}A${r},${r} 0 0 1 ${x},${y + h - r}V${y + r}A${r},${r} 0 0 1 ${x + r},${y}Z`;
+  return `M${(x + r).toFixed(1)},${y.toFixed(1)}H${(x + w - r).toFixed(1)}A${r.toFixed(1)},${r.toFixed(1)} 0 0 1 ${(x + w).toFixed(1)},${(y + r).toFixed(1)}V${(y + h - r).toFixed(1)}A${r.toFixed(1)},${r.toFixed(1)} 0 0 1 ${(x + w - r).toFixed(1)},${(y + h).toFixed(1)}H${(x + r).toFixed(1)}A${r.toFixed(1)},${r.toFixed(1)} 0 0 1 ${x.toFixed(1)},${(y + h - r).toFixed(1)}V${(y + r).toFixed(1)}A${r.toFixed(1)},${r.toFixed(1)} 0 0 1 ${(x + r).toFixed(1)},${y.toFixed(1)}Z`;
+};
+
+const circlePath = (x, y, r) => {
+  if (r <= 0.4) return '';
+  const d = r * 2;
+  return `M${(x - r).toFixed(1)},${y.toFixed(1)}a${r.toFixed(1)},${r.toFixed(1)} 0 1,0 ${d.toFixed(1)},0a${r.toFixed(1)},${r.toFixed(1)} 0 1,0 ${(-d).toFixed(1)},0Z`;
 };
 
 const compile = (gl, type, source) => {
@@ -293,10 +299,11 @@ const GooeyNav = ({
     let raf = 0;
     let last = 0;
     let disposed = false;
+    let lastClipPath = '';
 
     const measure = () => {
       const box = stage.getBoundingClientRect();
-      const ratio = Math.min(window.devicePixelRatio || 1, 2);
+      const ratio = Math.min(window.devicePixelRatio || 1, 1.5);
       view.width = box.width;
       view.height = box.height;
       const outerWidth = box.width + MARGIN * 2;
@@ -470,12 +477,27 @@ const GooeyNav = ({
         });
       }
 
-      const settledPill = boxes.length === 1 && !blobs.length;
-      if (settledPill) {
+      let nextClipPath;
+      if (boxes.length === 1 && !blobs.length) {
         const box = boxes[0];
-        overlay.style.clipPath = `path('${pillPath(box.cx - box.hw, box.cy - box.hh, box.hw * 2, box.hh * 2)}')`;
+        nextClipPath = `path('${pillPath(box.cx - box.hw, box.cy - box.hh, box.hw * 2, box.hh * 2)}')`;
       } else {
-        overlay.style.clipPath = `path('${trace(boxes, blobs, smooth) || 'M0,0Z'}')`;
+        const segs = [];
+        for (let i = 0; i < boxes.length; i++) {
+          const box = boxes[i];
+          const p = pillPath(box.cx - box.hw, box.cy - box.hh, box.hw * 2, box.hh * 2);
+          if (p) segs.push(p);
+        }
+        for (let i = 0; i < blobs.length; i++) {
+          const blob = blobs[i];
+          const c = circlePath(blob.x, blob.y, blob.r);
+          if (c) segs.push(c);
+        }
+        nextClipPath = `path('${segs.join('') || 'M0,0Z'}')`;
+      }
+      if (nextClipPath !== lastClipPath) {
+        lastClipPath = nextClipPath;
+        overlay.style.clipPath = nextClipPath;
       }
       overlay.style.visibility = 'visible';
 

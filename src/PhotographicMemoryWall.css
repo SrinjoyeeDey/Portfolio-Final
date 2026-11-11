@@ -195,7 +195,7 @@
 .wall-canvas-stage {
   position: relative;
   width: 100%;
-  padding: 0 4px;
+  padding: 10px 12px 18px;
   box-sizing: border-box;
   overflow: visible;
 }
@@ -232,42 +232,60 @@
   cursor: pointer;
   -webkit-tap-highlight-color: transparent;
   transform-origin: 50% 50%;
+  contain: layout style;
 
-  /* Initial unrevealed state: shifted down by 36px, slightly scaled down, blurred */
+  /* Base individual transform properties keep stacking context & containment stable */
   opacity: 0;
-  transform: translate(var(--overlap-x, 0px), calc(var(--overlap-y, 0px) + 36px)) scale(0.96) rotate(var(--base-rot, 0deg));
-  filter: blur(4px);
+  translate: var(--overlap-x, 0px) calc(var(--overlap-y, 0px) + 28px);
+  rotate: var(--base-rot, 0deg);
+  scale: 0.96;
   z-index: var(--z-index, 1);
 
-  transition: 
-    opacity 0.65s cubic-bezier(0.2, 0.9, 0.2, 1),
-    transform 0.65s cubic-bezier(0.2, 0.9, 0.2, 1),
-    filter 0.65s cubic-bezier(0.2, 0.9, 0.2, 1),
-    box-shadow 0.38s cubic-bezier(0.25, 1, 0.5, 1),
-    z-index 0.38s ease;
-  transition-delay: var(--reveal-delay, 0s);
-  will-change: opacity, transform, filter;
+  transition:
+    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0s),
+    translate 0.26s cubic-bezier(0.22, 1, 0.36, 1),
+    rotate 0.26s cubic-bezier(0.22, 1, 0.36, 1),
+    scale 0.24s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Revealed state as user scrolls down into view */
+/* Revealed state as user scrolls into view */
 .photo-print-card.is-revealed {
   opacity: 1;
-  transform: translate(var(--overlap-x, 0px), var(--overlap-y, 0px)) scale(1) rotate(var(--base-rot, 0deg));
-  filter: blur(0px);
+  translate: var(--overlap-x, 0px) var(--overlap-y, 0px);
+  rotate: var(--base-rot, 0deg);
+  scale: 1;
 }
 
-/* Hover Elevation & Focus (only when revealed) */
-.photo-print-card.is-revealed:hover,
-.photo-print-card.is-revealed.is-active {
-  transform: scale(1.06) rotate(0deg) translate(0, -4px) !important;
-  z-index: 50 !important;
-  transition-delay: 0s !important;
+/* Immediate hover elevation & focus on any photo print (ungated by scroll state) */
+.photo-print-card:is(:hover, :focus-visible, .is-active) {
+  opacity: 1;
+  translate: var(--overlap-x, 0px) calc(var(--overlap-y, 0px) - 8px);
+  rotate: 0deg;
+  scale: 1.07;
+  z-index: 60;
+  transition-delay: 0s;
+  will-change: transform;
 }
 
 .photo-print-card:focus-visible {
-  outline: 2px solid #F5DF77;
+  outline: 2px solid #222428;
   outline-offset: 4px;
-  z-index: 55;
+  z-index: 65;
+}
+
+@supports not (translate: 0px) {
+  .photo-print-card {
+    transform: translate(var(--overlap-x, 0px), calc(var(--overlap-y, 0px) + 28px)) scale(0.96) rotate(var(--base-rot, 0deg));
+    transition:
+      opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1) var(--reveal-delay, 0s),
+      transform 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .photo-print-card.is-revealed {
+    transform: translate(var(--overlap-x, 0px), var(--overlap-y, 0px)) scale(1) rotate(var(--base-rot, 0deg));
+  }
+  .photo-print-card:is(:hover, :focus-visible, .is-active) {
+    transform: translate(var(--overlap-x, 0px), calc(var(--overlap-y, 0px) - 8px)) scale(1.07) rotate(0deg);
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -302,8 +320,7 @@
   pointer-events: none;
 }
 
-.photo-print-card:hover .photo-paper-surface,
-.photo-print-card.is-active .photo-paper-surface {
+.photo-print-card:is(:hover, :focus-visible, .is-active) .photo-paper-surface {
   background-color: #FFFFFF;
   box-shadow: 
     0 20px 45px -4px rgba(0, 0, 0, 0.65),
@@ -372,16 +389,12 @@
   pointer-events: none;
   /* Warm film monochrome aesthetic matching reference photo */
   filter: grayscale(1) sepia(0.12) brightness(0.95) contrast(1.08);
-  transition: 
-    filter 0.42s cubic-bezier(0.2, 0.8, 0.2, 1),
-    transform 0.42s cubic-bezier(0.2, 0.8, 0.2, 1);
-  will-change: filter, transform;
+  transition: filter 0.24s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Smooth reveal to original vibrant color on hover */
-.photo-print-card:hover .photo-actual-image,
-.photo-print-card.is-active .photo-actual-image {
-  filter: grayscale(0) sepia(0) brightness(1) contrast(1);
+/* Smooth immediate reveal to original vibrant color on hover or focus */
+.photo-print-card:is(:hover, :focus-visible, .is-active) .photo-actual-image {
+  filter: grayscale(0) sepia(0) brightness(1.02) contrast(1.02) saturate(1.08);
 }
 
 /* Photographic Paper Grain Layer */
@@ -392,6 +405,11 @@
   box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.22);
   mix-blend-mode: multiply;
   opacity: 0.38;
+  transition: opacity 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.photo-print-card:is(:hover, :focus-visible, .is-active) .photo-paper-grain {
+  opacity: 0;
 }
 
 /* --------------------------------------------------------------------------
@@ -705,12 +723,22 @@
   object-fit: cover;
   display: block;
   filter: grayscale(1) sepia(0.06) brightness(0.97) contrast(1.03);
-  transition: transform 0.25s ease, filter 0.25s ease;
+  transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), filter 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pmw-mobile-thumb-card:is(:hover, :focus-visible) .pmw-mobile-thumb-img {
+  transform: scale(1.04);
+  filter: grayscale(0) sepia(0) brightness(1.02) contrast(1.02) saturate(1.08);
 }
 
 .pmw-mobile-thumb-card:active .pmw-mobile-thumb-img {
   transform: scale(0.96);
   filter: grayscale(0) brightness(1);
+}
+
+.pmw-mobile-thumb-card:focus-visible {
+  outline: 2px solid #222428;
+  outline-offset: 2px;
 }
 
 /* View More Button */
@@ -972,14 +1000,6 @@
   line-height: 1.4;
 }
 
-/* Hide target cursor when viewer is open so corners don't obstruct view */
-body.memory-viewer-open .target-cursor {
-  display: none !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
-}
-
 body.memory-viewer-open {
   overflow: hidden !important;
 }
@@ -988,8 +1008,27 @@ body.memory-viewer-open {
    ACCESSIBILITY: REDUCED MOTION PREFERENCES
    -------------------------------------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
-  .photo-print-card,
+  .photo-print-card {
+    opacity: 1;
+    translate: var(--overlap-x, 0px) var(--overlap-y, 0px);
+    scale: 1;
+    filter: none;
+    transition: none !important;
+  }
+  .photo-print-card:is(:hover, :focus-visible, .is-active) {
+    translate: var(--overlap-x, 0px) var(--overlap-y, 0px);
+    rotate: var(--base-rot, 0deg);
+    scale: 1;
+  }
   .photo-actual-image,
+  .photo-paper-grain,
+  .pmw-mobile-thumb-img {
+    transition: filter 0.12s ease-out, opacity 0.12s ease-out !important;
+  }
+  .pmw-mobile-thumb-card:is(:hover, :focus-visible) .pmw-mobile-thumb-img,
+  .pmw-mobile-thumb-card:active .pmw-mobile-thumb-img {
+    transform: none !important;
+  }
   .wall-lightbox-card,
   .pmw-viewer-content-card,
   .pmw-fullscreen-viewer-overlay {

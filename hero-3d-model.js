@@ -57,7 +57,7 @@
       antialias: true,
       powerPreference: 'high-performance'
     });
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.35));
     const initW = container.clientWidth || (window.innerWidth < 768 ? 290 : 720);
     const initH = container.clientHeight || (window.innerWidth < 768 ? 290 : 820);
     renderer.setSize(initW, initH);
@@ -83,8 +83,8 @@
     const keyLight = new THREE.DirectionalLight(0xfff5e4, 0.95);
     keyLight.position.set(3, 4, 4);
     keyLight.castShadow = true;
-    keyLight.shadow.mapSize.width = 1024;
-    keyLight.shadow.mapSize.height = 1024;
+    keyLight.shadow.mapSize.width = 512;
+    keyLight.shadow.mapSize.height = 512;
     scene.add(keyLight);
 
     // Fill Light (Soft warm butter bounce)
@@ -277,28 +277,66 @@
     let currentRotationX = 0;
     let isDragging = false;
     let prevMouseX = 0;
+    let isHeroVisible = true;
+    let containerRect = container.getBoundingClientRect();
+    let containerRectDirty = false;
+    const roomGrid = document.getElementById('hero-room-perspective-grid');
+
+    function updateContainerRect() {
+      containerRect = container.getBoundingClientRect();
+      containerRectDirty = false;
+    }
+
+    // Track visibility so off-screen WebGL rendering & mousemove work pause cleanly
+    if ('IntersectionObserver' in window) {
+      const heroStageTarget = document.getElementById('hero') || container;
+      const heroVisObserver = new IntersectionObserver(
+        (entries) => {
+          const entry = entries[0];
+          if (!entry) return;
+          isHeroVisible = entry.isIntersecting;
+          if (isHeroVisible) {
+            containerRectDirty = true;
+            wakeAnimate();
+          }
+        },
+        { rootMargin: '250px 0px', threshold: 0 }
+      );
+      heroVisObserver.observe(heroStageTarget);
+    }
 
     window.addEventListener('mousemove', (e) => {
-      if (isDragging) return;
-      const rect = container.getBoundingClientRect();
-      const mouseX = e.clientX - (rect.left + rect.width / 2);
-      const mouseY = e.clientY - (rect.top + rect.height / 2);
+      if (isDragging) {
+        const deltaX = e.clientX - prevMouseX;
+        const nextY = targetRotationY + deltaX * 0.008;
+        // Strictly lock to front left/right arc only
+        targetRotationY = Math.max(MIN_ROTATION_Y, Math.min(MAX_ROTATION_Y, nextY));
+        prevMouseX = e.clientX;
+        return;
+      }
+
+      if (!isHeroVisible || document.hidden) return;
+      if (containerRectDirty) updateContainerRect();
+
+      const vw = window.innerWidth || 1;
+      const vh = window.innerHeight || 1;
+      const mouseX = e.clientX - (containerRect.left + containerRect.width / 2);
+      const mouseY = e.clientY - (containerRect.top + containerRect.height / 2);
 
       // Gentle interactive head/torso turn towards cursor within clamped range
-      const calculatedY = (mouseX / window.innerWidth) * 0.45;
-      const calculatedX = (mouseY / window.innerHeight) * 0.25;
+      const calculatedY = (mouseX / vw) * 0.45;
+      const calculatedX = (mouseY / vh) * 0.25;
 
       targetRotationY = Math.max(MIN_ROTATION_Y, Math.min(MAX_ROTATION_Y, calculatedY));
       targetRotationX = Math.max(MIN_ROTATION_X, Math.min(MAX_ROTATION_X, calculatedX));
 
       // Subtle 3D room optical parallax illusion
-      const roomGrid = document.getElementById('hero-room-perspective-grid');
       if (roomGrid) {
-        const roomShiftX = (mouseX / window.innerWidth) * -7;
-        const roomShiftY = (mouseY / window.innerHeight) * -5;
+        const roomShiftX = (mouseX / vw) * -7;
+        const roomShiftY = (mouseY / vh) * -5;
         roomGrid.style.transform = `translate3d(${roomShiftX}px, ${roomShiftY}px, 0)`;
       }
-    });
+    }, { passive: true });
 
     // Touch / Drag to rotate manually with strict clamp (cannot turn around completely)
     container.addEventListener('mousedown', (e) => {
@@ -307,15 +345,6 @@
     });
     window.addEventListener('mouseup', () => {
       isDragging = false;
-    });
-    window.addEventListener('mousemove', (e) => {
-      if (isDragging) {
-        const deltaX = e.clientX - prevMouseX;
-        const nextY = targetRotationY + deltaX * 0.008;
-        // Strictly lock to front left/right arc only
-        targetRotationY = Math.max(MIN_ROTATION_Y, Math.min(MAX_ROTATION_Y, nextY));
-        prevMouseX = e.clientX;
-      }
     });
 
     // Mobile Touch Drag Support
@@ -346,20 +375,33 @@
       camera.aspect = width / height;
       camera.updateProjectionMatrix();
       renderer.setSize(width, height);
+      updateContainerRect();
     }
     window.addEventListener('resize', handleResize);
     window.addEventListener('load', handleResize);
+    window.addEventListener('scroll', () => {
+      if (isHeroVisible) containerRectDirty = true;
+    }, { passive: true });
     window.addEventListener('orientationchange', () => setTimeout(handleResize, 150));
     document.addEventListener('visibilitychange', () => {
-      if (!document.hidden) handleResize();
+      if (!document.hidden) {
+        handleResize();
+        wakeAnimate();
+      }
     });
 
-    // Animation Loop
-    let clock = new THREE.Clock();
-    function animate() {
-      requestAnimationFrame(animate);
+    // Animation Loop (sleeps automatically when hero is off-screen or tab is hidden)
+    let rafId = null;
+    let lastFrameTime = performance.now();
+    let elapsedTime = 0;
 
-      const elapsedTime = clock.getElapsedTime();
+    function animate(now) {
+      rafId = null;
+      if (!isHeroVisible || document.hidden) return;
+
+      const dt = Math.min(0.05, Math.max(0, (now - lastFrameTime) / 1000));
+      lastFrameTime = now;
+      elapsedTime += dt;
 
       // Smooth lerp to mouse look
       currentRotationY += (targetRotationY - currentRotationY) * 0.06;
@@ -374,9 +416,17 @@
       characterGroup.position.y = -1.22 + idleFloat;
 
       renderer.render(scene, camera);
+      rafId = requestAnimationFrame(animate);
     }
 
-    animate();
+    function wakeAnimate() {
+      if (!rafId && isHeroVisible && !document.hidden) {
+        lastFrameTime = performance.now();
+        rafId = requestAnimationFrame(animate);
+      }
+    }
+
+    wakeAnimate();
   }
 
   if (document.readyState === 'loading') {

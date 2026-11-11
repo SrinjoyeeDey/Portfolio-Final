@@ -612,9 +612,10 @@ export function DoodleCrewFooter({
   const rootRef = React.useRef(null as HTMLElement | null)
   const svgRef = React.useRef(null as SVGSVGElement | null)
   const worldRef = React.useRef(null as HTMLDivElement | null)
-  const crewLayerRefs = React.useRef([] as (SVGGElement | null)[])
-  const eyeRefs = React.useRef([] as { blink: SVGGElement | null; pupil: SVGGElement | null }[][])
+  const crewLayerRefs = React.useRef([] as ({ el: SVGGElement; prefix: "b" | "f" } | null)[])
+  const eyeRefs = React.useRef([] as { blink: SVGGElement | null; pupil: SVGGElement | null; _pt?: string; _bt?: string }[][])
   const doodleRefs = React.useRef([] as (HTMLDivElement | null)[])
+  const doodleOpCache = React.useRef([] as number[])
 
   const [metrics, setMetrics] = React.useState(() => estimate(word))
   const [play, setPlay] = React.useState(true)
@@ -718,6 +719,12 @@ export function DoodleCrewFooter({
     py: NaN,
     inside: false,
     visible: false,
+    svgRect: null as DOMRect | null,
+    worldRect: null as DOMRect | null,
+    rectScrollX: 0,
+    rectScrollY: 0,
+    rectDirty: true,
+    wake: null as null | (() => void),
     gaze: [] as { x: number; y: number; tx: number; ty: number; next: number; blinkAt: number; blink: number }[],
     seed: 1,
     start: 0,
@@ -730,6 +737,10 @@ export function DoodleCrewFooter({
     const s = sim.current
     const size = () => {
       const r = el.getBoundingClientRect()
+      s.worldRect = r
+      s.rectScrollX = window.scrollX
+      s.rectScrollY = window.scrollY
+      s.rectDirty = true
       const ow = s.w
       const oh = s.h
       s.w = r.width
@@ -777,7 +788,10 @@ export function DoodleCrewFooter({
         op = Math.max(0, 1 - age / 0.3)
       }
       el.style.transform = "translate3d(" + f.x.toFixed(1) + "px," + f.y.toFixed(1) + "px,0) rotate(" + f.rot.toFixed(1) + "deg) scale(" + sc.toFixed(3) + ")"
-      el.style.opacity = String(op)
+      if (doodleOpCache.current[i] !== op) {
+        doodleOpCache.current[i] = op
+        el.style.opacity = String(op)
+      }
     }
   }
 
@@ -791,24 +805,31 @@ export function DoodleCrewFooter({
     return () => mq.removeEventListener?.("change", on)
   }, [])
 
-  // ---- the storyboard starts when the footer comes into view; the loop sleeps off-screen ----
+  // ---- the storyboard starts when the footer comes into view; the loop truly sleeps off-screen ----
   React.useEffect(() => {
     const root = rootRef.current
     if (!root) return
     const s = sim.current
     if (typeof IntersectionObserver === "undefined") {
       s.visible = true
+      root.dataset.visible = "1"
       setPlay(true)
+      s.wake?.()
       return
     }
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
           s.visible = e.isIntersecting
-          if (e.isIntersecting && e.intersectionRatio > 0.12) setPlay(true)
+          root.dataset.visible = s.visible ? "1" : "0"
+          if (e.isIntersecting) {
+            s.rectDirty = true
+            s.wake?.()
+            if (e.intersectionRatio > 0.12) setPlay(true)
+          }
         }
       },
-      { threshold: [0, 0.12, 0.3] },
+      { rootMargin: "160px 0px", threshold: [0, 0.12, 0.3] },
     )
     io.observe(root)
     return () => io.disconnect()
@@ -818,7 +839,7 @@ export function DoodleCrewFooter({
     if (play && !sim.current.start) sim.current.start = performance.now()
   }, [play])
 
-  // ---- the living loop: eyes, blinks, doodles, line boil ----
+  // ---- the living loop: eyes, blinks, doodles, line boil (zero post-write layout thrash, sleeps off-screen) ----
   React.useEffect(() => {
     if (typeof window === "undefined") return
     const s = sim.current
@@ -830,27 +851,40 @@ export function DoodleCrewFooter({
       s.seed = (s.seed * 16807) % 2147483647
       return s.seed / 2147483647
     }
-    const svgPoint = (svg: SVGSVGElement, cx: number, cy: number) => {
-      const m = svg.getScreenCTM()
-      if (!m) return null
-      const inv = m.inverse()
-      return { x: inv.a * cx + inv.c * cy + inv.e, y: inv.b * cx + inv.d * cy + inv.f }
+    const svgPoint = (rect: DOMRect | null, cx: number, cy: number, dx: number, dy: number) => {
+      if (!rect || rect.width <= 0 || rect.height <= 0) return null
+      const sc = Math.min(rect.width / view.w, rect.height / view.h)
+      if (sc <= 0) return null
+      const ox = rect.left + dx + (rect.width - view.w * sc) * 0.5
+      const oy = rect.top + dy + (rect.height - view.h * sc) * 0.5
+      return { x: view.x + (cx - ox) / sc, y: view.y + (cy - oy) / sc }
     }
     const frame = (now: number) => {
-      raf = requestAnimationFrame(frame)
+      raf = 0
       if (!s.visible || document.hidden) {
-        last = now
         return
       }
-      const dt = Math.min(0.05, (now - last) / 1000)
+      const dt = Math.min(0.05, Math.max(0, (now - last) / 1000))
       last = now
       const t = now / 1000
       const svg = svgRef.current
       const world = worldRef.current
+      const started = world && s.floaters.length ? (play && s.start ? now - s.start > tl.doodles || reduced : false) : false
+
+      // Batch DOM rect reads only when uninitialized/resized (never on mid-scroll frames); adjust via scroll delta
+      if (s.rectDirty && s.inside && interactive) {
+        if (svg) s.svgRect = svg.getBoundingClientRect()
+        if (world) s.worldRect = world.getBoundingClientRect()
+        s.rectScrollX = window.scrollX
+        s.rectScrollY = window.scrollY
+        s.rectDirty = false
+      }
+      const scrollDx = s.rectScrollX - window.scrollX
+      const scrollDy = s.rectScrollY - window.scrollY
 
       // eyes
       let target = null as null | { x: number; y: number }
-      if (svg && s.inside && interactive) target = svgPoint(svg, s.px, s.py)
+      if (svg && s.inside && interactive) target = svgPoint(s.svgRect, s.px, s.py, scrollDx, scrollDy)
       for (let c = 0; c < placed.length; c++) {
         const p = placed[c]
         const g = (s.gaze[c] ||= { x: 0, y: 0, tx: 0, ty: 0, next: 0, blinkAt: t + 1 + hash(c * 3.7) * 3, blink: 0 })
@@ -888,38 +922,89 @@ export function DoodleCrewFooter({
           const nx = prev.x + (o.x * p.flip - prev.x) * ease
           const ny = prev.y + (o.y - prev.y) * ease
           ;(g as unknown as { [k: string]: { x: number; y: number } })[key] = { x: nx, y: ny }
-          if (ref.pupil) ref.pupil.setAttribute("transform", "translate(" + nx.toFixed(2) + " " + ny.toFixed(2) + ")")
-          if (ref.blink) ref.blink.setAttribute("transform", "translate(0 " + (eye.y * (1 - lid)).toFixed(2) + ") scale(1 " + lid.toFixed(3) + ")")
+          if (ref.pupil) {
+            const pt = "translate(" + nx.toFixed(2) + " " + ny.toFixed(2) + ")"
+            if (ref._pt !== pt) {
+              ref._pt = pt
+              ref.pupil.setAttribute("transform", pt)
+            }
+          }
+          if (ref.blink) {
+            const bt = "translate(0 " + (eye.y * (1 - lid)).toFixed(2) + ") scale(1 " + lid.toFixed(3) + ")"
+            if (ref._bt !== bt) {
+              ref._bt = bt
+              ref.blink.setAttribute("transform", bt)
+            }
+          }
         }
       }
 
       // doodles
-      if (world && s.floaters.length) {
-        const started = play && s.start ? now - s.start > tl.doodles || reduced : false
-        if (started) {
-          const r = world.getBoundingClientRect()
-          const px = s.inside && interactive ? s.px - r.left : NaN
-          const py = s.inside && interactive ? s.py - r.top : NaN
-          if (!reduced) for (const f of s.floaters) stepFloater(f, dt, t, s.w, s.h, px, py, 110, rand)
-          paintDoodles()
+      if (started) {
+        const r = s.worldRect
+        const px = r && s.inside && interactive ? s.px - (r.left + scrollDx) : NaN
+        const py = r && s.inside && interactive ? s.py - (r.top + scrollDy) : NaN
+        if (!reduced) for (const f of s.floaters) stepFloater(f, dt, t, s.w, s.h, px, py, 110, rand)
+        paintDoodles()
+      }
+
+      // line boil: three hand-drawn takes swapped at ~6 fps per character group (static sketched ground avoids full-width filter redraws)
+      if (!reduced && now - boilAt > 165) {
+        boilAt = now
+        boil = (boil + 1) % 3
+        const layers = crewLayerRefs.current
+        for (let i = 0; i < layers.length; i++) {
+          const item = layers[i]
+          if (item) {
+            item.el.setAttribute("filter", "url(#" + uid + "-" + item.prefix + "-boil" + boil + ")")
+          }
         }
       }
 
-      // line boil: three hand-drawn takes swapped at 8 fps
-      if (!reduced && now - boilAt > 125) {
-        boilAt = now
-        boil = (boil + 1) % 3
-        const f = "url(#" + uid + "-boil" + boil + ")"
-        for (const el of crewLayerRefs.current) if (el) el.setAttribute("filter", f)
+      if (s.visible && !document.hidden) {
+        raf = requestAnimationFrame(frame)
       }
     }
-    raf = requestAnimationFrame(frame)
-    return () => cancelAnimationFrame(raf)
+
+    const schedule = () => {
+      if (!raf && s.visible && !document.hidden) {
+        last = performance.now()
+        raf = requestAnimationFrame(frame)
+      }
+    }
+    s.wake = schedule
+
+    const onVisibility = () => {
+      if (!document.hidden && s.visible) {
+        s.rectDirty = true
+        schedule()
+      } else if (raf) {
+        cancelAnimationFrame(raf)
+        raf = 0
+      }
+    }
+    const onScrollEnd = () => {
+      s.rectDirty = true
+    }
+
+    document.addEventListener("visibilitychange", onVisibility)
+    window.addEventListener("scrollend", onScrollEnd, { passive: true })
+    schedule()
+
+    return () => {
+      s.wake = null
+      if (raf) cancelAnimationFrame(raf)
+      document.removeEventListener("visibilitychange", onVisibility)
+      window.removeEventListener("scrollend", onScrollEnd)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [placed, play, reduced, interactive, uid, tl.doodles])
+  }, [placed, play, reduced, interactive, uid, tl.doodles, view.x, view.y, view.w, view.h])
 
   React.useEffect(() => () => window.clearTimeout(talkTimer.current), [])
 
+  const onPointerEnter = () => {
+    sim.current.rectDirty = true
+  }
   const onPointerMove = (e: React.PointerEvent) => {
     const s = sim.current
     s.px = e.clientX
@@ -953,64 +1038,81 @@ export function DoodleCrewFooter({
 
   const toTop = () => {
     if (typeof window === "undefined") return
-    window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" })
+    const lenis = (window as unknown as { lenis?: { scrollTo: (t: number, o?: { duration?: number }) => void } }).lenis
+    if (!reduced && lenis && typeof lenis.scrollTo === "function") {
+      lenis.scrollTo(0, { duration: 1.0 })
+    } else {
+      window.scrollTo({ top: 0, behavior: reduced ? "auto" : "smooth" })
+    }
   }
 
-  const hatch = "url(#" + uid + "-hatch)"
-  const vars = {
-    "--dcf-bg": colors.background,
-    "--dcf-ink": colors.ink,
-    "--dcf-accent": colors.accent,
-    "--dcf-serif": serifFamily,
-    "--dcf-display": fontFamily,
-    minHeight: height && height !== "auto" ? height : "auto",
-  } as React.CSSProperties
-
   const pct = (v: number, base: number, span: number) => (((v - base) / span) * 100).toFixed(3) + "%"
+  const viewBoxStr = view.x.toFixed(1) + " " + view.y.toFixed(1) + " " + view.w.toFixed(1) + " " + view.h.toFixed(1)
 
-  const renderCrew = (p: (typeof placed)[number], part: "body" | "front") => (
-    <g key={p.i + part} transform={"translate(" + p.x.toFixed(2) + " " + p.y.toFixed(2) + ") scale(" + (p.scale * p.flip).toFixed(4) + " " + p.scale.toFixed(4) + ")"}>
-      <g className={"dcf-arrive dcf-arrive-" + p.seat} style={{ "--d": tl.member(p.i) + "ms" } as React.CSSProperties}>
-        <g className={"dcf-hopper" + (hopping === p.i ? " is-hop" : "")}>
-          <g className={"dcf-art" + (p.art.idle ? " " + p.art.idle : "")} style={{ "--i": p.i } as React.CSSProperties}>
-            {part === "body" ? (
-              <>
-                {p.art.body(hatch)}
-                {p.art.eyes.map((eye, e) => (
-                  <g
-                    key={e}
-                    ref={(el) => {
-                      ;(eyeRefs.current[p.i] ||= [])[e] = { ...(eyeRefs.current[p.i]?.[e] || { pupil: null }), blink: el }
-                    }}
-                  >
-                    {eye.r > 0 && <circle cx={eye.x} cy={eye.y} r={eye.r} />}
-                    <g
-                      ref={(el) => {
-                        ;(eyeRefs.current[p.i] ||= [])[e] = { ...(eyeRefs.current[p.i]?.[e] || { blink: null }), pupil: el }
-                      }}
-                    >
-                      <circle className="k" cx={eye.x} cy={eye.y} r={eye.pupil} />
-                      <circle className="dcf-glint" cx={eye.x + eye.pupil * 0.35} cy={eye.y - eye.pupil * 0.4} r={eye.pupil * 0.32} />
-                    </g>
-                  </g>
-                ))}
-              </>
-            ) : (
-              p.art.front?.()
-            )}
+  const renderCrew = (p: (typeof placed)[number], part: "body" | "front", prefix: "b" | "f", boilIdx: number) => {
+    const hatch = "url(#" + uid + "-" + prefix + "-hatch)"
+    return (
+      <g
+        key={p.i + part}
+        ref={(el) => {
+          crewLayerRefs.current[boilIdx] = el ? { el, prefix } : null
+        }}
+      >
+        <g transform={"translate(" + p.x.toFixed(2) + " " + p.y.toFixed(2) + ") scale(" + (p.scale * p.flip).toFixed(4) + " " + p.scale.toFixed(4) + ")"}>
+          <g className={"dcf-arrive dcf-arrive-" + p.seat} style={{ "--d": tl.member(p.i) + "ms" } as React.CSSProperties}>
+            <g className={"dcf-hopper" + (hopping === p.i ? " is-hop" : "")}>
+              <g className={"dcf-art" + (p.art.idle ? " " + p.art.idle : "")} style={{ "--i": p.i } as React.CSSProperties}>
+                {part === "body" ? (
+                  <>
+                    {p.art.body(hatch)}
+                    {p.art.eyes.map((eye, e) => (
+                      <g
+                        key={e}
+                        ref={(el) => {
+                          ;(eyeRefs.current[p.i] ||= [])[e] = { ...(eyeRefs.current[p.i]?.[e] || { pupil: null }), blink: el }
+                        }}
+                      >
+                        {eye.r > 0 && <circle cx={eye.x} cy={eye.y} r={eye.r} />}
+                        <g
+                          ref={(el) => {
+                            ;(eyeRefs.current[p.i] ||= [])[e] = { ...(eyeRefs.current[p.i]?.[e] || { blink: null }), pupil: el }
+                          }}
+                        >
+                          <circle className="k" cx={eye.x} cy={eye.y} r={eye.pupil} />
+                          <circle className="dcf-glint" cx={eye.x + eye.pupil * 0.35} cy={eye.y - eye.pupil * 0.4} r={eye.pupil * 0.32} />
+                        </g>
+                      </g>
+                    ))}
+                  </>
+                ) : (
+                  p.art.front?.()
+                )}
+              </g>
+            </g>
           </g>
         </g>
       </g>
-    </g>
-  )
+    )
+  }
 
   return (
     <footer
       ref={rootRef}
       className={"dcf" + (className ? " " + className : "")}
       data-play={play || reduced ? "1" : "0"}
+      data-visible="0"
       data-interactive={interactive ? "1" : "0"}
-      style={vars}
+      style={
+        {
+          "--dcf-bg": colors.background,
+          "--dcf-ink": colors.ink,
+          "--dcf-accent": colors.accent,
+          "--dcf-serif": serifFamily,
+          "--dcf-display": fontFamily,
+          minHeight: height && height !== "auto" ? height : "auto",
+        } as React.CSSProperties
+      }
+      onPointerEnter={onPointerEnter}
       onPointerMove={onPointerMove}
       onPointerDown={onPointerMove}
       onPointerLeave={onPointerLeave}
@@ -1057,46 +1159,54 @@ export function DoodleCrewFooter({
       <div className="dcf-world" ref={worldRef}>
         <div className="dcf-stage">
           <h2 className="dcf-sr">{wordmark}</h2>
+
+          {/* Layer 1: Ground line + behind-seated crew (scoped boil filters per item, isolated from wordmark ink) */}
           <svg
-            ref={svgRef}
-            className="dcf-svg"
-            viewBox={view.x.toFixed(1) + " " + view.y.toFixed(1) + " " + view.w.toFixed(1) + " " + view.h.toFixed(1)}
-            aria-hidden="false"
-            role="group"
-            aria-label={wordmark + " — meet the crew"}
+            className="dcf-svg dcf-svg-back"
+            viewBox={viewBoxStr}
+            aria-hidden="true"
           >
             <defs>
-              <pattern id={uid + "-hatch"} width="4.6" height="4.6" patternUnits="userSpaceOnUse" patternTransform="rotate(38)">
+              <pattern id={uid + "-b-hatch"} width="4.6" height="4.6" patternUnits="userSpaceOnUse" patternTransform="rotate(38)">
                 <line x1="0" y1="0" x2="0" y2="4.6" style={{ stroke: "var(--dcf-ink)" }} strokeWidth="1.25" />
               </pattern>
               {[0, 1, 2].map((k) => (
-                <filter key={k} id={uid + "-boil" + k} x="-10%" y="-10%" width="120%" height="120%">
-                  <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed={k * 7 + 3} result="n" />
+                <filter key={k} id={uid + "-b-boil" + k} x="-10%" y="-10%" width="120%" height="120%" colorInterpolationFilters="sRGB">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves={1} seed={k * 7 + 3} result="n" />
                   <feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" xChannelSelector="R" yChannelSelector="G" />
                 </filter>
               ))}
-              <filter id={uid + "-ink"} x="-4%" y="-6%" width="108%" height="112%">
-                <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="3" seed="11" result="edge" />
+            </defs>
+
+            <g className="dcf-ground">
+              <path className="dcf-draw" pathLength={1} d={ground.d} style={{ "--d": tl.ground + "ms" } as React.CSSProperties} />
+              <path className="dcf-tufts dcf-fade" d={ground.tufts} style={{ "--d": tl.ground + 500 + "ms" } as React.CSSProperties} />
+              {ground.pebbles.map((pb, k) => (
+                <ellipse key={k} className="dcf-pebble dcf-fade" cx={pb.x} cy={pb.y} rx={pb.r * 1.5} ry={pb.r} style={{ "--d": tl.ground + 600 + "ms" } as React.CSSProperties} />
+              ))}
+            </g>
+
+            {placed.filter((p) => p.seat === "behind").map((p) => renderCrew(p, "body", "b", 1 + p.i))}
+          </svg>
+
+          {/* Layer 2: Wordmark ink letters isolated on their own SVG layer (never invalidated by eye/boil ticks) */}
+          <svg
+            className="dcf-svg dcf-svg-letters"
+            viewBox={viewBoxStr}
+            aria-hidden="true"
+          >
+            <defs>
+              <filter id={uid + "-ink"} x="-4%" y="-6%" width="108%" height="112%" colorInterpolationFilters="sRGB">
+                <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves={2} seed="11" result="edge" />
                 <feDisplacementMap in="SourceGraphic" in2="edge" scale="5" xChannelSelector="R" yChannelSelector="G" result="rough" />
-                <feTurbulence type="fractalNoise" baseFrequency="0.018 0.32" numOctaves="2" seed="4" result="streak" />
+                <feTurbulence type="fractalNoise" baseFrequency="0.018 0.32" numOctaves={1} seed="4" result="streak" />
                 <feColorMatrix in="streak" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -16 5.6" result="streakA" />
-                <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves="1" seed="9" result="speck" />
+                <feTurbulence type="fractalNoise" baseFrequency="0.7" numOctaves={1} seed="9" result="speck" />
                 <feColorMatrix in="speck" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -24 7.0" result="speckA" />
                 <feComposite in="streakA" in2="speckA" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="holes" />
                 <feComposite in="rough" in2="holes" operator="out" />
               </filter>
             </defs>
-
-            <g ref={(el) => void (crewLayerRefs.current[0] = el)}>
-              <g className="dcf-ground">
-                <path className="dcf-draw" pathLength={1} d={ground.d} style={{ "--d": tl.ground + "ms" } as React.CSSProperties} />
-                <path className="dcf-tufts dcf-fade" d={ground.tufts} style={{ "--d": tl.ground + 500 + "ms" } as React.CSSProperties} />
-                {ground.pebbles.map((pb, k) => (
-                  <ellipse key={k} className="dcf-pebble dcf-fade" cx={pb.x} cy={pb.y} rx={pb.r * 1.5} ry={pb.r} style={{ "--d": tl.ground + 600 + "ms" } as React.CSSProperties} />
-                ))}
-              </g>
-              {placed.filter((p) => p.seat === "behind").map((p) => renderCrew(p, "body"))}
-            </g>
 
             {chars.map((c, i) =>
               c === " " ? null : (
@@ -1115,16 +1225,36 @@ export function DoodleCrewFooter({
                 </g>
               ),
             )}
+          </svg>
 
-            <g ref={(el) => void (crewLayerRefs.current[1] = el)}>
-              {placed.filter((p) => p.seat === "behind").map((p) => renderCrew(p, "front"))}
-              {placed.filter((p) => p.seat !== "behind").map((p) => renderCrew(p, "body"))}
-            </g>
+          {/* Layer 3: Front & top crew + behind peeking paws + interactive hit regions */}
+          <svg
+            ref={svgRef}
+            className="dcf-svg dcf-svg-front"
+            viewBox={viewBoxStr}
+            aria-hidden="false"
+            role="group"
+            aria-label={wordmark + " — meet the crew"}
+          >
+            <defs>
+              <pattern id={uid + "-f-hatch"} width="4.6" height="4.6" patternUnits="userSpaceOnUse" patternTransform="rotate(38)">
+                <line x1="0" y1="0" x2="0" y2="4.6" style={{ stroke: "var(--dcf-ink)" }} strokeWidth="1.25" />
+              </pattern>
+              {[0, 1, 2].map((k) => (
+                <filter key={k} id={uid + "-f-boil" + k} x="-10%" y="-10%" width="120%" height="120%" colorInterpolationFilters="sRGB">
+                  <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves={1} seed={k * 7 + 3} result="n" />
+                  <feDisplacementMap in="SourceGraphic" in2="n" scale="2.6" xChannelSelector="R" yChannelSelector="G" />
+                </filter>
+              ))}
+            </defs>
+
+            {placed.filter((p) => p.seat === "behind").map((p) => renderCrew(p, "front", "f", 1 + placed.length + p.i))}
+            {placed.filter((p) => p.seat !== "behind").map((p) => renderCrew(p, "body", "f", 1 + p.i))}
 
             {interactive &&
               placed.map((p) => {
                 const bx = p.flip > 0 ? [p.art.box.l, p.art.box.r] : [-p.art.box.r, -p.art.box.l]
-                const top = p.seat === "behind" ? p.art.box.t : p.art.box.t
+                const top = p.art.box.t
                 const bottom = p.seat === "behind" ? -30 : p.art.box.b
                 return (
                   <rect
@@ -1283,8 +1413,13 @@ const CSS =
   ".dcf-link:hover .dcf-squiggle path,.dcf-link:focus-visible .dcf-squiggle path{stroke-dashoffset:0}" +
   // world
   ".dcf-world{position:relative;display:flex;flex-direction:column;justify-content:center;padding:12px var(--dcf-pad) 0;max-width:1360px;width:100%;margin:0 auto}" +
-  ".dcf-stage{position:relative;z-index:1}" +
+  ".dcf-stage{position:relative;z-index:1;contain:layout style}" +
   ".dcf-svg{display:block;width:100%;height:auto;user-select:none;-webkit-user-select:none}" +
+  ".dcf-svg-back{position:relative;z-index:1;pointer-events:none;transform:translateZ(0);backface-visibility:hidden}" +
+  ".dcf-svg-letters{position:absolute;inset:0;height:100%;z-index:2;pointer-events:none;will-change:transform;transform:translateZ(0);backface-visibility:hidden}" +
+  ".dcf-svg-letters .dcf-glyph{pointer-events:auto}" +
+  ".dcf-svg-front{position:absolute;inset:0;height:100%;z-index:3;pointer-events:none;transform:translateZ(0);backface-visibility:hidden}" +
+  ".dcf-svg-front .dcf-hit{pointer-events:auto}" +
   ".dcf-svg text{fill:var(--dcf-ink)}" +
   ".dcf-art{fill:var(--dcf-bg);stroke:var(--dcf-ink);stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}" +
   ".dcf-art .n{fill:none}.dcf-art .k{fill:var(--dcf-ink)}.dcf-art .a{fill:var(--dcf-accent)}.dcf-art .o{fill:#ff9f1c}.dcf-art .r{fill:#ff4d4d}" +
@@ -1303,18 +1438,19 @@ const CSS =
   ".dcf-art.dcf-sway{transform-box:fill-box;transform-origin:50% 100%;animation:dcf-swing 4s ease-in-out infinite}" +
   ".dcf-art.dcf-peck{transform-box:fill-box;transform-origin:50% 100%;animation:dcf-peck 5.5s ease-in-out infinite}" +
   ".dcf-tail{transform-box:fill-box;transform-origin:0% 100%;animation:dcf-tail 2.8s ease-in-out infinite}" +
+  ".dcf[data-visible='0'] .dcf-art,.dcf[data-visible='0'] .dcf-tail{animation-play-state:paused}" +
   ".dcf-hopper{transform-box:fill-box;transform-origin:50% 100%}" +
   ".dcf-hopper.is-hop{animation:dcf-hop .62s cubic-bezier(.3,.7,.4,1)}" +
   ".dcf-arrive{transform-box:fill-box;transform-origin:50% 100%}" +
   // bubbles
-  ".dcf-bubbles{position:absolute;inset:0;pointer-events:none;z-index:2}" +
+  ".dcf-bubbles{position:absolute;inset:0;pointer-events:none;z-index:4}" +
   ".dcf-bubble{position:absolute;transform:translate(-50%,-100%) rotate(-2deg);transform-origin:50% 100%;background:var(--dcf-bg);color:var(--dcf-ink);border:2px solid var(--dcf-ink);border-radius:16px;padding:7px 12px;font-size:13px;font-weight:700;line-height:1.25;white-space:nowrap;box-shadow:3px 3px 0 var(--dcf-ink);animation:dcf-bubble .32s cubic-bezier(.3,1.6,.5,1) both;margin-top:-4px}" +
   ".dcf-bubble::after{content:'';position:absolute;left:50%;bottom:-9px;width:14px;height:14px;background:var(--dcf-bg);border-right:2px solid var(--dcf-ink);border-bottom:2px solid var(--dcf-ink);transform:translateX(-50%) rotate(45deg) skew(8deg,8deg)}" +
   ".dcf-bubble.is-left{transform:translate(-88%,-100%) rotate(2deg);transform-origin:88% 100%}" +
   ".dcf-bubble.is-left::after{left:88%}" +
   // doodles
-  ".dcf-doodles{position:absolute;inset:0;pointer-events:none;z-index:2;overflow:hidden}" +
-  ".dcf-doodle{position:absolute;left:0;top:0;pointer-events:auto;cursor:pointer;will-change:transform;touch-action:manipulation}" +
+  ".dcf-doodles{position:absolute;inset:0;pointer-events:none;z-index:4;overflow:hidden;contain:layout style}" +
+  ".dcf-doodle{position:absolute;left:0;top:0;pointer-events:auto;cursor:pointer;will-change:transform;backface-visibility:hidden;touch-action:manipulation}" +
   ".dcf-doodle-in{display:block;width:100%;height:100%}" +
   ".dcf[data-interactive='0'] .dcf-doodle{pointer-events:none}" +
   ".dcf-doodle svg,.dcf-icon{display:block;stroke:var(--dcf-ink);stroke-width:1.9;stroke-linejoin:round;stroke-linecap:round}" +

@@ -834,16 +834,26 @@ export const LetterGlitch = ({
       if (grid.cols) buildGrid();
     };
 
+    let cachedRect = null;
+    let rectDirty = true;
+    const markRectDirty = () => {
+      rectDirty = true;
+    };
+
     const resize = () => {
+      rectDirty = true;
       resizePending = true;
       wake();
     };
 
     const locate = event => {
-      const rect = container.getBoundingClientRect();
-      const x = event.clientX - rect.left;
-      const y = event.clientY - rect.top;
-      pointer.inside = x >= 0 && y >= 0 && x <= rect.width && y <= rect.height;
+      if (rectDirty || !cachedRect) {
+        cachedRect = container.getBoundingClientRect();
+        rectDirty = false;
+      }
+      const x = event.clientX - cachedRect.left;
+      const y = event.clientY - cachedRect.top;
+      pointer.inside = x >= 0 && y >= 0 && x <= cachedRect.width && y <= cachedRect.height;
       pointer.x = x * view.ratio;
       pointer.y = y * view.ratio;
       if (pointer.fresh || pointer.presence < 0.02) {
@@ -854,6 +864,10 @@ export const LetterGlitch = ({
     };
 
     const onPointerMove = event => {
+      if (!visible || document.hidden) {
+        pointer.inside = false;
+        return;
+      }
       locate(event);
       wake();
     };
@@ -889,6 +903,7 @@ export const LetterGlitch = ({
     resizeObserver.observe(container);
     const intersection = new IntersectionObserver(entries => {
       visible = entries.some(entry => entry.isIntersecting);
+      rectDirty = true;
       if (visible) {
         last = 0;
         wake();
@@ -899,6 +914,7 @@ export const LetterGlitch = ({
     window.addEventListener('pointerdown', onPointerDown, { passive: true });
     window.addEventListener('pointerup', onPointerUp, { passive: true });
     window.addEventListener('pointercancel', onPointerUp, { passive: true });
+    window.addEventListener('scroll', markRectDirty, { passive: true });
     document.documentElement.addEventListener('pointerleave', onPointerLeave);
     document.addEventListener('visibilitychange', onVisibility);
     document.fonts?.addEventListener?.('loadingdone', onFonts);
@@ -915,6 +931,7 @@ export const LetterGlitch = ({
       window.removeEventListener('pointerdown', onPointerDown);
       window.removeEventListener('pointerup', onPointerUp);
       window.removeEventListener('pointercancel', onPointerUp);
+      window.removeEventListener('scroll', markRectDirty);
       document.documentElement.removeEventListener('pointerleave', onPointerLeave);
       document.removeEventListener('visibilitychange', onVisibility);
       document.fonts?.removeEventListener?.('loadingdone', onFonts);

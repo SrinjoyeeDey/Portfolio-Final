@@ -409,6 +409,22 @@ function Interactive3DStage({ children, className = '' }) {
   const stageRef = useRef(null);
   const rafRef = useRef(null);
   const targetTiltRef = useRef({ x: 0, y: 0 });
+  const prefersReducedRef = useRef(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return;
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const sync = () => {
+      prefersReducedRef.current = mq.matches;
+      if (mq.matches && stageRef.current) {
+        stageRef.current.style.setProperty('--tilt-x', '0deg');
+        stageRef.current.style.setProperty('--tilt-y', '0deg');
+      }
+    };
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
 
   const applyTilt = useCallback(() => {
     if (stageRef.current) {
@@ -420,9 +436,8 @@ function Interactive3DStage({ children, className = '' }) {
   }, []);
 
   const handleMouseMove = useCallback((e) => {
-    if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      return;
-    }
+    if (prefersReducedRef.current) return;
+    if (e.nativeEvent && e.nativeEvent.pointerType === 'touch') return;
     const currentTarget = e.currentTarget;
     const rect = currentTarget.getBoundingClientRect();
     if (!rect.width || !rect.height) return;
@@ -497,7 +512,7 @@ const DesktopDashboardScreen = React.memo(function DesktopDashboardScreen({ conf
               <span className="dash-notif-dot" />
             </button>
             <div className="dash-avatar-btn">
-              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&auto=format&fit=crop&q=80" alt="Profile" />
+              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&auto=format&fit=crop&q=80" alt="Profile" loading="lazy" decoding="async" />
             </div>
           </div>
         </div>
@@ -694,7 +709,7 @@ const DesktopDashboardScreen = React.memo(function DesktopDashboardScreen({ conf
                   <div className="dash-activity-list">
                     {config.activity.map((act, idx) => (
                       <div key={idx} className="dash-activity-item">
-                        <img src={act.avatar} alt={act.user} className="dash-act-avatar" />
+                        <img src={act.avatar} alt={act.user} className="dash-act-avatar" loading="lazy" decoding="async" />
                         <div className="dash-act-body">
                           <p className="dash-act-text">
                             <strong>{act.user}</strong> {act.action}
@@ -709,7 +724,7 @@ const DesktopDashboardScreen = React.memo(function DesktopDashboardScreen({ conf
                 <div className="dash-card">
                   <h4 className="dash-card-heading">On this production</h4>
                   <div className="dash-production-member">
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&auto=format&fit=crop&q=80" alt="Lead" className="dash-act-avatar" />
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&auto=format&fit=crop&q=80" alt="Lead" className="dash-act-avatar" loading="lazy" decoding="async" />
                     <div className="dash-act-body">
                       <span className="dash-member-name">{config.architect}</span>
                       <span className="dash-member-role">Lead Architect & Product</span>
@@ -850,7 +865,7 @@ const MobilePhoneScreen = React.memo(function MobilePhoneScreen({ project }) {
             ) : (
               <>
                 <div className="phone-feed-card">
-                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80" alt="Daniel" className="phone-user-avatar" />
+                  <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80" alt="Daniel" className="phone-user-avatar" loading="lazy" decoding="async" />
                   <div className="phone-feed-info">
                     <div className="phone-feed-headline">
                       <span className="phone-user-name">Daniel Reyes <span className="phone-deg">• 3rd</span></span>
@@ -865,7 +880,7 @@ const MobilePhoneScreen = React.memo(function MobilePhoneScreen({ project }) {
                 </div>
 
                 <div className="phone-feed-card">
-                  <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Priya" className="phone-user-avatar" />
+                  <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80" alt="Priya" className="phone-user-avatar" loading="lazy" decoding="async" />
                   <div className="phone-feed-info">
                     <div className="phone-feed-headline">
                       <span className="phone-user-name">Priya Nair <span className="phone-deg">• 3rd</span></span>
@@ -880,7 +895,7 @@ const MobilePhoneScreen = React.memo(function MobilePhoneScreen({ project }) {
                 </div>
 
                 <div className="phone-feed-card">
-                  <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80" alt="Tom" className="phone-user-avatar" />
+                  <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&auto=format&fit=crop&q=80" alt="Tom" className="phone-user-avatar" loading="lazy" decoding="async" />
                   <div className="phone-feed-info">
                     <div className="phone-feed-headline">
                       <span className="phone-user-name">Tom Halvorsen <span className="phone-deg">• 3rd</span></span>
@@ -962,7 +977,7 @@ const MobilePhoneScreen = React.memo(function MobilePhoneScreen({ project }) {
                 <i className="fa-solid fa-truck-moving"></i>
               </div>
             ) : (
-              <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=120&auto=format&fit=crop&q=80" alt="Maya" className="phone-recipient-avatar" />
+              <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?w=120&auto=format&fit=crop&q=80" alt="Maya" className="phone-recipient-avatar" loading="lazy" decoding="async" />
             )}
             <div className="phone-recipient-meta">
               <span className="phone-recipient-name">{isPunar ? 'Eco-Fleet Alpha 04' : 'Maya Okonkwo'}</span>
@@ -1013,30 +1028,30 @@ const ProjectRow = React.memo(function ProjectRow({
   project,
   index,
   isExpanded,
-  onHover,
-  onLeave,
+  hasBeenOpened,
   onClick,
   onKeyDown,
   onOpenModal
 }) {
+  const showVisualStage = isExpanded || hasBeenOpened;
+
   return (
     <article
       className={`editorial-row ${isExpanded ? 'is-expanded' : 'is-collapsed'}`}
       data-theme={project.theme}
+      data-row-id={project.numericId}
       style={{
         '--accent-color': project.accentColor,
         '--accent-rgb': project.accentRgb,
         '--row-solid-bg': project.solidBg,
         '--row-text-color': project.textColor
       }}
-      onMouseEnter={() => onHover(index)}
-      onMouseLeave={() => onLeave(index)}
       onClick={(e) => onClick(index, e)}
       onKeyDown={(e) => onKeyDown(e, index)}
       tabIndex={0}
       role="button"
       aria-expanded={isExpanded}
-      aria-label={`${project.title} — ${isExpanded ? 'Expanded' : 'Click or hover to expand'}`}
+      aria-label={`${project.title} — ${isExpanded ? 'Expanded, click to collapse' : 'Click to expand'}`}
     >
       {/* Subtle Blueprint Grid Overlay per Project */}
       <div className="editorial-row-bg-grid" aria-hidden="true" />
@@ -1191,15 +1206,17 @@ const ProjectRow = React.memo(function ProjectRow({
             </div>
           </div>
 
-          {/* Right Column: Visual Stage / High-Fidelity Mockup */}
+          {/* Right Column: Visual Stage / High-Fidelity Mockup (mounted on open & retained once opened) */}
           <div className="editorial-visual-column">
-            {project.title === 'Punarchakra' || project.visualType === 'ballpit' || project.title === 'Agnivaarak' || project.visualType === 'agnivaarak' ? (
-              <MobilePhoneScreen project={project} />
-            ) : (
-              <DesktopDashboardScreen
-                config={DASHBOARD_CONFIGS[project.numericId] || DASHBOARD_CONFIGS['1']}
-                project={project}
-              />
+            {showVisualStage && (
+              project.title === 'Punarchakra' || project.visualType === 'ballpit' || project.title === 'Agnivaarak' || project.visualType === 'agnivaarak' ? (
+                <MobilePhoneScreen project={project} />
+              ) : (
+                <DesktopDashboardScreen
+                  config={DASHBOARD_CONFIGS[project.numericId] || DASHBOARD_CONFIGS['1']}
+                  project={project}
+                />
+              )
             )}
           </div>
         </div>
@@ -1210,35 +1227,89 @@ const ProjectRow = React.memo(function ProjectRow({
 
 export default function ProjectsShowcase() {
   const [expandedIndex, setExpandedIndex] = useState(null);
+  const [openedIndices, setOpenedIndices] = useState(() => new Set());
   const [soundOn, setSoundOn] = useState(false);
   const containerRef = useRef(null);
-  const userCollapsedIndexRef = useRef(null);
-  const hoverTimerRef = useRef(null);
+  const hasInteractedRef = useRef(false);
+  const scrollSettleTimerRef = useRef(null);
+
+  const markOpened = useCallback((idx) => {
+    if (idx === null || idx === undefined) return;
+    setOpenedIndices((prev) => {
+      if (prev.has(idx)) return prev;
+      const next = new Set(prev);
+      next.add(idx);
+      return next;
+    });
+  }, []);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      if (window.ScrollTrigger) {
-        if (typeof window.ScrollTrigger.update === 'function') {
-          window.ScrollTrigger.update();
-        }
-        // Force refresh trigger heights as rows expand/contract
-        setTimeout(() => {
-          if (typeof window.ScrollTrigger.refresh === 'function') {
-            window.ScrollTrigger.refresh();
-          }
-        }, 100);
-        setTimeout(() => {
-          if (typeof window.ScrollTrigger.refresh === 'function') {
-            window.ScrollTrigger.refresh();
-          }
-        }, 360);
-      }
+    if (!hasInteractedRef.current) {
+      return;
     }
+    if (typeof window === 'undefined' || !window.ScrollTrigger) {
+      return;
+    }
+
+    const container = containerRef.current;
+    const refreshScrollTrigger = () => {
+      if (typeof window.ScrollTrigger?.refresh === 'function') {
+        window.ScrollTrigger.refresh();
+      }
+    };
+
+    const expansionTargets = container
+      ? Array.from(container.querySelectorAll('.editorial-row-expansion'))
+      : [];
+    const hasRunningAnimation = expansionTargets.some(
+      (el) => typeof el.getAnimations === 'function' && el.getAnimations().length > 0
+    );
+
+    if (!hasRunningAnimation) {
+      refreshScrollTrigger();
+      return;
+    }
+
+    let settled = false;
+    let fallbackTimer = null;
+
+    const finalize = () => {
+      if (settled) return;
+      settled = true;
+      if (container) {
+        container.removeEventListener('transitionend', handleTransitionEnd);
+      }
+      if (fallbackTimer) clearTimeout(fallbackTimer);
+      refreshScrollTrigger();
+    };
+
+    const handleTransitionEnd = (ev) => {
+      if (
+        ev.propertyName === 'grid-template-rows' &&
+        ev.target instanceof Element &&
+        ev.target.classList.contains('editorial-row-expansion')
+      ) {
+        finalize();
+      }
+    };
+
+    if (container) {
+      container.addEventListener('transitionend', handleTransitionEnd);
+    }
+    fallbackTimer = setTimeout(finalize, 320);
+
+    return () => {
+      settled = true;
+      if (container) {
+        container.removeEventListener('transitionend', handleTransitionEnd);
+      }
+      if (fallbackTimer) clearTimeout(fallbackTimer);
+    };
   }, [expandedIndex]);
 
   useEffect(() => {
     return () => {
-      if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
+      if (scrollSettleTimerRef.current) clearTimeout(scrollSettleTimerRef.current);
     };
   }, []);
 
@@ -1253,75 +1324,57 @@ export default function ProjectsShowcase() {
     });
   }, []);
 
-  const handleRowHover = useCallback((index) => {
-    // If the user explicitly collapsed this row by click, do not re-expand while mouse lingers over it
-    if (userCollapsedIndexRef.current === index) {
-      return;
-    }
-    userCollapsedIndexRef.current = null;
-    if (hoverTimerRef.current) clearTimeout(hoverTimerRef.current);
-    hoverTimerRef.current = setTimeout(() => {
-      setExpandedIndex((prev) => {
-        if (prev !== index) {
-          playSlideSound();
-          return index;
-        }
-        return prev;
-      });
-    }, 35);
-  }, []);
+  const scrollRowIntoComfortableView = useCallback((numericId) => {
+    if (scrollSettleTimerRef.current) clearTimeout(scrollSettleTimerRef.current);
+    scrollSettleTimerRef.current = setTimeout(() => {
+      const rowEl = document.querySelector(`.editorial-row[data-row-id="${numericId}"]`);
+      if (!rowEl) return;
+      const rect = rowEl.getBoundingClientRect();
+      const dockClearance = 96;
+      const topClearance = 76;
 
-  const handleRowLeave = useCallback((index) => {
-    if (hoverTimerRef.current) {
-      clearTimeout(hoverTimerRef.current);
-      hoverTimerRef.current = null;
-    }
-    // Clear userCollapsedIndex when mouse leaves that specific row so future entries can expand
-    if (userCollapsedIndexRef.current === index) {
-      userCollapsedIndexRef.current = null;
-    }
+      if (rect.top < topClearance) {
+        const targetY = window.scrollY + rect.top - 84;
+        if (window.lenis && typeof window.lenis.scrollTo === 'function') {
+          window.lenis.scrollTo(targetY, { duration: 0.45 });
+        } else {
+          window.scrollTo({ top: targetY, behavior: 'smooth' });
+        }
+      } else if (rect.bottom > window.innerHeight - dockClearance && rect.height < window.innerHeight - 120) {
+        const overflow = rect.bottom - (window.innerHeight - dockClearance);
+        const targetY = window.scrollY + overflow;
+        if (window.lenis && typeof window.lenis.scrollTo === 'function') {
+          window.lenis.scrollTo(targetY, { duration: 0.45 });
+        } else {
+          window.scrollTo({ top: targetY, behavior: 'smooth' });
+        }
+      }
+    }, 300);
   }, []);
 
   const handleRowClick = useCallback((index, e) => {
     // Don't toggle row if clicking inside buttons or links
-    if (e.target.closest('a') || e.target.closest('button')) {
+    if (e.target.closest('a, button')) {
       return;
     }
-    if (hoverTimerRef.current) {
-      clearTimeout(hoverTimerRef.current);
-      hoverTimerRef.current = null;
-    }
+
+    hasInteractedRef.current = true;
+    markOpened(index);
+
     setExpandedIndex((prev) => {
       if (prev === index) {
-        // Collapsed by user
-        userCollapsedIndexRef.current = index;
+        if (scrollSettleTimerRef.current) clearTimeout(scrollSettleTimerRef.current);
         return null;
-      } else {
-        // Expanded by user
-        userCollapsedIndexRef.current = null;
-        playSlideSound();
-
-        // Ensure newly expanded row is comfortably framed within viewport
-        setTimeout(() => {
-          const rowEl = document.querySelector(`.editorial-row[data-row-id="${SHOWCASE_PROJECTS[index]?.numericId}"]`);
-          if (rowEl) {
-            const rect = rowEl.getBoundingClientRect();
-            const dockOffset = 110; // Mac dock clearance
-            if (rect.bottom > window.innerHeight - dockOffset || rect.top < 70) {
-              const targetY = window.pageYOffset + rect.top - 80;
-              if (window.lenis && typeof window.lenis.scrollTo === 'function') {
-                window.lenis.scrollTo(targetY, { duration: 0.8 });
-              } else {
-                window.scrollTo({ top: targetY, behavior: 'smooth' });
-              }
-            }
-          }
-        }, 140);
-
-        return index;
       }
+
+      playSlideSound();
+      const numericId = SHOWCASE_PROJECTS[index]?.numericId;
+      if (numericId) {
+        scrollRowIntoComfortableView(numericId);
+      }
+      return index;
     });
-  }, []);
+  }, [markOpened, scrollRowIntoComfortableView]);
 
   const handleOpenModal = useCallback((numericId, e) => {
     if (e) {
@@ -1340,32 +1393,36 @@ export default function ProjectsShowcase() {
   }, []);
 
   const handleKeyDown = useCallback((e, index) => {
+    if (e.target.closest('a, button')) {
+      return;
+    }
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
+      hasInteractedRef.current = true;
+      markOpened(index);
       setExpandedIndex((prev) => {
         if (prev === index) {
-          userCollapsedIndexRef.current = index;
           return null;
-        } else {
-          userCollapsedIndexRef.current = null;
-          playSlideSound();
-          return index;
         }
+        playSlideSound();
+        return index;
       });
     } else if (e.key === 'ArrowDown') {
       e.preventDefault();
       const next = (index + 1) % total;
-      userCollapsedIndexRef.current = null;
+      hasInteractedRef.current = true;
+      markOpened(next);
       setExpandedIndex(next);
       playSlideSound();
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       const prev = (index - 1 + total) % total;
-      userCollapsedIndexRef.current = null;
+      hasInteractedRef.current = true;
+      markOpened(prev);
       setExpandedIndex(prev);
       playSlideSound();
     }
-  }, [total]);
+  }, [total, markOpened]);
 
   return (
     <div
@@ -1413,8 +1470,7 @@ export default function ProjectsShowcase() {
             project={project}
             index={index}
             isExpanded={expandedIndex === index}
-            onHover={handleRowHover}
-            onLeave={handleRowLeave}
+            hasBeenOpened={openedIndices.has(index)}
             onClick={handleRowClick}
             onKeyDown={handleKeyDown}
             onOpenModal={handleOpenModal}

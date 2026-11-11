@@ -155,7 +155,7 @@ export const TextPressure = ({
     window.addEventListener('touchmove', handleTouch, { passive: true });
     window.addEventListener('touchend', handleLeave);
     window.addEventListener('touchcancel', handleLeave);
-    window.addEventListener('scroll', wake, { passive: true, capture: true });
+    window.addEventListener('scroll', wake, { passive: true });
     document.documentElement.addEventListener('mouseleave', handleLeave);
     document.fonts?.addEventListener?.('loadingdone', wake);
     container?.addEventListener('pointerdown', handlePress);
@@ -180,7 +180,7 @@ export const TextPressure = ({
       window.removeEventListener('touchmove', handleTouch);
       window.removeEventListener('touchend', handleLeave);
       window.removeEventListener('touchcancel', handleLeave);
-      window.removeEventListener('scroll', wake, { capture: true });
+      window.removeEventListener('scroll', wake);
       document.documentElement.removeEventListener('mouseleave', handleLeave);
       document.fonts?.removeEventListener?.('loadingdone', wake);
       container?.removeEventListener('pointerdown', handlePress);

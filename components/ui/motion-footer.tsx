@@ -155,12 +155,27 @@ export const MagneticButton = React.forwardRef<HTMLElement, MagneticButtonProps>
       if (!element) return;
 
       const ctx = gsap.context(() => {
+        let cachedRect: DOMRect | null = null;
+        let rectDirty = true;
+
+        const markDirty = () => {
+          rectDirty = true;
+        };
+
+        const handleMouseEnter = () => {
+          cachedRect = element.getBoundingClientRect();
+          rectDirty = false;
+        };
+
         const handleMouseMove = (e: MouseEvent) => {
-          const rect = element.getBoundingClientRect();
-          const h = rect.width / 2;
-          const w = rect.height / 2;
-          const x = e.clientX - rect.left - h;
-          const y = e.clientY - rect.top - w;
+          if (rectDirty || !cachedRect) {
+            cachedRect = element.getBoundingClientRect();
+            rectDirty = false;
+          }
+          const h = cachedRect.width / 2;
+          const w = cachedRect.height / 2;
+          const x = e.clientX - cachedRect.left - h;
+          const y = e.clientY - cachedRect.top - w;
 
           gsap.to(element, {
             x: x * 0.4,
@@ -170,10 +185,13 @@ export const MagneticButton = React.forwardRef<HTMLElement, MagneticButtonProps>
             scale: 1.05,
             ease: "power2.out",
             duration: 0.4,
+            overwrite: "auto",
           });
         };
 
         const handleMouseLeave = () => {
+          cachedRect = null;
+          rectDirty = true;
           gsap.to(element, {
             x: 0,
             y: 0,
@@ -182,15 +200,22 @@ export const MagneticButton = React.forwardRef<HTMLElement, MagneticButtonProps>
             scale: 1,
             ease: "elastic.out(1, 0.3)",
             duration: 1.2,
+            overwrite: "auto",
           });
         };
 
-        element.addEventListener("mousemove", handleMouseMove as any);
+        element.addEventListener("mouseenter", handleMouseEnter, { passive: true });
+        element.addEventListener("mousemove", handleMouseMove as any, { passive: true });
         element.addEventListener("mouseleave", handleMouseLeave);
+        window.addEventListener("scroll", markDirty, { passive: true });
+        window.addEventListener("resize", markDirty, { passive: true });
 
         return () => {
+          element.removeEventListener("mouseenter", handleMouseEnter);
           element.removeEventListener("mousemove", handleMouseMove as any);
           element.removeEventListener("mouseleave", handleMouseLeave);
+          window.removeEventListener("scroll", markDirty);
+          window.removeEventListener("resize", markDirty);
         };
       }, element);
 

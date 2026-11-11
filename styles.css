@@ -40,9 +40,10 @@
   --transition-bounce: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-/* TargetCursor from React Bits handles cursor across the entire website */
+/* SmoothCursor (@/registry/magicui/smooth-cursor) renders cursor on fine-pointer desktop devices */
 @media (hover: hover) and (pointer: fine) {
-  *, *::before, *::after {
+  html.smooth-cursor-active,
+  html.smooth-cursor-active * {
     cursor: none !important;
   }
 }
@@ -6334,8 +6335,6 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
   border-radius: 18px;
   background: rgba(255, 255, 255, 0.08); /* Translucent glass button fill */
   border: 1px solid rgba(255, 255, 255, 0.18);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
   box-shadow:
     0 8px 16px -2px rgba(0, 0, 0, 0.15),
     0 2px 6px -1px rgba(0, 0, 0, 0.08);
@@ -8887,11 +8886,10 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
   }
 }
 
-/* Hide custom TargetCursor on touch/mobile devices or when modals/viewers are active */
-@media (hover: none), (pointer: coarse), (max-width: 768px) {
+/* Disable SmoothCursor on touch / coarse-pointer devices */
+@media (hover: none), (pointer: coarse) {
   #target-cursor-mount,
-  .target-cursor-wrapper,
-  .target-cursor-container,
+  .smooth-cursor,
   #custom-cursor,
   #cursor-follower-ring {
     display: none !important;
@@ -8899,17 +8897,6 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
     visibility: hidden !important;
     pointer-events: none !important;
   }
-}
-
-.modal-overlay.active ~ #target-cursor-mount,
-body:has(.modal-overlay.active) #target-cursor-mount,
-body.memory-viewer-open #target-cursor-mount,
-body:has(.pmw-fullscreen-viewer-overlay) #target-cursor-mount,
-body:has(.wall-lightbox-overlay) #target-cursor-mount {
-  display: none !important;
-  opacity: 0 !important;
-  visibility: hidden !important;
-  pointer-events: none !important;
 }
 
 /* Visible throughout interactive journey */
@@ -8932,6 +8919,13 @@ body:has(.wall-lightbox-overlay) #target-cursor-mount {
   visibility: hidden !important;
   pointer-events: none !important;
   transform: translate3d(var(--flight-x, 0px), calc(var(--flight-y, 0px) + 35px), 0) scale(0.88) !important;
+}
+
+.floating-envelope-widget.envelope-hidden .envelope-float-layer,
+.floating-envelope-widget.envelope-hidden .envelope-rock-layer,
+.floating-envelope-widget.envelope-hidden .envelope-shake-layer,
+.floating-envelope-widget.envelope-hidden .envelope-floor-shadow {
+  animation-play-state: paused !important;
 }
 
 /* Layer 0: 3D Rotation Pirouette & Spin */
@@ -8961,6 +8955,7 @@ body:has(.wall-lightbox-overlay) #target-cursor-mount {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
   border-radius: 16px;
+  contain: layout style;
 }
 
 .envelope-3d-front {
@@ -9370,27 +9365,23 @@ body:has(.wall-lightbox-overlay) #target-cursor-mount {
   }
 }
 
-/* Floor Shadow Keyframes */
+/* Floor Shadow Keyframes (compositor-only transforms/opacity; base element provides static blur) */
 @keyframes fabricShadowPulse {
   0% {
     transform: scale(1);
     opacity: 0.3;
-    filter: blur(4.5px);
   }
   50% {
     transform: scale(0.72);
     opacity: 0.16;
-    filter: blur(6.5px);
   }
   93% {
     transform: scale(1.08);
     opacity: 0.42;
-    filter: blur(4px);
   }
   100% {
     transform: scale(1);
     opacity: 0.3;
-    filter: blur(4.5px);
   }
 }
 
@@ -12630,10 +12621,15 @@ body:has(.wall-lightbox-overlay) #target-cursor-mount {
 /* Soft Realistic Floor Shadow beneath the 3D Keyboard */
 .studio-keyboard-ground-shadow {
   width: clamp(460px, 62%, 760px);
-  height: 24px;
+  height: 28px;
   border-radius: 50%;
-  background: radial-gradient(ellipse at center, rgba(17, 18, 21, 0.20) 0%, rgba(17, 18, 21, 0.05) 50%, transparent 75%);
-  filter: blur(10px);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(17, 18, 21, 0.16) 0%,
+    rgba(17, 18, 21, 0.08) 36%,
+    rgba(17, 18, 21, 0.025) 60%,
+    transparent 80%
+  );
   margin-top: -6px;
   pointer-events: none;
   z-index: 2;

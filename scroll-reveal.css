@@ -16,17 +16,6 @@ html, body {
   box-sizing: border-box;
   background-color: var(--color-bg-light, #ECECE7);
   background-image: var(--color-bg-studio, linear-gradient(135deg, #f0f0eb 0%, #e2e3dd 50%, #e9e8e3 100%));
-  transform: translateZ(0);
-  backface-visibility: hidden;
-}
-
-/* Eliminate hover hit-test recalculations during active scroll for 60/120fps lock */
-html.lenis-scrolling * {
-  pointer-events: none !important;
-}
-
-html.lenis-scrolling {
-  pointer-events: auto !important;
 }
 
 /* Melt Mask disabled so sections do not get top cutoff */
@@ -76,7 +65,6 @@ html.lenis-scrolling {
   background-image: var(--color-bg-studio, linear-gradient(135deg, #f0f0eb 0%, #e2e3dd 50%, #e9e8e3 100%));
   box-shadow: none;
   overflow: visible;
-  will-change: transform, opacity;
   padding-bottom: 0;
 }
 
@@ -152,11 +140,9 @@ body.preloader-locked {
   width: clamp(340px, 48vw, 720px);
   height: clamp(240px, 34vw, 480px);
   border-radius: 28px;
-  background: radial-gradient(135% 120% at 50% 20%, rgba(255, 255, 255, 0.88) 0%, rgba(236, 236, 231, 0.55) 60%, rgba(220, 220, 214, 0.45) 100%);
+  background: radial-gradient(135% 120% at 50% 20%, rgba(255, 255, 255, 0.94) 0%, rgba(236, 236, 231, 0.88) 65%, rgba(220, 220, 214, 0.84) 100%);
   border: 1.5px solid rgba(17, 18, 21, 0.14);
   box-shadow: 0 32px 80px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.04);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
   opacity: 0;
   pointer-events: none;
   z-index: 15;

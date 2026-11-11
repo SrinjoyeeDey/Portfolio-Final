@@ -1,5 +1,4 @@
 import React, {
-  Suspense,
   useCallback,
   useEffect,
   useMemo,
@@ -63,9 +62,9 @@ function createExtrudedBox(
     bevelEnabled: bevelSize > 0,
     bevelThickness: bevelSize,
     bevelSize: bevelSize,
-    bevelSegments: 2,
+    bevelSegments: 1,
     steps: 1,
-    curveSegments: 12,
+    curveSegments: 6,
   });
   geometry.rotateX(-Math.PI / 2);
   geometry.translate(0, -height / 2 + bevelSize, 0);
@@ -88,7 +87,7 @@ function createExtrudedBox(
 function makeIconTexture(
   svgPath: string,
   color: string,
-  size = 256
+  size = 128
 ): THREE.CanvasTexture {
   const canvas = document.createElement("canvas");
   canvas.width = size;
@@ -109,7 +108,7 @@ function makeIconTexture(
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = 4;
+  tex.anisotropy = 2;
   tex.needsUpdate = true;
   return tex;
 }
@@ -235,7 +234,7 @@ function Keycap({
 }) {
   const pressRef = useRef<THREE.Group>(null);
   const pressY = useRef(0);
-  const matRef = useRef<THREE.MeshPhysicalMaterial>(null);
+  const matRef = useRef<THREE.MeshStandardMaterial>(null);
 
   const iconTexture = useMemo(
     () => makeIconTexture(icon.path, `#${icon.hex}`),
@@ -250,25 +249,49 @@ function Keycap({
     return c;
   }, [accent, whiteColor]);
 
+  const settledRef = useRef(true);
+  const lastAccentRef = useRef(accent);
+  const lastHoveredRef = useRef(hovered);
+
+  useEffect(() => {
+    settledRef.current = false;
+  }, [hovered, accent]);
+
   useEffect(() => {
     return () => iconTexture.dispose();
   }, [iconTexture]);
 
   useFrame(() => {
-    if (!pressRef.current) return;
+    if (!pressRef.current || settledRef.current) return;
+
     const target = hovered ? -PRESS_DEPTH : 0;
-    pressY.current = THREE.MathUtils.lerp(pressY.current, target, 0.24);
+    const targetIntensity = hovered ? 0.95 : 0.3;
+
+    if (matRef.current && (lastHoveredRef.current !== hovered || lastAccentRef.current !== accent)) {
+      lastHoveredRef.current = hovered;
+      lastAccentRef.current = accent;
+      matRef.current.emissive.copy(whiteColor).lerp(accentColor, hovered ? 1 : 0);
+      matRef.current.color.copy(whiteColor).lerp(bodyTint, hovered ? 0.6 : 0);
+    }
+
+    const nextY = THREE.MathUtils.lerp(pressY.current, target, 0.24);
+    const ySettled = Math.abs(target - nextY) < 0.0005;
+    pressY.current = ySettled ? target : nextY;
     pressRef.current.position.y = pressY.current;
 
+    let intensitySettled = true;
     if (matRef.current) {
-      const targetIntensity = hovered ? 0.95 : 0.3;
-      matRef.current.emissiveIntensity = THREE.MathUtils.lerp(
+      const nextIntensity = THREE.MathUtils.lerp(
         matRef.current.emissiveIntensity,
         targetIntensity,
         0.18
       );
-      matRef.current.emissive.copy(whiteColor).lerp(accentColor, hovered ? 1 : 0);
-      matRef.current.color.copy(whiteColor).lerp(bodyTint, hovered ? 0.6 : 0);
+      intensitySettled = Math.abs(targetIntensity - nextIntensity) < 0.002;
+      matRef.current.emissiveIntensity = intensitySettled ? targetIntensity : nextIntensity;
+    }
+
+    if (ySettled && intensitySettled) {
+      settledRef.current = true;
     }
   });
 
@@ -304,14 +327,11 @@ function Keycap({
           onPointerUp={handleUp}
           onPointerCancel={handleUp}
         >
-          <meshPhysicalMaterial
+          <meshStandardMaterial
             ref={matRef}
             color="#ffffff"
-            transmission={0}
-            roughness={0.32}
-            clearcoat={isMobile ? 0 : 0.5}
-            clearcoatRoughness={0.18}
-            metalness={0}
+            roughness={0.28}
+            metalness={0.04}
             emissive="#ffffff"
             emissiveIntensity={0.3}
           />
@@ -337,11 +357,11 @@ function Keycap({
 
 function KeyboardModel({
   palette,
-  pointerOffset,
+  pointerOffsetRef,
   isMobile,
 }: {
   palette: { keyboardBase: string; accent: string };
-  pointerOffset: { x: number; y: number };
+  pointerOffsetRef: React.MutableRefObject<{ x: number; y: number }>;
   isMobile: boolean;
 }) {
   const ref = useRef<THREE.Group>(null);
@@ -358,9 +378,10 @@ function KeyboardModel({
     if (ref.current) ref.current.rotation.order = "YXZ";
   }, []);
 
-  useFrame((state, delta) => {
+  useFrame((state) => {
     if (!ref.current) return;
     const t = state.clock.elapsedTime;
+    const pointerOffset = pointerOffsetRef.current;
 
     // Tilted completely towards the user so all key surfaces and tech logos are fully visible
     const basePitch = isMobile ? 0.46 : 0.44;
@@ -475,9 +496,13 @@ export default function Interactive3DKeyboard() {
     accent: siteColor,
   }), [siteColor]);
 
-  const [pointerOffset, setPointerOffset] = useState({ x: 0, y: 0 });
+  const pointerOffsetRef = useRef({ x: 0, y: 0 });
+  const rectRef = useRef<DOMRect | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const [isCanvasActive, setIsCanvasActive] = useState(false);
+  const [isWarming, setIsWarming] = useState(false);
+  const glContextRef = useRef<{ gl: THREE.WebGLRenderer; scene: THREE.Scene; camera: THREE.Camera } | null>(null);
 
   useEffect(() => {
     const handleColorChange = (e: Event) => {
@@ -501,30 +526,140 @@ export default function Interactive3DKeyboard() {
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
+      rectRef.current = null;
     };
     checkMobile();
     window.addEventListener("resize", checkMobile);
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
+  // Pause R3F WebGL render loop completely when off-screen or when tab is hidden
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el || typeof window === "undefined") return;
+
+    let isInView = typeof IntersectionObserver === "undefined";
+    const syncActive = () => {
+      setIsCanvasActive(isInView && !document.hidden);
+    };
+
+    let observer: IntersectionObserver | null = null;
+    if (typeof IntersectionObserver !== "undefined") {
+      observer = new IntersectionObserver(
+        ([entry]) => {
+          isInView = Boolean(entry?.isIntersecting);
+          if (isInView) rectRef.current = null;
+          syncActive();
+        },
+        { rootMargin: "40px 0px", threshold: 0 }
+      );
+      observer.observe(el);
+    } else {
+      syncActive();
+    }
+
+    document.addEventListener("visibilitychange", syncActive);
+    return () => {
+      observer?.disconnect();
+      document.removeEventListener("visibilitychange", syncActive);
+    };
+  }, []);
+
+  // Pre-compile WebGL shaders & Environment PMREM once when idle after preloader so scrolling into Studio/Footer never stalls
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    let cancelled = false;
+    let started = false;
+    let waitTimer: ReturnType<typeof setTimeout> | null = null;
+    let stopTimer: ReturnType<typeof setTimeout> | null = null;
+    let idleId: number | null = null;
+
+    const runWarmup = () => {
+      if (cancelled || started) return;
+      started = true;
+      const execute = () => {
+        if (cancelled) return;
+        const ctx = glContextRef.current;
+        if (ctx) {
+          try {
+            ctx.gl.compile(ctx.scene, ctx.camera);
+          } catch {}
+        }
+        setIsWarming(true);
+        stopTimer = setTimeout(() => {
+          if (!cancelled) setIsWarming(false);
+        }, 120);
+      };
+      if ("requestIdleCallback" in window) {
+        idleId = (window as any).requestIdleCallback(execute, { timeout: 1200 });
+      } else {
+        waitTimer = setTimeout(execute, 180);
+      }
+    };
+
+    const scheduleAfter = (ms: number) => {
+      if (waitTimer) clearTimeout(waitTimer);
+      waitTimer = setTimeout(runWarmup, ms);
+    };
+
+    const preloaderEl = document.querySelector(".tt-preloader") as HTMLElement | null;
+    const preloaderDone = !preloaderEl || getComputedStyle(preloaderEl).display === "none";
+    if (preloaderDone) {
+      scheduleAfter(350);
+      return () => {
+        cancelled = true;
+        if (waitTimer) clearTimeout(waitTimer);
+        if (stopTimer) clearTimeout(stopTimer);
+        if (idleId !== null && "cancelIdleCallback" in window) {
+          (window as any).cancelIdleCallback(idleId);
+        }
+      };
+    }
+
+    const onPreloaderDone = () => {
+      runWarmup();
+    };
+    window.addEventListener("preloader:completed", onPreloaderDone, { once: true });
+    // Warm up cleanly inside an idle slice while the initial greeting preloader is visible (before first scroll)
+    scheduleAfter(1800);
+
+    return () => {
+      cancelled = true;
+      window.removeEventListener("preloader:completed", onPreloaderDone);
+      if (waitTimer) clearTimeout(waitTimer);
+      if (stopTimer) clearTimeout(stopTimer);
+      if (idleId !== null && "cancelIdleCallback" in window) {
+        (window as any).cancelIdleCallback(idleId);
+      }
+    };
+  }, []);
+
+  const handlePointerEnter = () => {
+    if (containerRef.current) {
+      rectRef.current = containerRef.current.getBoundingClientRect();
+    }
+  };
+
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!containerRef.current) return;
-    const rect = containerRef.current.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width - 0.5) * 2;
-    const y = ((e.clientY - rect.top) / rect.height - 0.5) * 2;
-    setPointerOffset({
-      x: THREE.MathUtils.clamp(x, -1, 1),
-      y: THREE.MathUtils.clamp(y, -1, 1),
-    });
+    const rect = rectRef.current || containerRef.current.getBoundingClientRect();
+    rectRef.current = rect;
+    const x = ((e.clientX - rect.left) / (rect.width || 1) - 0.5) * 2;
+    const y = ((e.clientY - rect.top) / (rect.height || 1) - 0.5) * 2;
+    pointerOffsetRef.current.x = THREE.MathUtils.clamp(x, -1, 1);
+    pointerOffsetRef.current.y = THREE.MathUtils.clamp(y, -1, 1);
   };
 
   const handlePointerLeave = () => {
-    setPointerOffset({ x: 0, y: 0 });
+    rectRef.current = null;
+    pointerOffsetRef.current.x = 0;
+    pointerOffsetRef.current.y = 0;
   };
 
   return (
     <div
       ref={containerRef}
+      onPointerEnter={handlePointerEnter}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
       style={{
@@ -543,12 +678,16 @@ export default function Interactive3DKeyboard() {
     >
       {/* R3F 3D Canvas */}
       <Canvas
+        frameloop={isCanvasActive ? "always" : isWarming ? "demand" : "never"}
+        onCreated={({ gl, scene, camera }) => {
+          glContextRef.current = { gl, scene, camera };
+        }}
         camera={
           isMobile
             ? { position: [0, 1.58, 4.35], fov: 33 }
             : { position: [0, 1.45, 3.95], fov: 33 }
         }
-        dpr={isMobile ? [1, 1.5] : [1, 2]}
+        dpr={isMobile ? 1 : [1, 1.25]}
         gl={{
           antialias: true,
           alpha: true,
@@ -556,7 +695,7 @@ export default function Interactive3DKeyboard() {
         }}
         style={{ width: "100%", height: "100%", cursor: "grab" }}
       >
-        <Environment resolution={128} environmentIntensity={0.25}>
+        <Environment resolution={32} environmentIntensity={0.25}>
           <Lightformer
             intensity={1.1}
             color="#ffffff"
@@ -585,7 +724,7 @@ export default function Interactive3DKeyboard() {
 
         <KeyboardModel
           palette={palette}
-          pointerOffset={pointerOffset}
+          pointerOffsetRef={pointerOffsetRef}
           isMobile={isMobile}
         />
       </Canvas>
