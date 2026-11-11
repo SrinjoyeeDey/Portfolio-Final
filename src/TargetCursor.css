@@ -3,6 +3,7 @@
   inset: 0;
   z-index: 2147483647;
   pointer-events: none;
+  contain: layout style;
 }
 
 html.tc-active,
@@ -12,52 +13,95 @@ html.tc-active *::after {
   cursor: none !important;
 }
 
-.target-cursor__corner {
-  position: absolute;
+.target-cursor__orb {
+  position: fixed;
   top: 0;
   left: 0;
   box-sizing: border-box;
-  border-style: solid;
-  border-color: var(--target-cursor-color, #FFBD12);
-  transform-origin: 0 0;
-  will-change: transform;
-  filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.75));
-}
-
-.target-cursor__arrow,
-.target-cursor__dot {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 17px;
-  height: 18px;
-  background: transparent;
   pointer-events: none;
-  will-change: transform;
-  transform-origin: 50% 1.5px;
-  filter: drop-shadow(0 1px 3px rgba(0, 0, 0, 0.75));
+  transform-origin: center center;
+  will-change: transform, width, height, border-radius;
+  border: 1.5px solid rgba(34, 36, 40, 0.72);
+  background: radial-gradient(
+    circle at 32% 30%,
+    rgba(255, 255, 255, 0.45) 0%,
+    rgba(255, 189, 18, 0.16) 62%,
+    rgba(34, 36, 40, 0.06) 100%
+  );
+  -webkit-backdrop-filter: contrast(1.08) saturate(1.15);
+  backdrop-filter: contrast(1.08) saturate(1.15);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.72),
+    inset 0 1px 0 rgba(255, 255, 255, 0.55),
+    0 6px 18px rgba(34, 36, 40, 0.1);
+  transition:
+    border-color 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.2s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.target-cursor__arrow-svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
+/* Expanded over light / glass buttons & cards */
+.target-cursor__orb[data-state='locked'][data-tone='light'] {
+  border-color: #FFBD12;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 189, 18, 0.2) 0%,
+    rgba(255, 255, 255, 0.12) 100%
+  );
+  box-shadow:
+    0 0 0 1px rgba(34, 36, 40, 0.26),
+    0 10px 26px rgba(255, 189, 18, 0.24);
+}
+
+/* Expanded over dark charcoal buttons (#222428) */
+.target-cursor__orb[data-state='locked'][data-tone='dark'] {
+  border-color: #FFBD12;
+  background: rgba(255, 189, 18, 0.14);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.32),
+    0 0 24px rgba(255, 189, 18, 0.36);
+}
+
+/* Expanded over sunshine-yellow accents (#FFBD12 / #FFE500) */
+.target-cursor__orb[data-state='locked'][data-tone='accent'] {
+  border-color: #222428;
+  background: rgba(34, 36, 40, 0.1);
+  box-shadow:
+    0 0 0 1.5px rgba(255, 255, 255, 0.65),
+    0 8px 22px rgba(34, 36, 40, 0.2);
 }
 
 .target-cursor__label {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
-  color: var(--target-cursor-color, #ffffff);
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #222428;
+  color: #FFBD12;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.18);
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.05em;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  line-height: 1;
+  line-height: 1.1;
   white-space: nowrap;
   opacity: 0;
+  pointer-events: none;
   will-change: transform, opacity;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  z-index: 3;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .target-cursor__orb {
+    transition: none;
+  }
+}
+
+@media (hover: none), (pointer: coarse) {
+  .target-cursor {
+    display: none !important;
+  }
 }

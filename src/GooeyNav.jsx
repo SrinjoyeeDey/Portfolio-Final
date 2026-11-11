@@ -35,11 +35,10 @@ const SIZES = { sm: 'gooey-nav--sm', md: 'gooey-nav--md', lg: 'gooey-nav--lg' };
 const DEFAULT_ITEMS = [
   { label: 'Home', href: '#hero' },
   { label: 'About', href: '#about' },
-  { label: 'Works', href: '#projects' },
+  { label: 'Experience', href: '#projects' },
   { label: 'Snapshots', href: '#memory-wall' },
   { label: 'Skills', href: '#skills' },
-  { label: 'Experience', href: '#experience' },
-  { label: 'Contact', href: '#contact' }
+  { label: 'Contact', href: '#studio' }
 ];
 
 const MAX_DROPS = 32;
@@ -767,7 +766,9 @@ const GooeyNav = ({
       }
       const shared = {
         className: 'gooey-nav__link',
-        'aria-current': index === current ? 'page' : undefined,
+        'aria-current': item.href?.startsWith('#')
+          ? (index === current ? 'true' : 'false')
+          : (index === current ? 'page' : undefined),
         onClick: event => {
           if (!item.href || item.href.startsWith('#')) {
             // let smooth scroller handle

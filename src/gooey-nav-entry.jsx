@@ -5,11 +5,10 @@ import GooeyNav from './GooeyNav';
 const navItems = [
   { label: 'Home', href: '#hero' },
   { label: 'About', href: '#about' },
-  { label: 'Works', href: '#projects' },
+  { label: 'Experience', href: '#projects' },
   { label: 'Snapshots', href: '#memory-wall' },
   { label: 'Skills', href: '#skills' },
-  { label: 'Experience', href: '#experience' },
-  { label: 'Contact', href: '#contact' }
+  { label: 'Contact', href: '#studio' }
 ];
 
 function NavContainer() {
@@ -24,9 +23,10 @@ function NavContainer() {
     const onScroll = () => {
       if (isClickingRef.current) return;
       if (!ticking) {
+        ticking = true;
         requestAnimationFrame(() => {
           const vhPoint = window.innerHeight * 0.45;
-          let currentIdx = 0;
+          let currentIdx = null;
 
           // If near top of page, select Home
           if (window.scrollY < 120) {
@@ -42,12 +42,24 @@ function NavContainer() {
                 }
               }
             });
+
+            const contactEl = document.getElementById('contact');
+            const atBottom = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 40;
+            if (atBottom) {
+              currentIdx = navItems.length - 1;
+            } else if (contactEl) {
+              const contactRect = contactEl.getBoundingClientRect();
+              if (contactRect.top <= vhPoint && contactRect.bottom >= vhPoint) {
+                currentIdx = navItems.length - 1;
+              }
+            }
           }
 
-          setActiveIndex(prev => (prev !== currentIdx ? currentIdx : prev));
+          if (currentIdx !== null) {
+            setActiveIndex(prev => (prev !== currentIdx ? currentIdx : prev));
+          }
           ticking = false;
         });
-        ticking = true;
       }
     };
 
@@ -86,6 +98,11 @@ function NavContainer() {
             window.lenis.scrollTo(targetEl, { offset: 0, duration: 1.0 });
           } else {
             targetEl.scrollIntoView({ behavior: 'smooth' });
+          }
+          if (typeof targetEl.focus === 'function') {
+            try {
+              targetEl.focus({ preventScroll: true });
+            } catch (_) {}
           }
         }
       }

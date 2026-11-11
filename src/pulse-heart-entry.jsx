@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
 import PulseHeart from './PulseHeart';
 
-const INITIAL_COUNT = 1204;
-const STORAGE_KEY_LIKED = 'sd_pulse_heart_liked';
-const STORAGE_KEY_COUNT = 'sd_pulse_heart_count';
+const INITIAL_COUNT = 0;
+const STORAGE_KEY_LIKED = 'sd_pulse_heart_liked_v2';
+const STORAGE_KEY_COUNT = 'sd_pulse_heart_count_v2';
 
 function PulseHeartWidget() {
   const [liked, setLiked] = useState(() => {
@@ -18,18 +18,21 @@ function PulseHeartWidget() {
   const [count, setCount] = useState(() => {
     try {
       const stored = localStorage.getItem(STORAGE_KEY_COUNT);
-      return stored ? parseInt(stored, 10) : INITIAL_COUNT;
+      if (stored === null) return INITIAL_COUNT;
+      const parsed = Number.parseInt(stored, 10);
+      return Number.isFinite(parsed) && parsed >= 0 ? parsed : INITIAL_COUNT;
     } catch {
       return INITIAL_COUNT;
     }
   });
 
   const handleChange = (nextLiked, nextCount) => {
+    const safeCount = Math.max(0, nextCount);
     setLiked(nextLiked);
-    setCount(nextCount);
+    setCount(safeCount);
     try {
       localStorage.setItem(STORAGE_KEY_LIKED, String(nextLiked));
-      localStorage.setItem(STORAGE_KEY_COUNT, String(nextCount));
+      localStorage.setItem(STORAGE_KEY_COUNT, String(safeCount));
     } catch {}
   };
 

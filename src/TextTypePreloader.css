@@ -24,21 +24,6 @@
   pointer-events: auto;
 }
 
-.tt-preloader__system-badge {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  color: #222428;
-  opacity: 0.75;
-  background: rgba(34, 36, 40, 0.04);
-  border: 1px solid rgba(34, 36, 40, 0.08);
-  padding: 6px 14px;
-  border-radius: 100px;
-}
-
 /* Fullscreen SVG Mask & Cutout Portal */
 .tt-preloader__portal-svg {
   position: absolute;
@@ -117,14 +102,17 @@
   position: relative;
   z-index: 4;
   width: 100%;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
+  gap: 1rem;
   padding: 2.2rem 3.5rem;
   box-sizing: border-box;
 }
 
 .tt-preloader__brand {
+  grid-column: 1;
+  justify-self: start;
   display: flex;
   align-items: center;
   gap: 0.75rem;
@@ -147,6 +135,9 @@
 
 /* Glass Pill Badge matching the site's cards */
 .tt-preloader__lang-pill {
+  grid-column: 2;
+  justify-self: center;
+  white-space: nowrap;
   display: inline-flex;
   align-items: center;
   gap: 0.65rem;

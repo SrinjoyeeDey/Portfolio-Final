@@ -2,10 +2,8 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { SmoothCursor } from '../components/ui/smooth-cursor';
 import './TargetCursor.css';
-
-const CORNER_ANGLES = [0, 90, 180, 270];
-const QUARTER = Math.PI / 2;
 
 const spring = (state, goal, stiffness, damping, dt) => {
   const maxH = 0.004; // 4ms sub-step guarantees numerical stability
@@ -26,45 +24,130 @@ const spring = (state, goal, stiffness, damping, dt) => {
 
 const resolveElement = value => (value && 'current' in value ? value.current : value) || null;
 
+// Strictly clickable buttons, links, controls, and interactive cards (never plain text/headings)
+const CLICKABLE_SELECTORS = [
+  'a[href]',
+  'button:not(:disabled)',
+  'summary',
+  'select:not(:disabled)',
+  '[role="button"]:not([aria-disabled="true"])',
+  '.btn',
+  '.nav-link',
+  '.gooey-nav__link',
+  '.dock-item',
+  '.dock-badge-icon',
+  '.social-link-btn',
+  '.circle-arrow-btn',
+  '.back-to-top-btn',
+  '.footer-back-to-top',
+  '.footer-nav-item',
+  '.studio-legend-link',
+  '.brand-logo',
+  '.circular-logo-mark',
+  '.heart-btn',
+  '.glass-icon-btn',
+  '.nav-pulse-heart-btn',
+  '.hamburger-btn',
+  '.sound-toggle-btn',
+  '.tech-sound-toggle-btn',
+  '.spotlight-explore-btn',
+  '.spotlight-glide-btn',
+  '.rail-icon',
+  '.mimo-trigger-btn',
+  '.mimo-close-btn',
+  '.mimo-send-btn',
+  '.modal-close-btn',
+  '.filter-btn',
+  '.filter-pill',
+  '.quick-pill-btn',
+  '.type-pill-option',
+  '.project-card',
+  '.project-card-trigger',
+  '.swap-project-card',
+  '.globe-photo-card',
+  '.globe-hud-btn',
+  '.editorial-jump-btn',
+  '.editorial-action-primary',
+  '.editorial-action-secondary',
+  '.editorial-action-icon',
+  '.editorial-sound-toggle-btn',
+  '.container-scroll-tab-btn',
+  '.console-btn-primary',
+  '.console-btn-secondary',
+  '.console-arrow-btn',
+  '.card-3d-see-more',
+  '.work-together-card',
+  '.polaroid-item',
+  '.photo-print-card',
+  '.card-item',
+  '.skill-card',
+  '.pmw-mobile-thumb-card',
+  '.pmw-view-all-btn',
+  '.studio-meet-trigger',
+  '.dock-toggle-btn'
+].join(', ');
+
+const TEXT_INPUT_SELECTOR = 'input, textarea, [contenteditable="true"], [contenteditable=""]';
+
+const getTargetTone = el => {
+  if (!el || typeof getComputedStyle !== 'function') return 'light';
+  let current = el;
+  for (let depth = 0; depth < 3 && current && current !== document.documentElement; depth += 1) {
+    const bg = getComputedStyle(current).backgroundColor;
+    const match = bg && bg.match(/rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)(?:\s*[,/]\s*([\d.]+))?/i);
+    if (match) {
+      const a = match[4] !== undefined ? parseFloat(match[4]) : 1;
+      if (a > 0.35) {
+        const r = parseFloat(match[1]) / 255;
+        const g = parseFloat(match[2]) / 255;
+        const b = parseFloat(match[3]) / 255;
+        const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+        if (r > 0.72 && g > 0.55 && b < 0.38) return 'accent';
+        if (lum < 0.38) return 'dark';
+        return 'light';
+      }
+    }
+    current = current.parentElement;
+  }
+  return 'light';
+};
+
+const isOverlayOpen = () =>
+  Boolean(
+    document.body?.classList.contains('memory-viewer-open') ||
+      document.querySelector('.modal-overlay.active, .pmw-fullscreen-viewer-overlay, .wall-lightbox-overlay')
+  );
+
 const TargetCursor = ({
   targetSelector = '.cursor-target',
-  cursorColor = '#ffffff',
-  cursorColorOnTarget,
-  spinDuration = 2,
-  hoverDuration = 0.2,
+  cursorColor = '#FFBD12',
+  cursorColorOnTarget = '#FFBD12',
+  hoverDuration = 0.16,
   parallaxOn = true,
   hideDefaultCursor = true,
-  size = 36,
-  cornerSize = 12,
-  thickness = 3,
+  size = 34,
   padding = 6,
   matchRadius = true,
-  dotSize = 4,
-  blendMode = 'difference',
+  blendMode = 'normal',
   showLabel = true,
   clickEffect = true,
   container
 }) => {
   const [host, setHost] = useState(null);
   const rootRef = useRef(null);
-  const cornerRefs = useRef([]);
-  const dotRef = useRef(null);
+  const orbRef = useRef(null);
   const labelRef = useRef(null);
   const wakeRef = useRef(null);
   const settings = {
     targetSelector,
     cursorColor,
     cursorColorOnTarget,
-    spinDuration,
-    hoverDuration: Math.max(0.05, hoverDuration),
+    hoverDuration: Math.max(0.06, hoverDuration),
     parallaxOn,
     hideDefaultCursor,
-    size: Math.max(4, size),
-    cornerSize: Math.max(2, cornerSize),
-    thickness: Math.max(0.5, thickness),
+    size: Math.max(12, size),
     padding,
     matchRadius,
-    dotSize: Math.max(0, dotSize),
     showLabel,
     clickEffect,
     container
@@ -90,19 +173,17 @@ const TargetCursor = ({
     const halfW = { x: 0, v: 0 };
     const halfH = { x: 0, v: 0 };
     const radius = { x: 0, v: 0 };
-    const turn = { x: 0, v: 0 };
     const lock = { x: 0, v: 0 };
     const press = { x: 0, v: 0 };
     const presence = { x: 0, v: 0 };
     let target = null;
     let targetRadius = 0;
-    let quarter = 0;
-    let spinSpeed = 0;
+    let targetTone = 'light';
     let raf = 0;
     let last = 0;
     let lastLabel = '';
-    let lastColor = '';
     let lastScope = null;
+    let lastStateKey = '';
 
     const scopeOf = () => resolveElement(settingsRef.current.container);
 
@@ -114,30 +195,25 @@ const TargetCursor = ({
         scope?.setAttribute('data-target-cursor-scope', '');
         lastScope = scope;
       }
+      const suppressed = isOverlayOpen();
       const selector = scope ? '[data-target-cursor-scope]' : 'html';
-      const rule =
-        s.hideDefaultCursor && pointer.inside
-          ? `${selector}, ${selector} *, ${selector} *::before, ${selector} *::after { cursor: none !important; }`
-          : '';
+      const active = s.hideDefaultCursor && pointer.inside && !suppressed;
+      const rule = active
+        ? `${selector}, ${selector} *, ${selector} *::before, ${selector} *::after { cursor: none !important; }`
+        : '';
       if (style.textContent !== rule) style.textContent = rule;
-      if (s.hideDefaultCursor && pointer.inside) {
+      if (active) {
         document.documentElement.classList.add('tc-active');
       } else {
         document.documentElement.classList.remove('tc-active');
       }
     };
 
-    const BUTTON_SELECTORS =
-      'a, button, input, textarea, select, [role="button"], [tabindex="0"], .btn, .dock-item, .dock-badge-icon, .social-link-btn, .spotlight-explore-btn, .spotlight-glide-btn, .rail-icon, .mimo-trigger-btn, .mimo-close-btn, .mimo-send-btn, .modal-close-btn, .back-to-top-btn, .filter-btn, .filter-pill, .quick-pill-btn, .type-pill-option, .project-card, .polaroid-item, .card-item, .skill-card, .cursor-target';
-
-    const HEADING_SELECTORS =
-      'h1, h2, h3, h4, h5, h6, [role="heading"], .spotlight-headline, .build-line, .with-me-line, .stat-number, .logo-text, .brand-logo, .section-title, .section-heading, .highlight-yellow-text, .kanji-main';
-
-    const TEXT_BLOCK_SELECTORS =
-      'p, label, li, blockquote, figcaption, .spotlight-left-bio, .spotlight-right-desc, .spotlight-right-roles, .hero-supporting-desc, .stat-label, .dock-label, .role-pill-label, .role-pill-val, .footer-tagline, .copyright-text';
-
-    const INLINE_TEXT_SELECTORS =
-      'span, strong, em, b, small, i, .spotlight-brand-name, .spotlight-status-text, .spotlight-location-text, .editorial-date, .tech-text';
+    const isValidTargetSize = rect =>
+      rect.width >= 12 &&
+      rect.height >= 12 &&
+      rect.width < window.innerWidth * 0.85 &&
+      rect.height < window.innerHeight * 0.85;
 
     const findTarget = (x, y, element) => {
       const s = settingsRef.current;
@@ -145,51 +221,21 @@ const TargetCursor = ({
       if (!node || node === document.body || node === document.documentElement) return null;
       if (node.closest?.('.target-cursor')) return null;
 
+      // Never snap an expanding box over text entry controls
+      if (node.closest?.(TEXT_INPUT_SELECTOR)) return null;
+
       const scope = scopeOf();
-
-      // 1. Interactive buttons, links, controls, pills, cards take top priority
-      const button = node.closest?.(BUTTON_SELECTORS);
-      if (button) {
-        if (scope && !scope.contains(button)) return null;
-        return button;
+      const clickable = node.closest?.(CLICKABLE_SELECTORS);
+      if (clickable) {
+        if (scope && !scope.contains(clickable)) return null;
+        if (isValidTargetSize(clickable.getBoundingClientRect())) return clickable;
       }
 
-      // 2. Headings (h1-h6, spotlight headlines, title lines)
-      const heading = node.closest?.(HEADING_SELECTORS);
-      if (heading) {
-        if (scope && !scope.contains(heading)) return null;
-        return heading;
-      }
-
-      // 3. Text blocks (paragraphs, lists, blockquotes, descriptions, bios)
-      const textBlock = node.closest?.(TEXT_BLOCK_SELECTORS);
-      if (textBlock) {
-        if (scope && !scope.contains(textBlock)) return null;
-        return textBlock;
-      }
-
-      // 4. Inline text tags, badges, and phrases with direct text content
-      const inlineText = node.closest?.(INLINE_TEXT_SELECTORS);
-      if (inlineText) {
-        if (scope && !scope.contains(inlineText)) return null;
-        const text = inlineText.textContent?.trim();
-        if (text && text.length > 0 && !inlineText.querySelector('div, p, h1, h2, h3, h4, h5, h6')) {
-          const rect = inlineText.getBoundingClientRect();
-          if (rect.width > 0 && rect.height > 0 && rect.width < window.innerWidth * 0.8) {
-            return inlineText;
-          }
-        }
-      }
-
-      // 5. Custom targetSelector if provided and not a giant wrapper container
       if (s.targetSelector) {
-        const found = node.closest?.(s.targetSelector);
-        if (found && found !== document.body && found !== document.documentElement) {
-          if (scope && !scope.contains(found)) return null;
-          const rect = found.getBoundingClientRect();
-          if (rect.width > 0 && rect.height > 0 && rect.width < window.innerWidth * 0.85 && rect.height < window.innerHeight * 0.85) {
-            return found;
-          }
+        const custom = node.closest?.(s.targetSelector);
+        if (custom && custom !== document.body && custom !== document.documentElement) {
+          if (scope && !scope.contains(custom)) return null;
+          if (isValidTargetSize(custom.getBoundingClientRect())) return custom;
         }
       }
 
@@ -200,11 +246,13 @@ const TargetCursor = ({
       if (next === target) return;
       target = next;
       if (target) {
-        const angle = turn.x;
-        quarter = Math.round(angle / QUARTER);
-        const corner = parseFloat(getComputedStyle(target).borderTopLeftRadius) || 0;
-        targetRadius = corner;
-        spinSpeed = 0;
+        const rect = target.getBoundingClientRect();
+        const rawCorner = parseFloat(getComputedStyle(target).borderTopLeftRadius) || 0;
+        const maxCorner = Math.min(rect.width, rect.height) / 2;
+        targetRadius = Math.min(rawCorner, maxCorner) + (rawCorner > 0 ? settingsRef.current.padding : 6);
+        targetTone = getTargetTone(target);
+      } else {
+        targetTone = 'light';
       }
     };
 
@@ -214,38 +262,50 @@ const TargetCursor = ({
       const dt = last ? Math.min(0.05, (now - last) / 1000) : 1 / 60;
       last = now;
 
-      const rect = target && target.isConnected ? target.getBoundingClientRect() : null;
-      if (target && (!target.isConnected || (rect && (rect.width <= 0 || rect.height <= 0)))) lockOn(null);
-      const locked = !!rect && rect.width > 0 && rect.height > 0 && pointer.inside;
-      const snapW = 4.6 / s.hoverDuration;
+      const suppressed = isOverlayOpen();
+      const rect = !suppressed && target && target.isConnected ? target.getBoundingClientRect() : null;
+      if (target && (!target.isConnected || suppressed || (rect && (rect.width <= 0 || rect.height <= 0)))) {
+        lockOn(null);
+      }
+
+      const locked = !!rect && rect.width > 0 && rect.height > 0 && pointer.inside && !suppressed;
+      const snapW = 5.4 / s.hoverDuration;
       const snapK = snapW * snapW;
-      const snapC = 2 * 0.62 * snapW;
+      const snapC = 2 * 0.78 * snapW;
 
-      spring(presence, pointer.inside ? 1 : 0, 800, 50, dt);
-      spring(lock, locked ? 1 : 0, snapK, 2 * snapW, dt);
-      spring(press, pointer.pressed && s.clickEffect ? 1 : 0, 900, 40, dt);
+      if (reduce) {
+        presence.x = pointer.inside && !suppressed ? 1 : 0;
+        presence.v = 0;
+        lock.x = locked ? 1 : 0;
+        lock.v = 0;
+        press.x = pointer.pressed && s.clickEffect ? 1 : 0;
+        press.v = 0;
+      } else {
+        spring(presence, pointer.inside && !suppressed ? 1 : 0, 900, 56, dt);
+        spring(lock, locked ? 1 : 0, snapK, 2 * snapW, dt);
+        spring(press, pointer.pressed && s.clickEffect ? 1 : 0, 1100, 44, dt);
+      }
 
-      let goalX = pointer.x;
-      let goalY = pointer.y + 7.5;
+      // Slightly offset idle center (+5, +6) so the orb frames the inner pointer centered around its tip
+      let goalX = pointer.x + 5;
+      let goalY = pointer.y + 6;
       let goalW = s.size / 2;
       let goalH = s.size / 2;
-      let goalR = Math.min(2, s.cornerSize / 4);
+      let goalR = s.size / 2;
+
       if (locked) {
         const cx = rect.left + rect.width / 2;
         const cy = rect.top + rect.height / 2;
-        const lean = s.parallaxOn ? 0.08 : 0;
+        const lean = s.parallaxOn ? 0.065 : 0;
         goalX = cx + (pointer.x - cx) * lean;
         goalY = cy + (pointer.y - cy) * lean;
-        const odd = Math.abs(quarter) % 2 === 1;
-        const w = rect.width / 2 + s.padding;
-        const h = rect.height / 2 + s.padding;
-        goalW = odd ? h : w;
-        goalH = odd ? w : h;
-        goalR = s.matchRadius ? Math.min(targetRadius + Math.max(0, s.padding), s.cornerSize) : 0;
+        goalW = rect.width / 2 + s.padding;
+        goalH = rect.height / 2 + s.padding;
+        goalR = s.matchRadius ? Math.min(targetRadius, Math.min(goalW, goalH)) : Math.min(goalW, goalH);
       }
 
       if (!pointer.inside && presence.x < 0.01) pointer.seen = false;
-      if (!pointer.seen) {
+      if (!pointer.seen || reduce) {
         centerX.x = goalX;
         centerX.v = 0;
         centerY.x = goalY;
@@ -256,60 +316,38 @@ const TargetCursor = ({
         halfH.v = 0;
         radius.x = goalR;
         radius.v = 0;
-        turn.v = 0;
         pointer.seen = pointer.inside;
-      }
-
-      const follow = locked ? snapK : 2200;
-      const followC = locked ? snapC : 2 * Math.sqrt(2200);
-      spring(centerX, goalX, follow, followC, dt);
-      spring(centerY, goalY, follow, followC, dt);
-      spring(halfW, goalW, snapK, snapC, dt);
-      spring(halfH, goalH, snapK, snapC, dt);
-      spring(radius, goalR, snapK, 2 * snapW, dt);
-
-      if (locked) {
-        spring(turn, quarter * QUARTER, snapK, snapC, dt);
       } else {
-        const speed = s.spinDuration > 0 && !reduce ? (Math.PI * 2) / s.spinDuration : 0;
-        spinSpeed += (speed - spinSpeed) * (1 - Math.exp(-dt * 3));
-        turn.v = spinSpeed;
-        turn.x += spinSpeed * dt;
+        // Tight idle follow keeps the Contrast Orb synchronized right behind SmoothCursor
+        const follow = locked ? snapK : 1350;
+        const followC = locked ? snapC : 2 * Math.sqrt(1350);
+        spring(centerX, goalX, follow, followC, dt);
+        spring(centerY, goalY, follow, followC, dt);
+        spring(halfW, goalW, snapK, snapC, dt);
+        spring(halfH, goalH, snapK, snapC, dt);
+        spring(radius, goalR, snapK, 2 * snapW, dt);
       }
 
-      const squeeze = 1 - press.x * 0.14;
-      const cos = Math.cos(turn.x);
-      const sin = Math.sin(turn.x);
-      const w = Math.max(0, halfW.x) * squeeze;
-      const h = Math.max(0, halfH.x) * squeeze;
-      const local = [
-        [-w, -h],
-        [w, -h],
-        [w, h],
-        [-w, h]
-      ];
-      const r = Math.max(0, Math.min(radius.x, s.cornerSize));
-      const degrees = (turn.x * 180) / Math.PI;
-      let left = Infinity;
-      let top = Infinity;
-      cornerRefs.current.forEach((corner, i) => {
-        if (!corner) return;
-        const [lx, ly] = local[i];
-        const x = centerX.x + lx * cos - ly * sin;
-        const y = centerY.x + lx * sin + ly * cos;
-        left = Math.min(left, x);
-        top = Math.min(top, y);
-        corner.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, 0) rotate(${(CORNER_ANGLES[i] + degrees).toFixed(2)}deg)`;
-        corner.style.width = `${s.cornerSize}px`;
-        corner.style.height = `${s.cornerSize}px`;
-        corner.style.borderWidth = `${s.thickness}px 0 0 ${s.thickness}px`;
-        corner.style.borderTopLeftRadius = `${r.toFixed(2)}px`;
-      });
+      const squeeze = reduce ? 1 : 1 - press.x * 0.09;
+      const boxW = Math.max(8, halfW.x * 2);
+      const boxH = Math.max(8, halfH.x * 2);
+      const left = centerX.x - boxW / 2;
+      const top = centerY.x - boxH / 2;
+      const r = Math.max(4, Math.min(radius.x, Math.min(boxW, boxH) / 2));
 
-      const dot = dotRef.current;
-      if (dot) {
-        const dotScale = 1 - press.x * 0.22;
-        dot.style.transform = `translate3d(${pointer.x}px, ${pointer.y}px, 0) translate(-50%, -1.5px) scale(${dotScale.toFixed(3)})`;
+      const orb = orbRef.current;
+      if (orb) {
+        orb.style.width = `${boxW.toFixed(2)}px`;
+        orb.style.height = `${boxH.toFixed(2)}px`;
+        orb.style.borderRadius = `${r.toFixed(2)}px`;
+        orb.style.transform = `translate3d(${left.toFixed(2)}px, ${top.toFixed(2)}px, 0) scale(${squeeze.toFixed(4)})`;
+
+        const stateKey = `${locked ? 'locked' : 'idle'}:${locked ? targetTone : 'light'}`;
+        if (stateKey !== lastStateKey) {
+          orb.dataset.state = locked ? 'locked' : 'idle';
+          orb.dataset.tone = locked ? targetTone : 'light';
+          lastStateKey = stateKey;
+        }
       }
 
       const label = labelRef.current;
@@ -317,25 +355,28 @@ const TargetCursor = ({
         const text = s.showLabel && target ? target.getAttribute('data-cursor-label') || '' : '';
         if (text && text !== lastLabel) label.textContent = text;
         if (text) lastLabel = text;
-        const shown = text ? Math.max(0, Math.min(1, lock.x)) : 0;
-        label.style.transform = `translate3d(${left.toFixed(2)}px, ${(top - 8).toFixed(2)}px, 0) translateY(-100%) translateY(${((1 - shown) * 4).toFixed(2)}px)`;
+        const shown = text && !suppressed ? Math.max(0, Math.min(1, lock.x)) : 0;
+        const placeBelow = top < 42;
+        const clampedX = Math.max(46, Math.min(window.innerWidth - 46, centerX.x));
+        const anchorY = placeBelow ? top + boxH + 10 : top - 10;
+        const yPercent = placeBelow ? '0%' : '-100%';
+        const slideOffset = ((1 - shown) * (placeBelow ? -5 : 5)).toFixed(2);
+        label.style.transform = `translate3d(${clampedX.toFixed(2)}px, ${anchorY.toFixed(2)}px, 0) translate(-50%, ${yPercent}) translateY(${slideOffset}px)`;
         label.style.opacity = shown.toFixed(3);
       }
 
-      const mix = s.cursorColorOnTarget ? Math.round(Math.max(0, Math.min(1, lock.x)) * 100) : 0;
-      const color = mix ? `color-mix(in oklab, ${s.cursorColorOnTarget} ${mix}%, ${s.cursorColor})` : s.cursorColor;
-      if (color !== lastColor) {
-        root.style.setProperty('--target-cursor-color', color);
-        lastColor = color;
-      }
       root.style.opacity = Math.max(0, Math.min(1, presence.x)).toFixed(3);
 
       const keepRunning =
-        pointer.inside ||
-        presence.x > 0.005 ||
-        Math.abs(presence.v) > 0.005 ||
-        Math.abs(centerX.v) > 0.01 ||
-        Math.abs(centerY.v) > 0.01;
+        !reduce &&
+        ((pointer.inside && !suppressed) ||
+          presence.x > 0.005 ||
+          Math.abs(presence.v) > 0.005 ||
+          Math.abs(centerX.v) > 0.05 ||
+          Math.abs(centerY.v) > 0.05 ||
+          Math.abs(halfW.v) > 0.05 ||
+          Math.abs(halfH.v) > 0.05 ||
+          Math.abs(press.v) > 0.01);
       if (keepRunning) raf = requestAnimationFrame(frame);
       else last = 0;
     };
@@ -361,11 +402,11 @@ const TargetCursor = ({
       pointer.x = event.clientX;
       pointer.y = event.clientY;
       const inside = insideScope(pointer.x, pointer.y, event.target);
-      if (inside !== pointer.inside) {
+      if (inside !== pointer.inside || isOverlayOpen()) {
         pointer.inside = inside;
         hideCursor();
       }
-      lockOn(inside ? findTarget(pointer.x, pointer.y, event.target) : null);
+      lockOn(inside && !isOverlayOpen() ? findTarget(pointer.x, pointer.y, event.target) : null);
       wake();
     };
 
@@ -377,6 +418,7 @@ const TargetCursor = ({
 
     const onPointerUp = () => {
       pointer.pressed = false;
+      setTimeout(hideCursor, 0);
       wake();
     };
 
@@ -400,7 +442,8 @@ const TargetCursor = ({
 
     const onScroll = () => {
       if (!pointer.inside) return;
-      lockOn(findTarget(pointer.x, pointer.y));
+      hideCursor();
+      lockOn(!isOverlayOpen() ? findTarget(pointer.x, pointer.y) : null);
       wake();
     };
 
@@ -416,8 +459,26 @@ const TargetCursor = ({
     document.documentElement.addEventListener('pointerleave', onLeave);
     window.addEventListener('blur', onLeave);
 
+    let overlayObserver = null;
+    if (typeof MutationObserver !== 'undefined') {
+      overlayObserver = new MutationObserver(() => {
+        hideCursor();
+        wake();
+      });
+      overlayObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class'],
+        childList: true
+      });
+      const projectModal = document.getElementById('project-modal');
+      if (projectModal) {
+        overlayObserver.observe(projectModal, { attributes: true, attributeFilter: ['class'] });
+      }
+    }
+
     return () => {
       cancelAnimationFrame(raf);
+      overlayObserver?.disconnect();
       wakeRef.current = null;
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('mousemove', onPointerMove);
@@ -431,6 +492,7 @@ const TargetCursor = ({
       document.documentElement.removeEventListener('pointerleave', onLeave);
       window.removeEventListener('blur', onLeave);
       lastScope?.removeAttribute('data-target-cursor-scope');
+      document.documentElement.classList.remove('tc-active');
       style.remove();
     };
   }, [host]);
@@ -443,36 +505,8 @@ const TargetCursor = ({
 
   return createPortal(
     <div ref={rootRef} className="target-cursor" style={{ mixBlendMode: blendMode, opacity: 0 }} aria-hidden="true">
-      {CORNER_ANGLES.map((angle, i) => (
-        <span
-          key={angle}
-          ref={element => {
-            cornerRefs.current[i] = element;
-          }}
-          className="target-cursor__corner"
-        />
-      ))}
-      <div
-        ref={dotRef}
-        className="target-cursor__arrow target-cursor__dot"
-        aria-hidden="true"
-      >
-        <svg
-          viewBox="0 0 26 27"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          className="target-cursor__arrow-svg"
-        >
-          <path
-            d="M 13 2.2 C 13.7 2.2 14.3 2.6 14.7 3.3 L 23.9 22.1 C 24.5 23.3 23.9 24.8 22.7 25.2 C 21.9 25.5 21.1 25.2 20.5 24.6 Q 13 19.2 5.5 24.6 C 4.9 25.2 4.1 25.5 3.3 25.2 C 2.1 24.8 1.5 23.3 2.1 22.1 L 11.3 3.3 C 11.7 2.6 12.3 2.2 13 2.2 Z"
-            fill="#000000"
-            stroke="#ffffff"
-            strokeWidth="1.8"
-            strokeLinejoin="round"
-            strokeLinecap="round"
-          />
-        </svg>
-      </div>
+      <div ref={orbRef} className="target-cursor__orb" data-state="idle" data-tone="light" />
+      <SmoothCursor hideDefaultCursor={false} zIndex={2} />
       <span ref={labelRef} className="target-cursor__label" />
     </div>,
     host

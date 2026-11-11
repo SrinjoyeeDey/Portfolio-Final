@@ -4,7 +4,7 @@ esbuild.buildSync({
   entryPoints: ['src/target-cursor-entry.jsx'],
   bundle: true,
   outfile: 'target-cursor-bundle.js',
-  loader: { '.jsx': 'jsx', '.css': 'css' },
+  loader: { '.tsx': 'tsx', '.ts': 'ts', '.jsx': 'jsx', '.js': 'js', '.css': 'css' },
   minify: true,
   define: {
     'process.env.NODE_ENV': '"production"'

@@ -12769,5 +12769,13 @@ body:has(.wall-lightbox-overlay) #target-cursor-mount {
   }
 }
 
+section[id] {
+  scroll-margin-top: 72px;
+}
+
+section[tabindex="-1"]:focus {
+  outline: none;
+}
+
 
 

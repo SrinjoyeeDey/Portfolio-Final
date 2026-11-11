@@ -407,11 +407,6 @@ export default function TextTypePreloader() {
               </>
             )}
           </div>
-
-          <div className="tt-preloader__system-badge">
-            <span className="tt-preloader__brand-dot" style={{ backgroundColor: modelStatus === 'error' ? '#EF4444' : '#FFBD12' }} />
-            <span>{modelStatus === 'error' ? '3D OFFLINE' : (modelStatus === 'success' ? '3D READY' : 'LOADING 3D')}</span>
-          </div>
         </header>
 
         {/* Center Stage: TextType for Phase 1 */}
@@ -442,8 +437,8 @@ export default function TextTypePreloader() {
               <span className="tt-preloader__subtitle-line" />
               <span>
                 {modelStatus === 'error'
-                  ? '3D ENGINE INITIALIZATION ERROR'
-                  : (greetingsDone ? 'PREPARING 3D STUDIO SCENE...' : `${activeGreeting.code} • CREATIVE VISUAL DEVELOPER`)}
+                  ? 'ENGINE INITIALIZATION ERROR'
+                  : (greetingsDone ? 'PREPARING STUDIO SCENE...' : `${activeGreeting.code} • CREATIVE VISUAL DEVELOPER`)}
               </span>
               <span className="tt-preloader__subtitle-line" />
             </div>
@@ -477,7 +472,7 @@ export default function TextTypePreloader() {
                 }}
               >
                 <i className="fa-solid fa-circle-exclamation"></i>
-                <span>3D avatar model could not be loaded</span>
+                <span>Avatar model could not be loaded</span>
               </div>
               <div style={{ display: 'flex', gap: '10px' }}>
                 <button
@@ -502,7 +497,7 @@ export default function TextTypePreloader() {
                   }}
                 >
                   <i className="fa-solid fa-rotate-right" style={{ marginRight: '6px' }}></i>
-                  Retry 3D Load
+                  Retry Load
                 </button>
                 <button
                   type="button"
@@ -537,10 +532,10 @@ export default function TextTypePreloader() {
           <div className="tt-preloader__status">
             <span>
               {modelStatus === 'error'
-                ? '● 3D SYSTEM ERROR'
+                ? '● SYSTEM ERROR'
                 : (modelStatus === 'loading'
-                  ? (greetingsDone ? '● FINALIZING 3D ENVIRONMENT' : '● LOADING 3D ASSETS')
-                  : '● 3D STUDIO READY')}
+                  ? (greetingsDone ? '● FINALIZING STUDIO' : '● INITIALIZING EXPERIENCE')
+                  : '● STUDIO READY')}
             </span>
           </div>
 

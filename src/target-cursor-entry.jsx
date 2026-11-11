@@ -16,16 +16,12 @@ export function initTargetCursor() {
       targetSelector=".cursor-target"
       cursorColor="#FFBD12"
       cursorColorOnTarget="#FFBD12"
-      spinDuration={2}
-      hoverDuration={0.2}
+      hoverDuration={0.16}
       parallaxOn={true}
       hideDefaultCursor={true}
-      size={36}
-      cornerSize={12}
-      thickness={3}
+      size={34}
       padding={6}
       matchRadius={true}
-      dotSize={4}
       blendMode="normal"
       showLabel={true}
       clickEffect={true}
@@ -38,4 +34,3 @@ if (document.readyState === 'loading') {
 } else {
   initTargetCursor();
 }
-

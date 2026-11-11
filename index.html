@@ -27,7 +27,7 @@
   <link rel="stylesheet" href="lib/lenis.css">
 
   <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=120">
+  <link rel="stylesheet" href="styles.css?v=121">
   <link rel="stylesheet" href="journey-timeline.css?v=2">
   <link rel="stylesheet" href="grid-scan-bundle.css">
   <link rel="stylesheet" href="projects-showcase-bundle.css?v=90">
@@ -35,14 +35,14 @@
   <link rel="stylesheet" href="circular-text-bundle.css?v=2">
   <link rel="stylesheet" href="gooey-nav-bundle.css?v=3">
   <link rel="stylesheet" href="pulse-heart-bundle.css?v=2">
-  <link rel="stylesheet" href="target-cursor-bundle.css?v=30">
+  <link rel="stylesheet" href="target-cursor-bundle.css?v=32">
   <link rel="stylesheet" href="memory-wall-bundle.css?v=95">
   <link rel="stylesheet" href="memory-wall.css?v=80">
   <link rel="stylesheet" href="pixel-transition-bundle.css?v=2">
   <link rel="stylesheet" href="letter-glitch-bundle.css?v=2">
   <link rel="stylesheet" href="tech-arsenal.css?v=6">
   <link rel="stylesheet" href="footer-shuffle-bundle.css?v=1">
-  <link rel="stylesheet" href="preloader-bundle.css?v=30">
+  <link rel="stylesheet" href="preloader-bundle.css?v=31">
   <link rel="stylesheet" href="elastic-mesh-bundle.css?v=1">
   <link rel="stylesheet" href="tailwind-bundle.css?v=1">
   <link rel="stylesheet" href="lets-work-bundle.css?v=1">
@@ -53,7 +53,7 @@
 
   <!-- TextType Multi-Lingual Greeting Preloader Root -->
   <div id="preloader-root"></div>
-  <script src="preloader-bundle.js?v=12"></script>
+  <script src="preloader-bundle.js?v=13"></script>
 
 
   <!-- Background Decorative Tech & Studio Elements (Matches User Image) -->
@@ -92,20 +92,19 @@
         <span class="logo-text">PORTO<span class="logo-dot">.</span></span>
       </a>
 
-      <nav class="nav-menu" id="nav-menu">
+      <nav class="nav-menu" id="nav-menu" aria-label="Primary">
         <ul class="nav-list">
           <li><a href="#hero" class="nav-link active">Home</a></li>
           <li><a href="#about" class="nav-link">About</a></li>
-          <li><a href="#projects" class="nav-link">Works</a></li>
+          <li><a href="#projects" class="nav-link">Experience</a></li>
           <li><a href="#memory-wall" class="nav-link">Snapshots</a></li>
           <li><a href="#skills" class="nav-link">Skills</a></li>
-          <li><a href="#experience" class="nav-link">Experience</a></li>
-          <li><a href="#contact" class="nav-link">Contact</a></li>
+          <li><a href="#studio" class="nav-link">Contact</a></li>
         </ul>
       </nav>
 
       <div class="nav-actions">
-        <a href="#contact" class="btn btn-pill-dark interactive-hover-btn cursor-target" data-cursor-label="Connect">
+        <a href="#studio" class="btn btn-pill-dark interactive-hover-btn cursor-target" data-cursor-label="Connect">
           <span class="btn-text-initial">
             <span>Let's Connect</span>
             <i class="fa-solid fa-arrow-right-long"></i>
@@ -173,7 +172,7 @@
     <div class="story-layer" id="story-layer-hero" data-layer-id="hero">
 
       <!-- HERO SECTION (Directly matching user reference design with 3D Perspective Room & Model) -->
-      <section class="hero-section" id="hero">
+      <section class="hero-section" id="hero" tabindex="-1">
       <!-- 3D Perspective Room Wireframe Grid Background (Fine Technical Studio Room with Light Gradient) -->
       <!-- Dynamic 3D Perspective Room Wireframe Grid (<GridScan /> from React Bits) -->
       <div class="hero-room-perspective-grid" id="hero-room-perspective-grid" aria-hidden="true"></div>
@@ -341,7 +340,7 @@
   <!-- LAYER 2: ABOUT VIEWPORT STAGE -->
   <div class="story-layer" id="story-layer-about" data-layer-id="about">
     <!-- ABOUT SECTION (Blank clean canvas) -->
-    <section class="about-section section-padding" id="about">
+    <section class="about-section section-padding" id="about" tabindex="-1">
       <div class="container">
 
         <!-- Section Header with Line and Circle Arrow -->
@@ -583,7 +582,7 @@
 
   <!-- LAYER 3: PROJECTS / WORKS VIEWPORT STAGE -->
   <div class="story-layer" id="story-layer-projects" data-layer-id="projects">
-    <section class="projects-section-immersive" id="projects" style="position: relative; padding: 0; margin: 0; min-height: 100vh; width: 100%;">
+    <section class="projects-section-immersive" id="projects" tabindex="-1" style="position: relative; padding: 0; margin: 0; min-height: 100vh; width: 100%;">
       <!-- Interactive Expandable Editorial Projects Showcase Root -->
       <div id="projects-showcase-root"></div>
 
@@ -614,7 +613,7 @@
     <!-- ==========================================================================
          SNAPSHOTS SECTION (Physical Photographic Memory Wall Archive)
          ========================================================================== -->
-    <section class="memory-wall-section" id="memory-wall" aria-label="Snapshots / A Collection of Moments">
+    <section class="memory-wall-section" id="memory-wall" tabindex="-1" aria-label="Snapshots / A Collection of Moments">
       <div class="memory-wall-fullwidth-stage">
         <div id="memory-wall-carousel-root" class="memory-wall-carousel-mount"></div>
       </div>
@@ -625,7 +624,7 @@
   <div class="story-layer" id="story-layer-skills" data-layer-id="skills">
 
     <!-- TECH STACK & TOOLS SECTION (Interactive Infinite Logo Showcase) -->
-    <section class="tech-showcase-section" id="skills" aria-label="Technology Stack & Tools">
+    <section class="tech-showcase-section" id="skills" tabindex="-1" aria-label="Technology Stack & Tools">
       <!-- Ambient Interactive WebGL2 LetterGlitch Background Canvas -->
       <div id="tech-showcase-letterglitch-root" class="tech-showcase-letterglitch-bg" aria-hidden="true"></div>
 
@@ -666,7 +665,7 @@
     <!-- ==========================================================================
          EDITORIAL STUDIO SHOWCASE SECTION (Matches Reference Design)
          ========================================================================== -->
-    <section class="studio-editorial-section" id="studio" aria-label="Creative Studio Showcase">
+    <section class="studio-editorial-section" id="studio" tabindex="-1" aria-label="Creative Studio Showcase">
       <div class="studio-main-panel">
         
         <!-- Floating Cursor Name Tag: Left Purple ("Amirali") -->
@@ -1086,16 +1085,16 @@
     <script src="text-pressure-bundle.js?v=5"></script>
     <script src="tech-text-bundle.js?v=12"></script>
     <script src="circular-text-bundle.js?v=2"></script>
-    <script src="gooey-nav-bundle.js?v=3"></script>
-    <script src="pulse-heart-bundle.js?v=2"></script>
-    <script src="target-cursor-bundle.js?v=30"></script>
+    <script src="gooey-nav-bundle.js?v=4"></script>
+    <script src="pulse-heart-bundle.js?v=3"></script>
+    <script src="target-cursor-bundle.js?v=32"></script>
     <script src="memory-wall-bundle.js?v=95"></script>
 
     <!-- Sound Design System (Procedural Web Audio Engine) -->
     <script src="sound-system.js?v=3"></script>
 
     <!-- Main Interactive Scripts -->
-    <script src="script.js?v=50"></script>
+    <script src="script.js?v=51"></script>
     <script src="letter-glitch-bundle.js?v=2"></script>
     <script src="pixel-transition-bundle.js?v=2"></script>
     <script src="tech-arsenal.js?v=7"></script>

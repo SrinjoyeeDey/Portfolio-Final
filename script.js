@@ -622,7 +622,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (percent < 25) {
           loaderSectionName.textContent = 'INITIALIZING STUDIO...';
         } else if (percent < 55) {
-          loaderSectionName.textContent = 'LOADING 3D ASSETS...';
+          loaderSectionName.textContent = 'LOADING ASSETS...';
         } else if (percent < 85) {
           loaderSectionName.textContent = 'PREPARING EXPERIENCE...';
         } else if (percent < 100) {
@@ -736,6 +736,11 @@ document.addEventListener('DOMContentLoaded', () => {
               window.lenis.scrollTo(targetEl, { offset: 0, duration: 1.0 });
             } else {
               targetEl.scrollIntoView({ behavior: 'smooth' });
+            }
+            if (typeof targetEl.focus === 'function') {
+              try {
+                targetEl.focus({ preventScroll: true });
+              } catch (_) {}
             }
           }
         }
