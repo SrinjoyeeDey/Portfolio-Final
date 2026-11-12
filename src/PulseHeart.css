@@ -27,6 +27,7 @@
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
   outline: none;
+  overflow: visible;
   transition: transform 160ms var(--ph-ease-out);
 }
 
@@ -34,9 +35,9 @@
   transform: scale(0.97);
 }
 
-.pulse-heart:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--ph-liked) 60%, transparent);
-  outline-offset: 3px;
+.pulse-heart:focus-visible,
+.pulse-heart:focus {
+  outline: none;
 }
 
 .pulse-heart:disabled {
@@ -45,6 +46,7 @@
 }
 
 .pulse-heart__pill {
+  position: relative;
   display: inline-flex;
   align-items: center;
   gap: calc(var(--ph-size) * 0.25);
@@ -53,19 +55,34 @@
   border-radius: var(--ph-corner);
   background: var(--ph-pill);
   transform-origin: center;
+  overflow: visible;
 }
 
 .pulse-heart[data-no-count] .pulse-heart__pill {
   padding-inline-end: calc(var(--ph-size) * 0.3);
 }
 
-.pulse-heart__heart {
-  display: block;
+/* Local heart wrapper acting as the center anchor for particles */
+.pulse-heart__heart-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   width: var(--ph-size);
   height: var(--ph-size);
+  overflow: visible;
+  flex-shrink: 0;
+}
+
+.pulse-heart__heart {
+  display: block;
+  width: 100%;
+  height: 100%;
   color: var(--ph-idle);
   transform-origin: center;
-  transition: color 160ms ease;
+  transition: color 180ms ease, filter 240ms ease;
+  position: relative;
+  overflow: visible;
 }
 
 .pulse-heart__heart svg {
@@ -92,6 +109,146 @@
 .pulse-heart[data-running] .pulse-heart__heart,
 .pulse-heart[data-instant] .pulse-heart__heart {
   transition: none;
+}
+
+/* Silky celebration bounce (smooth gentle scale up, soft bounce, settle back) */
+.pulse-heart[data-celebrating] .pulse-heart__heart {
+  animation: pulseHeartCelebrationBounce 460ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  filter: drop-shadow(0 0 6px rgba(255, 77, 109, 0.75)) drop-shadow(0 0 14px rgba(255, 117, 143, 0.4));
+}
+
+@keyframes pulseHeartCelebrationBounce {
+  0% {
+    transform: scale(1);
+  }
+  32% {
+    transform: scale(1.24);
+  }
+  60% {
+    transform: scale(0.96);
+  }
+  82% {
+    transform: scale(1.04);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Local micro-animation container strictly confined around heart center */
+.pulse-heart__micro-stage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 100;
+}
+
+/* Soft glowing radial pulse centered on heart */
+.pulse-heart__glow-burst {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0.5);
+  background: radial-gradient(circle, rgba(255, 77, 109, 0.45) 0%, rgba(255, 182, 193, 0.2) 48%, rgba(255, 255, 255, 0) 74%);
+  pointer-events: none;
+  animation: pulseGlowBurst 850ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes pulseGlowBurst {
+  0% {
+    transform: translate(-50%, -50%) scale(0.5);
+    opacity: 0.9;
+  }
+  45% {
+    transform: translate(-50%, -50%) scale(2.2);
+    opacity: 0.45;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.8);
+    opacity: 0;
+  }
+}
+
+/* Delicate expanding halo ring */
+.pulse-heart__ring-halo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 77, 109, 0.55);
+  transform: translate(-50%, -50%) scale(0.6);
+  pointer-events: none;
+  animation: pulseRingHalo 750ms cubic-bezier(0.2, 0.8, 0.25, 1) forwards;
+}
+
+@keyframes pulseRingHalo {
+  0% {
+    transform: translate(-50%, -50%) scale(0.6);
+    opacity: 0.85;
+    border-color: rgba(255, 77, 109, 0.6);
+  }
+  50% {
+    opacity: 0.35;
+    border-color: rgba(255, 140, 160, 0.35);
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2.4);
+    opacity: 0;
+    border-color: rgba(255, 182, 193, 0);
+  }
+}
+
+/* Floating micro-particles (hearts, petals, sparkles) */
+.pulse-particle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  animation: pulseParticleGentleFloat var(--dur) cubic-bezier(0.25, 0.8, 0.25, 1) var(--delay) forwards;
+  will-change: transform, opacity;
+  opacity: 0;
+  filter: drop-shadow(0 1px 2px rgba(255, 77, 109, 0.25));
+}
+
+.pulse-particle svg {
+  display: block;
+  overflow: visible;
+}
+
+/* Silky, gentle upward float and fade: no harsh fling, stays close as a soft halo */
+@keyframes pulseParticleGentleFloat {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translate(0, 0) scale(0.2) rotate(0deg);
+  }
+  18% {
+    opacity: 0.95;
+    transform: translate(-50%, -50%) translate(calc(var(--dx) * 0.32), calc(var(--dy) * 0.32)) scale(var(--scale)) rotate(calc(var(--rot) * 0.3));
+  }
+  60% {
+    opacity: 0.85;
+    transform: translate(-50%, -50%) translate(calc(var(--dx) * 0.75), calc(var(--dy) * 0.75)) scale(var(--scale)) rotate(calc(var(--rot) * 0.7));
+  }
+  85% {
+    opacity: 0.45;
+    transform: translate(-50%, -50%) translate(calc(var(--dx) * 0.92), calc(var(--dy) * 0.92)) scale(calc(var(--scale) * 0.88)) rotate(var(--rot));
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translate(var(--dx), var(--dy)) scale(calc(var(--scale) * 0.7)) rotate(calc(var(--rot) * 1.15));
+  }
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -169,5 +326,13 @@
   .pulse-heart__roll {
     transition: none;
   }
-}
 
+  .pulse-heart[data-celebrating] .pulse-heart__heart {
+    animation: none !important;
+    filter: none !important;
+  }
+
+  .pulse-heart__micro-stage {
+    display: none !important;
+  }
+}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import PulseHeart from './PulseHeart';
 
@@ -26,20 +26,28 @@ function PulseHeartWidget() {
     }
   });
 
+  const [isProcessing, setIsProcessing] = useState(false);
+
   const handleChange = (nextLiked, nextCount) => {
-    const safeCount = Math.max(0, nextCount);
-    setLiked(nextLiked);
-    setCount(safeCount);
+    setIsProcessing(true);
     try {
+      const safeCount = Math.max(0, nextCount);
       localStorage.setItem(STORAGE_KEY_LIKED, String(nextLiked));
       localStorage.setItem(STORAGE_KEY_COUNT, String(safeCount));
-    } catch {}
+      setLiked(nextLiked);
+      setCount(safeCount);
+    } catch (err) {
+      console.error('Failed to persist appreciation:', err);
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
     <PulseHeart
       count={count}
       liked={liked}
+      disabled={isProcessing}
       onChange={handleChange}
       showCount={true}
       icon="heart"
@@ -73,4 +81,3 @@ if (document.readyState === 'loading') {
 } else {
   initPulseHeart();
 }
-

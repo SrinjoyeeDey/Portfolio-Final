@@ -29,7 +29,7 @@ const resolveElement = value => (value && 'current' in value ? value.current : v
 // Strictly clickable buttons, links, controls, and interactive cards (never plain text/headings/inputs/rows)
 const CLICKABLE_SELECTORS = [
   'a[href]',
-  'button:not(:disabled):not(.pmw-mobile-thumb-card)',
+  'button:not(:disabled):not(.pmw-mobile-thumb-card):not(.nav-pulse-heart-btn):not(.pulse-heart)',
   'summary',
   'select:not(:disabled)',
   '[role="button"]:not([aria-disabled="true"]):not(.editorial-row):not(.photo-print-card):not(.polaroid-item):not(.pmw-mobile-thumb-card):not(.dcf-hit)',
@@ -48,7 +48,6 @@ const CLICKABLE_SELECTORS = [
   '.circular-logo-mark',
   '.heart-btn',
   '.glass-icon-btn',
-  '.nav-pulse-heart-btn',
   '.hamburger-btn',
   '.sound-toggle-btn',
   '.tech-sound-toggle-btn',
