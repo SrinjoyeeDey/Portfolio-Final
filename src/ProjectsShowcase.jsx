@@ -276,6 +276,14 @@ const SHOWCASE_PROJECTS = [
     visualType: 'nobodristhi',
     images: [
       {
+        src: 'images/projects/nobodristhi-hero.jpg',
+        alt: 'NoboDorshi CMS landing hero showcasing global intelligence network and editorial news navigation',
+        label: 'NoboDorshi CMS Overview',
+        width: 1024,
+        height: 489,
+        bg: '#FFFFFF'
+      },
+      {
         src: 'images/projects/nobodristhi-1.jpg',
         alt: 'Nobodristhi newsroom moderation queue with automated event summary and verification actions',
         label: 'Newsroom Moderation Queue',

@@ -6,6 +6,30 @@
 (function initLenisEngine() {
   if (typeof window === 'undefined') return;
 
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual';
+  }
+
+  const resetScrollToHero = () => {
+    window.scrollTo(0, 0);
+    if (window.lenis && typeof window.lenis.scrollTo === 'function') {
+      window.lenis.scrollTo(0, { immediate: true, force: true });
+    }
+  };
+
+  if (!window.location.hash) {
+    resetScrollToHero();
+  }
+  window.addEventListener('DOMContentLoaded', () => {
+    if (!window.location.hash) resetScrollToHero();
+  });
+  window.addEventListener('load', () => {
+    if (!window.location.hash) resetScrollToHero();
+  });
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted && !window.location.hash) resetScrollToHero();
+  });
+
   function bootLenis() {
     if (typeof Lenis === 'undefined') {
       setTimeout(bootLenis, 60);
@@ -36,6 +60,10 @@
       });
 
       window.lenis = lenis;
+      if (!window.location.hash) {
+        window.scrollTo(0, 0);
+        lenis.scrollTo(0, { immediate: true, force: true });
+      }
 
       // Sync with GSAP ScrollTrigger
       if (typeof ScrollTrigger !== 'undefined') {
