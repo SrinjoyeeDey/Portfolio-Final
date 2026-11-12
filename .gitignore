@@ -1,3 +1,6 @@
+# Build & Distribution
+dist/
+
 # Dependencies
 node_modules/
 .pnp
