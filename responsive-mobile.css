@@ -2279,18 +2279,26 @@ img {
 
   .pmw-display-typography .pmw-display-row-1,
   .pmw-display-typography.hero-display-typography .row-portfolio.pmw-display-row-1 {
-    font-size: clamp(1.3rem, 5.8vw, 2.1rem) !important;
+    font-size: clamp(2.05rem, 9.8vw, 3.4rem) !important;
     white-space: nowrap !important;
-    letter-spacing: -0.5px !important;
-    line-height: 1 !important;
+    letter-spacing: -1.2px !important;
+    line-height: 0.95 !important;
+    text-align: center !important;
   }
 
   .pmw-display-typography .pmw-display-row-2,
   .pmw-display-typography.hero-display-typography .row-design.pmw-display-row-2 {
-    font-size: clamp(2rem, 9vw, 3.2rem) !important;
+    font-size: clamp(1.95rem, 9.2vw, 3.2rem) !important;
     white-space: nowrap !important;
-    letter-spacing: -1px !important;
-    line-height: 1 !important;
+    flex-wrap: nowrap !important;
+    justify-content: center !important;
+    gap: 0.25em !important;
+    letter-spacing: -1.2px !important;
+    line-height: 0.95 !important;
+  }
+
+  .pmw-display-typography .pmw-display-year-row {
+    text-align: center !important;
   }
 }
 
@@ -2298,16 +2306,19 @@ img {
 
   .pmw-display-typography .pmw-display-row-1,
   .pmw-display-typography.hero-display-typography .row-portfolio.pmw-display-row-1 {
-    font-size: clamp(1.1rem, 5.5vw, 1.8rem) !important;
+    font-size: clamp(1.9rem, 9.6vw, 2.9rem) !important;
     white-space: nowrap !important;
-    letter-spacing: -0.5px !important;
+    letter-spacing: -1.2px !important;
   }
 
   .pmw-display-typography .pmw-display-row-2,
   .pmw-display-typography.hero-display-typography .row-design.pmw-display-row-2 {
-    font-size: clamp(1.7rem, 8.5vw, 2.8rem) !important;
+    font-size: clamp(1.8rem, 9vw, 2.75rem) !important;
     white-space: nowrap !important;
-    letter-spacing: -1px !important;
+    flex-wrap: nowrap !important;
+    justify-content: center !important;
+    gap: 0.25em !important;
+    letter-spacing: -1.2px !important;
   }
 }
 
@@ -2315,70 +2326,16 @@ img {
 
   .pmw-display-typography .pmw-display-row-1,
   .pmw-display-typography.hero-display-typography .row-portfolio.pmw-display-row-1 {
-    font-size: clamp(1rem, 5.2vw, 1.6rem) !important;
+    font-size: clamp(1.75rem, 9.3vw, 2.25rem) !important;
     white-space: nowrap !important;
   }
 
   .pmw-display-typography .pmw-display-row-2,
   .pmw-display-typography.hero-display-typography .row-design.pmw-display-row-2 {
-    font-size: clamp(1.55rem, 8vw, 2.4rem) !important;
+    font-size: clamp(1.65rem, 8.7vw, 2.1rem) !important;
     white-space: nowrap !important;
-  }
-}
-
-/* ==========================================================================
-   34. PHOTOGRAPHIC MEMORY WALL â€” 2-line mobile header fix
-   Force "A COLLECTION OF" on line 1 and "MOMENTS" on line 2.
-   Must come last to override the .hero-display-typography .row-portfolio
-   rule above (which uses !important and matches the same elements).
-   ========================================================================== */
-@media (max-width: 768px) {
-
-  .pmw-display-typography .pmw-display-row-1,
-  .pmw-display-typography.hero-display-typography .row-portfolio.pmw-display-row-1 {
-    font-size: clamp(1.3rem, 5.8vw, 2.1rem) !important;
-    white-space: nowrap !important;
-    letter-spacing: -0.5px !important;
-    line-height: 1 !important;
-  }
-
-  .pmw-display-typography .pmw-display-row-2,
-  .pmw-display-typography.hero-display-typography .row-design.pmw-display-row-2 {
-    font-size: clamp(2rem, 9vw, 3.2rem) !important;
-    white-space: nowrap !important;
-    letter-spacing: -1px !important;
-    line-height: 1 !important;
-  }
-}
-
-@media (max-width: 480px) {
-
-  .pmw-display-typography .pmw-display-row-1,
-  .pmw-display-typography.hero-display-typography .row-portfolio.pmw-display-row-1 {
-    font-size: clamp(1.1rem, 5.5vw, 1.8rem) !important;
-    white-space: nowrap !important;
-    letter-spacing: -0.5px !important;
-  }
-
-  .pmw-display-typography .pmw-display-row-2,
-  .pmw-display-typography.hero-display-typography .row-design.pmw-display-row-2 {
-    font-size: clamp(1.7rem, 8.5vw, 2.8rem) !important;
-    white-space: nowrap !important;
-    letter-spacing: -1px !important;
-  }
-}
-
-@media (max-width: 375px) {
-
-  .pmw-display-typography .pmw-display-row-1,
-  .pmw-display-typography.hero-display-typography .row-portfolio.pmw-display-row-1 {
-    font-size: clamp(1rem, 5.2vw, 1.6rem) !important;
-    white-space: nowrap !important;
-  }
-
-  .pmw-display-typography .pmw-display-row-2,
-  .pmw-display-typography.hero-display-typography .row-design.pmw-display-row-2 {
-    font-size: clamp(1.55rem, 8vw, 2.4rem) !important;
-    white-space: nowrap !important;
+    flex-wrap: nowrap !important;
+    justify-content: center !important;
+    gap: 0.25em !important;
   }
 }

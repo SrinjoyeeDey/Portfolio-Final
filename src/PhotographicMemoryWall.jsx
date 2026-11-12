@@ -670,7 +670,7 @@ export default function PhotographicMemoryWall() {
         });
         revealBatch(newlyVisible);
       },
-      { rootMargin: '260px 0px 260px 0px', threshold: 0.01 }
+      { rootMargin: '0px 0px -30px 0px', threshold: 0.05 }
     );
 
     const immediateIds = [];
@@ -679,7 +679,7 @@ export default function PhotographicMemoryWall() {
     cardElementsRef.current.forEach((node) => {
       if (!node) return;
       const rect = node.getBoundingClientRect();
-      if (rect.top <= vh + 260 && rect.bottom >= -260) {
+      if (rect.top <= vh - 20 && rect.bottom >= 0) {
         const id = Number(node.getAttribute('data-id'));
         if (id) {
           immediateIds.push(id);
@@ -696,7 +696,7 @@ export default function PhotographicMemoryWall() {
     }
 
     return () => observer.disconnect();
-  }, [columns, isMobile]);
+  }, [columns, isMobile, activeCategory, isExpanded]);
 
   // Gently promote and pre-decode remaining masonry print images one-by-one in idle slices after load
   useEffect(() => {
@@ -853,10 +853,13 @@ export default function PhotographicMemoryWall() {
         {/* Bold Exotic Reference Typography */}
         <div className="hero-display-typography pmw-display-typography">
           <div className="display-row row-portfolio pmw-display-row-1">
-            A COLLECTION OF
+            A COLLECTION
           </div>
           <div className="display-row row-design pmw-display-row-2">
+            <span>OF</span>
             <span className="highlight-yellow-text pmw-highlight-yellow">MOMENTS</span>
+          </div>
+          <div className="display-row pmw-display-year-row">
             <span className="pmw-year-code">24–26↘</span>
           </div>
           <div className="display-row row-kanji-star pmw-display-row-3">
@@ -902,23 +905,32 @@ export default function PhotographicMemoryWall() {
 
         {/* Compact 3-Column Square Thumbnail Grid */}
         <div className="pmw-mobile-grid" role="region" aria-label="Square memory thumbnails">
-          {mobileDisplayedPhotos.map((photo, idx) => (
-            <button
-              key={photo.id}
-              type="button"
-              className="pmw-mobile-thumb-card"
-              onClick={() => setActivePhoto(photo)}
-              aria-label={`View photo: ${photo.title}`}
-            >
-              <img
-                src={photo.src}
-                alt={photo.title}
-                loading={idx < 9 ? 'eager' : 'lazy'}
-                decoding="async"
-                className="pmw-mobile-thumb-img"
-              />
-            </button>
-          ))}
+          {mobileDisplayedPhotos.map((photo, idx) => {
+            const isRevealed = revealedIds.has(photo.id);
+            return (
+              <button
+                key={photo.id}
+                data-id={photo.id}
+                ref={(el) => {
+                  if (el) cardElementsRef.current.set(photo.id, el);
+                  else cardElementsRef.current.delete(photo.id);
+                }}
+                type="button"
+                className={`pmw-mobile-thumb-card ${isRevealed ? 'is-revealed' : ''}`}
+                style={{ '--reveal-delay': `${((idx % 3) * 0.06).toFixed(2)}s` }}
+                onClick={() => setActivePhoto(photo)}
+                aria-label={`View photo: ${photo.title}`}
+              >
+                <img
+                  src={photo.src}
+                  alt={photo.title}
+                  loading={idx < 9 ? 'eager' : 'lazy'}
+                  decoding="async"
+                  className="pmw-mobile-thumb-img"
+                />
+              </button>
+            );
+          })}
         </div>
 
         {/* View All / Collapse Button */}

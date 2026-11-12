@@ -1,3 +1,10 @@
+/* Disable default browser right-click context menu */
+if (typeof document !== 'undefined') {
+  document.addEventListener('contextmenu', (e) => {
+    e.preventDefault();
+  });
+}
+
 /* ==========================================================================
    LENIS ULTRA-SMOOTH INERTIAL SCROLL ENGINE
    Exact match to https://asmitrishi.dev configuration:
@@ -52,9 +59,9 @@
           if (!node || typeof node.closest !== 'function') return false;
           return Boolean(
             node.hasAttribute?.('data-lenis-prevent') ||
-              node.closest(
-                '[data-lenis-prevent], #project-modal, .modal-card, .modal-body, .clay-screen-body, #terminal-output, #clay-terminal-output, .terminal-output-area, .muchi-cli-scrollable, .pmw-filter-bar, .pmw-fullscreen-viewer-overlay'
-              )
+            node.closest(
+              '[data-lenis-prevent], #project-modal, .modal-card, .modal-body, .clay-screen-body, #terminal-output, #clay-terminal-output, .terminal-output-area, .muchi-cli-scrollable, .pmw-filter-bar, .pmw-fullscreen-viewer-overlay'
+            )
           );
         }
       });
@@ -589,10 +596,10 @@ document.addEventListener('DOMContentLoaded', () => {
       id: "punarchakra",
       title: "Punarchakra",
       subtitle: "AI-Powered E-Waste Recycling Platform",
-      category: "AI/ML • Sustainability • Web",
+      category: "AI/ML • Sustainability • APP Dev",
       overviewHeading: "PROJECT OVERVIEW",
       overview: [
-        "Punarchakra, also presented as E-BIN, is a smart web-based platform focused on making e-waste recycling more accessible and engaging.",
+        "Punarchakra, also presented as E-BIN, is a smart App-based platform focused on making e-waste recycling more accessible and engaging.",
         "The platform combines AI-assisted e-waste classification with a reward-driven recycling experience, helping users identify electronic waste and connect the act of responsible disposal with tangible incentives.",
         "The core idea is to turn e-waste from something people simply throw away into something that can be identified, processed, and redirected toward responsible recycling."
       ],
@@ -634,7 +641,7 @@ document.addEventListener('DOMContentLoaded', () => {
       infoCard: {
         project: "Punarchakra / E-BIN",
         focus: "AI/ML • Sustainability • Recycling",
-        platform: "Web",
+        platform: "Mobile",
         myContribution: "Product • AI/ML • Development",
         techStack: [
           "AI-Assisted Classification",
@@ -726,7 +733,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Global helper to show the 3D isometric loader with percentage
-  window.showLoader = function(customText, duration = 1200, callback) {
+  window.showLoader = function (customText, duration = 1200, callback) {
     if (!sectionLoaderOverlay) {
       if (typeof callback === 'function') callback();
       return;
@@ -748,13 +755,13 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Global helper to hide the loader immediately
-  window.hideLoader = function() {
+  window.hideLoader = function () {
     if (!sectionLoaderOverlay) return;
     sectionLoaderOverlay.classList.remove('active');
   };
 
   // Global helper to display loader during error state
-  window.showErrorLoader = function(errorMsg) {
+  window.showErrorLoader = function (errorMsg) {
     if (!sectionLoaderOverlay) return;
     if (loaderSectionName) {
       loaderSectionName.textContent = errorMsg ? errorMsg.toUpperCase() : 'SOMETHING WENT WRONG.';
@@ -771,7 +778,7 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // Global helper for section transitions
-  window.triggerSectionLoader = function(targetName, callback, duration = 1000) {
+  window.triggerSectionLoader = function (targetName, callback, duration = 1000) {
     window.showLoader(targetName ? `LOADING ${targetName}...` : 'LOADING...', duration, callback);
   };
 
@@ -807,7 +814,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (typeof targetEl.focus === 'function') {
               try {
                 targetEl.focus({ preventScroll: true });
-              } catch (_) {}
+              } catch (_) { }
             }
           }
         }
@@ -941,10 +948,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const shouldFlyLeft =
       Boolean(
         cachedEnvelopeWidget &&
-          window._envelopeCurrentSide === 'right' &&
-          typeof window._triggerEnvelopeFlight === 'function' &&
-          cachedProjectsEl &&
-          cachedProjectsEl.getBoundingClientRect().top <= vh * 0.55
+        window._envelopeCurrentSide === 'right' &&
+        typeof window._triggerEnvelopeFlight === 'function' &&
+        cachedProjectsEl &&
+        cachedProjectsEl.getBoundingClientRect().top <= vh * 0.55
       );
 
     // Perform DOM mutations strictly after all layout reads
@@ -1028,8 +1035,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (data) {
       // Hero Media Panel: Use authentic project mark/title without fake screenshots
       let heroMediaHtml = '';
-        if (data.id === 'vani') {
-          heroMediaHtml = `
+      if (data.id === 'vani') {
+        heroMediaHtml = `
             <div class="modal-hero-banner vani-hero-banner">
               <div class="vani-hero-content">
                 <div class="vani-hero-icon-badge">
@@ -1048,8 +1055,8 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
             </div>
           `;
-        } else if (data.id === 'agnivaarak') {
-          heroMediaHtml = `
+      } else if (data.id === 'agnivaarak') {
+        heroMediaHtml = `
             <div class="modal-hero-banner agnivaarak-hero-banner">
               <div class="agnivaarak-hero-content">
                 <div class="agnivaarak-hero-icon-badge">
@@ -1068,8 +1075,8 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
             </div>
           `;
-        } else if (data.id === 'anchor') {
-          heroMediaHtml = `
+      } else if (data.id === 'anchor') {
+        heroMediaHtml = `
             <div class="modal-hero-banner anchor-hero-banner">
               <div class="anchor-hero-content">
                 <div class="anchor-hero-icon-badge">
@@ -1088,8 +1095,8 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
             </div>
           `;
-        } else if (data.id === 'nobodristhi') {
-          heroMediaHtml = `
+      } else if (data.id === 'nobodristhi') {
+        heroMediaHtml = `
             <div class="modal-hero-banner nobodristhi-hero-banner">
               <div class="nobodristhi-hero-content">
                 <div class="nobodristhi-hero-icon-badge">
@@ -1108,8 +1115,8 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
             </div>
           `;
-        } else if (data.id === 'nexvyapaar') {
-          heroMediaHtml = `
+      } else if (data.id === 'nexvyapaar') {
+        heroMediaHtml = `
             <div class="modal-hero-banner nexvyapaar-hero-banner">
               <div class="nexvyapaar-hero-content">
                 <div class="nexvyapaar-hero-icon-badge">
@@ -1128,8 +1135,8 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
             </div>
           `;
-        } else if (data.id === 'punarchakra') {
-          heroMediaHtml = `
+      } else if (data.id === 'punarchakra') {
+        heroMediaHtml = `
             <div class="modal-hero-banner punarchakra-hero-banner">
               <div class="punarchakra-hero-content">
                 <div class="punarchakra-hero-icon-badge">
@@ -1148,8 +1155,8 @@ document.addEventListener('DOMContentLoaded', () => {
               </div>
             </div>
           `;
-        } else {
-          heroMediaHtml = `
+      } else {
+        heroMediaHtml = `
             <div class="modal-hero-banner standard-hero-banner">
               <div class="modal-banner-icon-circle">
                 <i class="fa-solid ${getProjectIcon(projectId)}"></i>
@@ -1157,9 +1164,9 @@ document.addEventListener('DOMContentLoaded', () => {
               <div class="modal-banner-title">${data.title}</div>
             </div>
           `;
-        }
+      }
 
-        modalBodyContent.innerHTML = `
+      modalBodyContent.innerHTML = `
           <!-- Header: Category & Titles -->
           <div class="modal-header-info">
             <span class="pill-badge-tag">${data.category}</span>
@@ -1282,9 +1289,9 @@ document.addEventListener('DOMContentLoaded', () => {
             </button>
           </div>
         `;
-        projectModal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-      }
+      projectModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
   }
   window.openProjectModalById = openProjectModalById;
 
@@ -1352,7 +1359,7 @@ document.addEventListener('DOMContentLoaded', () => {
       gain.connect(ctx.destination);
       osc.start();
       osc.stop(ctx.currentTime + 0.065);
-    } catch (e) {}
+    } catch (e) { }
   }
 
   // --- PART A: FORMAL VERIFIED PROJECT INQUIRY FORM (raghawshukla.xyz match) ---
@@ -1409,42 +1416,42 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         body: JSON.stringify(payload)
       })
-      .then(res => res.json())
-      .catch(err => {
-        console.warn('Direct fetch note: fallback active', err);
-      })
-      .finally(() => {
-        setTimeout(() => {
-          if (submitBtn) {
-            submitBtn.innerHTML = `<span class="btn-text-content"><span>[ TRANSMISSION_COMPLETE. ACK_RECEIVED. ]</span> <i class="fa-solid fa-check"></i></span>`;
-            submitBtn.style.background = '#22c55e';
-            submitBtn.style.color = '#FFFFFF';
-            submitBtn.style.borderColor = '#111111';
-          }
-          if (formStatusMsg) {
-            formStatusMsg.innerHTML = '<span style="color:#00875a; font-weight:700;">// UPLINK_SUCCESS: Data packet sent. Direct response dispatched within 24h.</span>';
-          }
-          contactForm.reset();
-          if (window.PortoSound) {
-            window.PortoSound.playSuccess();
-          } else {
-            playPinSound(880);
-          }
-          showToast(`📬 Transmission dispatched to Srinjoyee! Direct reply will arrive at ${email} shortly.`);
-
+        .then(res => res.json())
+        .catch(err => {
+          console.warn('Direct fetch note: fallback active', err);
+        })
+        .finally(() => {
           setTimeout(() => {
             if (submitBtn) {
-              submitBtn.disabled = false;
-              submitBtn.innerHTML = originalHTML;
-              submitBtn.style.background = originalBg;
-              submitBtn.style.color = originalColor;
+              submitBtn.innerHTML = `<span class="btn-text-content"><span>[ TRANSMISSION_COMPLETE. ACK_RECEIVED. ]</span> <i class="fa-solid fa-check"></i></span>`;
+              submitBtn.style.background = '#22c55e';
+              submitBtn.style.color = '#FFFFFF';
+              submitBtn.style.borderColor = '#111111';
             }
             if (formStatusMsg) {
-              formStatusMsg.innerHTML = '';
+              formStatusMsg.innerHTML = '<span style="color:#00875a; font-weight:700;">// UPLINK_SUCCESS: Data packet sent. Direct response dispatched within 24h.</span>';
             }
-          }, 4500);
-        }, 900);
-      });
+            contactForm.reset();
+            if (window.PortoSound) {
+              window.PortoSound.playSuccess();
+            } else {
+              playPinSound(880);
+            }
+            showToast(`📬 Transmission dispatched to Srinjoyee! Direct reply will arrive at ${email} shortly.`);
+
+            setTimeout(() => {
+              if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalHTML;
+                submitBtn.style.background = originalBg;
+                submitBtn.style.color = originalColor;
+              }
+              if (formStatusMsg) {
+                formStatusMsg.innerHTML = '';
+              }
+            }, 4500);
+          }, 900);
+        });
     });
   }
 
@@ -1524,7 +1531,7 @@ document.addEventListener('DOMContentLoaded', () => {
       notes.unshift({ category, text, color, pin, timestamp: Date.now() });
       if (notes.length > 20) notes.pop();
       localStorage.setItem(STICKY_STORAGE_KEY, JSON.stringify(notes));
-    } catch (e) {}
+    } catch (e) { }
   }
 
   // 4. Pin Note Submission Handler (Anonymous)
@@ -1572,34 +1579,34 @@ document.addEventListener('DOMContentLoaded', () => {
         },
         body: JSON.stringify(anonPayload)
       })
-      .then(res => res.json())
-      .catch(err => {
-        console.warn('Anonymous dispatch fetch note:', err);
-      })
-      .finally(() => {
-        setTimeout(() => {
-          // Pin note to the live board
-          if (stickyNotesGrid) {
-            const freshNote = createNoteDOM(category, noteText, color, chosenPin, true);
-            stickyNotesGrid.prepend(freshNote);
-          }
+        .then(res => res.json())
+        .catch(err => {
+          console.warn('Anonymous dispatch fetch note:', err);
+        })
+        .finally(() => {
+          setTimeout(() => {
+            // Pin note to the live board
+            if (stickyNotesGrid) {
+              const freshNote = createNoteDOM(category, noteText, color, chosenPin, true);
+              stickyNotesGrid.prepend(freshNote);
+            }
 
-          // Persist in local storage
-          saveStickyNoteToStorage(category, noteText, color, chosenPin);
+            // Persist in local storage
+            saveStickyNoteToStorage(category, noteText, color, chosenPin);
 
-          // Reset composer
-          stickyTextarea.value = '';
-          pinNoteBtn.disabled = false;
-          pinNoteBtn.innerHTML = originalBtnHTML;
+            // Reset composer
+            stickyTextarea.value = '';
+            pinNoteBtn.disabled = false;
+            pinNoteBtn.innerHTML = originalBtnHTML;
 
-          if (window.PortoSound) {
-            window.PortoSound.playSuccess();
-          } else {
-            playPinSound(880);
-          }
-          showToast('📌 Note pinned to the community board & dispatched anonymously to Srinjoyee’s inbox!');
-        }, 750);
-      });
+            if (window.PortoSound) {
+              window.PortoSound.playSuccess();
+            } else {
+              playPinSound(880);
+            }
+            showToast('📌 Note pinned to the community board & dispatched anonymously to Srinjoyee’s inbox!');
+          }, 750);
+        });
     });
   }
 
@@ -1682,7 +1689,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const r = Math.round(lower.r + factor * (upper.r - lower.r));
       const g = Math.round(lower.g + factor * (upper.g - lower.g));
       const b = Math.round(lower.b + factor * (upper.b - lower.b));
-      
+
       const nearestName = factor > 0.5 ? upper.name : lower.name;
       return { r, g, b, name: nearestName, rgbStr: `rgb(${r}, ${g}, ${b})` };
     }
@@ -1986,7 +1993,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const macDockOuter = document.getElementById('mac-dock');
     const ctaSectionEl = document.getElementById('studio');
     const contactSectionEl = document.getElementById('story-layer-contact') || document.getElementById('contact');
-    
+
     if (macDockOuter) {
       let isCtaInView = false;
       let isContactInView = false;
@@ -2575,7 +2582,7 @@ document.addEventListener('DOMContentLoaded', () => {
               })
             }).then(() => {
               if (window.PortoSound) window.PortoSound.playSuccess();
-            }).catch(() => {});
+            }).catch(() => { });
           }
           break;
 
@@ -2824,7 +2831,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  window.removeSlotImage = function(slotKey) {
+  window.removeSlotImage = function (slotKey) {
     const slotObj = editorialSlots.find(s => s.key === slotKey);
     if (!slotObj) return;
     if (slotObj.previewEl) {
@@ -2842,7 +2849,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     try {
       localStorage.removeItem(`editorial_slot_${slotKey}`);
-    } catch (err) {}
+    } catch (err) { }
   };
 
   editorialSlots.forEach(slot => {
@@ -2854,7 +2861,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (saved) {
         setSlotImage(slot, saved);
       }
-    } catch (err) {}
+    } catch (err) { }
 
     // File input change
     slot.inputEl.addEventListener('change', (e) => {
@@ -2940,7 +2947,7 @@ document.addEventListener('DOMContentLoaded', () => {
     scrapbookSection.style.display = 'block';
     scrapbookSection.classList.remove('scrapbook-hidden');
     scrapbookSection.classList.add('scrapbook-revealed');
-    
+
     if (btnToggleMotion) {
       btnToggleMotion.classList.add('active');
       btnToggleMotion.setAttribute('aria-expanded', 'true');
@@ -3037,7 +3044,7 @@ document.addEventListener('DOMContentLoaded', () => {
       osc.type = type;
       osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(freq * 1.5, audioCtx.currentTime + 0.04);
-      
+
       gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.045);
 
@@ -3276,7 +3283,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function updateTimelineSpine() {
       const rect = timelineSection.getBoundingClientRect();
       const windowHeight = window.innerHeight;
-      
+
       const startOffset = windowHeight * 0.45;
       const totalDist = rect.height - 100;
       const currentScroll = startOffset - rect.top;
@@ -3319,7 +3326,7 @@ document.addEventListener('DOMContentLoaded', () => {
       window.addEventListener('scroll', onScroll, { passive: true });
     }
     window.addEventListener('resize', onScroll, { passive: true });
-    
+
     setTimeout(updateTimelineSpine, 300);
 
     // 3. Smooth Jump Bar Links
@@ -3572,7 +3579,7 @@ document.addEventListener('DOMContentLoaded', () => {
       void popover.offsetWidth;
       popover.classList.add('is-open');
       triggerBtn.setAttribute('aria-expanded', 'true');
-      
+
       // Focus name input shortly after open
       setTimeout(() => {
         if (nameInput) nameInput.focus();
