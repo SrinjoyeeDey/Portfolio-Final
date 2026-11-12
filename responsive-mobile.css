@@ -1295,7 +1295,6 @@ html, body {
   .mobile-iphone-device {
     width: min(250px, 86vw) !important;
     height: auto !important;
-    min-height: 360px !important;
     max-width: 100% !important;
     transform: none !important;
     margin: 0 auto !important;
@@ -1305,7 +1304,7 @@ html, body {
   .mobile-iphone-device.phone-left,
   .mobile-iphone-device.phone-right {
     transform: none !important;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.18) !important;
+    filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.18)) !important;
   }
 
   .desktop-dashboard-frame {

@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { Iphone } from '@/registry/magicui/iphone';
 import { isSoundEnabled, setSoundEnabled, playSlideSound } from './tactileSound';
 import './ProjectsShowcase.css';
 
@@ -49,7 +50,50 @@ const SHOWCASE_PROJECTS = [
     ],
     companionPhone: {
       label: 'VAni Android App',
-      images: []
+      images: [
+        {
+          src: 'images/projects/vani-phone-1.jpg',
+          alt: 'VAni mobile app welcome screen featuring Mr. Meddy AI companion with Google and Email sign-in',
+          label: 'Mobile App • Mr. Meddy Welcome',
+          width: 483,
+          height: 1024
+        },
+        {
+          src: 'images/projects/vani-phone-2.jpg',
+          alt: 'VAni mobile app home dashboard showing adherence score, weekly progress, reminders, and quick voice assistant',
+          label: 'Mobile App • Daily Adherence Dashboard',
+          width: 466,
+          height: 1024
+        },
+        {
+          src: 'images/projects/vani-phone-3.jpg',
+          alt: 'VAni mobile app Hindi voice assistant modal answering medication questions in natural speech',
+          label: 'Mobile App • Hindi Voice Assistant',
+          width: 356,
+          height: 780
+        },
+        {
+          src: 'images/projects/vani-phone-4.jpg',
+          alt: 'VAni Smart Emergency SOS settings with rapid-tap trigger, cancel window, live GPS sharing, and 112 auto-call',
+          label: 'Mobile App • Smart Emergency SOS',
+          width: 469,
+          height: 1024
+        },
+        {
+          src: 'images/projects/vani-phone-5.jpg',
+          alt: 'VAni Live Tracking Center showing real-time ambulance dispatch on Leaflet OpenStreetMap with ETA',
+          label: 'Mobile App • Live Ambulance Tracking',
+          width: 356,
+          height: 766
+        },
+        {
+          src: 'images/projects/vani-phone-6.jpg',
+          alt: 'VAni Doctor and patient care messaging thread with medication safety guidance',
+          label: 'Mobile App • Care Team Chat',
+          width: 459,
+          height: 1024
+        }
+      ]
     }
   },
   {
@@ -220,11 +264,35 @@ const SHOWCASE_PROJECTS = [
     visualType: 'gaming',
     images: [
       {
-        src: 'images/projects/nexvyapaar-1.png',
-        alt: 'NexVyapaar multilingual voice control screen recording sales across 22 Indian languages',
-        label: 'Voice Control Workflow',
-        width: 800,
-        height: 455,
+        src: 'images/projects/nexvyapaar-2.jpg',
+        alt: 'NexVyapaar real-time Sales Dashboard showing revenue trends, average order value, Khata Scanner, and top selling categories',
+        label: 'Sales Dashboard & Trends',
+        width: 1024,
+        height: 578,
+        bg: '#FFFFFF'
+      },
+      {
+        src: 'images/projects/nexvyapaar-3.jpg',
+        alt: 'NexVyapaar Raw Materials Inventory table with active low-stock alert, burn rate, and weekly trend tracking',
+        label: 'Smart Inventory & Alerts',
+        width: 1024,
+        height: 576,
+        bg: '#FFFFFF'
+      },
+      {
+        src: 'images/projects/nexvyapaar-4.jpg',
+        alt: 'NexVyapaar Analytics view with monthly revenue charts and AI-Powered Forecasts comparison curve',
+        label: 'Analytics & AI Forecasts',
+        width: 1024,
+        height: 575,
+        bg: '#FFFFFF'
+      },
+      {
+        src: 'images/projects/nexvyapaar-5.jpg',
+        alt: 'NexVyapaar Suppliers Management directory tracking 8 suppliers, lead times, ratings, and payment terms',
+        label: 'Supplier Directory & Lead Times',
+        width: 1024,
+        height: 575,
         bg: '#FFFFFF'
       }
     ]
@@ -341,13 +409,17 @@ function Interactive3DStage({ children, className = '' }) {
 
 const ProjectMockupCarousel = React.memo(function ProjectMockupCarousel({ project, fallbackStage = null }) {
   const images = Array.isArray(project.images) ? project.images : [];
-  const hasRealImages = images.length > 0;
-  const totalSlides = hasRealImages ? images.length : 1;
+  const companionPhone = project.companionPhone || null;
+  const phoneImages = Array.isArray(companionPhone?.images) ? companionPhone.images : [];
+  const hasRealImages = images.length > 0 || phoneImages.length > 0;
+  const totalSlides = hasRealImages ? Math.max(images.length, phoneImages.length) : 1;
+  const hasMultiTrackSlides = images.length > 1;
+  const hasPhoneOnlyMulti = !hasMultiTrackSlides && phoneImages.length > 1;
 
   const trackRef = useRef(null);
   const slideRefs = useRef([]);
   const [supportsParking, setSupportsParking] = useState(false);
-  const canLoopContinuous = hasRealImages && totalSlides >= 3 && supportsParking;
+  const canLoopContinuous = hasMultiTrackSlides && totalSlides >= 3 && supportsParking;
 
   const [activeIndex, setActiveIndex] = useState(0);
   const [settledIndex, setSettledIndex] = useState(0);
@@ -487,8 +559,19 @@ const ProjectMockupCarousel = React.memo(function ProjectMockupCarousel({ projec
   }, [applyParking, findNearestSlideIndex, images, totalSlides]);
 
   useEffect(() => {
+    if (typeof window === 'undefined' || phoneImages.length <= 1) return;
+    phoneImages.forEach((img) => {
+      if (img?.src) {
+        const preloaderImg = new window.Image();
+        preloaderImg.decoding = 'async';
+        preloaderImg.src = img.src;
+      }
+    });
+  }, [phoneImages]);
+
+  useEffect(() => {
     const track = trackRef.current;
-    if (!track || !hasRealImages) return undefined;
+    if (!track || !hasMultiTrackSlides) return undefined;
 
     if (canLoopContinuous) {
       prevParkingRef.current = { firstAfter: false, lastBefore: false };
@@ -557,7 +640,7 @@ const ProjectMockupCarousel = React.memo(function ProjectMockupCarousel({ projec
         resizeObserver.disconnect();
       }
     };
-  }, [applyParking, canLoopContinuous, findNearestSlideIndex, getSlideLocalLeft, hasRealImages, runSettle]);
+  }, [applyParking, canLoopContinuous, findNearestSlideIndex, getSlideLocalLeft, hasMultiTrackSlides, runSettle]);
 
   const scrollToSlide = useCallback(
     (targetIdx) => {
@@ -573,6 +656,18 @@ const ProjectMockupCarousel = React.memo(function ProjectMockupCarousel({ projec
         noticeTimerRef.current = setTimeout(() => {
           setSingleSlideNotice(false);
         }, 2000);
+        return;
+      }
+
+      if (hasPhoneOnlyMulti) {
+        const clampedIdx = ((targetIdx % totalSlides) + totalSlides) % totalSlides;
+        pendingTargetRef.current = null;
+        settledIndexRef.current = clampedIdx;
+        setSettledIndex(clampedIdx);
+        setActiveIndex(clampedIdx);
+        playSlideSound();
+        const phoneLabel = phoneImages[clampedIdx]?.label ? `: ${phoneImages[clampedIdx].label}` : '';
+        setStatusAnnouncement(`Slide ${clampedIdx + 1} of ${totalSlides}${phoneLabel}`);
         return;
       }
 
@@ -595,7 +690,7 @@ const ProjectMockupCarousel = React.memo(function ProjectMockupCarousel({ projec
         runSettle();
       }
     },
-    [getSlideLocalLeft, hasRealImages, project.title, runSettle, totalSlides]
+    [getSlideLocalLeft, hasPhoneOnlyMulti, hasRealImages, phoneImages, project.title, runSettle, totalSlides]
   );
 
   const handleNextClick = useCallback(
@@ -606,15 +701,19 @@ const ProjectMockupCarousel = React.memo(function ProjectMockupCarousel({ projec
         scrollToSlide(0);
         return;
       }
+      if (hasPhoneOnlyMulti) {
+        scrollToSlide((activeIndex + 1) % totalSlides);
+        return;
+      }
       const baseIndex = pendingTargetRef.current !== null ? pendingTargetRef.current : findNearestSlideIndex();
-      const isFiniteMode = totalSlides >= 3 && !supportsParking;
+      const isFiniteMode = hasMultiTrackSlides && totalSlides >= 3 && !supportsParking;
       const nextIdx = isFiniteMode
         ? Math.min(totalSlides - 1, baseIndex + 1)
         : (baseIndex + 1) % totalSlides;
       if (isFiniteMode && nextIdx === baseIndex) return;
       scrollToSlide(nextIdx);
     },
-    [findNearestSlideIndex, hasRealImages, scrollToSlide, supportsParking, totalSlides]
+    [activeIndex, findNearestSlideIndex, hasMultiTrackSlides, hasPhoneOnlyMulti, hasRealImages, scrollToSlide, supportsParking, totalSlides]
   );
 
   const handlePrevClick = useCallback(
@@ -622,15 +721,19 @@ const ProjectMockupCarousel = React.memo(function ProjectMockupCarousel({ projec
       e.preventDefault();
       e.stopPropagation();
       if (!hasRealImages || totalSlides <= 1) return;
+      if (hasPhoneOnlyMulti) {
+        scrollToSlide((activeIndex - 1 + totalSlides) % totalSlides);
+        return;
+      }
       const baseIndex = pendingTargetRef.current !== null ? pendingTargetRef.current : findNearestSlideIndex();
-      const isFiniteMode = totalSlides >= 3 && !supportsParking;
+      const isFiniteMode = hasMultiTrackSlides && totalSlides >= 3 && !supportsParking;
       const prevIdx = isFiniteMode
         ? Math.max(0, baseIndex - 1)
         : (baseIndex - 1 + totalSlides) % totalSlides;
       if (isFiniteMode && prevIdx === baseIndex) return;
       scrollToSlide(prevIdx);
     },
-    [findNearestSlideIndex, hasRealImages, scrollToSlide, supportsParking, totalSlides]
+    [activeIndex, findNearestSlideIndex, hasMultiTrackSlides, hasPhoneOnlyMulti, hasRealImages, scrollToSlide, supportsParking, totalSlides]
   );
 
   const handleMarkerClick = useCallback(
@@ -666,15 +769,17 @@ const ProjectMockupCarousel = React.memo(function ProjectMockupCarousel({ projec
     [handleNextClick, handlePrevClick]
   );
 
-  const companionPhone = project.companionPhone || null;
-  const phoneImages = Array.isArray(companionPhone?.images) ? companionPhone.images : [];
   const activePhoneImg =
     phoneImages.length > 0 ? phoneImages[activeIndex % phoneImages.length] : null;
-  const isFiniteMultiSlide = hasRealImages && totalSlides >= 3 && !supportsParking;
+  const isFiniteMultiSlide = hasMultiTrackSlides && totalSlides >= 3 && !supportsParking;
   const isPrevDisabled = isFiniteMultiSlide && activeIndex === 0;
   const isFiniteNextDisabled = isFiniteMultiSlide && activeIndex === totalSlides - 1;
+  const markerItems = Array.from({ length: totalSlides }, (_, idx) =>
+    hasPhoneOnlyMulti ? phoneImages[idx] : images[idx] || phoneImages[idx]
+  );
   const currentCaption = hasRealImages
-    ? images[activeIndex]?.label || `${project.title} preview`
+    ? (hasPhoneOnlyMulti ? phoneImages[activeIndex]?.label : images[activeIndex]?.label) ||
+      `${project.title} preview`
     : 'Interactive Concept Mockup';
   const counterLabel = `${String(activeIndex + 1).padStart(2, '0')} / ${String(totalSlides).padStart(2, '0')}`;
 
@@ -698,13 +803,13 @@ const ProjectMockupCarousel = React.memo(function ProjectMockupCarousel({ projec
           </span>
           {hasRealImages && totalSlides > 1 && (
             <nav className="mockup-carousel-markers" aria-label={`Choose a ${project.title} screenshot`}>
-              {images.map((img, idx) => (
+              {markerItems.map((img, idx) => (
                 <button
                   key={`${project.id}-marker-${idx}`}
                   type="button"
                   className="mockup-marker-dot"
                   aria-current={activeIndex === idx ? 'true' : undefined}
-                  aria-label={`Show image ${idx + 1} of ${totalSlides}${img.label ? `: ${img.label}` : ''}`}
+                  aria-label={`Show image ${idx + 1} of ${totalSlides}${img?.label ? `: ${img.label}` : ''}`}
                   onClick={(e) => handleMarkerClick(idx, e)}
                   onKeyDown={handleButtonKeyDown}
                 />
@@ -746,132 +851,157 @@ const ProjectMockupCarousel = React.memo(function ProjectMockupCarousel({ projec
         </div>
       </div>
 
-      {/* Main 3D Showcase Stage */}
-      {hasRealImages ? (
-        <Interactive3DStage
-          className={`tablet-3d-stage mockup-real-stage ${companionPhone ? 'mockup-has-phone' : ''}`}
-        >
-          <div className="desktop-dashboard-frame mockup-photo-frame">
-            <div className="dashboard-glass-sheen" aria-hidden="true" />
-            <div className="dashboard-camera-dot" aria-hidden="true" />
-            <div className="mockup-screen-window">
-              <div
-                ref={trackRef}
-                className={`mockup-carousel-track ${canLoopContinuous ? 'is-looping' : ''}`}
-                tabIndex={0}
-                role="group"
-                aria-label={`${project.title} preview slides`}
-                onPointerDown={clearPendingOnManualScroll}
-                onWheel={clearPendingOnManualScroll}
-                onKeyDown={handleTrackKeyDown}
-              >
-                {images.map((img, idx) => {
-                  const isParked =
-                    canLoopContinuous &&
-                    (totalSlides === 3
-                      ? (settledIndex >= 2 && idx === 0) || (settledIndex <= 0 && idx === 2)
-                      : (settledIndex >= totalSlides - 2 && idx === 0) ||
-                        (settledIndex <= 1 && idx === totalSlides - 1));
+      {/* Main 3D MacBook Showcase Stage (All Project Cards) */}
+      <Interactive3DStage
+        className={`macbook-3d-stage mockup-real-stage ${companionPhone ? 'mockup-has-phone' : ''}`}
+      >
+        <div className="macbook">
+          <div className="screen">
+            <div className="viewport">
+              {hasRealImages ? (
+                <div
+                  ref={trackRef}
+                  className={`mockup-carousel-track ${canLoopContinuous ? 'is-looping' : ''}`}
+                  tabIndex={0}
+                  role="group"
+                  aria-label={`${project.title} preview slides`}
+                  onPointerDown={clearPendingOnManualScroll}
+                  onWheel={clearPendingOnManualScroll}
+                  onKeyDown={handleTrackKeyDown}
+                >
+                  {images.map((img, idx) => {
+                    const isParked =
+                      canLoopContinuous &&
+                      (totalSlides === 3
+                        ? (settledIndex >= 2 && idx === 0) || (settledIndex <= 0 && idx === 2)
+                        : (settledIndex >= totalSlides - 2 && idx === 0) ||
+                          (settledIndex <= 1 && idx === totalSlides - 1));
+                    const ratio = img.width && img.height ? img.height / img.width : 0;
+                    const isTallShot = ratio > 0.68;
 
-                  return (
-                    <div
-                      key={`${project.id}-slide-${idx}`}
-                      ref={(el) => {
-                        slideRefs.current[idx] = el;
-                      }}
-                      className="mockup-carousel-slide"
-                      role="group"
-                      aria-roledescription="slide"
-                      aria-label={`${idx + 1} of ${totalSlides}`}
-                      data-marker-name={`Show image ${idx + 1} of ${totalSlides}`}
-                      inert={isParked}
-                      style={{ '--slide-bg': img.bg || '#0B0D11' }}
-                    >
-                      <img
-                        src={img.src}
-                        alt={img.alt}
-                        width={img.width}
-                        height={img.height}
-                        loading={idx === 0 ? 'eager' : 'lazy'}
-                        decoding="async"
-                        fetchPriority={idx > 0 ? 'low' : undefined}
-                        className={`mockup-slide-img ${img.fit === 'cover' ? 'is-cover' : ''}`}
-                        draggable={false}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
+                    return (
+                      <div
+                        key={`${project.id}-slide-${idx}`}
+                        ref={(el) => {
+                          slideRefs.current[idx] = el;
+                        }}
+                        className="mockup-carousel-slide"
+                        role="group"
+                        aria-roledescription="slide"
+                        aria-label={`${idx + 1} of ${totalSlides}`}
+                        data-marker-name={`Show image ${idx + 1} of ${totalSlides}`}
+                        inert={isParked}
+                        style={{ '--slide-bg': img.bg || '#111318' }}
+                      >
+                        <div
+                          className={`macbook-slide-shot ${isTallShot ? 'is-tall' : ''} ${img.fit === 'cover' ? 'is-cover' : ''}`}
+                          style={{ backgroundImage: `url("${img.src}")` }}
+                        >
+                          <img
+                            src={img.src}
+                            alt={img.alt}
+                            width={img.width}
+                            height={img.height}
+                            loading="eager"
+                            decoding="async"
+                            fetchPriority={idx > 0 ? 'low' : undefined}
+                            className={`mockup-slide-img ${img.fit === 'cover' ? 'is-cover' : ''} ${isTallShot ? 'is-tall-hidden' : ''}`}
+                            draggable={false}
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                fallbackStage || <PunarchakraMacbookScreen project={project} />
+              )}
             </div>
           </div>
+          <div className="base" aria-hidden="true" />
+          <div className="notch" aria-hidden="true" />
+        </div>
 
-          {companionPhone && (
-            <div
-              className="mockup-companion-phone"
-              aria-label={`${companionPhone.label || project.title} mobile mockup`}
-            >
-              <div className="mockup-phone-glass-sheen" aria-hidden="true" />
-              <div className="mockup-phone-screen">
-                <div className="mockup-phone-status" aria-hidden="true">
-                  <span className="mockup-phone-time">9:41</span>
-                  <span className="mockup-phone-island" />
-                  <span className="mockup-phone-icons">
-                    <i className="fa-solid fa-signal"></i>
-                    <i className="fa-solid fa-battery-full"></i>
-                  </span>
-                </div>
-
-                {activePhoneImg ? (
-                  <img
-                    src={activePhoneImg.src}
-                    alt={activePhoneImg.alt}
-                    width={activePhoneImg.width}
-                    height={activePhoneImg.height}
-                    loading="lazy"
-                    decoding="async"
-                    fetchPriority="low"
-                    className="mockup-phone-img"
-                    draggable={false}
-                  />
-                ) : (
-                  <div className="mockup-phone-placeholder">
-                    <div className="mockup-phone-brand-row">
-                      <span className="mockup-phone-brand-icon" aria-hidden="true">
-                        <i className="fa-solid fa-heart-pulse"></i>
-                      </span>
-                      <span className="mockup-phone-brand-name">VAni</span>
-                      <span className="mockup-phone-apk-badge">APK</span>
-                    </div>
-
-                    <div className="mockup-phone-card">
-                      <div className="mockup-phone-avatar" aria-hidden="true">
-                        <i className="fa-solid fa-robot"></i>
-                      </div>
-                      <span className="mockup-phone-card-title">Mr. Meddy</span>
-                      <span className="mockup-phone-card-sub">Post-Discharge App</span>
-                    </div>
-
-                    <div className="mockup-phone-slot-pill">
-                      <i className="fa-solid fa-mobile-screen-button" aria-hidden="true"></i>
-                      <span>App Screen Ready</span>
-                    </div>
-                  </div>
-                )}
-
-                <div className="mockup-phone-home-bar" aria-hidden="true" />
-              </div>
-            </div>
-          )}
-
-          <div className="device-3d-ground-shadow" aria-hidden="true" />
-        </Interactive3DStage>
-      ) : (
-        fallbackStage
-      )}
+        {companionPhone && (
+          <div
+            className="mockup-companion-phone"
+            aria-label={`${companionPhone.label || project.title} mobile mockup`}
+          >
+            <Iphone
+              src={activePhoneImg?.src}
+              alt={activePhoneImg?.alt || `${companionPhone.label || project.title} mobile mockup`}
+              className="mockup-companion-iphone"
+            />
+          </div>
+        )}
+      </Interactive3DStage>
 
       <p className="sr-only" role="status" aria-live="polite">
         {statusAnnouncement}
       </p>
+    </div>
+  );
+});
+
+const PunarchakraMacbookScreen = React.memo(function PunarchakraMacbookScreen({ project }) {
+  return (
+    <div className="punar-macbook-ui" aria-label={`${project.title} web platform preview`}>
+      <div className="punar-mac-topbar">
+        <div className="punar-mac-brand">
+          <span className="punar-mac-logo">
+            <i className="fa-solid fa-recycle" aria-hidden="true"></i>
+          </span>
+          <div className="punar-mac-brand-text">
+            <strong>Punarchakra</strong>
+            <span>Circular E-Waste AI Hub</span>
+          </div>
+        </div>
+        <span className="punar-mac-live-pill">
+          <span className="punar-live-dot" aria-hidden="true"></span>
+          CV Classifier Active
+        </span>
+      </div>
+
+      <div className="punar-mac-stats">
+        <div className="punar-mac-stat-card">
+          <span className="punar-stat-k">Detected Stream</span>
+          <strong className="punar-stat-v">PCB &amp; Li-Ion</strong>
+          <span className="punar-stat-sub">94.2% confidence</span>
+        </div>
+        <div className="punar-mac-stat-card">
+          <span className="punar-stat-k">CO₂ Diverted</span>
+          <strong className="punar-stat-v">284.5 kg</strong>
+          <span className="punar-stat-sub">Verified Circular Credit</span>
+        </div>
+        <div className="punar-mac-stat-card">
+          <span className="punar-stat-k">Eco Rewards</span>
+          <strong className="punar-stat-v">1,420 pts</strong>
+          <span className="punar-stat-sub">Batch #PC-8842</span>
+        </div>
+      </div>
+
+      <div className="punar-mac-list">
+        <div className="punar-mac-row">
+          <span className="punar-row-icon emerald">
+            <i className="fa-solid fa-microchip" aria-hidden="true"></i>
+          </span>
+          <div className="punar-row-meta">
+            <strong>Lithium &amp; Gold Core • Circuit Boards</strong>
+            <span>Automated Optical Sorting • High Recovery Yield</span>
+          </div>
+          <span className="punar-row-badge good">Ready</span>
+        </div>
+        <div className="punar-mac-row">
+          <span className="punar-row-icon amber">
+            <i className="fa-solid fa-battery-half" aria-hidden="true"></i>
+          </span>
+          <div className="punar-row-meta">
+            <strong>Li-Ion Cell Packs • Secondary Storage</strong>
+            <span>BMS Health Diagnostic Passed • Safe Dispatch</span>
+          </div>
+          <span className="punar-row-badge warn">Verified</span>
+        </div>
+      </div>
     </div>
   );
 });
@@ -905,12 +1035,10 @@ const MobilePhoneScreen = React.memo(function MobilePhoneScreen({ project }) {
     <Interactive3DStage className="mobile-3d-stage">
       <div className="mobile-dual-phones-container">
         {/* Phone 1: Left */}
-        <div className="mobile-iphone-device phone-left">
-          <div className="iphone-glass-sheen" aria-hidden="true" />
+        <Iphone className="mobile-iphone-device phone-left">
           <div className="iphone-screen-body">
             <div className="iphone-status-bar">
               <span className="iphone-time">9:41</span>
-              <div className="iphone-dynamic-island" />
               <div className="iphone-status-icons">
                 <i className="fa-solid fa-signal"></i>
                 <i className="fa-solid fa-wifi"></i>
@@ -1082,16 +1210,14 @@ const MobilePhoneScreen = React.memo(function MobilePhoneScreen({ project }) {
           </div>
 
           <div className="iphone-home-indicator" />
-        </div>
-      </div>
+          </div>
+        </Iphone>
 
         {/* Phone 2: Right */}
-        <div className="mobile-iphone-device phone-right">
-          <div className="iphone-glass-sheen" aria-hidden="true" />
+        <Iphone className="mobile-iphone-device phone-right">
           <div className="iphone-screen-body message-screen">
             <div className="iphone-status-bar">
               <span className="iphone-time">9:41</span>
-              <div className="iphone-dynamic-island" />
               <div className="iphone-status-icons">
                 <i className="fa-solid fa-signal"></i>
                 <i className="fa-solid fa-wifi"></i>
@@ -1150,8 +1276,8 @@ const MobilePhoneScreen = React.memo(function MobilePhoneScreen({ project }) {
             </button>
             <div className="iphone-home-indicator" />
           </div>
-        </div>
-      </div>
+          </div>
+        </Iphone>
       </div>
       <div className="mobile-3d-ground-shadow" aria-hidden="true" />
     </Interactive3DStage>
@@ -1348,7 +1474,7 @@ const ProjectRow = React.memo(function ProjectRow({
                 fallbackStage={
                   project.images && project.images.length > 0
                     ? null
-                    : <MobilePhoneScreen project={project} />
+                    : <PunarchakraMacbookScreen project={project} />
                 }
               />
             )}
