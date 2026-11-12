@@ -36,7 +36,21 @@ const SHOWCASE_PROJECTS = [
     },
     liveUrl: 'https://vani-bice.vercel.app/',
     githubUrl: 'https://github.com/SrinjoyeeDey/VAni',
-    visualType: 'vani'
+    visualType: 'vani',
+    images: [
+      {
+        src: 'images/projects/vani-1.jpg',
+        alt: 'VAni post-discharge healthcare landing interface featuring Mr. Meddy AI companion',
+        label: 'Landing & Mr. Meddy Overview',
+        width: 1024,
+        height: 545,
+        bg: '#F8F7FC'
+      }
+    ],
+    companionPhone: {
+      label: 'VAni Android App',
+      images: []
+    }
   },
   {
     id: '2',
@@ -70,7 +84,18 @@ const SHOWCASE_PROJECTS = [
       url: 'https://github.com/SrinjoyeeDey/Agnivaarak'
     },
     githubUrl: 'https://github.com/SrinjoyeeDey/Agnivaarak',
-    visualType: 'agnivaarak'
+    visualType: 'agnivaarak',
+    images: [
+      {
+        src: 'images/projects/agnivaarak-1.jpg',
+        alt: 'Agnivaarak autonomous fire detection and suppression hardware prototype with camera gimbal, tubing, and battery array',
+        label: 'Hardware Prototype & Gimbal',
+        width: 1024,
+        height: 576,
+        bg: '#0E1015',
+        fit: 'cover'
+      }
+    ]
   },
   {
     id: '3',
@@ -104,7 +129,17 @@ const SHOWCASE_PROJECTS = [
       url: 'https://github.com/SrinjoyeeDey/'
     },
     githubUrl: 'https://github.com/SrinjoyeeDey/',
-    visualType: 'vault'
+    visualType: 'vault',
+    images: [
+      {
+        src: 'images/projects/anchor-1.jpg',
+        alt: 'Anchor grounded workspace web interface with active source pins and pgvector chunk verification',
+        label: 'Grounded RAG Workspace',
+        width: 1024,
+        height: 652,
+        bg: '#FFFFFF'
+      }
+    ]
   },
   {
     id: '4',
@@ -138,7 +173,17 @@ const SHOWCASE_PROJECTS = [
       url: 'https://drive.google.com/file/d/1G6v34ZHr6KDTvnT2ezIzofBHMVTiMkUc/view?usp=drivesdk'
     },
     githubUrl: 'https://github.com/SrinjoyeeDey/',
-    visualType: 'nobodristhi'
+    visualType: 'nobodristhi',
+    images: [
+      {
+        src: 'images/projects/nobodristhi-1.jpg',
+        alt: 'Nobodristhi newsroom moderation queue with automated event summary and verification actions',
+        label: 'Newsroom Moderation Queue',
+        width: 1024,
+        height: 572,
+        bg: '#FFFFFF'
+      }
+    ]
   },
   {
     id: '5',
@@ -172,7 +217,17 @@ const SHOWCASE_PROJECTS = [
       url: 'https://github.com/SrinjoyeeDey/NexVyapaar'
     },
     githubUrl: 'https://github.com/SrinjoyeeDey/NexVyapaar',
-    visualType: 'gaming'
+    visualType: 'gaming',
+    images: [
+      {
+        src: 'images/projects/nexvyapaar-1.png',
+        alt: 'NexVyapaar multilingual voice control screen recording sales across 22 Indian languages',
+        label: 'Voice Control Workflow',
+        width: 800,
+        height: 455,
+        bg: '#FFFFFF'
+      }
+    ]
   },
   {
     id: '6',
@@ -206,203 +261,10 @@ const SHOWCASE_PROJECTS = [
       url: 'https://punarchakra.vercel.app/'
     },
     githubUrl: 'https://github.com/SrinjoyeeDey/Punarchakra',
-    visualType: 'ballpit'
+    visualType: 'ballpit',
+    images: []
   }
 ];
-
-
-const DASHBOARD_CONFIGS = {
-  '1': {
-    brandLogo: 'fa-solid fa-heart-pulse',
-    brandName: 'VAni Hub',
-    systemTitle: 'VAni Health OS',
-    season: 'v2.4 • Clinical Release',
-    status: 'In Production',
-    quote: '"Continuous post-discharge patient care, vitals sync & voice triage."',
-    architect: 'Srinjoyee Dey',
-    coreTech: 'Groq + Gemini + Whisper',
-    targetLaunch: 'Q1 2026',
-    synopsis: 'Bridging hospital discharge and home recovery with real-time multilingual voice triage, automated prescription scanning, and instant emergency caregiver dispatch.',
-    metrics: [
-      { label: 'PATIENTS', val: '1,420+' },
-      { label: 'VITALS SYNC', val: '99.8%' },
-      { label: 'WORKSPACES', val: '14' },
-      { label: 'MODELS', val: '6 Active' }
-    ],
-    jumpTo: [
-      { title: 'Apollo Cardiology', sub: 'Protocol Alpha', color: '#8B5CF6' },
-      { title: 'Max Care Triage', sub: 'Emergency Unit', color: '#EC4899' },
-      { title: 'Prescription OCR', sub: 'Vision Model v3', color: '#A855F7' },
-      { title: 'Vitals Telemetry', sub: 'Live Sensor Stream', color: '#F59E0B' },
-      { title: 'Caregiver Voice SOS', sub: 'Multi-Dialect', color: '#F97316' }
-    ],
-    workspaces: [
-      { icon: 'fa-solid fa-notes-medical', color: '#F59E0B', title: 'Post-Discharge Recovery Protocol', sub: 'Clinical • updated 12m ago', badge: 'Active', badgeColor: '#10B981' },
-      { icon: 'fa-solid fa-wave-square', color: '#3B82F6', title: 'Bengali Dialect Speech Model', sub: 'Speech • updated 2h ago', badge: 'In Review', badgeColor: '#F59E0B' },
-      { icon: 'fa-solid fa-file-prescription', color: '#10B981', title: 'Prescription OCR Parser', sub: 'OCR • updated yesterday', badge: 'Approved', badgeColor: '#3B82F6' }
-    ],
-    activity: [
-      { user: 'Srinjoyee Dey', action: 'committed a revision to Speech Triage v2.4', time: '12m ago', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&auto=format&fit=crop&q=60' },
-      { user: 'Dr. Aris Thorne', action: 'approved Cardiology discharge checklist', time: '2h ago', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&auto=format&fit=crop&q=60' },
-      { user: 'Ines Chen', action: 'validated caregiver vitals telemetry stream', time: 'Yesterday', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=80&auto=format&fit=crop&q=60' },
-      { user: 'Kim Ha-yoon', action: 'benchmarked Groq Llama 3.3 latency (140ms)', time: '3d ago', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&auto=format&fit=crop&q=60' }
-    ],
-    heroBg: 'linear-gradient(135deg, #FDE2D2 0%, #FAD4C0 35%, #F1EFE5 100%)',
-    heroImage: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=800&auto=format&fit=crop&q=60'
-  },
-  '2': {
-    brandLogo: 'fa-solid fa-fire-flame-curved',
-    brandName: 'Agnivaarak AI',
-    systemTitle: 'Agnivaarak Vision OS',
-    season: 'v3.1 • Autonomous Safety',
-    status: 'Field Validated',
-    quote: '"Autonomous 360° fire tracking, temporal flicker analysis & safe-zone suppression."',
-    architect: 'Srinjoyee Dey',
-    coreTech: 'YOLOv8 + OpenCV + FastAPI',
-    targetLaunch: 'National Finalist',
-    synopsis: 'Edge-computing AI fire suppression system combining 360° continuous camera tracking, thermal sensor fusion, and targeted multi-nozzle spray actuators.',
-    metrics: [
-      { label: 'SURVEILLANCE', val: '360°' },
-      { label: 'FLAME ACCURACY', val: '98.7%' },
-      { label: 'SUPPRESSION RT', val: '1.2s' },
-      { label: 'SAFE ZONES', val: '100%' }
-    ],
-    jumpTo: [
-      { title: 'Sector 4 Industrial', sub: 'Continuous Scan', color: '#EF4444' },
-      { title: 'Chemical Depot Beta', sub: 'High Risk Area', color: '#F97316' },
-      { title: 'Nozzle Array Matrix', sub: '8-Bar Actuators', color: '#F59E0B' },
-      { title: 'Thermal Telemetry', sub: 'IR Grid v2', color: '#10B981' },
-      { title: 'Safe-Zone Validator', sub: 'Occupant Protection', color: '#3B82F6' }
-    ],
-    workspaces: [
-      { icon: 'fa-solid fa-video', color: '#EF4444', title: 'YOLOv8 Edge Quantization Stream', sub: 'Vision • updated 8m ago', badge: 'Active', badgeColor: '#10B981' },
-      { icon: 'fa-solid fa-crosshairs', color: '#F59E0B', title: 'Multi-Nozzle Spatial Targeting', sub: 'Hardware • updated 1h ago', badge: 'In Review', badgeColor: '#F59E0B' },
-      { icon: 'fa-solid fa-shield-halved', color: '#10B981', title: 'Occupant Exclusion Zone Grid', sub: 'Safety • updated yesterday', badge: 'Verified', badgeColor: '#3B82F6' }
-    ],
-    activity: [
-      { user: 'Srinjoyee Dey', action: 'calibrated thermal flicker threshold (24.2°C)', time: '8m ago', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&auto=format&fit=crop&q=60' },
-      { user: 'Marcus Vance', action: 'completed actuator pressure test on Nozzle B', time: '1h ago', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&auto=format&fit=crop&q=60' },
-      { user: 'Elena Rostova', action: 'logged zero false positives over 72h run', time: 'Yesterday', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=80&auto=format&fit=crop&q=60' },
-      { user: 'David Park', action: 'benchmarked YOLOv8 inference at 42 FPS on edge', time: '2d ago', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&auto=format&fit=crop&q=60' }
-    ],
-    heroBg: 'linear-gradient(135deg, #FED7AA 0%, #FDBA74 40%, #1E1B18 100%)',
-    heroImage: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=800&auto=format&fit=crop&q=60'
-  },
-  '3': {
-    brandLogo: 'fa-solid fa-anchor',
-    brandName: 'Anchor Hub',
-    systemTitle: 'Anchor Knowledge Vault',
-    season: 'v1.8 • Grounded Core',
-    status: 'Production Core',
-    quote: '"Rigorous document grounding with pgvector similarity & LangGraph orchestration."',
-    architect: 'Srinjoyee Dey',
-    coreTech: 'React 19 + LangGraph + pgvector',
-    targetLaunch: 'Active Core',
-    synopsis: 'Enterprise-grade RAG architecture eliminating AI hallucinations through strict chunk retrieval, cross-source citation validation, and multi-agent reasoning graphs.',
-    metrics: [
-      { label: 'DIMENSIONS', val: '1536-dim' },
-      { label: 'COSINE SIM', val: '0.942' },
-      { label: 'GROUNDEDNESS', val: '99.4%' },
-      { label: 'LATENCY', val: '240ms' }
-    ],
-    jumpTo: [
-      { title: 'Enterprise KB Corpus', sub: '4,800 Chunks', color: '#10B981' },
-      { title: 'LangGraph Reasoning', sub: 'Router Agent', color: '#84CC16' },
-      { title: 'pgvector Index', sub: 'HNSW Optimized', color: '#F59E0B' },
-      { title: 'Citation Verifier', sub: 'Strict Anti-Hallucination', color: '#06B6D4' },
-      { title: 'Llama 3.3 Fallback', sub: 'High Concurrency', color: '#8B5CF6' }
-    ],
-    workspaces: [
-      { icon: 'fa-solid fa-diagram-project', color: '#84CC16', title: 'LangGraph Multi-Hop Router', sub: 'Graph • updated 15m ago', badge: 'Active', badgeColor: '#10B981' },
-      { icon: 'fa-solid fa-database', color: '#06B6D4', title: 'pgvector Semantic Partitioning', sub: 'Vector • updated 3h ago', badge: 'In Review', badgeColor: '#F59E0B' },
-      { icon: 'fa-solid fa-quote-left', color: '#10B981', title: 'Citation Grounding Checker', sub: 'Evaluator • updated yesterday', badge: 'Approved', badgeColor: '#3B82F6' }
-    ],
-    activity: [
-      { user: 'Srinjoyee Dey', action: 'indexed 4,800 enterprise compliance docs', time: '15m ago', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&auto=format&fit=crop&q=60' },
-      { user: 'Devin K.', action: 'measured zero hallucination on 200 test queries', time: '3h ago', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&auto=format&fit=crop&q=60' },
-      { user: 'Amina S.', action: 'tuned HNSW index parameters m=16 ef=64', time: 'Yesterday', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=80&auto=format&fit=crop&q=60' },
-      { user: 'Liam Zhao', action: 'added Gemini 1.5 Pro dynamic fallback routing', time: '2d ago', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&auto=format&fit=crop&q=60' }
-    ],
-    heroBg: 'linear-gradient(135deg, #ECFCCB 0%, #D9F99D 40%, #D5E859 100%)',
-    heroImage: 'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=800&auto=format&fit=crop&q=60'
-  },
-  '4': {
-    brandLogo: 'fa-solid fa-newspaper',
-    brandName: 'Nobodristhi',
-    systemTitle: 'Nobodristhi Verifier',
-    season: 'v2.0 • Geospatial Truth',
-    status: 'Active Pipeline',
-    quote: '"Geospatial Haversine clustering, reverse image lookup & moderation queue."',
-    architect: 'Srinjoyee Dey',
-    coreTech: 'Python + Flask + SerpAPI + PostgreSQL',
-    targetLaunch: 'Q2 2026',
-    synopsis: 'Automated news verification and crowdsourced report deduplication backend. Clusters breaking incidents by geographic radius and cross-verifies digital media signatures.',
-    metrics: [
-      { label: 'GEO ACCURACY', val: '99.1%' },
-      { label: 'RADIUS CLUSTER', val: '5.0 km' },
-      { label: 'DEDUPLICATION', val: '96.4%' },
-      { label: 'DISPATCH RT', val: 'Real-time' }
-    ],
-    jumpTo: [
-      { title: 'Dhaka Central Hub', sub: 'High Volume Radar', color: '#10B981' },
-      { title: 'Chittagong Coastal', sub: 'Incident Cluster B', color: '#059669' },
-      { title: 'Reverse Image Queue', sub: 'SerpAPI Vision Match', color: '#34D399' },
-      { title: 'Haversine Cluster ML', sub: 'Spatial Radius', color: '#6EE7B7' },
-      { title: 'Moderator Audit Ledger', sub: 'Tamper-Proof Log', color: '#A7F3D0' }
-    ],
-    workspaces: [
-      { icon: 'fa-solid fa-location-dot', color: '#10B981', title: 'Haversine Geospatial Clustering', sub: 'Spatial • updated 10m ago', badge: 'Active', badgeColor: '#10B981' },
-      { icon: 'fa-solid fa-image', color: '#34D399', title: 'Reverse Image Search Pipeline', sub: 'SerpAPI • updated 2h ago', badge: 'In Review', badgeColor: '#F59E0B' },
-      { icon: 'fa-solid fa-clipboard-check', color: '#059669', title: 'Journalist Moderation Ledger', sub: 'Queue • updated yesterday', badge: 'Approved', badgeColor: '#3B82F6' }
-    ],
-    activity: [
-      { user: 'Srinjoyee Dey', action: 'deduplicated 82 incoming eyewitness reports', time: '10m ago', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&auto=format&fit=crop&q=60' },
-      { user: 'Tariq Rahman', action: 'verified geotag authentic for flood report', time: '2h ago', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&auto=format&fit=crop&q=60' },
-      { user: 'Sara Chowdhury', action: 'cleared reverse image backlog (zero fake hits)', time: 'Yesterday', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=80&auto=format&fit=crop&q=60' },
-      { user: 'Nadia Karim', action: 'optimized Haversine spatial radius computation', time: '3d ago', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&auto=format&fit=crop&q=60' }
-    ],
-    heroBg: 'linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 40%, #059669 100%)',
-    heroImage: 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&auto=format&fit=crop&q=60'
-  },
-  '5': {
-    brandLogo: 'fa-solid fa-shop',
-    brandName: 'NexVyapaar',
-    systemTitle: 'NexVyapaar POS',
-    season: 'v1.4 • Smart Retail',
-    status: 'Interactive MVP',
-    quote: '"Offline-first intelligent POS: AI advises, Owner decides."',
-    architect: 'Srinjoyee Dey',
-    coreTech: 'React + TypeScript + IndexedDB + Vite',
-    targetLaunch: 'Active Beta',
-    synopsis: 'Offline-first intelligent retail assistant and smart POS copilot. Provides real-time restock suggestions, batch expiry warnings, and CDSCO banned-drug safety enforcement.',
-    metrics: [
-      { label: 'OFFLINE SYNC', val: '100% Local' },
-      { label: 'INVENTORY ITEMS', val: '3,200+' },
-      { label: 'BAN DETECTION', val: '0ms Latency' },
-      { label: 'REORDER ACC', val: '94.8%' }
-    ],
-    jumpTo: [
-      { title: 'Main Counter Register', sub: 'Terminal 01', color: '#6366F1' },
-      { title: 'Pharmacy Inventory', sub: 'Expiry Radar', color: '#818CF8' },
-      { title: 'Banned Drug Database', sub: 'CDSCO Compliance', color: '#4F46E5' },
-      { title: 'Restock Copilot', sub: 'Predictive Sales', color: '#A5B4FC' },
-      { title: 'IndexedDB Sync', sub: 'Zero-Drop Offline', color: '#C7D2FE' }
-    ],
-    workspaces: [
-      { icon: 'fa-solid fa-cart-shopping', color: '#6366F1', title: 'Local POS Checkout Engine', sub: 'Terminal • updated 5m ago', badge: 'Active', badgeColor: '#10B981' },
-      { icon: 'fa-solid fa-pills', color: '#4F46E5', title: 'CDSCO Banned Drug Validator', sub: 'Compliance • updated 1h ago', badge: 'In Review', badgeColor: '#F59E0B' },
-      { icon: 'fa-solid fa-chart-line', color: '#818CF8', title: 'Dynamic Restock Forecast', sub: 'Analytics • updated yesterday', badge: 'Approved', badgeColor: '#3B82F6' }
-    ],
-    activity: [
-      { user: 'Srinjoyee Dey', action: 'synced 64 offline retail transactions', time: '5m ago', avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&auto=format&fit=crop&q=60' },
-      { user: 'Rajesh Gupta', action: 'blocked banned pharmaceutical sale attempt', time: '1h ago', avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&auto=format&fit=crop&q=60' },
-      { user: 'Pooja Verma', action: 'reordered fast-moving stock before stockout', time: 'Yesterday', avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=80&auto=format&fit=crop&q=60' },
-      { user: 'Vikram Joshi', action: 'benchmarked IndexedDB store speed (8ms)', time: '2d ago', avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&auto=format&fit=crop&q=60' }
-    ],
-    heroBg: 'linear-gradient(135deg, #EEF2FF 0%, #E0E7FF 40%, #EFECE1 100%)',
-    heroImage: 'https://images.unsplash.com/photo-1556742049-0a67c5574f73?w=800&auto=format&fit=crop&q=60'
-  }
-};
 
 
 function Interactive3DStage({ children, className = '' }) {
@@ -477,268 +339,540 @@ function Interactive3DStage({ children, className = '' }) {
   );
 }
 
-const DesktopDashboardScreen = React.memo(function DesktopDashboardScreen({ config, project }) {
+const ProjectMockupCarousel = React.memo(function ProjectMockupCarousel({ project, fallbackStage = null }) {
+  const images = Array.isArray(project.images) ? project.images : [];
+  const hasRealImages = images.length > 0;
+  const totalSlides = hasRealImages ? images.length : 1;
+
+  const trackRef = useRef(null);
+  const slideRefs = useRef([]);
+  const [supportsParking, setSupportsParking] = useState(false);
+  const canLoopContinuous = hasRealImages && totalSlides >= 3 && supportsParking;
+
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [settledIndex, setSettledIndex] = useState(0);
+  const [statusAnnouncement, setStatusAnnouncement] = useState('');
+  const [singleSlideNotice, setSingleSlideNotice] = useState(false);
+
+  const settledIndexRef = useRef(0);
+  const pendingTargetRef = useRef(null);
+  const prevParkingRef = useRef({ firstAfter: false, lastBefore: false });
+  const scrollRafRef = useRef(null);
+  const settleTimerRef = useRef(null);
+  const noticeTimerRef = useRef(null);
+  const reducedMotionRef = useRef(false);
+
+  useEffect(() => {
+    if (typeof CSS !== 'undefined' && typeof CSS.supports === 'function') {
+      setSupportsParking(CSS.supports('order', 'sibling-index()'));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !window.matchMedia) return undefined;
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const sync = () => {
+      reducedMotionRef.current = mq.matches;
+    };
+    sync();
+    mq.addEventListener('change', sync);
+    return () => mq.removeEventListener('change', sync);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (scrollRafRef.current) cancelAnimationFrame(scrollRafRef.current);
+      if (settleTimerRef.current) clearTimeout(settleTimerRef.current);
+      if (noticeTimerRef.current) clearTimeout(noticeTimerRef.current);
+    };
+  }, []);
+
+  const getSlideLocalLeft = useCallback((slideEl) => {
+    const track = trackRef.current;
+    if (!track || !slideEl) return 0;
+    return slideEl.offsetParent === track
+      ? slideEl.offsetLeft
+      : slideEl.offsetLeft - track.offsetLeft;
+  }, []);
+
+  const findNearestSlideIndex = useCallback(() => {
+    const track = trackRef.current;
+    if (!track) return 0;
+    const currentScroll = track.scrollLeft;
+    let bestIdx = 0;
+    let bestDist = Infinity;
+
+    for (let i = 0; i < totalSlides; i += 1) {
+      const slideEl = slideRefs.current[i];
+      if (!slideEl) continue;
+      const slideLeft = getSlideLocalLeft(slideEl);
+      const dist = Math.abs(slideLeft - currentScroll);
+      if (dist < bestDist) {
+        bestDist = dist;
+        bestIdx = i;
+      }
+    }
+    return bestIdx;
+  }, [getSlideLocalLeft, totalSlides]);
+
+  const applyParking = useCallback(
+    (targetIdx) => {
+      const track = trackRef.current;
+      if (!track || !canLoopContinuous) return;
+
+      const firstAfter = totalSlides === 3 ? targetIdx >= 2 : targetIdx >= totalSlides - 2;
+      const lastBefore = totalSlides === 3 ? targetIdx <= 0 : targetIdx <= 1;
+      const changed =
+        firstAfter !== prevParkingRef.current.firstAfter ||
+        lastBefore !== prevParkingRef.current.lastBefore;
+
+      if (!changed && track.style.getPropertyValue('--current') === String(targetIdx)) {
+        return;
+      }
+
+      const activeSlideEl = slideRefs.current[targetIdx];
+      const beforeLeft = activeSlideEl ? getSlideLocalLeft(activeSlideEl) : 0;
+
+      prevParkingRef.current = { firstAfter, lastBefore };
+      track.style.scrollBehavior = 'auto';
+      track.style.scrollSnapType = 'none';
+      track.style.overflowX = 'hidden';
+      track.style.setProperty('--current', String(targetIdx));
+
+      if (activeSlideEl) {
+        const afterLeft = getSlideLocalLeft(activeSlideEl);
+        const shift = afterLeft - beforeLeft;
+        if (Math.abs(shift) > 0.5) {
+          track.scrollLeft += shift;
+        }
+      }
+
+      track.style.scrollSnapType = '';
+      track.style.scrollBehavior = '';
+
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          if (trackRef.current) {
+            trackRef.current.style.overflowX = '';
+          }
+        });
+      });
+    },
+    [canLoopContinuous, getSlideLocalLeft, totalSlides]
+  );
+
+  const runSettle = useCallback(() => {
+    if (settleTimerRef.current) {
+      clearTimeout(settleTimerRef.current);
+      settleTimerRef.current = null;
+    }
+
+    const settled = findNearestSlideIndex();
+    const pendingTarget = pendingTargetRef.current;
+
+    if (pendingTarget !== null && pendingTarget !== settled) {
+      return;
+    }
+
+    pendingTargetRef.current = null;
+    applyParking(settled);
+    setSettledIndex(settled);
+    setActiveIndex(settled);
+
+    if (settled !== settledIndexRef.current) {
+      settledIndexRef.current = settled;
+      const slideTitle = images[settled]?.label ? `: ${images[settled].label}` : '';
+      setStatusAnnouncement(`Slide ${settled + 1} of ${totalSlides}${slideTitle}`);
+    }
+  }, [applyParking, findNearestSlideIndex, images, totalSlides]);
+
+  useEffect(() => {
+    const track = trackRef.current;
+    if (!track || !hasRealImages) return undefined;
+
+    if (canLoopContinuous) {
+      prevParkingRef.current = { firstAfter: false, lastBefore: false };
+      applyParking(settledIndexRef.current);
+    }
+
+    const restoreSettledPosition = () => {
+      const targetEl = slideRefs.current[settledIndexRef.current];
+      if (!track || !targetEl) return;
+      const expectedLeft = getSlideLocalLeft(targetEl);
+      if (Math.abs(track.scrollLeft - expectedLeft) > 2) {
+        track.style.scrollBehavior = 'auto';
+        track.style.scrollSnapType = 'none';
+        track.scrollLeft = expectedLeft;
+        track.style.scrollSnapType = '';
+        track.style.scrollBehavior = '';
+      }
+    };
+
+    const onScroll = () => {
+      if (pendingTargetRef.current === null && !scrollRafRef.current) {
+        scrollRafRef.current = requestAnimationFrame(() => {
+          scrollRafRef.current = null;
+          const nearest = findNearestSlideIndex();
+          setActiveIndex((prev) => (prev !== nearest ? nearest : prev));
+        });
+      }
+
+      if (settleTimerRef.current) clearTimeout(settleTimerRef.current);
+      settleTimerRef.current = setTimeout(runSettle, 'onscrollend' in window ? 240 : 140);
+    };
+
+    const onScrollEnd = () => {
+      runSettle();
+    };
+
+    track.addEventListener('scroll', onScroll, { passive: true });
+    if ('onscrollend' in window) {
+      track.addEventListener('scrollend', onScrollEnd, { passive: true });
+    }
+
+    const scrollTrigger = typeof window !== 'undefined' ? window.ScrollTrigger : null;
+    if (scrollTrigger && typeof scrollTrigger.addEventListener === 'function') {
+      scrollTrigger.addEventListener('refresh', restoreSettledPosition);
+    }
+
+    let resizeObserver = null;
+    if (typeof ResizeObserver === 'function') {
+      resizeObserver = new ResizeObserver(() => {
+        if (pendingTargetRef.current === null) {
+          restoreSettledPosition();
+        }
+      });
+      resizeObserver.observe(track);
+    }
+
+    return () => {
+      track.removeEventListener('scroll', onScroll);
+      if ('onscrollend' in window) {
+        track.removeEventListener('scrollend', onScrollEnd);
+      }
+      if (scrollTrigger && typeof scrollTrigger.removeEventListener === 'function') {
+        scrollTrigger.removeEventListener('refresh', restoreSettledPosition);
+      }
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      }
+    };
+  }, [applyParking, canLoopContinuous, findNearestSlideIndex, getSlideLocalLeft, hasRealImages, runSettle]);
+
+  const scrollToSlide = useCallback(
+    (targetIdx) => {
+      if (!hasRealImages || totalSlides <= 1) {
+        playSlideSound();
+        setSingleSlideNotice(true);
+        setStatusAnnouncement(
+          totalSlides === 1
+            ? `${project.title}: showing image 1 of 1. More screenshots coming soon.`
+            : `${project.title}: interactive preview placeholder.`
+        );
+        if (noticeTimerRef.current) clearTimeout(noticeTimerRef.current);
+        noticeTimerRef.current = setTimeout(() => {
+          setSingleSlideNotice(false);
+        }, 2000);
+        return;
+      }
+
+      const track = trackRef.current;
+      const targetEl = slideRefs.current[targetIdx];
+      if (!track || !targetEl) return;
+
+      const targetLeft = getSlideLocalLeft(targetEl);
+      const delta = targetLeft - track.scrollLeft;
+      pendingTargetRef.current = targetIdx;
+      setActiveIndex(targetIdx);
+      playSlideSound();
+
+      track.scrollTo({
+        left: targetLeft,
+        behavior: reducedMotionRef.current ? 'auto' : 'smooth'
+      });
+
+      if (Math.abs(delta) < 1) {
+        runSettle();
+      }
+    },
+    [getSlideLocalLeft, hasRealImages, project.title, runSettle, totalSlides]
+  );
+
+  const handleNextClick = useCallback(
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!hasRealImages || totalSlides <= 1) {
+        scrollToSlide(0);
+        return;
+      }
+      const baseIndex = pendingTargetRef.current !== null ? pendingTargetRef.current : findNearestSlideIndex();
+      const isFiniteMode = totalSlides >= 3 && !supportsParking;
+      const nextIdx = isFiniteMode
+        ? Math.min(totalSlides - 1, baseIndex + 1)
+        : (baseIndex + 1) % totalSlides;
+      if (isFiniteMode && nextIdx === baseIndex) return;
+      scrollToSlide(nextIdx);
+    },
+    [findNearestSlideIndex, hasRealImages, scrollToSlide, supportsParking, totalSlides]
+  );
+
+  const handlePrevClick = useCallback(
+    (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      if (!hasRealImages || totalSlides <= 1) return;
+      const baseIndex = pendingTargetRef.current !== null ? pendingTargetRef.current : findNearestSlideIndex();
+      const isFiniteMode = totalSlides >= 3 && !supportsParking;
+      const prevIdx = isFiniteMode
+        ? Math.max(0, baseIndex - 1)
+        : (baseIndex - 1 + totalSlides) % totalSlides;
+      if (isFiniteMode && prevIdx === baseIndex) return;
+      scrollToSlide(prevIdx);
+    },
+    [findNearestSlideIndex, hasRealImages, scrollToSlide, supportsParking, totalSlides]
+  );
+
+  const handleMarkerClick = useCallback(
+    (idx, e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      scrollToSlide(idx);
+    },
+    [scrollToSlide]
+  );
+
+  const handleButtonKeyDown = useCallback((e) => {
+    e.stopPropagation();
+  }, []);
+
+  const clearPendingOnManualScroll = useCallback(() => {
+    pendingTargetRef.current = null;
+  }, []);
+
+  const handleTrackKeyDown = useCallback(
+    (e) => {
+      if (e.target !== trackRef.current) return;
+      if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        e.stopPropagation();
+        handleNextClick(e);
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        e.stopPropagation();
+        handlePrevClick(e);
+      }
+    },
+    [handleNextClick, handlePrevClick]
+  );
+
+  const companionPhone = project.companionPhone || null;
+  const phoneImages = Array.isArray(companionPhone?.images) ? companionPhone.images : [];
+  const activePhoneImg =
+    phoneImages.length > 0 ? phoneImages[activeIndex % phoneImages.length] : null;
+  const isFiniteMultiSlide = hasRealImages && totalSlides >= 3 && !supportsParking;
+  const isPrevDisabled = isFiniteMultiSlide && activeIndex === 0;
+  const isFiniteNextDisabled = isFiniteMultiSlide && activeIndex === totalSlides - 1;
+  const currentCaption = hasRealImages
+    ? images[activeIndex]?.label || `${project.title} preview`
+    : 'Interactive Concept Mockup';
+  const counterLabel = `${String(activeIndex + 1).padStart(2, '0')} / ${String(totalSlides).padStart(2, '0')}`;
+
   return (
-    <Interactive3DStage className="tablet-3d-stage">
-      <div className="desktop-dashboard-frame">
-        <div className="dashboard-glass-sheen" aria-hidden="true" />
-      <div className="dashboard-camera-dot" aria-hidden="true" />
-      <div className="dashboard-app-window">
-        {/* Top Header Bar */}
-        <div className="dash-top-nav">
-          <div className="dash-top-left">
-            <div className="dash-brand-icon">
-              <i className={config.brandLogo}></i>
-            </div>
-            <span className="dash-brand-name">{config.brandName}</span>
-            <div className="dash-nav-pills">
-              <span className="dash-nav-pill">Home</span>
-              <span className="dash-nav-pill active">Productions</span>
-              <span className="dash-nav-pill">Assets</span>
-              <span className="dash-nav-pill">Team</span>
-            </div>
-          </div>
-          <div className="dash-top-right">
-            <div className="dash-search-box">
-              <i className="fa-solid fa-magnifying-glass"></i>
-              <span>Search everything...</span>
-              <kbd className="dash-kbd">&#8984;K</kbd>
-            </div>
-            <button type="button" className="dash-icon-btn" aria-label="Dark mode">
-              <i className="fa-regular fa-moon"></i>
-            </button>
-            <button type="button" className="dash-icon-btn with-dot" aria-label="Notifications">
-              <i className="fa-regular fa-bell"></i>
-              <span className="dash-notif-dot" />
-            </button>
-            <div className="dash-avatar-btn">
-              <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&auto=format&fit=crop&q=80" alt="Profile" loading="lazy" decoding="async" />
-            </div>
-          </div>
+    <div
+      className="mockup-carousel"
+      data-multi-slide={hasRealImages && totalSlides > 1 ? 'true' : 'false'}
+      role="region"
+      aria-roledescription="carousel"
+      aria-label={`${project.title} screenshots`}
+      onClick={(e) => e.stopPropagation()}
+    >
+      {/* Controls remain before the track in DOM order for accessible sequential navigation */}
+      <div className="mockup-carousel-controls">
+        <div className="mockup-controls-meta">
+          <span className="mockup-slide-counter" aria-hidden="true">
+            {counterLabel}
+          </span>
+          <span className="mockup-slide-caption">
+            {singleSlideNotice ? 'More screenshots coming soon' : currentCaption}
+          </span>
+          {hasRealImages && totalSlides > 1 && (
+            <nav className="mockup-carousel-markers" aria-label={`Choose a ${project.title} screenshot`}>
+              {images.map((img, idx) => (
+                <button
+                  key={`${project.id}-marker-${idx}`}
+                  type="button"
+                  className="mockup-marker-dot"
+                  aria-current={activeIndex === idx ? 'true' : undefined}
+                  aria-label={`Show image ${idx + 1} of ${totalSlides}${img.label ? `: ${img.label}` : ''}`}
+                  onClick={(e) => handleMarkerClick(idx, e)}
+                  onKeyDown={handleButtonKeyDown}
+                />
+              ))}
+            </nav>
+          )}
         </div>
 
-        {/* Dashboard Body Grid: Sidebar + Workspace */}
-        <div className="dash-body-grid">
-          {/* Left Sidebar */}
-          <aside className="dash-sidebar">
-            <div className="dash-sidebar-header">
-              <span className="dash-back-link">
-                <i className="fa-solid fa-chevron-left"></i> All productions
-              </span>
-              <i className="fa-solid fa-bars-staggered dash-collapse-icon"></i>
-            </div>
-
-            {/* Active Production Card */}
-            <div className="dash-project-card">
-              <div className="dash-project-poster" style={{ backgroundImage: "url(" + config.heroImage + ")" }}>
-                <span className="dash-poster-badge">HD</span>
-              </div>
-              <div className="dash-project-meta">
-                <span className="dash-project-card-title">{config.systemTitle}</span>
-                <span className="dash-project-card-sub">{config.season}</span>
-                <span className="dash-status-pill">
-                  <span className="dash-status-dot" />
-                  {config.status}
-                </span>
-              </div>
-            </div>
-
-            {/* Nav Menu */}
-            <div className="dash-sidebar-nav">
-              <div className="dash-menu-item active">
-                <i className="fa-solid fa-chart-pie"></i>
-                <span>Overview</span>
-              </div>
-              <div className="dash-menu-item">
-                <i className="fa-solid fa-code-branch"></i>
-                <span>Pipelines</span>
-                <span className="dash-count-badge">6</span>
-              </div>
-              <div className="dash-menu-item">
-                <i className="fa-solid fa-database"></i>
-                <span>Assets</span>
-                <span className="dash-count-badge">8</span>
-              </div>
-              <div className="dash-menu-item">
-                <i className="fa-solid fa-users"></i>
-                <span>Team</span>
-                <span className="dash-count-badge">11</span>
-              </div>
-            </div>
-
-            {/* Workspaces Group */}
-            <div className="dash-sidebar-group">
-              <div className="dash-group-header">
-                <span><i className="fa-solid fa-chevron-right"></i> WORKSPACES</span>
-                <span className="dash-count-badge">8</span>
-              </div>
-            </div>
-
-            {/* Jump To List with Colored Left Bars */}
-            <div className="dash-sidebar-group">
-              <div className="dash-group-header">
-                <span><i className="fa-solid fa-chevron-down"></i> JUMP TO</span>
-              </div>
-              <div className="dash-jumpto-list">
-                {config.jumpTo.map((item, idx) => (
-                  <div key={idx} className="dash-jumpto-item" style={{ '--item-accent': item.color }}>
-                    <span className="dash-jumpto-bar" />
-                    <div className="dash-jumpto-text">
-                      <span className="dash-jumpto-title">{item.title}</span>
-                      <span className="dash-jumpto-sub">{item.sub}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </aside>
-
-          {/* Main Workspace */}
-          <main className="dash-workspace">
-            {/* Hero Banner Card */}
-            <div className="dash-hero-banner" style={{ background: config.heroBg }}>
-              <div className="dash-hero-content">
-                <div className="dash-hero-title-row">
-                  <h3 className="dash-hero-title">{config.systemTitle}</h3>
-                  <span className="dash-hero-season">{config.season}</span>
-                </div>
-                <p className="dash-hero-quote">{config.quote}</p>
-
-                {/* Metadata Chips */}
-                <div className="dash-hero-meta-row">
-                  <div className="dash-meta-field">
-                    <span className="dash-meta-k">STATUS</span>
-                    <span className="dash-meta-v status-green">
-                      <span className="dash-status-dot" /> {config.status}
-                    </span>
-                  </div>
-                  <div className="dash-meta-field">
-                    <span className="dash-meta-k">ARCHITECT / LEAD</span>
-                    <span className="dash-meta-v">{config.architect}</span>
-                  </div>
-                  <div className="dash-meta-field">
-                    <span className="dash-meta-k">CORE STACK</span>
-                    <span className="dash-meta-v">{config.coreTech}</span>
-                  </div>
-                  <div className="dash-meta-field">
-                    <span className="dash-meta-k">TARGET LAUNCH</span>
-                    <span className="dash-meta-v">{config.targetLaunch}</span>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="dash-hero-actions">
-                  <button type="button" className="dash-btn-primary">
-                    <i className="fa-solid fa-play"></i> Open latest workspace
-                  </button>
-                  <button type="button" className="dash-btn-secondary">
-                    <i className="fa-solid fa-plus"></i> New workspace
-                  </button>
-                  <button type="button" className="dash-btn-secondary">
-                    <i className="fa-solid fa-share-nodes"></i> Share
-                  </button>
-                  <button type="button" className="dash-btn-secondary star">
-                    <i className="fa-solid fa-star"></i> Favorited
-                  </button>
-                </div>
-              </div>
-
-              {/* Banner Tab Row */}
-              <div className="dash-hero-tabs">
-                <span className="dash-tab-link active">Overview</span>
-                <span className="dash-tab-link">Pipelines</span>
-                <span className="dash-tab-link">Assets</span>
-                <span className="dash-tab-link">Team</span>
-              </div>
-            </div>
-
-            {/* Split Content: Left 65% / Right 35% */}
-            <div className="dash-content-grid">
-              {/* Left Column */}
-              <div className="dash-col-left">
-                {/* Synopsis Card */}
-                <div className="dash-card">
-                  <h4 className="dash-card-heading">Synopsis</h4>
-                  <p className="dash-synopsis-text">{config.synopsis}</p>
-                </div>
-
-                {/* 4 Stat Metric Cards */}
-                <div className="dash-stats-grid">
-                  {config.metrics.map((m, idx) => (
-                    <div key={idx} className="dash-stat-box">
-                      <span className="dash-stat-label">{m.label}</span>
-                      <span className="dash-stat-value">{m.val}</span>
-                    </div>
-                  ))}
-                </div>
-
-                {/* Active Workspaces List */}
-                <div className="dash-card">
-                  <div className="dash-card-header-row">
-                    <h4 className="dash-card-heading">Active workspaces</h4>
-                    <span className="dash-add-link">+ New</span>
-                  </div>
-                  <div className="dash-workspaces-list">
-                    {config.workspaces.map((ws, idx) => (
-                      <div key={idx} className="dash-workspace-row">
-                        <div className="dash-ws-icon" style={{ backgroundColor: ws.color + "18", color: ws.color }}>
-                          <i className={ws.icon}></i>
-                        </div>
-                        <div className="dash-ws-info">
-                          <span className="dash-ws-title">{ws.title}</span>
-                          <span className="dash-ws-sub">{ws.sub}</span>
-                        </div>
-                        <span className="dash-ws-badge" style={{ color: ws.badgeColor, backgroundColor: ws.badgeColor + "18" }}>
-                          {ws.badge}
-                        </span>
-                        <div className="dash-avatar-pile">
-                          <span className="dash-mini-avatar" />
-                          <span className="dash-mini-avatar offset" />
-                          <span className="dash-mini-avatar count">+1</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Right Column: Activity & Lead */}
-              <div className="dash-col-right">
-                <div className="dash-card">
-                  <h4 className="dash-card-heading">Latest activity</h4>
-                  <div className="dash-activity-list">
-                    {config.activity.map((act, idx) => (
-                      <div key={idx} className="dash-activity-item">
-                        <img src={act.avatar} alt={act.user} className="dash-act-avatar" loading="lazy" decoding="async" />
-                        <div className="dash-act-body">
-                          <p className="dash-act-text">
-                            <strong>{act.user}</strong> {act.action}
-                          </p>
-                          <span className="dash-act-time">{act.time}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="dash-card">
-                  <h4 className="dash-card-heading">On this production</h4>
-                  <div className="dash-production-member">
-                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=64&auto=format&fit=crop&q=80" alt="Lead" className="dash-act-avatar" loading="lazy" decoding="async" />
-                    <div className="dash-act-body">
-                      <span className="dash-member-name">{config.architect}</span>
-                      <span className="dash-member-role">Lead Architect & Product</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </main>
+        <div className="mockup-controls-actions">
+          {hasRealImages && totalSlides > 1 && (
+            <button
+              type="button"
+              className="mockup-prev-btn cursor-target"
+              data-cursor-label="Prev"
+              aria-label={`Previous screenshot for ${project.title}`}
+              disabled={isPrevDisabled}
+              onClick={handlePrevClick}
+              onKeyDown={handleButtonKeyDown}
+            >
+              <i className="fa-solid fa-chevron-left" aria-hidden="true"></i>
+            </button>
+          )}
+          <button
+            type="button"
+            className={`mockup-next-btn cursor-target ${singleSlideNotice ? 'is-nudged' : ''}`}
+            data-cursor-label="Next"
+            aria-label={
+              hasRealImages && totalSlides > 1
+                ? `Next screenshot for ${project.title} (${activeIndex + 1} of ${totalSlides})`
+                : `Next screenshot for ${project.title} (${counterLabel})`
+            }
+            disabled={isFiniteNextDisabled}
+            onClick={handleNextClick}
+            onKeyDown={handleButtonKeyDown}
+          >
+            <span>{singleSlideNotice ? '1 / 1 Ready' : 'Next'}</span>
+            <i className="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          </button>
         </div>
       </div>
-      </div>
-      <div className="device-3d-ground-shadow" aria-hidden="true" />
-    </Interactive3DStage>
+
+      {/* Main 3D Showcase Stage */}
+      {hasRealImages ? (
+        <Interactive3DStage
+          className={`tablet-3d-stage mockup-real-stage ${companionPhone ? 'mockup-has-phone' : ''}`}
+        >
+          <div className="desktop-dashboard-frame mockup-photo-frame">
+            <div className="dashboard-glass-sheen" aria-hidden="true" />
+            <div className="dashboard-camera-dot" aria-hidden="true" />
+            <div className="mockup-screen-window">
+              <div
+                ref={trackRef}
+                className={`mockup-carousel-track ${canLoopContinuous ? 'is-looping' : ''}`}
+                tabIndex={0}
+                role="group"
+                aria-label={`${project.title} preview slides`}
+                onPointerDown={clearPendingOnManualScroll}
+                onWheel={clearPendingOnManualScroll}
+                onKeyDown={handleTrackKeyDown}
+              >
+                {images.map((img, idx) => {
+                  const isParked =
+                    canLoopContinuous &&
+                    (totalSlides === 3
+                      ? (settledIndex >= 2 && idx === 0) || (settledIndex <= 0 && idx === 2)
+                      : (settledIndex >= totalSlides - 2 && idx === 0) ||
+                        (settledIndex <= 1 && idx === totalSlides - 1));
+
+                  return (
+                    <div
+                      key={`${project.id}-slide-${idx}`}
+                      ref={(el) => {
+                        slideRefs.current[idx] = el;
+                      }}
+                      className="mockup-carousel-slide"
+                      role="group"
+                      aria-roledescription="slide"
+                      aria-label={`${idx + 1} of ${totalSlides}`}
+                      data-marker-name={`Show image ${idx + 1} of ${totalSlides}`}
+                      inert={isParked}
+                      style={{ '--slide-bg': img.bg || '#0B0D11' }}
+                    >
+                      <img
+                        src={img.src}
+                        alt={img.alt}
+                        width={img.width}
+                        height={img.height}
+                        loading={idx === 0 ? 'eager' : 'lazy'}
+                        decoding="async"
+                        fetchPriority={idx > 0 ? 'low' : undefined}
+                        className={`mockup-slide-img ${img.fit === 'cover' ? 'is-cover' : ''}`}
+                        draggable={false}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          {companionPhone && (
+            <div
+              className="mockup-companion-phone"
+              aria-label={`${companionPhone.label || project.title} mobile mockup`}
+            >
+              <div className="mockup-phone-glass-sheen" aria-hidden="true" />
+              <div className="mockup-phone-screen">
+                <div className="mockup-phone-status" aria-hidden="true">
+                  <span className="mockup-phone-time">9:41</span>
+                  <span className="mockup-phone-island" />
+                  <span className="mockup-phone-icons">
+                    <i className="fa-solid fa-signal"></i>
+                    <i className="fa-solid fa-battery-full"></i>
+                  </span>
+                </div>
+
+                {activePhoneImg ? (
+                  <img
+                    src={activePhoneImg.src}
+                    alt={activePhoneImg.alt}
+                    width={activePhoneImg.width}
+                    height={activePhoneImg.height}
+                    loading="lazy"
+                    decoding="async"
+                    fetchPriority="low"
+                    className="mockup-phone-img"
+                    draggable={false}
+                  />
+                ) : (
+                  <div className="mockup-phone-placeholder">
+                    <div className="mockup-phone-brand-row">
+                      <span className="mockup-phone-brand-icon" aria-hidden="true">
+                        <i className="fa-solid fa-heart-pulse"></i>
+                      </span>
+                      <span className="mockup-phone-brand-name">VAni</span>
+                      <span className="mockup-phone-apk-badge">APK</span>
+                    </div>
+
+                    <div className="mockup-phone-card">
+                      <div className="mockup-phone-avatar" aria-hidden="true">
+                        <i className="fa-solid fa-robot"></i>
+                      </div>
+                      <span className="mockup-phone-card-title">Mr. Meddy</span>
+                      <span className="mockup-phone-card-sub">Post-Discharge App</span>
+                    </div>
+
+                    <div className="mockup-phone-slot-pill">
+                      <i className="fa-solid fa-mobile-screen-button" aria-hidden="true"></i>
+                      <span>App Screen Ready</span>
+                    </div>
+                  </div>
+                )}
+
+                <div className="mockup-phone-home-bar" aria-hidden="true" />
+              </div>
+            </div>
+          )}
+
+          <div className="device-3d-ground-shadow" aria-hidden="true" />
+        </Interactive3DStage>
+      ) : (
+        fallbackStage
+      )}
+
+      <p className="sr-only" role="status" aria-live="polite">
+        {statusAnnouncement}
+      </p>
+    </div>
   );
 });
 
@@ -1206,17 +1340,17 @@ const ProjectRow = React.memo(function ProjectRow({
             </div>
           </div>
 
-          {/* Right Column: Visual Stage / High-Fidelity Mockup (mounted on open & retained once opened) */}
+          {/* Right Column: Visual Stage / Real Screenshot Mockup Carousel */}
           <div className="editorial-visual-column">
             {showVisualStage && (
-              project.title === 'Punarchakra' || project.visualType === 'ballpit' || project.title === 'Agnivaarak' || project.visualType === 'agnivaarak' ? (
-                <MobilePhoneScreen project={project} />
-              ) : (
-                <DesktopDashboardScreen
-                  config={DASHBOARD_CONFIGS[project.numericId] || DASHBOARD_CONFIGS['1']}
-                  project={project}
-                />
-              )
+              <ProjectMockupCarousel
+                project={project}
+                fallbackStage={
+                  project.images && project.images.length > 0
+                    ? null
+                    : <MobilePhoneScreen project={project} />
+                }
+              />
             )}
           </div>
         </div>
@@ -1254,7 +1388,19 @@ export default function ProjectsShowcase() {
     const container = containerRef.current;
     const refreshScrollTrigger = () => {
       if (typeof window.ScrollTrigger?.refresh === 'function') {
+        const tracks = container
+          ? Array.from(container.querySelectorAll('.mockup-carousel-track')).map((el) => [el, el.scrollLeft])
+          : [];
         window.ScrollTrigger.refresh();
+        tracks.forEach(([el, savedLeft]) => {
+          if (Math.abs(el.scrollLeft - savedLeft) > 2) {
+            el.style.scrollBehavior = 'auto';
+            el.style.scrollSnapType = 'none';
+            el.scrollLeft = savedLeft;
+            el.style.scrollSnapType = '';
+            el.style.scrollBehavior = '';
+          }
+        });
       }
     };
 
@@ -1353,8 +1499,8 @@ export default function ProjectsShowcase() {
   }, []);
 
   const handleRowClick = useCallback((index, e) => {
-    // Don't toggle row if clicking inside buttons or links
-    if (e.target.closest('a, button')) {
+    // Don't toggle row if clicking inside buttons, links, or mockup carousel controls/stage
+    if (e.target.closest('a, button, .mockup-carousel')) {
       return;
     }
 
@@ -1393,7 +1539,7 @@ export default function ProjectsShowcase() {
   }, []);
 
   const handleKeyDown = useCallback((e, index) => {
-    if (e.target.closest('a, button')) {
+    if (e.target.closest('a, button, .mockup-carousel')) {
       return;
     }
     if (e.key === 'Enter' || e.key === ' ') {

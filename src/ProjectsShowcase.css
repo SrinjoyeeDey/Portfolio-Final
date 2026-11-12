@@ -206,14 +206,27 @@
   .editorial-jump-btn,
   .editorial-action-primary,
   .editorial-action-secondary,
-  .editorial-action-icon
+  .editorial-action-icon,
+  .mockup-next-btn,
+  .mockup-prev-btn,
+  .mockup-marker-dot,
+  .mockup-carousel-track
 ):focus-visible {
   outline: 2px solid #0F172A;
   outline-offset: 3px;
 }
 
 .editorial-row:is([data-theme="charcoal"], [data-theme="lavender"], [data-theme="green"], [data-theme="purple"]).is-expanded
-  :where(.editorial-jump-btn, .editorial-action-primary, .editorial-action-secondary, .editorial-action-icon):focus-visible {
+  :where(
+    .editorial-jump-btn,
+    .editorial-action-primary,
+    .editorial-action-secondary,
+    .editorial-action-icon,
+    .mockup-next-btn,
+    .mockup-prev-btn,
+    .mockup-marker-dot,
+    .mockup-carousel-track
+  ):focus-visible {
   outline-color: #FFFFFF;
 }
 
@@ -2750,13 +2763,641 @@
   }
 }
 
+/* ==========================================================================
+   PROJECT REAL SCREENSHOT CAROUSEL & NEXT CONTROL
+   ========================================================================== */
+.mockup-carousel {
+  position: relative;
+  width: 100%;
+  padding-bottom: 60px;
+  box-sizing: border-box;
+}
+
+.mockup-carousel .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.mockup-photo-frame {
+  background: #0B0D11;
+}
+
+.mockup-screen-window {
+  background: #0B0D11;
+  border-radius: 11px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+}
+
+.mockup-carousel-track {
+  position: relative;
+  display: flex;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  touch-action: manipulation;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  outline: none;
+}
+
+.mockup-carousel-track::-webkit-scrollbar {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mockup-carousel-track {
+    scroll-behavior: smooth;
+  }
+}
+
+.mockup-carousel-slide {
+  flex: 0 0 100%;
+  width: 100%;
+  height: 100%;
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+  background: var(--slide-bg, #0B0D11);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+@supports (order: sibling-index()) {
+  .mockup-carousel-track.is-looping > .mockup-carousel-slide:first-child {
+    order: clamp(0, var(--current) - max(1, sibling-count() - 3), 1);
+  }
+  .mockup-carousel-track.is-looping > .mockup-carousel-slide:last-child {
+    order: calc(-1 * clamp(0, 2 - var(--current) - max(0, 4 - sibling-count()), 1));
+  }
+}
+
+.mockup-slide-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.mockup-slide-img.is-cover {
+  object-fit: cover;
+}
+
+/* Composite Tablet + Companion Phone Mockup Stage (VAni Web + APK) */
+.tablet-3d-stage.mockup-real-stage.mockup-has-phone {
+  container: mockup-stage / inline-size;
+  padding: 14px clamp(26px, 6.5cqi, 46px) 32px 10px;
+}
+
+.mockup-companion-phone {
+  position: absolute;
+  right: clamp(2px, 1.2cqi, 10px);
+  bottom: 10px;
+  z-index: 8;
+  width: clamp(92px, 26cqi, 132px);
+  aspect-ratio: 9 / 19;
+  background: #14171E;
+  border: 2px solid #363C4A;
+  border-radius: clamp(19px, 5.2cqi, 28px);
+  padding: clamp(3.5px, 1cqi, 5.5px);
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+  transform-style: preserve-3d;
+  transform:
+    perspective(1200px)
+    rotateY(calc(-11deg + var(--tilt-y, 0deg) * 0.7))
+    rotateX(calc(5deg + var(--tilt-x, 0deg) * 0.7))
+    translateZ(46px);
+  transition: transform 0.22s cubic-bezier(0.2, 0.8, 0.4, 1), box-shadow 0.3s ease;
+  box-shadow:
+    -1px 1px 0 #262B36,
+    -2px 2px 0 #1B1F28,
+    -3px 3px 0 #11141A,
+    -14px 20px 36px -6px rgba(15, 23, 42, 0.55),
+    inset 0 1px 1px rgba(255, 255, 255, 0.22);
+}
+
+.mockup-phone-glass-sheen {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.03) 34%, transparent 60%);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.mockup-phone-screen {
+  position: relative;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  border-radius: clamp(14px, 4cqi, 22px);
+  background: linear-gradient(180deg, #F8F7FC 0%, #EFEAFE 100%);
+  display: flex;
+  flex-direction: column;
+  overflow: clip;
+  color: #1E1B4B;
+  box-shadow: inset 0 0 0 1px rgba(109, 40, 217, 0.14);
+}
+
+.mockup-phone-status {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 8px 3px;
+  font-size: 7px;
+  font-weight: 700;
+  color: #1E1B4B;
+  flex-shrink: 0;
+}
+
+.mockup-phone-island {
+  position: absolute;
+  left: 50%;
+  top: 4px;
+  transform: translateX(-50%);
+  width: 34%;
+  height: 8px;
+  border-radius: 999px;
+  background: #0B0D11;
+}
+
+.mockup-phone-icons {
+  display: inline-flex;
+  align-items: center;
+  gap: 2.5px;
+  font-size: 6px;
+}
+
+.mockup-phone-img {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  object-fit: cover;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.mockup-phone-placeholder {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 7px 10px;
+  text-align: center;
+  gap: 6px;
+}
+
+.mockup-phone-brand-row {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  width: 100%;
+  justify-content: center;
+}
+
+.mockup-phone-brand-icon {
+  width: 15px;
+  height: 15px;
+  border-radius: 5px;
+  background: #6D28D9;
+  color: #FFFFFF;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 7.5px;
+  flex-shrink: 0;
+}
+
+.mockup-phone-brand-name {
+  font-size: 9.5px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #1E1B4B;
+}
+
+.mockup-phone-apk-badge {
+  font-size: 6.5px;
+  font-weight: 800;
+  padding: 1.5px 4px;
+  border-radius: 999px;
+  background: rgba(109, 40, 217, 0.14);
+  color: #5B21B6;
+}
+
+.mockup-phone-card {
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  background: #FFFFFF;
+  border: 1px solid rgba(109, 40, 217, 0.14);
+  border-radius: 10px;
+  padding: 8px 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  box-shadow: 0 6px 14px rgba(109, 40, 217, 0.1);
+}
+
+.mockup-phone-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 100%);
+  color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+}
+
+.mockup-phone-card-title {
+  font-size: 9px;
+  font-weight: 800;
+  color: #0F172A;
+  line-height: 1.15;
+}
+
+.mockup-phone-card-sub {
+  font-size: 7px;
+  font-weight: 600;
+  color: #64748B;
+  line-height: 1.2;
+}
+
+.mockup-phone-slot-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  width: 100%;
+  padding: 4px 5px;
+  border-radius: 6px;
+  border: 1px dashed rgba(109, 40, 217, 0.38);
+  background: rgba(255, 255, 255, 0.72);
+  color: #5B21B6;
+  font-size: 7px;
+  font-weight: 700;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.mockup-phone-home-bar {
+  width: 34%;
+  height: 2.5px;
+  border-radius: 999px;
+  background: rgba(30, 27, 75, 0.32);
+  margin: 0 auto 3px;
+  flex-shrink: 0;
+}
+
+@container mockup-stage (inline-size <= 380px) {
+  .mockup-companion-phone {
+    width: clamp(78px, 27cqi, 94px);
+    bottom: 6px;
+    right: 2px;
+  }
+
+  .mockup-phone-status {
+    padding: 3.5px 6px 2px;
+    font-size: 5.5px;
+  }
+
+  .mockup-phone-island {
+    height: 6px;
+    top: 3px;
+  }
+
+  .mockup-phone-placeholder {
+    padding: 5px 4px 6px;
+    gap: 4px;
+  }
+
+  .mockup-phone-brand-icon {
+    width: 12px;
+    height: 12px;
+    font-size: 6px;
+  }
+
+  .mockup-phone-brand-name {
+    font-size: 7.5px;
+  }
+
+  .mockup-phone-apk-badge {
+    font-size: 5.5px;
+    padding: 1px 3px;
+  }
+
+  .mockup-phone-card {
+    padding: 5px 3px;
+    gap: 2.5px;
+    border-radius: 7px;
+  }
+
+  .mockup-phone-avatar {
+    width: 19px;
+    height: 19px;
+    font-size: 9px;
+    border-radius: 6px;
+  }
+
+  .mockup-phone-card-title {
+    font-size: 7.5px;
+  }
+
+  .mockup-phone-card-sub {
+    font-size: 5.8px;
+  }
+
+  .mockup-phone-slot-pill {
+    font-size: 5.6px;
+    padding: 3px 3px;
+    gap: 2px;
+  }
+}
+
+.mockup-carousel-controls {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 6px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  height: 40px;
+  pointer-events: none;
+}
+
+.mockup-controls-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  pointer-events: auto;
+}
+
+.mockup-slide-counter {
+  font-family: 'Space Mono', monospace, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  padding: 4px 9px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  color: #0F172A;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.mockup-slide-caption {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: inherit;
+  opacity: 0.78;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.mockup-carousel-markers {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.mockup-marker-dot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  min-width: 0;
+  min-height: 0;
+  padding: 0;
+  flex-shrink: 0;
+  border-radius: 999px;
+  border: none;
+  background: rgba(15, 23, 42, 0.24);
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: width 160ms ease-out, background-color 160ms ease-out, scale 150ms ease-out;
+}
+
+.mockup-marker-dot::after {
+  content: '';
+  position: absolute;
+  inset: -8px -4px;
+}
+
+.mockup-marker-dot[aria-current="true"] {
+  width: 20px;
+  background: #0F172A;
+}
+
+.mockup-controls-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  pointer-events: auto;
+}
+
+.mockup-prev-btn,
+.mockup-next-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 32px;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  touch-action: manipulation;
+  scale: 1;
+  transition:
+    background-color 150ms ease-out,
+    border-color 150ms ease-out,
+    color 150ms ease-out,
+    box-shadow 150ms ease-out,
+    scale 150ms ease-out;
+}
+
+.mockup-prev-btn {
+  width: 32px;
+  padding: 0;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(15, 23, 42, 0.16);
+  color: #0F172A;
+}
+
+.mockup-next-btn {
+  padding: 0 13px;
+  background: #111215;
+  border: 1px solid #111215;
+  color: #FFFFFF;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.16);
+}
+
+.mockup-next-btn i {
+  font-size: 10.5px;
+  transition: transform 150ms ease-out;
+}
+
+.mockup-next-btn:hover:not(:disabled),
+.mockup-prev-btn:hover:not(:disabled) {
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.24);
+}
+
+.mockup-next-btn:hover:not(:disabled) i {
+  transform: translateX(2px);
+}
+
+.mockup-next-btn:active:not(:disabled),
+.mockup-prev-btn:active:not(:disabled),
+.mockup-marker-dot:active {
+  scale: 0.97;
+}
+
+.mockup-next-btn.is-nudged {
+  box-shadow: 0 0 0 2px rgba(255, 197, 46, 0.72), 0 4px 14px rgba(15, 23, 42, 0.2);
+}
+
+.mockup-prev-btn:disabled,
+.mockup-next-btn:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Dark theme overrides for mockup carousel controls */
+.editorial-row:is([data-theme="charcoal"], [data-theme="lavender"], [data-theme="green"], [data-theme="purple"]) .mockup-slide-counter {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.22);
+  color: #FFFFFF;
+}
+
+.editorial-row:is([data-theme="charcoal"], [data-theme="lavender"], [data-theme="green"], [data-theme="purple"]) .mockup-marker-dot {
+  background: rgba(255, 255, 255, 0.34);
+}
+
+.editorial-row:is([data-theme="charcoal"], [data-theme="lavender"], [data-theme="green"], [data-theme="purple"]) .mockup-marker-dot[aria-current="true"] {
+  background: var(--accent-color, #FFFFFF);
+}
+
+.editorial-row:is([data-theme="charcoal"], [data-theme="lavender"], [data-theme="green"], [data-theme="purple"]) .mockup-prev-btn {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.24);
+  color: #FFFFFF;
+}
+
+.editorial-row[data-theme="charcoal"] .mockup-next-btn {
+  background: #FF7A00;
+  border-color: #FF7A00;
+  color: #111216;
+  box-shadow: 0 4px 14px rgba(255, 122, 0, 0.32);
+}
+
+.editorial-row:is([data-theme="lavender"], [data-theme="green"]) .mockup-next-btn {
+  background: #F5DF77;
+  border-color: #F5DF77;
+  color: #251E32;
+  box-shadow: 0 4px 14px rgba(245, 223, 119, 0.26);
+}
+
+.editorial-row[data-theme="purple"] .mockup-next-btn {
+  background: #FFFFFF;
+  border-color: #FFFFFF;
+  color: #5B21B6;
+}
+
+@media (max-width: 1024px) {
+  .mockup-carousel {
+    padding-bottom: 66px;
+  }
+
+  .mockup-carousel-controls {
+    height: auto;
+    min-height: 44px;
+    bottom: 8px;
+  }
+
+  button.mockup-marker-dot {
+    min-width: 0;
+    min-height: 0;
+  }
+
+  button.mockup-marker-dot::after {
+    inset: -18px -6px;
+  }
+
+  button.mockup-prev-btn {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+  }
+
+  button.mockup-next-btn {
+    min-height: 44px;
+    padding: 0 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mockup-carousel-controls {
+    left: 4px;
+    right: 4px;
+    bottom: 8px;
+  }
+
+  .mockup-slide-caption {
+    max-width: 145px;
+  }
+}
+
+@media (max-width: 560px) {
+  .mockup-carousel[data-multi-slide="true"] .mockup-slide-caption {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .editorial-row,
   .editorial-row-expansion,
   .editorial-expansion-inner,
   .desktop-dashboard-frame,
   .mobile-iphone-device,
-  .editorial-jump-btn {
+  .mockup-companion-phone,
+  .editorial-jump-btn,
+  .mockup-next-btn,
+  .mockup-prev-btn,
+  .mockup-marker-dot {
     transition: none !important;
     animation: none !important;
     transform: none !important;
