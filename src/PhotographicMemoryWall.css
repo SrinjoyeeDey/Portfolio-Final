@@ -356,7 +356,7 @@
 
 /* Smart India Hackathon & Victory Prints */
 .photo-print-card.format-hackathon-portrait .photo-media-container {
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 771 / 1024;
 }
 
 .photo-print-card.format-hackathon-portrait .photo-actual-image {
@@ -724,6 +724,10 @@
   display: block;
   filter: grayscale(1) sepia(0.06) brightness(0.97) contrast(1.03);
   transition: transform 0.22s cubic-bezier(0.22, 1, 0.36, 1), filter 0.22s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.pmw-mobile-thumb-card[aria-label*="Hacktechnique"] .pmw-mobile-thumb-img {
+  object-position: center top;
 }
 
 .pmw-mobile-thumb-card:is(:hover, :focus-visible) .pmw-mobile-thumb-img {

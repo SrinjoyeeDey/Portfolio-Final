@@ -40,7 +40,7 @@ export function LetsWorkTogether({
     if (typeof window !== "undefined" && (window as any).PortoSound?.playClick) {
       (window as any).PortoSound.playClick(true)
     }
-    window.open("mailto:deysrinjoyee28@gmail.com", "_blank")
+    window.open("https://cal.com/let-s-talk-with-sr", "_blank", "noopener,noreferrer")
   }
 
   return (
@@ -78,11 +78,12 @@ export function LetsWorkTogether({
             </h3>
           </div>
 
-          {/* Book a call button */}
+          {/* Book a Meet button */}
           <button
             onClick={handleBookCall}
             onMouseEnter={() => setIsButtonHovered(true)}
             onMouseLeave={() => setIsButtonHovered(false)}
+            aria-label="Book a Meet"
             className="group relative flex items-center gap-3 sm:gap-4 transition-all duration-500 cursor-pointer bg-transparent border-0"
             style={{
               transform: showSuccess
@@ -125,7 +126,7 @@ export function LetsWorkTogether({
                   color: isButtonHovered ? "var(--background)" : "var(--foreground)",
                 }}
               >
-                Book a call
+                Book a Meet
               </span>
               <ArrowUpRight
                 className="size-3.5 sm:size-4 transition-all duration-500"
