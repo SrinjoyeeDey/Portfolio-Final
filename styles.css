@@ -293,20 +293,16 @@ img {
 }
 
 .brand-logo {
-  font-family: var(--font-display);
-  font-size: 1.8rem;
-  font-weight: 700;
-  letter-spacing: -0.5px;
   color: var(--color-charcoal);
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   text-decoration: none;
   transition: transform 0.25s ease;
 }
 
 .brand-logo:hover {
-  transform: scale(1.03);
+  transform: scale(1.02);
 }
 
 .brand-logo .logo-dot {
@@ -317,6 +313,60 @@ img {
 
 .brand-logo:hover .logo-dot {
   transform: scale(1.35);
+}
+
+/* SD® · Srinjoyee editorial brand identity */
+.brand-logo .logo-text {
+  display: inline-flex;
+  align-items: baseline;
+  line-height: 1;
+}
+
+.brand-logo .logo-mark {
+  font-family: 'Playfair Display', Didot, 'Bodoni MT', Georgia, serif;
+  font-size: 1.62rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--color-charcoal);
+  line-height: 1;
+}
+
+.brand-logo .logo-reg {
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.44em;
+  font-weight: 600;
+  vertical-align: super;
+  position: relative;
+  top: -0.58em;
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--color-charcoal);
+  opacity: 0.52;
+  margin-left: 2px;
+  margin-right: 7px;
+  display: inline-block;
+}
+
+.brand-logo .logo-name {
+  font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif);
+  font-size: 0.94rem;
+  font-weight: 500;
+  letter-spacing: 0.015em;
+  color: var(--color-charcoal);
+  opacity: 0.82;
+  line-height: 1;
+}
+
+@media (max-width: 480px) {
+  .brand-logo {
+    gap: 8px;
+  }
+  .brand-logo .logo-mark {
+    font-size: 1.45rem;
+  }
+  .brand-logo .logo-name {
+    font-size: 0.85rem;
+  }
 }
 
 .nav-menu {
