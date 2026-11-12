@@ -25,7 +25,8 @@
     "build:gooey-nav": "node scripts/build-gooey-nav.js",
     "build:pulse-heart": "node scripts/build-pulse-heart.js",
     "build:tailwind": "npx tailwindcss -i src/tailwind-input.css -o tailwind-bundle.css --minify",
-    "build:all": "npm run build:text-pressure && npm run build:target-cursor && npm run build:projects-showcase && npm run build:circular-text && npm run build:tech-text && npm run build:memory-wall && npm run build:grid-scan && npm run build:pixel-transition && npm run build:letter-glitch && npm run build:footer-shuffle && npm run build:keyboard && npm run build:unified-footer && npm run build:preloader && npm run build:elastic-mesh && npm run build:lets-work && npm run build:gooey-nav && npm run build:pulse-heart && npm run build:tailwind",
+    "build:core-assets": "node scripts/build-core-assets.js",
+    "build:all": "npm run build:text-pressure && npm run build:target-cursor && npm run build:projects-showcase && npm run build:circular-text && npm run build:tech-text && npm run build:memory-wall && npm run build:grid-scan && npm run build:pixel-transition && npm run build:letter-glitch && npm run build:footer-shuffle && npm run build:keyboard && npm run build:unified-footer && npm run build:preloader && npm run build:elastic-mesh && npm run build:lets-work && npm run build:gooey-nav && npm run build:pulse-heart && npm run build:tailwind && npm run build:core-assets",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

@@ -215,7 +215,7 @@ export default function UnifiedFooter() {
             </MagneticButton>
             <MagneticButton
               as="a"
-              href="images/Srinjoyee_Dey_Resume.pdf"
+              href="https://drive.google.com/drive/folders/1Oel0_j0zlht-NGhGP_BrgMepYVJC8k5U?usp=drive_link"
               target="_blank"
               rel="noopener noreferrer"
               className="cursor-target"
@@ -260,7 +260,7 @@ export default function UnifiedFooter() {
               <span className="nav-item-title">CONTACT</span>
               <span className="nav-item-num">07</span>
             </a>
-            <a href="images/Srinjoyee_Dey_Resume.pdf" target="_blank" rel="noopener noreferrer" className="footer-nav-item cursor-target" data-cursor-label="Resume">
+            <a href="https://drive.google.com/drive/folders/1Oel0_j0zlht-NGhGP_BrgMepYVJC8k5U?usp=drive_link" target="_blank" rel="noopener noreferrer" className="footer-nav-item cursor-target" data-cursor-label="Resume">
               <span className="nav-item-title">RESUME</span>
               <span className="nav-item-num">08</span>
             </a>

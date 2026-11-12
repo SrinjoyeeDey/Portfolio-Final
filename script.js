@@ -1,8 +1,109 @@
-/* Disable default browser right-click context menu */
+/* Disable default browser right-click context menu & casual asset dragging/downloading */
 if (typeof document !== 'undefined') {
+  const PROTECTED_ASSET_RE = /\.(?:glb|gltf|png|jpe?g|webp|gif|svg|avif|bmp|ico)(?:$|[?#])/i;
+  const PROTECTED_PDF_RE = /\.pdf(?:$|[?#])/i;
+  const RESUME_RE = /Srinjoyee_Dey_Resume\.pdf/i;
+
+  const isProtectedHref = (href) =>
+    Boolean(href) && !RESUME_RE.test(href) && (PROTECTED_ASSET_RE.test(href) || PROTECTED_PDF_RE.test(href));
+
   document.addEventListener('contextmenu', (e) => {
     e.preventDefault();
   });
+
+  document.addEventListener('dragstart', (e) => {
+    const target = e.target;
+    if (!target || target.nodeType !== 1) return;
+
+    if (target.closest('img, model-viewer, canvas.hero-3d-canvas, #keyboard-3d-root canvas')) {
+      e.preventDefault();
+      return;
+    }
+
+    const link = target.closest('a[href]');
+    if (link && isProtectedHref(link.getAttribute('href') || '')) {
+      e.preventDefault();
+    }
+  });
+
+  const stripProtectedDownloads = () => {
+    document.querySelectorAll('a[download]').forEach((link) => {
+      const href = link.getAttribute('href') || '';
+      if (isProtectedHref(href)) {
+        link.removeAttribute('download');
+      }
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', stripProtectedDownloads, { once: true });
+  } else {
+    stripProtectedDownloads();
+  }
+
+  /* Lightweight keyboard shortcut deterrents (DevTools, View Source, Save Page) */
+  if (typeof window !== 'undefined') {
+    if (window.__portfolioShortcutGuard) {
+      window.removeEventListener('keydown', window.__portfolioShortcutGuard, true);
+    }
+
+    const onProtectedKeydown = (e) => {
+      const key = (e.key || '').toLowerCase();
+      const code = e.code || '';
+      const keyCode = e.keyCode || e.which || 0;
+      const ctrlOrCmd = e.ctrlKey || e.metaKey;
+
+      const isSavePage =
+        ctrlOrCmd &&
+        !e.shiftKey &&
+        !e.altKey &&
+        (key === 's' || code === 'KeyS' || keyCode === 83);
+
+      if (isSavePage) {
+        e.preventDefault();
+        return;
+      }
+
+      const target = e.target;
+      if (
+        target &&
+        target.nodeType === 1 &&
+        (target.isContentEditable || target.closest('input, textarea, select, [contenteditable=""], [contenteditable="true"]'))
+      ) {
+        return;
+      }
+
+      const isF12 = e.key === 'F12' || code === 'F12' || keyCode === 123;
+      const isI = key === 'i' || code === 'KeyI' || keyCode === 73;
+      const isJ = key === 'j' || code === 'KeyJ' || keyCode === 74;
+      const isC = key === 'c' || code === 'KeyC' || keyCode === 67;
+      const isU = key === 'u' || code === 'KeyU' || keyCode === 85;
+
+      const isDevToolsShortcut =
+        (ctrlOrCmd && e.shiftKey && (isI || isJ || isC)) ||
+        (e.metaKey && e.altKey && (isI || isJ || isC));
+      const isViewSource =
+        (ctrlOrCmd && !e.shiftKey && isU) ||
+        (e.metaKey && e.altKey && isU);
+
+      if (isF12 || isDevToolsShortcut || isViewSource) {
+        e.preventDefault();
+      }
+    };
+
+    window.__portfolioShortcutGuard = onProtectedKeydown;
+    window.addEventListener('keydown', onProtectedKeydown, { capture: true, passive: false });
+    window.addEventListener(
+      'pagehide',
+      () => {
+        if (window.__portfolioShortcutGuard) {
+          window.removeEventListener('keydown', window.__portfolioShortcutGuard, true);
+          window.__portfolioShortcutGuard = null;
+        }
+      },
+      { once: true }
+    );
+  }
 }
 
 /* ==========================================================================
@@ -2127,7 +2228,41 @@ document.addEventListener('DOMContentLoaded', () => {
           envRaf = null;
         }
         envRect = null;
-        tiltLayer.style.transform = '';
+        if (!envelopeWidget.classList.contains('envelope-opening') && !envelopeWidget.classList.contains('envelope-opened')) {
+          tiltLayer.style.transform = '';
+        }
+      });
+    }
+
+    // Smooth Lid-Open Animation on Click before redirecting to mailto
+    if (link) {
+      let isMailOpening = false;
+      link.addEventListener('click', (e) => {
+        const mailHref = link.getAttribute('href') || 'mailto:deysrinjoyee04@gmail.com';
+        if (!mailHref.startsWith('mailto:')) return;
+
+        e.preventDefault();
+        if (isMailOpening) return;
+        isMailOpening = true;
+
+        envelopeWidget.classList.remove('envelope-opened');
+        envelopeWidget.classList.add('envelope-opening');
+
+        if (typeof window.playTactilePop === 'function') {
+          window.playTactilePop();
+        }
+
+        setTimeout(() => {
+          envelopeWidget.classList.remove('envelope-opening');
+          envelopeWidget.classList.add('envelope-opened');
+
+          window.location.href = mailHref;
+
+          setTimeout(() => {
+            envelopeWidget.classList.remove('envelope-opened');
+            isMailOpening = false;
+          }, 1400);
+        }, 620);
       });
     }
 

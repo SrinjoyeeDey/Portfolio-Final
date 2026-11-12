@@ -9360,6 +9360,32 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
   transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
+/* Smooth Lid Open on Click / Interaction */
+.envelope-top-flap-group {
+  transform-origin: 47px 2px;
+  transform-style: preserve-3d;
+  transition: transform 0.65s cubic-bezier(0.25, 1, 0.36, 1);
+}
+
+.floating-envelope-widget.envelope-opening .envelope-top-flap-group,
+.floating-envelope-widget.envelope-opened .envelope-top-flap-group {
+  transform: translateY(-2px) rotateX(-175deg) !important;
+  transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1) !important;
+}
+
+.floating-envelope-widget.envelope-opening .cute-heart-seal-wrapper,
+.floating-envelope-widget.envelope-opened .cute-heart-seal-wrapper {
+  transform: scale(0.92);
+  opacity: 0.88;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.floating-envelope-widget.envelope-opening .envelope-tilt-layer,
+.floating-envelope-widget.envelope-opened .envelope-tilt-layer {
+  transform: translateY(-26px) rotateX(8deg) rotateY(-8deg) scale(1.08) !important;
+  transition: transform 0.65s cubic-bezier(0.25, 1, 0.36, 1) !important;
+}
+
 /* Sweet Heart Seal Heartbeat Pulse on Hover */
 .floating-envelope-link:hover .cute-heart-seal-wrapper {
   animation: cuteHeartPulse 0.9s cubic-bezier(0.25, 1, 0.5, 1) infinite;
