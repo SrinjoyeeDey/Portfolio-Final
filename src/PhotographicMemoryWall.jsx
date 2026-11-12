@@ -135,18 +135,18 @@ export const ARCHIVAL_PHOTOS = [
     category: 'Hackathons'
   },
   {
-    id: 11,
-    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.21 PM.jpeg',
-    title: 'Synchronicity Selfie',
-    subtitle: 'Candid Moment During Synchronicity Hackathon',
+    id: 18,
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.30 PM-2.jpeg',
+    title: 'Google Solution Showcase',
+    subtitle: 'Top 100 Presentation Before Board & Trustee',
     date: 'Dec 2024',
-    format: 'standard',
-    aspectRatio: 1.33,
-    rotation: -1.2,
-    overlapX: -2,
-    overlapY: 3,
-    zIndex: 2,
-    category: 'Hackathons'
+    format: 'wide',
+    aspectRatio: 1.45,
+    rotation: 2.2,
+    overlapX: 3,
+    overlapY: -3,
+    zIndex: 3,
+    category: 'Events'
   },
   {
     id: 13,
@@ -233,18 +233,18 @@ export const ARCHIVAL_PHOTOS = [
     category: 'Events'
   },
   {
-    id: 18,
-    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.30 PM-2.jpeg',
-    title: 'Google Solution Showcase',
-    subtitle: 'Top 100 Presentation Before Board & Trustee',
+    id: 11,
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.21 PM.jpeg',
+    title: 'Synchronicity Selfie',
+    subtitle: 'Candid Moment During Synchronicity Hackathon',
     date: 'Dec 2024',
-    format: 'wide',
-    aspectRatio: 1.45,
-    rotation: 2.2,
-    overlapX: 3,
-    overlapY: -3,
-    zIndex: 3,
-    category: 'Events'
+    format: 'standard',
+    aspectRatio: 1.33,
+    rotation: -1.2,
+    overlapX: -2,
+    overlapY: 3,
+    zIndex: 2,
+    category: 'Hackathons'
   },
   {
     id: 19,
@@ -266,8 +266,8 @@ export const ARCHIVAL_PHOTOS = [
     title: 'Campus Memories',
     subtitle: 'Early Semester Reflections at AOT',
     date: 'Dec 2024',
-    format: 'wide',
-    aspectRatio: 1.45,
+    format: 'campus-portrait',
+    aspectRatio: 3123 / 4160,
     rotation: 1.4,
     overlapX: 2,
     overlapY: -2,
@@ -303,20 +303,6 @@ export const ARCHIVAL_PHOTOS = [
     category: 'Hackathons'
   },
   {
-    id: 16,
-    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.25 PM.jpeg',
-    title: 'Kshitij Moments',
-    subtitle: 'Celebrating Milestones & Accolades at IIT Kharagpur',
-    date: 'Dec 2024',
-    format: 'wide',
-    aspectRatio: 1.45,
-    rotation: -1.3,
-    overlapX: -2,
-    overlapY: 3,
-    zIndex: 2,
-    category: 'Events'
-  },
-  {
     id: 24,
     src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.35 PM.jpeg',
     title: 'SCCSE Tech Team',
@@ -331,6 +317,20 @@ export const ARCHIVAL_PHOTOS = [
     category: 'Friends'
   },
   {
+    id: 16,
+    src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.25 PM.jpeg',
+    title: 'Kshitij Moments',
+    subtitle: 'Celebrating Milestones & Accolades at IIT Kharagpur',
+    date: 'Dec 2024',
+    format: 'wide',
+    aspectRatio: 1.45,
+    rotation: -1.3,
+    overlapX: -2,
+    overlapY: 3,
+    zIndex: 2,
+    category: 'Events'
+  },
+  {
     id: 25,
     src: 'images/grid_img/WhatsApp Image 2026-10-31 at 7.54.36 PM.jpeg',
     title: 'Build Club Innovation',
@@ -341,6 +341,20 @@ export const ARCHIVAL_PHOTOS = [
     rotation: -1.7,
     overlapX: -3,
     overlapY: 2,
+    zIndex: 3,
+    category: 'Events'
+  },
+  {
+    id: 40,
+    src: 'images/boardroom-showcase.jpg',
+    title: 'Session about No-Code Website',
+    subtitle: 'Presenting Google Solution Challenge project before college board members and trustee',
+    date: 'Sep 2024',
+    format: 'wide',
+    aspectRatio: 1.45,
+    rotation: -1.8,
+    overlapX: -2,
+    overlapY: 3,
     zIndex: 3,
     category: 'Events'
   },
@@ -415,17 +429,17 @@ export const ARCHIVAL_PHOTOS = [
     category: 'Hackathons'
   },
   {
-    id: 40,
-    src: 'images/boardroom-showcase.jpg',
-    title: 'No Code Website Presentation',
-    subtitle: 'Presenting Google Solution Challenge project before college board members and trustee',
-    date: 'Sep 2024',
-    format: 'wide',
-    aspectRatio: 1.45,
-    rotation: -1.8,
-    overlapX: -2,
-    overlapY: 3,
-    zIndex: 3,
+    id: 44,
+    src: 'images/induction-memories.jpg',
+    title: 'Induction Memories',
+    subtitle: 'Induction program organized during first semester at AOT',
+    date: '2023',
+    format: 'standard',
+    aspectRatio: 1.33,
+    rotation: 1.1,
+    overlapX: 2,
+    overlapY: -2,
+    zIndex: 2,
     category: 'Campus'
   },
   {
@@ -469,20 +483,6 @@ export const ARCHIVAL_PHOTOS = [
     overlapY: -3,
     zIndex: 2,
     category: 'Events'
-  },
-  {
-    id: 44,
-    src: 'images/induction-memories.jpg',
-    title: 'Induction Memories',
-    subtitle: 'Induction program organized during first semester at AOT',
-    date: '2023',
-    format: 'standard',
-    aspectRatio: 1.33,
-    rotation: 1.1,
-    overlapX: 2,
-    overlapY: -2,
-    zIndex: 2,
-    category: 'Campus'
   }
 ];
 
@@ -494,6 +494,7 @@ function getEstimatedHeight(photo) {
   else if (photo.format === 'tall') ratio = 0.75;
   else if (photo.format === 'hackathon-portrait') ratio = 771 / 1024;
   else if (photo.format === 'wide') ratio = 1.45;
+  else if (photo.format === 'campus-portrait') ratio = 3123 / 4160;
   else if (photo.format === 'milestone-full') ratio = 4160 / 2755;
   else if (photo.format === 'championship-full') ratio = 4160 / 2755;
   return (220 / ratio) + 38;
@@ -563,16 +564,34 @@ export default function PhotographicMemoryWall() {
     const heights = offsets.slice(0, colCount).map((o) => o);
 
     ARCHIVAL_PHOTOS.forEach((photo) => {
-      let minCol = 0;
-      let minH = heights[0];
-      for (let c = 1; c < colCount; c++) {
-        if (heights[c] < minH) {
-          minH = heights[c];
-          minCol = c;
+      let targetCol = -1;
+      if (photo.title === 'Induction Memories') {
+        const htCol = cols.findIndex((c) => c.some((p) => p.title === 'Hacktechnique Memories'));
+        if (htCol !== -1) {
+          targetCol = htCol;
+        }
+      } else if (photo.id === 40 || photo.title.toLowerCase().includes('no-code website')) {
+        const bcCol = cols.findIndex((c) => c.some((p) => p.title === 'Build Club Innovation'));
+        if (bcCol !== -1) {
+          targetCol = bcCol;
         }
       }
-      cols[minCol].push(photo);
-      heights[minCol] += getEstimatedHeight(photo) + 10;
+
+      if (targetCol !== -1) {
+        cols[targetCol].push(photo);
+        heights[targetCol] += getEstimatedHeight(photo) + 10;
+      } else {
+        let minCol = 0;
+        let minH = heights[0];
+        for (let c = 1; c < colCount; c++) {
+          if (heights[c] < minH) {
+            minH = heights[c];
+            minCol = c;
+          }
+        }
+        cols[minCol].push(photo);
+        heights[minCol] += getEstimatedHeight(photo) + 10;
+      }
     });
 
     return { columns: cols, STAGGER_OFFSETS: offsets };

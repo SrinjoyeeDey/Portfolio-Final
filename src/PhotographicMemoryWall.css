@@ -376,6 +376,18 @@
   object-position: center;
 }
 
+/* Campus Memories (Uncropped, edge-to-edge portrait with zero empty space) */
+.photo-print-card.format-campus-portrait .photo-media-container,
+.photo-print-card[data-id="10"] .photo-media-container {
+  aspect-ratio: 3123 / 4160;
+}
+
+.photo-print-card.format-campus-portrait .photo-actual-image,
+.photo-print-card[data-id="10"] .photo-actual-image {
+  object-fit: cover;
+  object-position: center;
+}
+
 /* --------------------------------------------------------------------------
    ACTUAL PHOTOGRAPH IMAGE & WARM MONOCHROME FILM TREATMENT
    -------------------------------------------------------------------------- */
@@ -728,6 +740,11 @@
 
 .pmw-mobile-thumb-card[aria-label*="Hacktechnique"] .pmw-mobile-thumb-img {
   object-position: center top;
+}
+
+.pmw-mobile-thumb-card[aria-label*="Campus Memories"] .pmw-mobile-thumb-img {
+  object-fit: cover;
+  object-position: center 65%;
 }
 
 .pmw-mobile-thumb-card:is(:hover, :focus-visible) .pmw-mobile-thumb-img {
