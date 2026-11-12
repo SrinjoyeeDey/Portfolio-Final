@@ -42,9 +42,33 @@ const SHOWCASE_PROJECTS = [
       {
         src: 'images/projects/vani-1.jpg',
         alt: 'VAni post-discharge healthcare landing interface featuring Mr. Meddy AI companion',
-        label: 'Landing & Mr. Meddy Overview',
+        label: 'Web & App • Mr. Meddy Overview',
         width: 1024,
         height: 545,
+        bg: '#F8F7FC'
+      },
+      {
+        src: 'images/projects/vani-2.jpg',
+        alt: 'VAni Care Circle caregiver monitoring dashboard showing patient risk alerts and vitals',
+        label: 'Web & App • Care Circle Dashboard',
+        width: 1024,
+        height: 548,
+        bg: '#F8F7FC'
+      },
+      {
+        src: 'images/projects/vani-3.jpg',
+        alt: 'VAni daily recovery medicine schedule converting hospital paperwork into actionable routines',
+        label: 'Web & App • Daily Recovery Schedule',
+        width: 1024,
+        height: 546,
+        bg: '#F8F7FC'
+      },
+      {
+        src: 'images/projects/vani-4.jpg',
+        alt: 'VAni SOS and emergency assistance module with live location sharing and medical info access',
+        label: 'Web & App • SOS & Emergency Support',
+        width: 1024,
+        height: 548,
         bg: '#F8F7FC'
       }
     ],
@@ -182,6 +206,38 @@ const SHOWCASE_PROJECTS = [
         width: 1024,
         height: 652,
         bg: '#FFFFFF'
+      },
+      {
+        src: 'images/projects/anchor-2.jpg',
+        alt: 'Anchor RAG Intelligence and Governance modal with LLM inference selection and strict document grounding profiles',
+        label: 'RAG Governance & Profiles',
+        width: 1024,
+        height: 555,
+        bg: '#FFFFFF'
+      },
+      {
+        src: 'images/projects/anchor-3.jpg',
+        alt: 'Anchor grounded Q&A workspace showing pgvector similarity retrieval and verified document citations',
+        label: 'Citation-Verified Q&A',
+        width: 1024,
+        height: 560,
+        bg: '#FFFFFF'
+      },
+      {
+        src: 'images/projects/anchor-4.jpg',
+        alt: 'Anchor developer calibration panel with cosine similarity cutoff barrier and top-k chunk sliders',
+        label: 'Cosine Cutoff Calibration',
+        width: 1024,
+        height: 558,
+        bg: '#FFFFFF'
+      },
+      {
+        src: 'images/projects/anchor-5.jpg',
+        alt: 'Anchor strict anti-hallucination guard refusing ungrounded answers when no citation exists in selected sources',
+        label: 'Strict Anti-Hallucination Guard',
+        width: 1024,
+        height: 558,
+        bg: '#FFFFFF'
       }
     ]
   },
@@ -225,6 +281,14 @@ const SHOWCASE_PROJECTS = [
         label: 'Newsroom Moderation Queue',
         width: 1024,
         height: 572,
+        bg: '#FFFFFF'
+      },
+      {
+        src: 'images/projects/nobodristhi-2.jpg',
+        alt: 'Nobodristhi Newsroom overview showing approved counts, active journalists, real-time filing feed, and category mix',
+        label: 'Newsroom Editorial Overview',
+        width: 1024,
+        height: 487,
         bg: '#FFFFFF'
       }
     ]
@@ -408,13 +472,18 @@ function Interactive3DStage({ children, className = '' }) {
 }
 
 const ProjectMockupCarousel = React.memo(function ProjectMockupCarousel({ project, fallbackStage = null }) {
-  const images = Array.isArray(project.images) ? project.images : [];
+  const rawImages = Array.isArray(project.images) ? project.images : [];
   const companionPhone = project.companionPhone || null;
   const phoneImages = Array.isArray(companionPhone?.images) ? companionPhone.images : [];
-  const hasRealImages = images.length > 0 || phoneImages.length > 0;
-  const totalSlides = hasRealImages ? Math.max(images.length, phoneImages.length) : 1;
-  const hasMultiTrackSlides = images.length > 1;
+  const hasRealImages = rawImages.length > 0 || phoneImages.length > 0;
+  const totalSlides = hasRealImages ? Math.max(rawImages.length, phoneImages.length) : 1;
+  const hasMultiTrackSlides = rawImages.length > 1;
   const hasPhoneOnlyMulti = !hasMultiTrackSlides && phoneImages.length > 1;
+  const images = React.useMemo(() => {
+    if (rawImages.length === 0) return [];
+    if (rawImages.length === 1 || rawImages.length >= totalSlides) return rawImages;
+    return Array.from({ length: totalSlides }, (_, idx) => rawImages[idx % rawImages.length]);
+  }, [rawImages, totalSlides]);
 
   const trackRef = useRef(null);
   const slideRefs = useRef([]);
@@ -706,14 +775,10 @@ const ProjectMockupCarousel = React.memo(function ProjectMockupCarousel({ projec
         return;
       }
       const baseIndex = pendingTargetRef.current !== null ? pendingTargetRef.current : findNearestSlideIndex();
-      const isFiniteMode = hasMultiTrackSlides && totalSlides >= 3 && !supportsParking;
-      const nextIdx = isFiniteMode
-        ? Math.min(totalSlides - 1, baseIndex + 1)
-        : (baseIndex + 1) % totalSlides;
-      if (isFiniteMode && nextIdx === baseIndex) return;
+      const nextIdx = (baseIndex + 1) % totalSlides;
       scrollToSlide(nextIdx);
     },
-    [activeIndex, findNearestSlideIndex, hasMultiTrackSlides, hasPhoneOnlyMulti, hasRealImages, scrollToSlide, supportsParking, totalSlides]
+    [activeIndex, findNearestSlideIndex, hasPhoneOnlyMulti, hasRealImages, scrollToSlide, totalSlides]
   );
 
   const handlePrevClick = useCallback(
@@ -726,14 +791,10 @@ const ProjectMockupCarousel = React.memo(function ProjectMockupCarousel({ projec
         return;
       }
       const baseIndex = pendingTargetRef.current !== null ? pendingTargetRef.current : findNearestSlideIndex();
-      const isFiniteMode = hasMultiTrackSlides && totalSlides >= 3 && !supportsParking;
-      const prevIdx = isFiniteMode
-        ? Math.max(0, baseIndex - 1)
-        : (baseIndex - 1 + totalSlides) % totalSlides;
-      if (isFiniteMode && prevIdx === baseIndex) return;
+      const prevIdx = (baseIndex - 1 + totalSlides) % totalSlides;
       scrollToSlide(prevIdx);
     },
-    [activeIndex, findNearestSlideIndex, hasMultiTrackSlides, hasPhoneOnlyMulti, hasRealImages, scrollToSlide, supportsParking, totalSlides]
+    [activeIndex, findNearestSlideIndex, hasPhoneOnlyMulti, hasRealImages, scrollToSlide, totalSlides]
   );
 
   const handleMarkerClick = useCallback(
@@ -771,14 +832,15 @@ const ProjectMockupCarousel = React.memo(function ProjectMockupCarousel({ projec
 
   const activePhoneImg =
     phoneImages.length > 0 ? phoneImages[activeIndex % phoneImages.length] : null;
-  const isFiniteMultiSlide = hasMultiTrackSlides && totalSlides >= 3 && !supportsParking;
-  const isPrevDisabled = isFiniteMultiSlide && activeIndex === 0;
-  const isFiniteNextDisabled = isFiniteMultiSlide && activeIndex === totalSlides - 1;
+  const isPrevDisabled = false;
+  const isFiniteNextDisabled = false;
   const markerItems = Array.from({ length: totalSlides }, (_, idx) =>
-    hasPhoneOnlyMulti ? phoneImages[idx] : images[idx] || phoneImages[idx]
+    hasPhoneOnlyMulti ? phoneImages[idx] : rawImages[idx] || phoneImages[idx] || images[idx]
   );
   const currentCaption = hasRealImages
-    ? (hasPhoneOnlyMulti ? phoneImages[activeIndex]?.label : images[activeIndex]?.label) ||
+    ? (hasPhoneOnlyMulti
+        ? phoneImages[activeIndex]?.label
+        : rawImages[activeIndex]?.label || phoneImages[activeIndex]?.label || images[activeIndex]?.label) ||
       `${project.title} preview`
     : 'Interactive Concept Mockup';
   const counterLabel = `${String(activeIndex + 1).padStart(2, '0')} / ${String(totalSlides).padStart(2, '0')}`;
@@ -1466,17 +1528,14 @@ const ProjectRow = React.memo(function ProjectRow({
             </div>
           </div>
 
-          {/* Right Column: Visual Stage / Real Screenshot Mockup Carousel */}
+          {/* Right Column: Visual Stage / Mockup Showcase */}
           <div className="editorial-visual-column">
             {showVisualStage && (
-              <ProjectMockupCarousel
-                project={project}
-                fallbackStage={
-                  project.images && project.images.length > 0
-                    ? null
-                    : <PunarchakraMacbookScreen project={project} />
-                }
-              />
+              project.visualType === 'ballpit' ? (
+                <MobilePhoneScreen project={project} />
+              ) : (
+                <ProjectMockupCarousel project={project} />
+              )
             )}
           </div>
         </div>
@@ -1625,8 +1684,8 @@ export default function ProjectsShowcase() {
   }, []);
 
   const handleRowClick = useCallback((index, e) => {
-    // Don't toggle row if clicking inside buttons, links, or mockup carousel controls/stage
-    if (e.target.closest('a, button, .mockup-carousel')) {
+    // Don't toggle row if clicking inside buttons, links, or mockup stages
+    if (e.target.closest('a, button, .mockup-carousel, .mobile-3d-stage')) {
       return;
     }
 
@@ -1665,7 +1724,7 @@ export default function ProjectsShowcase() {
   }, []);
 
   const handleKeyDown = useCallback((e, index) => {
-    if (e.target.closest('a, button, .mockup-carousel')) {
+    if (e.target.closest('a, button, .mockup-carousel, .mobile-3d-stage')) {
       return;
     }
     if (e.key === 'Enter' || e.key === ' ') {

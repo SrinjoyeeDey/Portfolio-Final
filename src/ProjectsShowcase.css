@@ -2083,10 +2083,10 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 14px;
+  gap: 10px;
   width: 100%;
-  padding: 8px 0 20px 0;
-  min-height: 420px;
+  padding: 6px 0 18px 0;
+  min-height: 450px;
   perspective: 1000px;
   transform-style: preserve-3d;
   position: relative;
@@ -2094,8 +2094,8 @@
   overflow: visible;
 }
 
-.mobile-iphone-device {
-  width: 226px;
+.mobile-dual-phones-container .mobile-iphone-device {
+  width: 214px;
   display: inline-block;
   position: relative;
   flex-shrink: 0;
@@ -2150,9 +2150,10 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 14px 4px;
+  padding: 11px 20px 6px;
+  min-height: 29px;
   color: #000000;
-  font-size: 9.5px;
+  font-size: 9px;
   font-weight: 700;
   background: #FFFFFF;
   z-index: 10;
@@ -2161,7 +2162,7 @@
 }
 
 .iphone-time {
-  font-size: 9.5px;
+  font-size: 9px;
   font-weight: 700;
   letter-spacing: -0.01em;
   padding-left: 2px;
@@ -2170,8 +2171,8 @@
 .iphone-status-icons {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 8.5px;
+  gap: 3.5px;
+  font-size: 8px;
   padding-right: 2px;
 }
 
@@ -2191,7 +2192,7 @@
 
 /* Phone 1: Hub & Candidate Listings */
 .phone-hub-header {
-  padding: 6px 10px 4px;
+  padding: 5px 10px 4px;
   border-bottom: 1px solid #F1F5F9;
   display: flex;
   flex-direction: column;
@@ -2221,9 +2222,10 @@
 
 .phone-hub-titles {
   flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 2px;
 }
 
 .phone-hub-role {
@@ -2236,9 +2238,12 @@
 }
 
 .phone-hub-status-tag {
-  font-size: 7.5px;
-  font-weight: 600;
+  font-size: 7px;
+  font-weight: 700;
   color: #16A34A;
+  padding: 1px 5px;
+  border-radius: 999px;
+  width: fit-content;
 }
 
 .phone-manage-link {
@@ -2279,17 +2284,17 @@
 .phone-feed-list {
   flex: 1;
   overflow-y: auto;
-  padding: 5px 8px;
+  padding: 8px 10px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 9px;
 }
 
 .phone-feed-card {
   display: flex;
   align-items: flex-start;
   gap: 6px;
-  padding-bottom: 5px;
+  padding-bottom: 8px;
   border-bottom: 1px solid #F1F5F9;
 }
 
@@ -2312,6 +2317,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 4px;
 }
 
 .phone-user-name {
@@ -2327,8 +2333,12 @@
 }
 
 .phone-fit-badge {
-  font-size: 7.5px;
+  font-size: 7px;
   font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding: 1.5px 5px;
+  border-radius: 999px;
 }
 
 .phone-fit-badge.good {
@@ -2382,12 +2392,12 @@
 /* Floating Toast Pill (Reference 2) */
 .phone-toast-pill {
   position: absolute;
-  bottom: 38px;
+  bottom: 49px;
   left: 8px;
   right: 8px;
   background: #FFFFFF;
   border-radius: 6px;
-  padding: 4px 8px;
+  padding: 5px 8px;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
   display: flex;
   align-items: center;
@@ -2484,7 +2494,7 @@
 }
 
 .phone-msg-header {
-  padding: 6px 10px;
+  padding: 6px 14px;
   display: flex;
   align-items: center;
   position: relative;
@@ -2494,7 +2504,7 @@
 
 .phone-close-btn {
   position: absolute;
-  left: 10px;
+  left: 14px;
   border: none;
   background: transparent;
   font-size: 11px;
