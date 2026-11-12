@@ -821,8 +821,57 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
+  const closeMobileNav = () => {
+    if (navMenu && navMenu.classList.contains('active')) {
+      navMenu.classList.remove('active');
+      if (hamburgerBtn) hamburgerBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
+      document.body.classList.remove('nav-open');
+    }
+  };
+
   if (hamburgerBtn && navMenu) {
-    hamburgerBtn.addEventListener('click', () => {
+    // On mobile: move nav-menu to body level to escape the header's stacking context
+    const isMobileViewport = () => window.innerWidth <= 768;
+    let navPortaled = false;
+    let navOriginalParent = null;
+    let navOriginalNextSibling = null;
+
+    function portalNavToBody() {
+      if (!navPortaled && isMobileViewport()) {
+        navOriginalParent = navMenu.parentNode;
+        navOriginalNextSibling = navMenu.nextSibling;
+        document.body.appendChild(navMenu);
+        navPortaled = true;
+      }
+    }
+
+    function unportalNav() {
+      if (navPortaled && navOriginalParent) {
+        if (navOriginalNextSibling) {
+          navOriginalParent.insertBefore(navMenu, navOriginalNextSibling);
+        } else {
+          navOriginalParent.appendChild(navMenu);
+        }
+        navPortaled = false;
+      }
+    }
+
+    // Portal immediately if on mobile
+    portalNavToBody();
+
+    // Re-evaluate on resize
+    window.addEventListener('resize', () => {
+      if (isMobileViewport()) {
+        portalNavToBody();
+      } else {
+        closeMobileNav();
+        unportalNav();
+      }
+    });
+
+    hamburgerBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      portalNavToBody(); // ensure portaled before toggling
       navMenu.classList.toggle('active');
       const isExpanded = navMenu.classList.contains('active');
       hamburgerBtn.innerHTML = isExpanded ? '<i class="fa-solid fa-xmark"></i>' : '<i class="fa-solid fa-bars"></i>';
@@ -830,12 +879,18 @@ document.addEventListener('DOMContentLoaded', () => {
       document.body.classList.toggle('nav-open', isExpanded);
     });
 
-    // Close nav when clicking outside of it (on the backdrop)
+    // Close nav when clicking outside of it (on the backdrop or outside the side panel)
     navMenu.addEventListener('click', (e) => {
-      if (e.target === navMenu) {
-        navMenu.classList.remove('active');
-        hamburgerBtn.innerHTML = '<i class="fa-solid fa-bars"></i>';
-        document.body.classList.remove('nav-open');
+      const panel = e.target.closest('.gooey-nav') || e.target.closest('.nav-side-panel');
+      if (!panel) {
+        closeMobileNav();
+      }
+    });
+
+    // Close nav on Escape key press
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' || e.key === 'Esc') {
+        closeMobileNav();
       }
     });
   }
@@ -1229,9 +1284,6 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         projectModal.classList.add('active');
         document.body.style.overflow = 'hidden';
-        if (window.lenis && typeof window.lenis.stop === 'function') {
-          window.lenis.stop();
-        }
       }
   }
   window.openProjectModalById = openProjectModalById;
@@ -1249,9 +1301,6 @@ document.addEventListener('DOMContentLoaded', () => {
   function closeModal() {
     projectModal.classList.remove('active');
     document.body.style.overflow = 'auto';
-    if (window.lenis && typeof window.lenis.start === 'function') {
-      window.lenis.start();
-    }
   }
   window.closeModal = closeModal;
 
@@ -1259,6 +1308,13 @@ document.addEventListener('DOMContentLoaded', () => {
   projectModal.addEventListener('click', (e) => {
     if (e.target === projectModal) closeModal();
   });
+  projectModal.addEventListener('wheel', (e) => {
+    if (e.target.closest('.modal-card')) {
+      e.stopPropagation();
+      return;
+    }
+    e.preventDefault();
+  }, { passive: false });
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && projectModal.classList.contains('active')) closeModal();
   });
@@ -1345,7 +1401,7 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       // Background asynchronous dispatch to mail recipient
-      fetch('https://formsubmit.co/ajax/srinjoyeedey@gmail.com', {
+      fetch('https://formsubmit.co/ajax/deysrinjoyee04@gmail.com', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -1508,7 +1564,7 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       // Send to Srinjoyee's inbox via formsubmit endpoint
-      fetch('https://formsubmit.co/ajax/srinjoyeedey@gmail.com', {
+      fetch('https://formsubmit.co/ajax/deysrinjoyee04@gmail.com', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -2340,7 +2396,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <p>• 10/10 engineers and startup founders recommend hiring Srinjoyee before she gets poached by Big Tech.</p>
             <p>• Specializes in end-to-end full-stack architectures, high-performance interactive 3D/WebGL interfaces, and computer vision &amp; edge AI.</p>
             <p>• 20+ national hackathon podiums prove she delivers production-ready code under extreme time constraints.</p>
-            <p>• Direct Email: <a href="mailto:srinjoyeedey@gmail.com" class="term-green" style="text-decoration:underline;">srinjoyeedey@gmail.com</a></p>
+            <p>• Direct Email: <a href="mailto:deysrinjoyee04@gmail.com" class="term-green" style="text-decoration:underline;">deysrinjoyee04@gmail.com</a></p>
             <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px;">
               <button type="button" class="term-chip" data-cmd="contact">contact 📩</button>
               <button type="button" class="term-chip" data-cmd="projects">projects 🚀</button>
@@ -2352,7 +2408,7 @@ document.addEventListener('DOMContentLoaded', () => {
         case 'contact':
           respLine.innerHTML = `
             <p>📩 <strong class="term-yellow">DIRECT UPLINK CHANNELS:</strong></p>
-            <p>• Email: <span class="term-green">deysrinjoyee28@gmail.com</span></p>
+            <p>• Email: <a href="mailto:deysrinjoyee04@gmail.com" class="term-green" style="text-decoration:underline;">deysrinjoyee04@gmail.com</a></p>
             <p>• GitHub: <a href="https://github.com/SrinjoyeeDey/" target="_blank" rel="noopener noreferrer" style="color:#FFBD12; text-decoration:underline;">github.com/SrinjoyeeDey</a></p>
             <p>• LinkedIn: <a href="https://www.linkedin.com/in/srinjoyee-dey/" target="_blank" rel="noopener noreferrer" style="color:#FFBD12; text-decoration:underline;">linkedin.com/in/srinjoyee-dey</a></p>
             <p>• X (Twitter): <a href="https://x.com/Srinjoyee__bee" target="_blank" rel="noopener noreferrer" style="color:#FFBD12; text-decoration:underline;">x.com/Srinjoyee__bee</a></p>
@@ -2509,7 +2565,7 @@ document.addEventListener('DOMContentLoaded', () => {
             respLine.innerHTML = `<p class="term-yellow">Usage: suggest &lt;your suggestion or thought here&gt;</p>`;
           } else {
             respLine.innerHTML = `<p class="term-green">📡 Suggestion logged: "${escapeHtml(arg)}". Transmitting to inbox...</p>`;
-            fetch('https://formsubmit.co/ajax/srinjoyeedey@gmail.com', {
+            fetch('https://formsubmit.co/ajax/deysrinjoyee04@gmail.com', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
               body: JSON.stringify({
@@ -3686,7 +3742,7 @@ document.addEventListener('DOMContentLoaded', () => {
       };
 
       try {
-        const response = await fetch('https://formsubmit.co/ajax/srinjoyeedey@gmail.com', {
+        const response = await fetch('https://formsubmit.co/ajax/deysrinjoyee04@gmail.com', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -3715,7 +3771,7 @@ document.addEventListener('DOMContentLoaded', () => {
       } catch (err) {
         console.warn('Let\'s meet submission error:', err);
         if (statusMsg) {
-          statusMsg.innerHTML = 'Unable to send. Please email directly to <a href="mailto:deysrinjoyee28@gmail.com" style="text-decoration:underline;color:#EF4444;">deysrinjoyee28@gmail.com</a>';
+          statusMsg.innerHTML = 'Unable to send. Please email directly to <a href="mailto:deysrinjoyee04@gmail.com" style="text-decoration:underline;color:#EF4444;">deysrinjoyee04@gmail.com</a>';
         }
         if (window.PortoSound && typeof window.PortoSound.playError === 'function') {
           window.PortoSound.playError();

@@ -3,12 +3,12 @@ import ReactDOM from 'react-dom/client';
 import GooeyNav from './GooeyNav';
 
 const navItems = [
-  { label: 'Home', href: '#hero' },
-  { label: 'About', href: '#about' },
-  { label: 'Experience', href: '#projects' },
-  { label: 'Snapshots', href: '#memory-wall' },
-  { label: 'Skills', href: '#skills' },
-  { label: 'Contact', href: '#studio' }
+  { label: 'Home', href: '#hero', icon: <i className="fa-solid fa-house" /> },
+  { label: 'About', href: '#about', icon: <i className="fa-solid fa-user" /> },
+  { label: 'Experience', href: '#projects', icon: <i className="fa-solid fa-briefcase" /> },
+  { label: 'Snapshots', href: '#memory-wall', icon: <i className="fa-solid fa-images" /> },
+  { label: 'Skills', href: '#skills', icon: <i className="fa-solid fa-layer-group" /> },
+  { label: 'Contact', href: '#studio', icon: <i className="fa-solid fa-envelope" /> }
 ];
 
 function NavContainer() {

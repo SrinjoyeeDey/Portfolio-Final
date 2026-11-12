@@ -414,7 +414,7 @@ export function CinematicFooter({
 
                 <MagneticButton
                   as="a"
-                  href="mailto:deysrinjoyee28@gmail.com"
+                  href="mailto:deysrinjoyee04@gmail.com"
                   className="footer-glass-pill px-10 py-5 rounded-full font-bold text-sm md:text-base flex items-center gap-3 group"
                 >
                   <svg className="w-6 h-6 transition-colors" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

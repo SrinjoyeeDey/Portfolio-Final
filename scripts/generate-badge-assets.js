@@ -379,7 +379,7 @@ const cardBackSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1
     </text>
 
     <text x="442" y="85" font-family="'JetBrains Mono', monospace" font-size="16" font-weight="600" fill="#94A3B8" text-anchor="middle">
-      deysrinjoyee28@gmail.com • Kolkata, India • 2026 Edition
+      deysrinjoyee04@gmail.com • Kolkata, India • 2026 Edition
     </text>
 
     <!-- Social Chips -->

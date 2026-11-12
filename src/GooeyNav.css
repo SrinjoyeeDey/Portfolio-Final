@@ -97,112 +97,293 @@
   font-size: 0.92rem;
   letter-spacing: -0.01em;
   text-decoration: none;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: color 0.2s ease;
-  -webkit-tap-highlight-color: transparent;
-}
 
-/* Match per-item font-weight identically between base list and active overlay
-   so active siblings never drift horizontally or double-render */
-.gooey-nav__list--active .gooey-nav__item[data-active] .gooey-nav__link,
-.gooey-nav__item[data-active] .gooey-nav__link {
-  font-weight: 600;
-}
 
-.gooey-nav__list--active .gooey-nav__link {
-  color: inherit;
-}
 
-.gooey-nav__item[data-active] .gooey-nav__link {
-  color: var(--gn-active-ink);
-}
-
-.gooey-nav--ready .gooey-nav__list:not(.gooey-nav__list--active) .gooey-nav__item[data-active] .gooey-nav__link {
-  color: var(--gn-muted);
-}
-
-@media (min-width: 769px) {
-  .gooey-nav__list {
-    flex-wrap: nowrap;
-  }
-}
-
-@media (min-width: 769px) and (max-width: 1120px) {
-  .gooey-nav {
-    --gn-pad: 5px;
-    --gn-gap: 2px;
-    --gn-x: 11px;
-    --gn-y: 7px;
+  .gooey-nav__list--active .gooey-nav__link {
+    color: inherit;
   }
 
-  .gooey-nav__link {
-    font-size: 0.85rem;
-  }
-}
-
-.gooey-nav__link:focus-visible {
-  outline: 2px solid var(--gn-ink);
-  outline-offset: 2px;
-}
-
-.gooey-nav__icon {
-  display: inline-flex;
-  flex: none;
-}
-
-.gooey-nav__icon svg {
-  width: 1.15em;
-  height: 1.15em;
-}
-
-.gooey-nav__rim {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  box-shadow:
-    inset 0 0 0 1px var(--gn-frame-edge),
-    inset 0 1px 0 var(--gn-frame-highlight);
-  pointer-events: none;
-}
-
-@media (max-width: 768px) {
-  .nav-menu .gooey-nav {
-    display: flex !important;
-    flex-direction: column !important;
-    width: 100% !important;
-    max-width: 300px !important;
-    border-radius: 28px !important;
-    padding: 10px !important;
-    background: rgba(255, 255, 255, 0.92) !important;
-    box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08) !important;
+  .gooey-nav__item[data-active] .gooey-nav__link {
+    color: var(--gn-active-ink);
   }
 
-  .nav-menu .gooey-nav__stage {
-    width: 100% !important;
+  .gooey-nav--ready .gooey-nav__list:not(.gooey-nav__list--active) .gooey-nav__item[data-active] .gooey-nav__link {
+    color: var(--gn-muted);
   }
 
-  .nav-menu .gooey-nav__list {
-    flex-direction: column !important;
-    width: 100% !important;
-    gap: 6px !important;
+  @media (min-width: 769px) {
+    .gooey-nav__list {
+      flex-wrap: nowrap;
+    }
+
+    .gooey-nav__icon {
+      display: none !important;
+    }
+
+    .gooey-nav__tooltip {
+      display: none !important;
+    }
   }
 
-  .nav-menu .gooey-nav__item {
-    width: 100% !important;
+  @media (min-width: 769px) and (max-width: 1120px) {
+    .gooey-nav {
+      --gn-pad: 5px;
+      --gn-gap: 2px;
+      --gn-x: 11px;
+      --gn-y: 7px;
+    }
+
+    .gooey-nav__link {
+      font-size: 0.85rem;
+    }
   }
 
-  .nav-menu .gooey-nav__link {
-    width: 100% !important;
-    justify-content: center !important;
-    padding: 12px 20px !important;
-    font-size: 1.15rem !important;
-    border-radius: 999px !important;
+  .gooey-nav__link:focus-visible {
+    outline: 2px solid var(--gn-ink);
+    outline-offset: 2px;
   }
-}
 
-@media (hover: hover) {
-  .gooey-nav__link:hover {
-    color: var(--gn-ink);
+  .gooey-nav__icon {
+    display: inline-flex;
+    flex: none;
+  }
+
+  .gooey-nav__icon svg {
+    width: 1.15em;
+    height: 1.15em;
+  }
+
+  .gooey-nav__rim {
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow:
+      inset 0 0 0 1px var(--gn-frame-edge),
+      inset 0 1px 0 var(--gn-frame-highlight);
+    pointer-events: none;
+  }
+
+  /* ==========================================================================
+   MOBILE HAMBURGER EXPANDED MENU — PIERRE SÙ DAY #14 SIDE NAVIGATION PILL
+   ========================================================================== */
+  @media (max-width: 768px) {
+
+    /* Translucent backdrop overlay that subtly blurs and dims the background */
+    .nav-menu {
+      position: fixed !important;
+      inset: 0 !important;
+      width: 100vw !important;
+      height: 100dvh !important;
+      background: rgba(12, 13, 16, 0.48) !important;
+      backdrop-filter: blur(8px) !important;
+      -webkit-backdrop-filter: blur(8px) !important;
+      z-index: 10000 !important;
+      pointer-events: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      transition: opacity 0.28s ease, visibility 0.28s ease !important;
+      margin: 0 !important;
+      padding: 0 !important;
+      border: none !important;
+      box-shadow: none !important;
+      display: block !important;
+      overflow: hidden !important;
+    }
+
+    .nav-menu.active {
+      pointer-events: auto !important;
+      opacity: 1 !important;
+      visibility: visible !important;
+    }
+
+    .nav-menu #nav-gooey-root {
+      position: fixed !important;
+      top: calc(env(safe-area-inset-top, 0px) + 74px) !important;
+      right: 16px !important;
+      z-index: 10001 !important;
+      pointer-events: none !important;
+    }
+
+    .nav-menu.active #nav-gooey-root {
+      pointer-events: auto !important;
+    }
+
+    /* Compact solid vertical side-navigation pill sliding from right (Pierre Sù Reference) */
+    .nav-menu .gooey-nav {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      width: 66px !important;
+      min-width: 66px !important;
+      max-width: 66px !important;
+      height: auto !important;
+      box-sizing: border-box !important;
+      background: #18191D !important;
+      border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+      border-radius: 999px !important;
+      padding: 14px 6px !important;
+      box-shadow:
+        0 20px 48px -10px rgba(0, 0, 0, 0.65),
+        0 4px 16px rgba(0, 0, 0, 0.35),
+        inset 0 1px 1px rgba(255, 255, 255, 0.18) !important;
+      transform: translateX(120px) !important;
+      opacity: 0 !important;
+      pointer-events: auto !important;
+      transition: transform 0.34s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease !important;
+      margin: 0 !important;
+    }
+
+    .nav-menu.active .gooey-nav {
+      transform: translateX(0) !important;
+      opacity: 1 !important;
+    }
+
+    .nav-menu .gooey-nav__stage {
+      width: 100% !important;
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+    }
+
+    .nav-menu .gooey-nav__canvas,
+    .nav-menu .gooey-nav__fallback,
+    .nav-menu .gooey-nav__list--active,
+    .nav-menu .gooey-nav__rim {
+      display: none !important;
+    }
+
+    .nav-menu .gooey-nav__list {
+      display: flex !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 8px !important;
+      width: 100% !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      list-style: none !important;
+    }
+
+    .nav-menu .gooey-nav__item {
+      width: 100% !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      padding: 0 !important;
+      margin: 0 !important;
+    }
+
+    .nav-menu .gooey-nav__link {
+      position: relative !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 48px !important;
+      height: 48px !important;
+      min-width: 48px !important;
+      min-height: 48px !important;
+      padding: 0 !important;
+      border-radius: 50% !important;
+      background: transparent !important;
+      color: rgba(255, 255, 255, 0.65) !important;
+      text-decoration: none !important;
+      border: none !important;
+      outline: none !important;
+      cursor: pointer !important;
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      -webkit-tap-highlight-color: transparent !important;
+      box-sizing: border-box !important;
+    }
+
+    .nav-menu .gooey-nav__label {
+      display: none !important;
+    }
+
+    .nav-menu .gooey-nav__icon {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      font-size: 1.15rem !important;
+      line-height: 1 !important;
+      color: rgba(255, 255, 255, 0.65) !important;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease !important;
+    }
+
+    /* Active circular badge matching Pierre Sù reference (White circle, dark icon) */
+    .nav-menu .gooey-nav__item[data-active] .gooey-nav__link {
+      background: #FFFFFF !important;
+      color: #16171A !important;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+      transform: scale(1.06) !important;
+    }
+
+    .nav-menu .gooey-nav__item[data-active] .gooey-nav__icon {
+      color: #16171A !important;
+      transform: scale(1.04) !important;
+    }
+
+    /* Desktop hover state on the side pill */
+    @media (hover: hover) and (pointer: fine) {
+      .nav-menu .gooey-nav__link:hover {
+        background: rgba(255, 255, 255, 0.1) !important;
+        color: #FFFFFF !important;
+      }
+
+      .nav-menu .gooey-nav__link:hover .gooey-nav__icon {
+        color: #FFFFFF !important;
+      }
+
+      .nav-menu .gooey-nav__tooltip {
+        display: block !important;
+        position: absolute !important;
+        right: calc(100% + 14px) !important;
+        top: 50% !important;
+        transform: translateY(-50%) translateX(6px) !important;
+        background: #111215 !important;
+        color: #FFFFFF !important;
+        font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif) !important;
+        font-size: 0.78rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.04em !important;
+        padding: 5px 12px !important;
+        border-radius: 999px !important;
+        white-space: nowrap !important;
+        pointer-events: none !important;
+        opacity: 0 !important;
+        visibility: hidden !important;
+        transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35) !important;
+        border: 1px solid rgba(255, 255, 255, 0.14) !important;
+        z-index: 10003 !important;
+      }
+
+      .nav-menu .gooey-nav__tooltip::after {
+        content: '' !important;
+        position: absolute !important;
+        left: 100% !important;
+        top: 50% !important;
+        transform: translateY(-50%) !important;
+        border-width: 4px !important;
+        border-style: solid !important;
+        border-color: transparent transparent transparent #111215 !important;
+      }
+
+      .nav-menu .gooey-nav__link:hover .gooey-nav__tooltip {
+        opacity: 1 !important;
+        visibility: visible !important;
+        transform: translateY(-50%) translateX(0) !important;
+      }
+    }
+
+    .nav-menu .gooey-nav__tooltip {
+      display: none;
+    }
+  }
+
+  @media (hover: hover) {
+    .gooey-nav__link:hover {
+      color: var(--gn-ink);
+    }
   }
 }

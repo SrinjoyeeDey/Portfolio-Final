@@ -272,7 +272,7 @@ export function LetsWorkTogether({
           <p className="max-w-md text-xs sm:text-sm leading-relaxed text-muted-foreground">
             Have a project in mind? I'd love to hear about it. Let's create something exceptional together.
           </p>
-          <span className="text-[11px] sm:text-xs tracking-widest uppercase text-muted-foreground/60">deysrinjoyee28@gmail.com</span>
+          <a href="mailto:deysrinjoyee04@gmail.com" className="text-[11px] sm:text-xs tracking-widest uppercase text-muted-foreground/60 hover:text-muted-foreground transition-colors">deysrinjoyee04@gmail.com</a>
         </div>
       </div>
     </section>

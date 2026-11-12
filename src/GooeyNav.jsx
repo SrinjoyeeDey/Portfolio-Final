@@ -791,6 +791,7 @@ const GooeyNav = ({
         <>
           {item.icon && <span className="gooey-nav__icon">{item.icon}</span>}
           {item.label && <span className="gooey-nav__label">{item.label}</span>}
+          {item.label && <span className="gooey-nav__tooltip" aria-hidden="true">{item.label}</span>}
         </>
       );
       if (!interactive) {
@@ -806,6 +807,8 @@ const GooeyNav = ({
       }
       const shared = {
         className: 'gooey-nav__link',
+        'aria-label': item.label,
+        title: item.label,
         'aria-current': item.href?.startsWith('#')
           ? (index === current ? 'true' : 'false')
           : (index === current ? 'page' : undefined),

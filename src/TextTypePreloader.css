@@ -99,8 +99,11 @@
 
 /* Top Header Bar */
 .tt-preloader__header {
-  position: relative;
-  z-index: 4;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
   width: 100%;
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -162,8 +165,7 @@
   box-shadow: 4px 5px 0px rgba(34, 36, 40, 0.3);
 }
 
-.tt-preloader--masked .tt-preloader__subtitle,
-.tt-preloader--masked .tt-preloader__footer,
+.tt-preloader--masked .tt-preloader__composition,
 .tt-preloader--masked .tt-preloader__crosshair {
   opacity: 0 !important;
   visibility: hidden !important;
@@ -204,31 +206,191 @@
   box-shadow: 4px 6px 0px #222428;
 }
 
-/* Center Stage */
+/* Center Stage: Unified Composition Centering */
 .tt-preloader__stage {
   position: relative;
   z-index: 4;
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 1rem 2rem;
+  padding: 1.5rem 1.5rem;
   box-sizing: border-box;
 }
 
+.tt-preloader__composition {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 900px;
+  position: relative;
+  z-index: 4;
+}
+
+/* ==========================================================================
+   1. ANIMATED DELIVERY TRUCK LOADER (Above Ciao Logo)
+   ========================================================================== */
+.tt-truck-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  height: fit-content;
+  margin-bottom: clamp(1.35rem, 1.8vw, 1.65rem);
+  position: relative;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.truckWrapper {
+  width: clamp(228px, 4.3vw + 202px, 266px);
+  height: clamp(110px, 2.1vw + 97px, 128px);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  align-items: center;
+  justify-content: flex-end;
+  overflow: hidden;
+  padding-bottom: 2px;
+}
+
+/* Truck upper body with gentle suspension bounce */
+.truckBody {
+  width: clamp(142px, 2.7vw + 125px, 165px);
+  height: fit-content;
+  margin-bottom: clamp(7px, 0.2vw + 6px, 8.5px);
+  animation: truckSuspensionMotion 1.1s ease-in-out infinite;
+  z-index: 2;
+  position: relative;
+  will-change: transform;
+}
+
+.trucksvg {
+  width: 100%;
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 4px 8px rgba(34, 36, 40, 0.08));
+}
+
+@keyframes truckSuspensionMotion {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(2.8px);
+  }
+}
+
+/* Truck tires with rotating spokes */
+.truckTires {
+  width: clamp(142px, 2.7vw + 125px, 165px);
+  height: fit-content;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0px clamp(9px, 0.3vw + 8px, 12px) 0px clamp(14px, 0.4vw + 12px, 18px);
+  box-sizing: border-box;
+  position: absolute;
+  bottom: 0px;
+  z-index: 3;
+}
+
+.truckTires .tiresvg {
+  width: clamp(26px, 0.5vw + 23px, 30px);
+  height: clamp(26px, 0.5vw + 23px, 30px);
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(34, 36, 40, 0.1));
+}
+
+.tire-spokes {
+  transform-origin: 15px 15px;
+  animation: tireRotateAnimation 0.75s linear infinite;
+}
+
+@keyframes tireRotateAnimation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Miniature moving road beneath truck */
+.road {
+  width: 100%;
+  height: 2px;
+  background-color: #222428;
+  position: relative;
+  bottom: 0;
+  align-self: flex-end;
+  border-radius: 999px;
+  z-index: 1;
+}
+
+.road::before {
+  content: "";
+  position: absolute;
+  width: 24px;
+  height: 100%;
+  background-color: #222428;
+  right: -50%;
+  border-radius: 3px;
+  animation: roadAnimation 1.4s linear infinite;
+  border-left: 10px solid #ECECE7;
+}
+
+.road::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 100%;
+  background-color: #222428;
+  right: -65%;
+  border-radius: 3px;
+  animation: roadAnimation 1.4s linear infinite;
+  border-left: 5px solid #ECECE7;
+}
+
+.lampPost {
+  position: absolute;
+  bottom: 0;
+  right: -90%;
+  height: clamp(98px, 1.4vw + 89px, 110px);
+  z-index: 1;
+  animation: roadAnimation 1.4s linear infinite;
+  pointer-events: none;
+}
+
+@keyframes roadAnimation {
+  0% {
+    transform: translateX(0px);
+  }
+  100% {
+    transform: translateX(-360px);
+  }
+}
+
+/* ==========================================================================
+   3. CIAO / GREETING WORDMARK & GLOWING GOLDEN ACCENT
+   ========================================================================== */
 .tt-preloader__word-wrap {
   position: relative;
   min-height: 1.3em;
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-bottom: 1.25rem;
 }
 
 .tt-preloader__word {
   font-family: 'Fredoka', cursive, sans-serif;
-  font-size: clamp(3.4rem, 10vw, 7.8rem);
+  font-size: clamp(3.2rem, 9.5vw, 7.2rem);
   font-weight: 800;
   letter-spacing: -0.02em;
   line-height: 1.1;
@@ -243,52 +405,40 @@
   border-radius: 4px;
 }
 
-.tt-preloader__subtitle {
-  margin-top: 1.4rem;
+/* ==========================================================================
+   4. INITIALIZING EXPERIENCE TEXT
+   ========================================================================== */
+.tt-preloader__status-block {
+  margin-bottom: 1.15rem;
   font-family: 'Fredoka', cursive, sans-serif;
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(34, 36, 40, 0.65);
-  display: flex;
+  color: rgba(34, 36, 40, 0.75);
+  display: inline-flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.65rem;
 }
 
-.tt-preloader__subtitle-line {
-  width: 32px;
-  height: 2px;
-  border-radius: 1px;
-  background-color: rgba(34, 36, 40, 0.25);
+.tt-preloader__status-indicator {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: #FFBD12;
+  box-shadow: 0 0 8px rgba(255, 189, 18, 0.85);
+  display: inline-block;
+  animation: ttPulse 1.8s infinite ease-in-out;
 }
 
-/* Bottom Footer Bar */
-.tt-preloader__footer {
-  position: relative;
-  z-index: 4;
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 2.2rem 3.5rem;
-  box-sizing: border-box;
-}
-
-.tt-preloader__status {
-  font-family: 'Fredoka', cursive, sans-serif;
-  font-size: 0.82rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: rgba(34, 36, 40, 0.7);
-}
-
+/* ==========================================================================
+   5. LOADING PROGRESS BAR & PERCENTAGE
+   ========================================================================== */
 .tt-preloader__progress-container {
   display: flex;
   align-items: center;
   gap: 1rem;
-  width: min(320px, 40vw);
+  width: min(320px, 75vw);
 }
 
 .tt-preloader__progress-bar {
@@ -316,6 +466,7 @@
   font-variant-numeric: tabular-nums;
   color: #222428;
   min-width: 38px;
+  text-align: right;
 }
 
 .tt-preloader__hint {
@@ -332,14 +483,69 @@
   50% { opacity: 1; transform: scale(1.15); }
 }
 
-/* Mobile Responsiveness */
+/* Respect prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .truckBody,
+  .tire-spokes,
+  .road::before,
+  .road::after,
+  .lampPost {
+    animation: none !important;
+  }
+}
+
+/* Mobile & Tablet Responsiveness */
 @media (max-width: 768px) {
-  .tt-preloader__header,
-  .tt-preloader__footer {
+  .tt-preloader__header {
     padding: 1.5rem 1.25rem;
   }
   .tt-preloader__crosshair { display: none; }
   .tt-preloader__brand span { display: none; }
-  .tt-preloader__progress-container { width: 140px; }
-  .tt-preloader__status { display: none; }
+  
+  .tt-preloader__word-wrap {
+    margin-bottom: 1rem;
+  }
+  .tt-preloader__status-block {
+    font-size: 0.8rem;
+    margin-bottom: 0.95rem;
+  }
+  .tt-preloader__progress-container {
+    width: min(260px, 80vw);
+  }
+}
+
+@media (max-width: 580px) {
+  .tt-truck-loader {
+    margin-bottom: 0.95rem;
+  }
+  .truckWrapper {
+    width: 165px;
+    height: 82px;
+  }
+  .truckBody {
+    width: 104px;
+    margin-bottom: 5px;
+  }
+  .truckTires {
+    width: 104px;
+    padding: 0px 7px 0px 11px;
+  }
+  .truckTires .tiresvg {
+    width: 19px;
+    height: 19px;
+  }
+  .lampPost {
+    height: 72px;
+  }
+  .tt-preloader__word-wrap {
+    margin-bottom: 0.8rem;
+  }
+  .tt-preloader__status-block {
+    font-size: 0.74rem;
+    margin-bottom: 0.8rem;
+    letter-spacing: 0.08em;
+  }
+  .tt-preloader__progress-container {
+    width: min(220px, 85vw);
+  }
 }

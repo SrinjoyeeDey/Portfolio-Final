@@ -1506,32 +1506,36 @@ const ProjectRow = React.memo(function ProjectRow({
                 </a>
               )}
 
-              {project.liveUrl && (
-                <a
-                  href={project.liveUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="editorial-action-icon cursor-target"
-                  title="Open Live Website"
-                  data-cursor-label="Live"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <i className="fa-solid fa-globe"></i>
-                </a>
-              )}
+              {(project.liveUrl || project.githubUrl) && (
+                <div className="editorial-action-icons-row">
+                  {project.liveUrl && (
+                    <a
+                      href={project.liveUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="editorial-action-icon cursor-target"
+                      title="Open Live Website"
+                      data-cursor-label="Live"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <i className="fa-solid fa-globe"></i>
+                    </a>
+                  )}
 
-              {project.githubUrl && (
-                <a
-                  href={project.githubUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="editorial-action-icon cursor-target"
-                  title="View GitHub Repository"
-                  data-cursor-label="GitHub"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <i className="fa-brands fa-github"></i>
-                </a>
+                  {project.githubUrl && (
+                    <a
+                      href={project.githubUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="editorial-action-icon cursor-target"
+                      title="View GitHub Repository"
+                      data-cursor-label="GitHub"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <i className="fa-brands fa-github"></i>
+                    </a>
+                  )}
+                </div>
               )}
             </div>
           </div>

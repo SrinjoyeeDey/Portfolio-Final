@@ -526,7 +526,7 @@ async function generateTextures() {
         <div class="contact-card">
           <div class="contact-item">
             <span>DIRECT MAIL</span>
-            <span>deysrinjoyee28@gmail.com</span>
+            <span>deysrinjoyee04@gmail.com</span>
           </div>
           <div class="contact-item">
             <span>GITHUB</span>

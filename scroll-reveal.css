@@ -254,3 +254,41 @@ body.preloader-locked {
   font-size: 22px;
   color: rgba(17, 18, 21, 0.4);
 }
+
+/* ==========================================================================
+   MOBILE CINEMATIC TRANSITION SUPPORT
+   Ensure pinned story layers are not clipped by overflow rules during
+   scroll-driven transitions on mobile devices (max-width: 768px).
+   ========================================================================== */
+@media (max-width: 768px) {
+  /* Allow GSAP-pinned layers to overflow their stacking context vertically
+     (horizontal overflow is still guarded by html/body overflow-x: hidden) */
+  #story-layer-hero,
+  #story-layer-projects,
+  #story-layer-snapshots {
+    overflow: visible !important;
+  }
+
+  /* The cinematic bridge sits absolutely inside the projects layer.
+     Ensure it is not clipped on mobile. */
+  .projects-cinematic-bridge {
+    /* Mobile-safe size using vw instead of the large clamp that may overflow */
+    width: clamp(220px, 72vw, 480px);
+    height: clamp(150px, 50vw, 320px);
+  }
+
+  /* Snapshot header and mobile grid: allow transforms during scroll transition */
+  .pmw-exotic-header,
+  .pmw-mobile-view-container,
+  .pmw-display-row-1,
+  .pmw-display-row-2 {
+    will-change: transform, opacity;
+    overflow: visible;
+  }
+
+  /* Prevent horizontal scroll caused by split-apart xPercent tweens */
+  #story-layer-projects,
+  #story-layer-snapshots {
+    overflow-x: clip !important;
+  }
+}

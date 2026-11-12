@@ -637,6 +637,19 @@
   .pmw-desktop-view-container {
     display: none !important;
   }
+
+  /* 2-line mobile layout for "A COLLECTION OF" / "MOMENTS" */
+  .pmw-display-row-1 {
+    font-size: clamp(1.35rem, 6.2vw, 2.2rem) !important;
+    white-space: nowrap !important;
+    letter-spacing: -1px !important;
+  }
+
+  .pmw-display-row-2 {
+    font-size: clamp(2.1rem, 9.5vw, 3.4rem) !important;
+    white-space: nowrap !important;
+    letter-spacing: -1px !important;
+  }
 }
 
 /* --------------------------------------------------------------------------
@@ -647,12 +660,21 @@
   align-items: center;
   gap: 8px;
   overflow-x: auto;
-  padding: 4px 2px 14px 2px;
+  overflow-y: hidden;
+  padding: 4px 6px 14px 6px;
   scrollbar-width: none;
   -ms-overflow-style: none;
   -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+  overscroll-behavior-x: contain;
   width: 100%;
   box-sizing: border-box;
+  cursor: grab;
+  user-select: none;
+}
+
+.pmw-filter-bar:active {
+  cursor: grabbing;
 }
 
 .pmw-filter-bar::-webkit-scrollbar {

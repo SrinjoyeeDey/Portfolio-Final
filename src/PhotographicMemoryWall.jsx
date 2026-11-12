@@ -540,7 +540,44 @@ export default function PhotographicMemoryWall() {
   const [isExpanded, setIsExpanded] = useState(false);
   const [revealedIds, setRevealedIds] = useState(() => new Set());
   const wallRef = useRef(null);
+  const filterBarRef = useRef(null);
   const cardElementsRef = useRef(new Map());
+
+  // Enable mouse drag-to-scroll for horizontal filter pills
+  useEffect(() => {
+    const el = filterBarRef.current;
+    if (!el) return;
+    let isDown = false;
+    let startX = 0;
+    let scrollLeft = 0;
+
+    const onMouseDown = (e) => {
+      isDown = true;
+      startX = e.pageX - el.offsetLeft;
+      scrollLeft = el.scrollLeft;
+    };
+    const onMouseLeave = () => { isDown = false; };
+    const onMouseUp = () => { isDown = false; };
+    const onMouseMove = (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - el.offsetLeft;
+      const walk = (x - startX) * 1.5;
+      el.scrollLeft = scrollLeft - walk;
+    };
+
+    el.addEventListener('mousedown', onMouseDown);
+    el.addEventListener('mouseleave', onMouseLeave);
+    el.addEventListener('mouseup', onMouseUp);
+    el.addEventListener('mousemove', onMouseMove);
+
+    return () => {
+      el.removeEventListener('mousedown', onMouseDown);
+      el.removeEventListener('mouseleave', onMouseLeave);
+      el.removeEventListener('mouseup', onMouseUp);
+      el.removeEventListener('mousemove', onMouseMove);
+    };
+  }, []);
 
   // Filtered photos for category
   const filteredPhotos = useMemo(() => {
@@ -802,14 +839,14 @@ export default function PhotographicMemoryWall() {
         <div className="pmw-meta-top-bar">
           <div className="pmw-meta-left">
             <span className="pmw-bracket-tag">〔 ARCHIVE / 2024–2026 〕</span>
-            <span className="pmw-sub-badge">SNAPSHOTS REEL</span>
+            <span className="pmw-sub-badge">LIFE LATELY</span>
           </div>
           <div className="pmw-meta-right">
             <div className="pmw-live-pill">
               <span className="pmw-live-dot" />
-              <span>{ARCHIVAL_PHOTOS.length} PHYSICAL PRINTS</span>
+              <span>MEMORIES = n! , Printed</span>
             </div>
-            <span className="pmw-stamp-badge">REEL®</span>
+            <span className="pmw-stamp-badge">A LITTLE RECAP</span>
           </div>
         </div>
 
@@ -836,8 +873,13 @@ export default function PhotographicMemoryWall() {
 
       {/* MOBILE EXPERIENCE (< 768px): Compact 3-Column Square Grid + Filters */}
       <div className="pmw-mobile-view-container">
-        {/* Horizontally scrollable category filter bar */}
-        <nav className="pmw-filter-bar" aria-label="Memory Categories">
+        {/* Horizontally scrollable category filter bar with smooth drag & touch scroll */}
+        <nav
+          className="pmw-filter-bar"
+          ref={filterBarRef}
+          data-lenis-prevent
+          aria-label="Memory Categories"
+        >
           {CATEGORIES.map((cat) => {
             const count = cat === 'All' ? ARCHIVAL_PHOTOS.length : ARCHIVAL_PHOTOS.filter((p) => p.category === cat).length;
             const isActive = activeCategory === cat;

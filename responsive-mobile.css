@@ -1,13 +1,14 @@
 /* ==========================================================================
    COMPREHENSIVE MOBILE & TABLET RESPONSIVENESS SYSTEM
-   Added: v1 — covers 320px → 1024px across all sections
+   Added: v1 Ã¢â‚¬â€ covers 320px Ã¢â€ â€™ 1024px across all sections
    Strategy: append-only, never overrides desktop styles above 1024px
    ========================================================================== */
 
 /* ------------------------------------------------------------------
    GLOBAL RESET & BORDER-BOX GUARD
    ------------------------------------------------------------------ */
-html, body {
+html,
+body {
   margin: 0 !important;
   padding: 0 !important;
   overflow-x: hidden !important;
@@ -15,7 +16,9 @@ html, body {
   max-width: 100% !important;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -50,7 +53,9 @@ html, body {
    1. GLOBAL CONTAINER / OVERFLOW GUARD
    ========================================================================== */
 @media (max-width: 1024px) {
-  html, body {
+
+  html,
+  body {
     overflow-x: hidden;
     max-width: 100%;
   }
@@ -67,7 +72,7 @@ html, body {
 }
 
 /* ==========================================================================
-   2. NAVIGATION — hamburger menu, mobile drawer
+   2. NAVIGATION Ã¢â‚¬â€ hamburger menu, mobile drawer
    ========================================================================== */
 @media (max-width: 768px) {
   .navbar-header {
@@ -98,15 +103,15 @@ html, body {
     justify-content: center;
     width: 44px;
     height: 44px;
-    background: rgba(255,255,255,0.9);
-    border: 1.5px solid rgba(34,36,40,0.15);
+    background: rgba(255, 255, 255, 0.9);
+    border: 1.5px solid rgba(34, 36, 40, 0.15);
     border-radius: 12px;
     font-size: 1.1rem;
     cursor: pointer;
     color: var(--color-charcoal);
     z-index: 10002 !important;
     flex-shrink: 0;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     transition: background 0.2s ease;
   }
 
@@ -125,73 +130,272 @@ html, body {
     padding-top: clamp(88px, 16vw, 115px) !important;
   }
 
-  /* Full-screen mobile nav drawer */
+  /* ==========================================================================
+     MOBILE NAV â€” Narrow vertical icon-only pill, slides in from right
+     Reference: Pierre Su Day #14 Side Navigation (dark pill variant)
+     ========================================================================== */
+
+  /* Full-screen backdrop â€” dim + blur, hidden until .active */
   .nav-menu {
     position: fixed !important;
     inset: 0 !important;
     width: 100vw !important;
     height: 100dvh !important;
-    background: rgba(236, 236, 231, 0.97) !important;
-    backdrop-filter: blur(24px) !important;
-    -webkit-backdrop-filter: blur(24px) !important;
+    background: rgba(10, 11, 14, 0.48) !important;
+    backdrop-filter: blur(5px) !important;
+    -webkit-backdrop-filter: blur(5px) !important;
     z-index: 10000 !important;
-    display: none !important;
-    flex-direction: column !important;
-    align-items: center !important;
-    justify-content: center !important;
-    border-radius: 0 !important;
-    padding: 48px 32px !important;
-    gap: 0 !important;
+    pointer-events: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: opacity 0.28s ease, visibility 0s linear 0.28s !important;
+    padding: 0 !important;
+    margin: 0 !important;
     border: none !important;
     box-shadow: none !important;
+    display: block !important;
+    overflow: visible !important;
   }
 
   .nav-menu.active {
-    display: flex !important;
+    pointer-events: auto !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    transition: opacity 0.28s ease, visibility 0s linear 0s !important;
   }
 
-  .nav-list {
+  /* Narrow vertical pill — icon-only, right-anchored (Pierre Sù Reference) */
+  .nav-side-panel,
+  .nav-menu .gooey-nav {
+    position: fixed !important;
+    top: calc(env(safe-area-inset-top, 0px) + 76px) !important;
+    right: 16px !important;
+    width: 66px !important;
+    min-width: 66px !important;
+    max-width: 66px !important;
+    height: auto !important;
+    display: flex !important;
     flex-direction: column !important;
-    gap: 6px !important;
-    width: 100% !important;
-    max-width: 320px !important;
     align-items: center !important;
-    list-style: none !important;
-    padding: 0 !important;
+    box-sizing: border-box !important;
+    background: #18191D !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+    border-radius: 999px !important;
+    padding: 14px 6px !important;
+    box-shadow:
+      0 20px 48px -10px rgba(0, 0, 0, 0.65),
+      0 4px 16px rgba(0, 0, 0, 0.35),
+      inset 0 1px 1px rgba(255, 255, 255, 0.18) !important;
+    transform: translateX(120px) !important;
+    opacity: 0 !important;
+    pointer-events: auto !important;
+    transition: transform 0.34s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease !important;
+    z-index: 10001 !important;
+    overflow: hidden !important;
     margin: 0 !important;
   }
 
-  .nav-list li {
-    width: 100%;
+  .nav-menu.active .nav-side-panel,
+  .nav-menu.active .gooey-nav {
+    transform: translateX(0) !important;
+    opacity: 1 !important;
   }
 
-  .nav-link {
-    display: block !important;
-    font-size: 1.5rem !important;
-    font-weight: 700 !important;
-    padding: 14px 24px !important;
-    text-align: center !important;
-    border-radius: 16px !important;
-    color: var(--color-charcoal) !important;
-    text-decoration: none !important;
-    transition: background 0.2s ease !important;
+  .nav-menu .gooey-nav__stage {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  .nav-menu .gooey-nav__canvas,
+  .nav-menu .gooey-nav__fallback,
+  .nav-menu .gooey-nav__list--active,
+  .nav-menu .gooey-nav__rim {
+    display: none !important;
+  }
+
+  /* No pseudo-element header — clean pill */
+  .nav-side-panel::before {
+    display: none !important;
+    content: none !important;
+  }
+
+  /* Vertical list — centred in pill */
+  .nav-list,
+  .nav-menu .gooey-nav__list {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    list-style: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
     width: 100% !important;
   }
 
-  .nav-link:hover,
-  .nav-link.active {
-    background: rgba(255, 189, 18, 0.18) !important;
-    color: var(--color-charcoal) !important;
+  .nav-list li,
+  .nav-menu .gooey-nav__item {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
-  /* Connect button inside the mobile drawer */
-  .nav-menu::after {
-    content: '';
+  /* Each nav item — circular icon-only touch target */
+  .nav-link,
+  .nav-menu .gooey-nav__link {
+    position: relative !important;
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0 !important;
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    min-height: 48px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    background: transparent !important;
+    color: rgba(255, 255, 255, 0.65) !important;
+    text-decoration: none !important;
+    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    border: none !important;
+    outline: none !important;
+    -webkit-tap-highlight-color: transparent !important;
+    cursor: pointer !important;
+    flex-shrink: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  /* Icon — centred */
+  .nav-link .nav-icon,
+  .nav-menu .gooey-nav__icon {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    border-radius: 50% !important;
+    background: transparent !important;
+    border: none !important;
+    font-size: 1.15rem !important;
+    line-height: 1 !important;
+    color: rgba(255, 255, 255, 0.65) !important;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Labels + tooltips — hidden on mobile */
+  .nav-link .nav-text,
+  .nav-menu .gooey-nav__label {
+    display: none !important;
+  }
+
+  .nav-tooltip,
+  .nav-menu .gooey-nav__tooltip {
+    display: none !important;
+  }
+
+  /* Hover — subtle brightening on pointer devices */
+  @media (hover: hover) and (pointer: fine) {
+
+    .nav-link:hover,
+    .nav-menu .gooey-nav__link:hover {
+      background: rgba(255, 255, 255, 0.1) !important;
+      color: #FFFFFF !important;
+    }
+
+    .nav-link:hover .nav-icon,
+    .nav-menu .gooey-nav__link:hover .gooey-nav__icon {
+      color: #FFFFFF !important;
+    }
+
+    .nav-tooltip,
+    .nav-menu .gooey-nav__tooltip {
+      display: block !important;
+      position: absolute !important;
+      right: calc(100% + 14px) !important;
+      top: 50% !important;
+      transform: translateY(-50%) translateX(6px) !important;
+      background: #111215 !important;
+      color: #FFFFFF !important;
+      font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif) !important;
+      font-size: 0.78rem !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.04em !important;
+      padding: 5px 12px !important;
+      border-radius: 999px !important;
+      white-space: nowrap !important;
+      pointer-events: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35) !important;
+      border: 1px solid rgba(255, 255, 255, 0.14) !important;
+      z-index: 10003 !important;
+    }
+
+    .nav-tooltip::after,
+    .nav-menu .gooey-nav__tooltip::after {
+      content: '' !important;
+      position: absolute !important;
+      left: 100% !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      border-width: 4px !important;
+      border-style: solid !important;
+      border-color: transparent transparent transparent #111215 !important;
+    }
+
+    .nav-link:hover .nav-tooltip,
+    .nav-menu .gooey-nav__link:hover .gooey-nav__tooltip {
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: translateY(-50%) translateX(0) !important;
+    }
+  }
+
+  /* Active circular badge matching Pierre Sù reference (White circle, dark icon) */
+  .nav-link.active,
+  .nav-menu .gooey-nav__item[data-active] .nav-link,
+  .nav-menu .gooey-nav__item[data-active] .gooey-nav__link {
+    background: #FFFFFF !important;
+    color: #16171A !important;
+    transform: scale(1.06) !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+  }
+
+  .nav-link.active .nav-icon,
+  .nav-menu .gooey-nav__item[data-active] .nav-icon,
+  .nav-menu .gooey-nav__item[data-active] .gooey-nav__icon {
+    background: transparent !important;
+    border: none !important;
+    color: #16171A !important;
+    transform: scale(1.04) !important;
+  }
+
+
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+
+    .nav-menu,
+    .nav-side-panel,
+    .nav-link {
+      transition: none !important;
+      transform: none !important;
+    }
   }
 
   /* Prevent body scroll when nav open */
   body.nav-open {
-    overflow: hidden;
+    overflow: hidden !important;
   }
 
   /* Navbar container row on mobile */
@@ -199,7 +403,7 @@ html, body {
     gap: 12px;
   }
 
-  /* Only show hamburger in nav-actions on mobile */
+  /* Show hamburger + heart in nav-actions */
   .nav-actions {
     display: flex;
     align-items: center;
@@ -232,6 +436,7 @@ html, body {
 }
 
 @media (max-width: 767px) {
+
   /* Hide 3D perspective room wireframe grid on mobile phones only */
   .hero-room-perspective-grid,
   #hero-room-perspective-grid,
@@ -240,50 +445,10 @@ html, body {
     visibility: hidden !important;
     opacity: 0 !important;
   }
-
-  /* Clean 2D flat grid background on mobile phones */
-  .hero-section {
-    background-color: var(--color-bg-light, #ECECE7) !important;
-    background-image: 
-      linear-gradient(to right, rgba(34, 36, 40, 0.08) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(34, 36, 40, 0.08) 1px, transparent 1px) !important;
-    background-size: 28px 28px !important;
-    background-position: center top !important;
-  }
 }
 
 @media (min-width: 768px) {
-  /* Ensure 3D perspective room wireframe grid remains active on tablet and website/desktop */
-  .hero-room-perspective-grid,
-  #hero-room-perspective-grid {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-}
 
-@media (max-width: 767px) {
-  /* Hide 3D perspective room wireframe grid on mobile phones only */
-  .hero-room-perspective-grid,
-  #hero-room-perspective-grid,
-  .hero-room-perspective-grid .grid-scan {
-    display: none !important;
-    visibility: hidden !important;
-    opacity: 0 !important;
-  }
-
-  /* Clean 2D flat grid background on mobile phones */
-  .hero-section {
-    background-color: var(--color-bg-light, #ECECE7) !important;
-    background-image: 
-      linear-gradient(to right, rgba(34, 36, 40, 0.08) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(34, 36, 40, 0.08) 1px, transparent 1px) !important;
-    background-size: 28px 28px !important;
-    background-position: center top !important;
-  }
-}
-
-@media (min-width: 768px) {
   /* Ensure 3D perspective room wireframe grid remains active on tablet and website/desktop */
   .hero-room-perspective-grid,
   #hero-room-perspective-grid {
@@ -294,17 +459,48 @@ html, body {
 }
 
 @media (max-width: 768px) {
+
+  /* Continuous 2D flat grid background covering the complete hero section to its bottom edge */
+  #story-layer-hero,
   .hero-section {
-    padding: clamp(84px, 13vw, 100px) var(--mob-pad-x) 24px !important;
-    min-height: auto !important;
+    background-color: var(--color-bg-light, #ECECE7) !important;
+    background-image:
+      linear-gradient(to right, rgba(34, 36, 40, 0.08) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(34, 36, 40, 0.08) 1px, transparent 1px) !important;
+    background-size: 28px 28px !important;
+    background-position: center top !important;
+  }
+
+  #story-layer-hero {
+    min-height: 100svh !important;
+    height: auto !important;
+    display: flex !important;
+    flex-direction: column !important;
+    position: relative !important;
+    overflow: visible !important;
+  }
+
+  .hero-section {
+    flex: 1 !important;
+    min-height: 100svh !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    padding: clamp(74px, 13vw, 88px) var(--mob-pad-x) clamp(16px, 4vw, 24px) !important;
+    margin: 0 !important;
   }
 
   .hero-container,
   .hero-ref-layout {
+    flex: 1 !important;
     display: flex !important;
     flex-direction: column !important;
+    justify-content: space-evenly !important;
     align-items: center !important;
     width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   /* Flatten hero-ref-content so children can be ordered relative to 3D model */
@@ -312,7 +508,7 @@ html, body {
     display: contents !important;
   }
 
-  /* Main heading rows — fluid sizing */
+  /* Main heading rows Ã¢â‚¬â€ fluid sizing */
   .hero-display-typography .row-portfolio,
   .hero-display-typography .row-design,
   .hero-year-code {
@@ -377,7 +573,7 @@ html, body {
     font-size: 0.8rem !important;
   }
 
-  /* 3D model stage — placed UP directly below typography, prominently visible! */
+  /* 3D model stage Ã¢â‚¬â€ placed UP directly below typography, prominently visible! */
   .hero-3d-model-stage {
     order: 4 !important;
     position: relative !important;
@@ -404,7 +600,8 @@ html, body {
     flex-wrap: nowrap !important;
     gap: 10px !important;
     max-width: 100% !important;
-    margin-bottom: 8px !important;
+    margin-top: 4px !important;
+    margin-bottom: 14px !important;
   }
 
   .hero-dual-role-pill {
@@ -434,40 +631,43 @@ html, body {
   /* Supporting desc */
   .hero-supporting-desc {
     order: 6 !important;
-    font-size: clamp(0.82rem, 2.8vw, 0.92rem) !important;
+    font-size: clamp(0.85rem, 2.9vw, 0.95rem) !important;
+    line-height: 1.45 !important;
     text-align: center !important;
-    max-width: 320px !important;
-    margin: 0 auto 10px auto !important;
+    max-width: 330px !important;
+    margin: 0 auto 14px auto !important;
   }
 
-  /* CTA group — compact buttons */
+  /* CTA group Ã¢â‚¬â€ compact buttons side by side */
   .hero-cta-group {
     order: 7 !important;
     display: flex !important;
     flex-direction: row !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 10px !important;
+    gap: 12px !important;
     width: 100% !important;
-    max-width: 340px !important;
+    max-width: 350px !important;
     margin: 0 auto !important;
   }
 
   .hero-cta-group .btn {
     flex: 1 1 0 !important;
     min-width: 0 !important;
-    padding: 9px 12px !important;
+    padding: 10px 14px !important;
     font-size: 0.82rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
     justify-content: center !important;
     white-space: nowrap !important;
   }
 
-  /* Disciplines row — hide on mobile interface per user instruction */
+  /* Disciplines row Ã¢â‚¬â€ hide on mobile interface per user instruction */
   .hero-disciplines-footer {
     display: none !important;
   }
 
-  /* Torn paper divider — hide on mobile per user instruction */
+  /* Torn paper divider Ã¢â‚¬â€ hide on mobile per user instruction */
   .torn-paper-divider {
     display: none !important;
   }
@@ -476,16 +676,12 @@ html, body {
     display: none !important;
   }
 
-  .hero-section {
-    padding-bottom: 24px !important;
-  }
-
   /* Stamp badge */
   .hero-stamp-badge {
     font-size: 0.72rem;
   }
 
-  /* Social column on hero — hide on small screens */
+  /* Social column on hero Ã¢â‚¬â€ hide on small screens */
   .left-social-stack {
     display: none !important;
   }
@@ -504,6 +700,7 @@ html, body {
 }
 
 @media (max-width: 480px) {
+
   .hero-display-typography .row-portfolio,
   .hero-display-typography .row-design {
     font-size: clamp(2.2rem, 11vw, 3.2rem) !important;
@@ -520,7 +717,7 @@ html, body {
 }
 
 /* ==========================================================================
-   4. ABOUT SECTION — COMPLETE RESPONSIVE SYSTEM
+   4. ABOUT SECTION Ã¢â‚¬â€ COMPLETE RESPONSIVE SYSTEM
    ========================================================================== */
 @media (max-width: 992px) {
   .about-section {
@@ -847,6 +1044,7 @@ html, body {
    6. EXPERIENCE / JOURNEY SECTION
    ========================================================================== */
 @media (max-width: 768px) {
+
   .experience-two-col,
   .experience-grid {
     grid-template-columns: 1fr !important;
@@ -918,13 +1116,14 @@ html, body {
     scrollbar-width: none !important;
     -ms-overflow-style: none !important;
   }
+
   #lets-work-root *::-webkit-scrollbar {
     display: none !important;
     width: 0 !important;
     height: 0 !important;
   }
 
-  /* Cursor tags — keep but scale down */
+  /* Cursor tags Ã¢â‚¬â€ keep but scale down */
   .studio-cursor-tag {
     transform: scale(0.8) !important;
   }
@@ -939,7 +1138,7 @@ html, body {
     right: 2% !important;
   }
 
-  /* Keyboard stage — sized and displayed so entire keyboard is visible without cropping */
+  /* Keyboard stage Ã¢â‚¬â€ sized and displayed so entire keyboard is visible without cropping */
   .studio-keyboard-stage-wrapper {
     width: 100% !important;
     overflow: visible !important;
@@ -963,7 +1162,7 @@ html, body {
     width: clamp(260px, 85%, 340px) !important;
   }
 
-  /* Legend bar — all 4 items strictly on the SAME SINGLE LINE */
+  /* Legend bar Ã¢â‚¬â€ all 4 items strictly on the SAME SINGLE LINE */
   .studio-legend-bar {
     display: flex !important;
     flex-direction: row !important;
@@ -978,6 +1177,7 @@ html, body {
     overflow-x: auto !important;
     scrollbar-width: none !important;
   }
+
   .studio-legend-bar::-webkit-scrollbar {
     display: none !important;
     width: 0 !important;
@@ -1006,6 +1206,7 @@ html, body {
 }
 
 @media (max-width: 480px) {
+
   /* Keyboard stage */
   .studio-keyboard-stage {
     max-width: 100% !important;
@@ -1018,9 +1219,10 @@ html, body {
 }
 
 /* ==========================================================================
-   9. PROJECTS SHOWCASE — COMPLETE MOBILE OPTIMIZATION
+   9. PROJECTS SHOWCASE Ã¢â‚¬â€ COMPLETE MOBILE OPTIMIZATION
    ========================================================================== */
 @media (max-width: 768px) {
+
   /* Hide the floating Mac dock on mobile so it never covers content */
   .dock-outer,
   #mac-dock {
@@ -1249,6 +1451,15 @@ html, body {
     box-sizing: border-box !important;
   }
 
+  /* Keep Globe & GitHub icons on the same row on mobile */
+  .editorial-action-icons-row {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex-shrink: 0 !important;
+  }
+
   .editorial-action-primary,
   .editorial-action-secondary {
     width: 100% !important;
@@ -1349,7 +1560,7 @@ html, body {
 }
 
 /* ==========================================================================
-   11. SIDE REGULATOR DOCK — reposition on smaller screens
+   11. SIDE REGULATOR DOCK Ã¢â‚¬â€ reposition on smaller screens
    ========================================================================== */
 @media (max-width: 768px) {
   .side-regulator-dock {
@@ -1364,6 +1575,7 @@ html, body {
 }
 
 @media (max-width: 480px) {
+
   /* On very small screens hide dock to prevent blocking content */
   .side-regulator-dock {
     display: none !important;
@@ -1371,7 +1583,7 @@ html, body {
 }
 
 /* ==========================================================================
-   12. FOOTER — MOBILE-FIRST REDESIGN (320px - 767px)
+   12. FOOTER Ã¢â‚¬â€ MOBILE-FIRST REDESIGN (320px - 767px)
    ========================================================================== */
 @media (max-width: 768px) {
   .editorial-footer-stage {
@@ -1586,6 +1798,7 @@ html, body {
    13. GLOBAL SECTION HEADINGS & SECTION PADDING
    ========================================================================== */
 @media (max-width: 768px) {
+
   /* Generic section padding for all sections */
   .section-pad,
   .section-padding,
@@ -1665,7 +1878,7 @@ html, body {
 }
 
 /* ==========================================================================
-   16. MODALS — smooth touch scrolling on mobile
+   16. MODALS Ã¢â‚¬â€ smooth touch scrolling on mobile
    ========================================================================== */
 .modal-overlay {
   touch-action: pan-y !important;
@@ -1705,9 +1918,10 @@ html, body {
 }
 
 /* ==========================================================================
-   17. TOUCH TARGET ENFORCEMENT — min 44×44px for all interactive elements
+   17. TOUCH TARGET ENFORCEMENT Ã¢â‚¬â€ min 44Ãƒâ€”44px for all interactive elements
    ========================================================================== */
 @media (max-width: 1024px) {
+
   button,
   [role="button"],
   a,
@@ -1730,9 +1944,10 @@ html, body {
 }
 
 /* ==========================================================================
-   18. HORIZONTAL OVERFLOW GUARDS — prevent any element from causing scroll
+   18. HORIZONTAL OVERFLOW GUARDS Ã¢â‚¬â€ prevent any element from causing scroll
    ========================================================================== */
 @media (max-width: 768px) {
+
   /* Watermark / background type */
   .bg-typography-watermark,
   .title-watermark-ghost,
@@ -1766,7 +1981,7 @@ html, body {
 }
 
 /* ==========================================================================
-   19. TELEPORT DOCK — horizontal scroll on small screens
+   19. TELEPORT DOCK Ã¢â‚¬â€ horizontal scroll on small screens
    ========================================================================== */
 @media (max-width: 480px) {
   .globe-teleport-dock {
@@ -1784,6 +1999,7 @@ html, body {
    20. PREFERS-REDUCED-MOTION ADDITIONS
    ========================================================================== */
 @media (prefers-reduced-motion: reduce) {
+
   .hero-flower-doodle,
   .hero-curved-arrow,
   .doodle-item,
@@ -1794,9 +2010,10 @@ html, body {
 }
 
 /* ==========================================================================
-   21. ULTRA-WIDE SCREENS (1920px+) — cap max content width
+   21. ULTRA-WIDE SCREENS (1920px+) Ã¢â‚¬â€ cap max content width
    ========================================================================== */
 @media (min-width: 1920px) {
+
   .container,
   .nav-container,
   .editorial-rows-container,
@@ -1840,9 +2057,10 @@ body.nav-open {
 }
 
 /* ==========================================================================
-   24. HERO — refined fluid font for 320px–375px
+   24. HERO Ã¢â‚¬â€ refined fluid font for 320pxÃ¢â‚¬â€œ375px
    ========================================================================== */
 @media (max-width: 375px) {
+
   .hero-display-typography .row-portfolio,
   .hero-display-typography .row-design {
     font-size: clamp(2rem, 12vw, 2.8rem) !important;
@@ -1861,9 +2079,10 @@ body.nav-open {
 }
 
 /* ==========================================================================
-   25. ABOUT SECTION — glass portrait wrapper exact reset
+   25. ABOUT SECTION Ã¢â‚¬â€ glass portrait wrapper exact reset
    ========================================================================== */
 @media (max-width: 992px) {
+
   /* Override the 90px left padding that was for desktop layout */
   .glass-card-wrapper {
     padding-left: clamp(16px, 4vw, 32px) !important;
@@ -1882,7 +2101,7 @@ body.nav-open {
 }
 
 /* ==========================================================================
-   26. TECH SKILLS — video card width fix on tablet
+   26. TECH SKILLS Ã¢â‚¬â€ video card width fix on tablet
    ========================================================================== */
 @media (max-width: 1024px) {
   .tech-showcase-container {
@@ -1902,6 +2121,7 @@ body.nav-open {
    27. SECTION-LEVEL HORIZONTAL PADDING NORMALISATION
    ========================================================================== */
 @media (max-width: 768px) {
+
   /* About */
   .about-section {
     padding-left: var(--mob-pad-x) !important;
@@ -1937,7 +2157,7 @@ body.nav-open {
 }
 
 /* ==========================================================================
-   28. TABLET (769–1023px) SPECIFIC — two-col where appropriate
+   28. TABLET (769Ã¢â‚¬â€œ1023px) SPECIFIC Ã¢â‚¬â€ two-col where appropriate
    ========================================================================== */
 @media (min-width: 769px) and (max-width: 1023px) {
   .software-skills-grid {
@@ -1957,7 +2177,7 @@ body.nav-open {
 }
 
 /* ==========================================================================
-   29. EXPERIENCE SECTION — two-col grid fix
+   29. EXPERIENCE SECTION Ã¢â‚¬â€ two-col grid fix
    ========================================================================== */
 @media (max-width: 768px) {
   .experience-two-col {
@@ -1977,7 +2197,7 @@ body.nav-open {
 }
 
 /* ==========================================================================
-   30. STUDIO LEGEND BAR — keep strictly on a single horizontal row on all mobile screens
+   30. STUDIO LEGEND BAR Ã¢â‚¬â€ keep strictly on a single horizontal row on all mobile screens
    ========================================================================== */
 @media (max-width: 400px) {
   .studio-legend-bar {
@@ -2011,7 +2231,7 @@ body.nav-open {
 }
 
 /* ==========================================================================
-   31. GLOBAL IMAGES — prevent overflow
+   31. GLOBAL IMAGES Ã¢â‚¬â€ prevent overflow
    ========================================================================== */
 img {
   max-width: 100%;
@@ -2019,7 +2239,7 @@ img {
 }
 
 /* ==========================================================================
-   32. BUTTON GLOBAL — prevent text overflow on tiny screens
+   32. BUTTON GLOBAL Ã¢â‚¬â€ prevent text overflow on tiny screens
    ========================================================================== */
 @media (max-width: 375px) {
   .btn {
@@ -2037,7 +2257,122 @@ img {
   .hero-disciplines-footer {
     display: flex !important;
   }
+
   .torn-paper-divider {
     display: block !important;
+  }
+}
+
+/* ==========================================================================
+   34. PHOTOGRAPHIC MEMORY WALL Ã¢â‚¬â€ 2-line mobile header fix
+   Force "A COLLECTION OF" on line 1 and "MOMENTS" on line 2.
+   Must come last to override the .hero-display-typography .row-portfolio
+   rule above (which uses !important and matches the same elements).
+   ========================================================================== */
+@media (max-width: 768px) {
+
+  .pmw-display-typography .pmw-display-row-1,
+  .pmw-display-typography.hero-display-typography .row-portfolio.pmw-display-row-1 {
+    font-size: clamp(1.3rem, 5.8vw, 2.1rem) !important;
+    white-space: nowrap !important;
+    letter-spacing: -0.5px !important;
+    line-height: 1 !important;
+  }
+
+  .pmw-display-typography .pmw-display-row-2,
+  .pmw-display-typography.hero-display-typography .row-design.pmw-display-row-2 {
+    font-size: clamp(2rem, 9vw, 3.2rem) !important;
+    white-space: nowrap !important;
+    letter-spacing: -1px !important;
+    line-height: 1 !important;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .pmw-display-typography .pmw-display-row-1,
+  .pmw-display-typography.hero-display-typography .row-portfolio.pmw-display-row-1 {
+    font-size: clamp(1.1rem, 5.5vw, 1.8rem) !important;
+    white-space: nowrap !important;
+    letter-spacing: -0.5px !important;
+  }
+
+  .pmw-display-typography .pmw-display-row-2,
+  .pmw-display-typography.hero-display-typography .row-design.pmw-display-row-2 {
+    font-size: clamp(1.7rem, 8.5vw, 2.8rem) !important;
+    white-space: nowrap !important;
+    letter-spacing: -1px !important;
+  }
+}
+
+@media (max-width: 375px) {
+
+  .pmw-display-typography .pmw-display-row-1,
+  .pmw-display-typography.hero-display-typography .row-portfolio.pmw-display-row-1 {
+    font-size: clamp(1rem, 5.2vw, 1.6rem) !important;
+    white-space: nowrap !important;
+  }
+
+  .pmw-display-typography .pmw-display-row-2,
+  .pmw-display-typography.hero-display-typography .row-design.pmw-display-row-2 {
+    font-size: clamp(1.55rem, 8vw, 2.4rem) !important;
+    white-space: nowrap !important;
+  }
+}
+
+/* ==========================================================================
+   34. PHOTOGRAPHIC MEMORY WALL â€” 2-line mobile header fix
+   Force "A COLLECTION OF" on line 1 and "MOMENTS" on line 2.
+   Must come last to override the .hero-display-typography .row-portfolio
+   rule above (which uses !important and matches the same elements).
+   ========================================================================== */
+@media (max-width: 768px) {
+
+  .pmw-display-typography .pmw-display-row-1,
+  .pmw-display-typography.hero-display-typography .row-portfolio.pmw-display-row-1 {
+    font-size: clamp(1.3rem, 5.8vw, 2.1rem) !important;
+    white-space: nowrap !important;
+    letter-spacing: -0.5px !important;
+    line-height: 1 !important;
+  }
+
+  .pmw-display-typography .pmw-display-row-2,
+  .pmw-display-typography.hero-display-typography .row-design.pmw-display-row-2 {
+    font-size: clamp(2rem, 9vw, 3.2rem) !important;
+    white-space: nowrap !important;
+    letter-spacing: -1px !important;
+    line-height: 1 !important;
+  }
+}
+
+@media (max-width: 480px) {
+
+  .pmw-display-typography .pmw-display-row-1,
+  .pmw-display-typography.hero-display-typography .row-portfolio.pmw-display-row-1 {
+    font-size: clamp(1.1rem, 5.5vw, 1.8rem) !important;
+    white-space: nowrap !important;
+    letter-spacing: -0.5px !important;
+  }
+
+  .pmw-display-typography .pmw-display-row-2,
+  .pmw-display-typography.hero-display-typography .row-design.pmw-display-row-2 {
+    font-size: clamp(1.7rem, 8.5vw, 2.8rem) !important;
+    white-space: nowrap !important;
+    letter-spacing: -1px !important;
+  }
+}
+
+@media (max-width: 375px) {
+
+  .pmw-display-typography .pmw-display-row-1,
+  .pmw-display-typography.hero-display-typography .row-portfolio.pmw-display-row-1 {
+    font-size: clamp(1rem, 5.2vw, 1.6rem) !important;
+    white-space: nowrap !important;
+  }
+
+  .pmw-display-typography .pmw-display-row-2,
+  .pmw-display-typography.hero-display-typography .row-design.pmw-display-row-2 {
+    font-size: clamp(1.55rem, 8vw, 2.4rem) !important;
+    white-space: nowrap !important;
   }
 }

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -26,7 +26,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://gstatic.com" crossorigin>
   <link
-    href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@400;600;700&family=Cedarville+Cursive&family=Dawning+of+a+New+Day&family=Homemade+Apple&family=Kristi&family=La+Belle+Aurore&family=Fredoka:wght@500;600;700;800&family=Gochi+Hand&family=Patrick+Hand&family=Permanent+Marker&family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700;1,800&family=Syne:wght@700;800;900&family=Roboto+Flex:opsz,wdth,wght,slnt@8..144,25..151,100..1000,-10..0&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Caveat:wght@400;600;700&family=Cedarville+Cursive&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Dawning+of+a+New+Day&family=Homemade+Apple&family=Kristi&family=La+Belle+Aurore&family=Fredoka:wght@500;600;700;800&family=Gochi+Hand&family=Patrick+Hand&family=Permanent+Marker&family=Playfair+Display:wght@600;700&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700;1,800&family=Syne:wght@700;800;900&family=Roboto+Flex:opsz,wdth,wght,slnt@8..144,25..151,100..1000,-10..0&display=swap"
     rel="stylesheet">
 
   <!-- FontAwesome Icons for UI & Doodles -->
@@ -40,33 +40,33 @@
   <link rel="stylesheet" href="lib/lenis.css">
 
   <!-- Custom Stylesheet -->
-  <link rel="stylesheet" href="styles.css?v=129">
+  <link rel="stylesheet" href="styles.css?v=135">
   <link rel="stylesheet" href="journey-timeline.css?v=2">
   <link rel="stylesheet" href="grid-scan-bundle.css">
-  <link rel="stylesheet" href="projects-showcase-bundle.css?v=107">
-  <link rel="stylesheet" href="scroll-reveal.css?v=22">
+  <link rel="stylesheet" href="projects-showcase-bundle.css?v=109">
+  <link rel="stylesheet" href="scroll-reveal.css?v=23">
   <link rel="stylesheet" href="circular-text-bundle.css?v=2">
-  <link rel="stylesheet" href="gooey-nav-bundle.css?v=4">
+  <link rel="stylesheet" href="gooey-nav-bundle.css?v=5">
   <link rel="stylesheet" href="pulse-heart-bundle.css?v=5">
   <link rel="stylesheet" href="target-cursor-bundle.css?v=38">
-  <link rel="stylesheet" href="memory-wall-bundle.css?v=104">
+  <link rel="stylesheet" href="memory-wall-bundle.css?v=106">
   <link rel="stylesheet" href="memory-wall.css?v=82">
   <link rel="stylesheet" href="pixel-transition-bundle.css?v=2">
   <link rel="stylesheet" href="letter-glitch-bundle.css?v=2">
   <link rel="stylesheet" href="tech-arsenal.css?v=7">
   <link rel="stylesheet" href="footer-shuffle-bundle.css?v=1">
-  <link rel="stylesheet" href="preloader-bundle.css?v=31">
+  <link rel="stylesheet" href="preloader-bundle.css?v=33">
   <link rel="stylesheet" href="elastic-mesh-bundle.css?v=1">
   <link rel="stylesheet" href="tailwind-bundle.css?v=3">
   <link rel="stylesheet" href="lets-work-bundle.css?v=1">
-  <link rel="stylesheet" href="responsive-mobile.css?v=21">
+  <link rel="stylesheet" href="responsive-mobile.css?v=30">
 </head>
 
 <body>
 
   <!-- TextType Multi-Lingual Greeting Preloader Root -->
   <div id="preloader-root"></div>
-  <script src="preloader-bundle.js?v=13"></script>
+  <script src="preloader-bundle.js?v=15"></script>
 
 
   <!-- Background Decorative Tech & Studio Elements (Matches User Image) -->
@@ -106,14 +106,52 @@
       </a>
 
       <nav class="nav-menu" id="nav-menu" aria-label="Primary">
-        <ul class="nav-list">
-          <li><a href="#hero" class="nav-link active">Home</a></li>
-          <li><a href="#about" class="nav-link">About</a></li>
-          <li><a href="#projects" class="nav-link">Experience</a></li>
-          <li><a href="#memory-wall" class="nav-link">Snapshots</a></li>
-          <li><a href="#skills" class="nav-link">Skills</a></li>
-          <li><a href="#studio" class="nav-link">Contact</a></li>
-        </ul>
+        <div class="nav-side-panel" id="nav-side-panel">
+          <ul class="nav-list">
+            <li>
+              <a href="#hero" class="nav-link active" aria-label="Home">
+                <span class="nav-icon" aria-hidden="true"><i class="fa-solid fa-house"></i></span>
+                <span class="nav-text">Home</span>
+                <span class="nav-tooltip" aria-hidden="true">Home</span>
+              </a>
+            </li>
+            <li>
+              <a href="#about" class="nav-link" aria-label="About">
+                <span class="nav-icon" aria-hidden="true"><i class="fa-solid fa-user"></i></span>
+                <span class="nav-text">About</span>
+                <span class="nav-tooltip" aria-hidden="true">About</span>
+              </a>
+            </li>
+            <li>
+              <a href="#projects" class="nav-link" aria-label="Experience">
+                <span class="nav-icon" aria-hidden="true"><i class="fa-solid fa-briefcase"></i></span>
+                <span class="nav-text">Experience</span>
+                <span class="nav-tooltip" aria-hidden="true">Experience</span>
+              </a>
+            </li>
+            <li>
+              <a href="#memory-wall" class="nav-link" aria-label="Snapshots">
+                <span class="nav-icon" aria-hidden="true"><i class="fa-solid fa-images"></i></span>
+                <span class="nav-text">Snapshots</span>
+                <span class="nav-tooltip" aria-hidden="true">Snapshots</span>
+              </a>
+            </li>
+            <li>
+              <a href="#skills" class="nav-link" aria-label="Skills">
+                <span class="nav-icon" aria-hidden="true"><i class="fa-solid fa-layer-group"></i></span>
+                <span class="nav-text">Skills</span>
+                <span class="nav-tooltip" aria-hidden="true">Skills</span>
+              </a>
+            </li>
+            <li>
+              <a href="#studio" class="nav-link" aria-label="Contact">
+                <span class="nav-icon" aria-hidden="true"><i class="fa-solid fa-envelope"></i></span>
+                <span class="nav-text">Contact</span>
+                <span class="nav-tooltip" aria-hidden="true">Contact</span>
+              </a>
+            </li>
+          </ul>
+        </div>
       </nav>
 
       <div class="nav-actions">
@@ -417,7 +455,7 @@
                     <p class="glass-user-tag">Web • Android • GenAI • Game Dev</p>
                     <p class="glass-personality-quote">“I build things, design things, and occasionally wonder why I
                       decided to build them.”</p>
-                    <a href="mailto:deysrinjoyee28@gmail.com" class="glass-user-link">deysrinjoyee28@gmail.com</a>
+                    <a href="mailto:deysrinjoyee04@gmail.com" class="glass-user-link">deysrinjoyee04@gmail.com</a>
                   </div>
 
                   <!-- Floating Pink Heart Reaction Bubbles (Reference Match) -->
@@ -444,43 +482,20 @@
 
             <!-- "Let's Build Something?" Card -->
             <div class="work-together-card">
-              <div class="qr-code-box">
-                <div class="qr-code-inner">
-                  <!-- Vector QR Code Pattern -->
-                  <svg viewBox="0 0 100 100" class="qr-svg">
-                    <rect width="100" height="100" fill="#FFBD12" />
-                    <!-- QR Corner Blocks -->
-                    <rect x="10" y="10" width="26" height="26" fill="#222428" />
-                    <rect x="14" y="14" width="18" height="18" fill="#FFBD12" />
-                    <rect x="18" y="18" width="10" height="10" fill="#222428" />
-
-                    <rect x="64" y="10" width="26" height="26" fill="#222428" />
-                    <rect x="68" y="14" width="18" height="18" fill="#FFBD12" />
-                    <rect x="72" y="18" width="10" height="10" fill="#222428" />
-
-                    <rect x="10" y="64" width="26" height="26" fill="#222428" />
-                    <rect x="14" y="68" width="18" height="18" fill="#FFBD12" />
-                    <rect x="18" y="72" width="10" height="10" fill="#222428" />
-
-                    <!-- QR Data Dots -->
-                    <rect x="42" y="12" width="8" height="8" fill="#222428" />
-                    <rect x="42" y="28" width="14" height="8" fill="#222428" />
-                    <rect x="12" y="44" width="8" height="12" fill="#222428" />
-                    <rect x="28" y="44" width="12" height="8" fill="#222428" />
-                    <rect x="48" y="44" width="16" height="16" fill="#222428" />
-                    <rect x="70" y="44" width="18" height="8" fill="#222428" />
-                    <rect x="44" y="68" width="8" height="18" fill="#222428" />
-                    <rect x="60" y="68" width="12" height="12" fill="#222428" />
-                    <rect x="78" y="64" width="10" height="22" fill="#222428" />
-                  </svg>
+              <a href="images/Srinjoyee_Dey_Resume.pdf" target="_blank" rel="noopener noreferrer" class="qr-col" title="View My Resume">
+                <div class="qr-code-box">
+                  <div class="qr-code-inner">
+                    <img src="images/qr-code.png?v=1" alt="Scan QR Code to view Srinjoyee's resume" class="qr-code-img" width="100" height="100" loading="lazy">
+                  </div>
                 </div>
-              </div>
+                <span class="qr-code-caption">View My Resume</span>
+              </a>
 
               <div class="work-together-info">
                 <h4 class="yellow-underline-title">Let's Build Something?</h4>
                 <ul class="contact-mini-list">
                   <li><i class="fa-solid fa-envelope"></i> <a
-                      href="mailto:deysrinjoyee28@gmail.com">deysrinjoyee28@gmail.com</a></li>
+                      href="mailto:deysrinjoyee04@gmail.com">deysrinjoyee04@gmail.com</a></li>
                   <li><i class="fa-brands fa-linkedin-in"></i> <a href="https://www.linkedin.com/in/srinjoyee-dey/"
                       target="_blank" rel="noopener noreferrer">srinjoyee-dey</a></li>
                   <li><i class="fa-brands fa-github"></i> <a href="https://github.com/SrinjoyeeDey/" target="_blank"
@@ -774,8 +789,8 @@
           <div class="dock-icon"><i class="fa-solid fa-camera-retro"></i></div>
           <div class="dock-label">Snapshots</div>
         </div>
-        <div class="dock-item" data-label="Mailbox" data-cursor-label="Email Me" data-href="mailto:deysrinjoyee28@gmail.com" tabindex="0" role="button"
-          aria-label="Send an email to deysrinjoyee28@gmail.com">
+        <div class="dock-item" data-label="Mailbox" data-cursor-label="Email Me" data-href="mailto:deysrinjoyee04@gmail.com" tabindex="0" role="button"
+          aria-label="Send an email to deysrinjoyee04@gmail.com">
           <div class="dock-icon"><i class="fa-solid fa-envelope"></i></div>
           <div class="dock-label">Mailbox</div>
         </div>
@@ -789,7 +804,7 @@
 
     <!-- Floating 3D Fabric Email Envelope (worksruthi-style tactile cotton object) -->
     <aside class="floating-envelope-widget envelope-visible" id="floating-envelope-widget">
-      <a href="mailto:deysrinjoyee28@gmail.com" class="floating-envelope-link" aria-label="Send me an email" data-cursor-label="Email Me">
+      <a href="mailto:deysrinjoyee04@gmail.com" class="floating-envelope-link" aria-label="Send me an email" data-cursor-label="Email Me">
         <!-- Layer 0: 3D Rotation & Spin Layer -->
         <div class="envelope-spin-layer">
           <!-- Layer A: Continuous Vertical Floating Bob -->
@@ -1090,29 +1105,29 @@
     <!-- 3D Interactive Mechanical Keyboard Bundle (from Txemalon 3D Portfolio) -->
     <script src="grid-scan-bundle.js?v=6"></script>
     <script src="keyboard-bundle.js?v=25"></script>
-    <script src="projects-showcase-bundle.js?v=107"></script>
+    <script src="projects-showcase-bundle.js?v=109"></script>
     <script src="dot-field-bundle.js?v=2"></script>
     <script src="text-pressure-bundle.js?v=6"></script>
     <script src="tech-text-bundle.js?v=12"></script>
     <script src="circular-text-bundle.js?v=2"></script>
-    <script src="gooey-nav-bundle.js?v=7"></script>
+    <script src="gooey-nav-bundle.js?v=8"></script>
     <script src="pulse-heart-bundle.js?v=6"></script>
     <script src="target-cursor-bundle.js?v=39"></script>
-    <script src="memory-wall-bundle.js?v=104"></script>
+    <script src="memory-wall-bundle.js?v=106"></script>
 
     <!-- Sound Design System (Procedural Web Audio Engine) -->
     <script src="sound-system.js?v=3"></script>
 
     <!-- Main Interactive Scripts -->
-    <script src="script.js?v=54"></script>
+    <script src="script.js?v=58"></script>
     <script src="letter-glitch-bundle.js?v=3"></script>
     <script src="pixel-transition-bundle.js?v=2"></script>
     <script src="tech-arsenal.js?v=7"></script>
     <script src="footer-shuffle-bundle.js?v=2"></script>
-    <script src="unified-footer-bundle.js?v=23"></script>
+    <script src="unified-footer-bundle.js?v=24"></script>
     <script src="elastic-mesh-bundle.js?v=4"></script>
-    <script src="lets-work-bundle.js?v=4"></script>
+    <script src="lets-work-bundle.js?v=5"></script>
     <script src="hero-3d-model.js?v=12"></script>
-    <script src="scroll-reveal.js?v=27"></script>
+    <script src="scroll-reveal.js?v=28"></script>
   </body>
 </html>

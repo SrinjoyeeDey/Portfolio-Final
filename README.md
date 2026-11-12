@@ -94,6 +94,6 @@ Deployable instantly to any static hosting provider:
 ## 📬 Contact & Connect
 
 - **Engineer**: Srinjoyee Dey
-- **Email**: [srinjoyeedey2004@gmail.com](mailto:srinjoyeedey2004@gmail.com)
+- **Email**: [deysrinjoyee04@gmail.com](mailto:deysrinjoyee04@gmail.com)
 - **LinkedIn**: [linkedin.com/in/srinjoyee-dey](https://linkedin.com/in/srinjoyee-dey)
 - **GitHub**: [github.com/SrinjoyeeDey](https://github.com/SrinjoyeeDey)

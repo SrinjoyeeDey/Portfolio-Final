@@ -197,7 +197,7 @@ export default function UnifiedFooter() {
             </MagneticButton>
             <MagneticButton
               as="a"
-              href="mailto:deysrinjoyee28@gmail.com"
+              href="mailto:deysrinjoyee04@gmail.com"
               className="cursor-target"
               data-cursor-label="Email"
             >

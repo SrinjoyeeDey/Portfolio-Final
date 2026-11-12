@@ -342,9 +342,20 @@
       };
     });
 
-    // Mobile: Fluid, responsive transitions without rigid scroll trapping
+    // Mobile: Full cinematic pinned transitions matching desktop visual language
     mm.add('(max-width: 768px)', () => {
-      // Mobile Hero → About transition: smooth slide-up over hero just like website
+      // Clear prior transforms on mobile so sections start clean
+      gsap.set([aboutLayer, projectsLayer, snapshotsLayer, skillsLayer].filter(Boolean), {
+        clearProps: 'all'
+      });
+      if (projectsLayer) {
+        const projectsChildrenMob = projectsLayer.querySelectorAll(
+          '.editorial-header-left, .editorial-header-right, .editorial-section-title, .editorial-rows-container, .projects-cinematic-bridge, .interactive-3d-stage'
+        );
+        gsap.set(projectsChildrenMob, { clearProps: 'opacity,transform,filter,visibility' });
+      }
+
+      // ── Transition 1: HERO → ABOUT (pinned, same as desktop) ─────────────
       const tlHeroAboutMobile = gsap.timeline({
         scrollTrigger: {
           id: 'hero-about-transition-mobile-pin',
@@ -356,7 +367,7 @@
           scrub: true,
           anticipatePin: 1,
           invalidateOnRefresh: true,
-          onUpdate: (self) => {
+          onUpdate: () => {
             const envelopeWidget = document.getElementById('floating-envelope-widget');
             if (envelopeWidget) {
               envelopeWidget.classList.remove('envelope-hidden');
@@ -380,38 +391,212 @@
         duration: 1
       }, 0);
 
+      // ── Transition 2: PROJECTS → SNAPSHOTS (pinned cinematic, mobile-adapted) ──
+      let tlProjectsSnapshotsMob = null;
       if (projectsLayer && snapshotsLayer) {
-        gsap.fromTo(snapshotsLayer, {
-          opacity: 0.82,
-          scale: 0.98
-        }, {
-          opacity: 1,
-          scale: 1,
-          ease: 'power1.out',
+        tlProjectsSnapshotsMob = gsap.timeline({
           scrollTrigger: {
+            id: 'projects-snapshots-transition-mobile-pin',
             trigger: snapshotsLayer,
-            start: 'top 85%',
-            end: 'top 30%',
-            scrub: true
+            start: 'top bottom',
+            end: 'top top',
+            pin: projectsLayer,
+            pinSpacing: false,
+            scrub: true,
+            anticipatePin: 1,
+            invalidateOnRefresh: true
           }
         });
-      }
-      if (snapshotsLayer && skillsLayer) {
-        gsap.fromTo(skillsLayer, {
-          opacity: 0.82,
-          scale: 0.98
-        }, {
+
+        // 1. Projects heading split-apart (reduced xPercent for narrow screens)
+        const pHeaderLeftMob = projectsLayer.querySelector('.editorial-header-left') || projectsLayer.querySelector('.editorial-section-title');
+        const pHeaderRightMob = projectsLayer.querySelector('.editorial-header-right') || projectsLayer.querySelector('.editorial-section-tagline');
+        if (pHeaderLeftMob) {
+          tlProjectsSnapshotsMob.to(pHeaderLeftMob, {
+            xPercent: -50,
+            opacity: 0,
+            ease: 'power1.inOut',
+            duration: 0.85
+          }, 0);
+        }
+        if (pHeaderRightMob) {
+          tlProjectsSnapshotsMob.to(pHeaderRightMob, {
+            xPercent: 50,
+            opacity: 0,
+            ease: 'power1.inOut',
+            duration: 0.85
+          }, 0);
+        }
+
+        // 2. Surrounding project content fades
+        const pSurroundMob = projectsLayer.querySelectorAll('.editorial-rows-container');
+        if (pSurroundMob && pSurroundMob.length > 0) {
+          tlProjectsSnapshotsMob.to(pSurroundMob, {
+            opacity: 0,
+            y: -20,
+            ease: 'power1.out',
+            duration: 0.55
+          }, 0.35);
+        }
+
+        // 3. Cinematic bridge element (mobile-sized, smaller scale)
+        const bridgeMob = projectsLayer.querySelector('.projects-cinematic-bridge');
+        if (bridgeMob) {
+          tlProjectsSnapshotsMob.fromTo(bridgeMob, {
+            scale: 0.72,
+            opacity: 0,
+            transformOrigin: '50% 50%',
+            force3D: true
+          }, {
+            scale: 1.1,
+            opacity: 0.9,
+            transformOrigin: '50% 50%',
+            ease: 'power1.inOut',
+            force3D: true,
+            duration: 0.85
+          }, 0);
+          tlProjectsSnapshotsMob.to(bridgeMob, {
+            opacity: 0,
+            scale: 1.35,
+            ease: 'power1.in',
+            duration: 0.25
+          }, 0.75);
+        }
+
+        // 4. Outgoing Projects layer depth lift & fade
+        tlProjectsSnapshotsMob.fromTo(projectsLayer, {
+          y: '0%',
           opacity: 1,
           scale: 1,
-          ease: 'power1.out',
+          force3D: true
+        }, {
+          y: '-6%',
+          opacity: 0.25,
+          scale: 0.97,
+          ease: 'none',
+          force3D: true,
+          duration: 1
+        }, 0);
+
+        // 5. Incoming Snapshots: header & mobile grid settle in
+        const snapshotHeaderMob = snapshotsLayer.querySelector('.pmw-exotic-header');
+        // On mobile the grid is .pmw-mobile-view-container; fall back to desktop stage
+        const snapshotStageMob = snapshotsLayer.querySelector('.pmw-mobile-view-container') || snapshotsLayer.querySelector('.wall-canvas-stage');
+
+        if (snapshotHeaderMob) {
+          tlProjectsSnapshotsMob.fromTo(snapshotHeaderMob, {
+            y: 28,
+            opacity: 0.4
+          }, {
+            y: 0,
+            opacity: 1,
+            ease: 'power1.out',
+            duration: 0.75
+          }, 0.2);
+        }
+        if (snapshotStageMob) {
+          tlProjectsSnapshotsMob.fromTo(snapshotStageMob, {
+            scale: 0.96,
+            opacity: 0.5
+          }, {
+            scale: 1,
+            opacity: 1,
+            ease: 'power1.out',
+            duration: 0.85
+          }, 0.15);
+        }
+      }
+
+      // ── Transition 3: SNAPSHOTS → SKILLS (pinned cinematic, mobile-adapted) ──
+      let tlSnapshotsSkillsMob = null;
+      if (snapshotsLayer && skillsLayer) {
+        tlSnapshotsSkillsMob = gsap.timeline({
           scrollTrigger: {
+            id: 'snapshots-skills-transition-mobile-pin',
             trigger: skillsLayer,
-            start: 'top 85%',
-            end: 'top 30%',
-            scrub: true
+            start: 'top bottom',
+            end: 'top top',
+            pin: snapshotsLayer,
+            pinSpacing: false,
+            scrub: true,
+            anticipatePin: 1,
+            invalidateOnRefresh: true
           }
         });
+
+        // 1. Heading rows split apart (reduced xPercent for mobile)
+        const row1Mob = snapshotsLayer.querySelector('.pmw-display-row-1');
+        const row2Mob = snapshotsLayer.querySelector('.pmw-display-row-2');
+        if (row1Mob) {
+          tlSnapshotsSkillsMob.to(row1Mob, {
+            xPercent: -50,
+            opacity: 0,
+            ease: 'power1.inOut',
+            duration: 0.85
+          }, 0);
+        }
+        if (row2Mob) {
+          tlSnapshotsSkillsMob.to(row2Mob, {
+            xPercent: 50,
+            opacity: 0,
+            ease: 'power1.inOut',
+            duration: 0.85
+          }, 0);
+        }
+
+        // 2. Surrounding content fades
+        const surroundMob = snapshotsLayer.querySelectorAll('.pmw-meta-top-bar, .pmw-display-row-3, .pmw-supporting-desc');
+        if (surroundMob && surroundMob.length > 0) {
+          tlSnapshotsSkillsMob.to(surroundMob, {
+            opacity: 0,
+            y: -20,
+            ease: 'power1.out',
+            duration: 0.6
+          }, 0);
+        }
+
+        // 3. Mobile grid expands (mobile uses .pmw-mobile-view-container)
+        const visualMediaMob = snapshotsLayer.querySelector('.pmw-mobile-view-container') || snapshotsLayer.querySelector('.wall-canvas-stage') || snapshotsLayer.querySelector('.memory-wall-fullwidth-stage');
+        if (visualMediaMob) {
+          tlSnapshotsSkillsMob.fromTo(visualMediaMob, {
+            scale: 1,
+            transformOrigin: '50% 50%',
+            force3D: true
+          }, {
+            scale: 1.08,
+            transformOrigin: '50% 50%',
+            opacity: 0.22,
+            ease: 'power1.inOut',
+            force3D: true,
+            duration: 1
+          }, 0);
+        }
+
+        // 4. Outgoing Snapshots layer depth lift & fade
+        tlSnapshotsSkillsMob.fromTo(snapshotsLayer, {
+          y: '0%',
+          opacity: 1,
+          scale: 1,
+          force3D: true
+        }, {
+          y: '-6%',
+          opacity: 0.25,
+          scale: 0.97,
+          ease: 'none',
+          force3D: true,
+          duration: 1
+        }, 0);
       }
+
+      // Cleanup on matchMedia exit
+      return () => {
+        tlHeroAboutMobile.kill();
+        if (tlProjectsSnapshotsMob) tlProjectsSnapshotsMob.kill();
+        if (tlSnapshotsSkillsMob) tlSnapshotsSkillsMob.kill();
+        gsap.set([heroLayer, aboutLayer, projectsLayer, snapshotsLayer, skillsLayer].filter(Boolean), {
+          clearProps: 'all'
+        });
+      };
     });
 
     // Setup seamless navigation for anchor links and Mac dock
