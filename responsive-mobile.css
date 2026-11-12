@@ -131,62 +131,65 @@ body {
   }
 
   /* ==========================================================================
-     MOBILE NAV â€” Narrow vertical icon-only pill, slides in from right
-     Reference: Pierre Su Day #14 Side Navigation (dark pill variant)
+     MOBILE NAV — Light glassmorphism vertical icon-only pill, slides in from right
      ========================================================================== */
 
-  /* Full-screen backdrop â€” dim + blur, hidden until .active */
+  /* Transparent click-outside catcher — NO dark overlay, NO blur, NO border/oval */
   .nav-menu {
     position: fixed !important;
     inset: 0 !important;
     width: 100vw !important;
     height: 100dvh !important;
-    background: rgba(10, 11, 14, 0.48) !important;
-    backdrop-filter: blur(5px) !important;
-    -webkit-backdrop-filter: blur(5px) !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-radius: 0 !important;
     z-index: 10000 !important;
     pointer-events: none !important;
     opacity: 0 !important;
     visibility: hidden !important;
-    transition: opacity 0.28s ease, visibility 0s linear 0.28s !important;
+    transition: opacity 0.25s ease, visibility 0s linear 0.25s !important;
     padding: 0 !important;
     margin: 0 !important;
     border: none !important;
+    outline: none !important;
     box-shadow: none !important;
     display: block !important;
-    overflow: visible !important;
+    overflow: hidden !important;
   }
 
   .nav-menu.active {
     pointer-events: auto !important;
     opacity: 1 !important;
     visibility: visible !important;
-    transition: opacity 0.28s ease, visibility 0s linear 0s !important;
+    transition: opacity 0.25s ease, visibility 0s linear 0s !important;
   }
 
-  /* Narrow vertical pill — icon-only, right-anchored (Pierre Sù Reference) */
+  /* Light frosted-glass vertical pill — icon-only, right-anchored */
   .nav-side-panel,
   .nav-menu .gooey-nav {
     position: fixed !important;
     top: calc(env(safe-area-inset-top, 0px) + 76px) !important;
     right: 16px !important;
-    width: 66px !important;
-    min-width: 66px !important;
-    max-width: 66px !important;
+    width: 64px !important;
+    min-width: 64px !important;
+    max-width: 64px !important;
     height: auto !important;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important;
     box-sizing: border-box !important;
-    background: #18191D !important;
-    border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
+    background: rgba(255, 255, 255, 0.72) !important;
+    backdrop-filter: blur(20px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+    border: none !important;
+    outline: none !important;
     border-radius: 999px !important;
-    padding: 14px 6px !important;
+    padding: 12px 6px !important;
     box-shadow:
-      0 20px 48px -10px rgba(0, 0, 0, 0.65),
-      0 4px 16px rgba(0, 0, 0, 0.35),
-      inset 0 1px 1px rgba(255, 255, 255, 0.18) !important;
-    transform: translateX(120px) !important;
+      0 12px 32px rgba(34, 36, 40, 0.08),
+      0 2px 8px rgba(34, 36, 40, 0.04) !important;
+    transform: translateX(110px) !important;
     opacity: 0 !important;
     pointer-events: auto !important;
     transition: transform 0.34s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease !important;
@@ -254,16 +257,16 @@ body {
     align-items: center !important;
     justify-content: center !important;
     gap: 0 !important;
-    width: 48px !important;
-    height: 48px !important;
-    min-width: 48px !important;
-    min-height: 48px !important;
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+    min-height: 46px !important;
     padding: 0 !important;
     border-radius: 50% !important;
     background: transparent !important;
-    color: rgba(255, 255, 255, 0.65) !important;
+    color: #4A4D55 !important;
     text-decoration: none !important;
-    transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.22s ease, color 0.22s ease !important;
     border: none !important;
     outline: none !important;
     -webkit-tap-highlight-color: transparent !important;
@@ -278,15 +281,15 @@ body {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-    width: 48px !important;
-    height: 48px !important;
-    min-width: 48px !important;
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
     border-radius: 50% !important;
     background: transparent !important;
     border: none !important;
-    font-size: 1.15rem !important;
+    font-size: 1.1rem !important;
     line-height: 1 !important;
-    color: rgba(255, 255, 255, 0.65) !important;
+    color: #4A4D55 !important;
     transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease !important;
     flex-shrink: 0 !important;
   }
@@ -302,18 +305,19 @@ body {
     display: none !important;
   }
 
-  /* Hover — subtle brightening on pointer devices */
+  /* Hover — subtle brightening/tint on pointer devices */
   @media (hover: hover) and (pointer: fine) {
 
     .nav-link:hover,
     .nav-menu .gooey-nav__link:hover {
-      background: rgba(255, 255, 255, 0.1) !important;
-      color: #FFFFFF !important;
+      background: rgba(34, 36, 40, 0.06) !important;
+      color: #222428 !important;
+      transform: scale(1.05) !important;
     }
 
     .nav-link:hover .nav-icon,
     .nav-menu .gooey-nav__link:hover .gooey-nav__icon {
-      color: #FFFFFF !important;
+      color: #222428 !important;
     }
 
     .nav-tooltip,
@@ -323,8 +327,10 @@ body {
       right: calc(100% + 14px) !important;
       top: 50% !important;
       transform: translateY(-50%) translateX(6px) !important;
-      background: #111215 !important;
-      color: #FFFFFF !important;
+      background: rgba(255, 255, 255, 0.9) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+      color: #222428 !important;
       font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif) !important;
       font-size: 0.78rem !important;
       font-weight: 700 !important;
@@ -336,8 +342,8 @@ body {
       opacity: 0 !important;
       visibility: hidden !important;
       transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35) !important;
-      border: 1px solid rgba(255, 255, 255, 0.14) !important;
+      box-shadow: 0 6px 18px rgba(34, 36, 40, 0.1) !important;
+      border: none !important;
       z-index: 10003 !important;
     }
 
@@ -350,7 +356,7 @@ body {
       transform: translateY(-50%) !important;
       border-width: 4px !important;
       border-style: solid !important;
-      border-color: transparent transparent transparent #111215 !important;
+      border-color: transparent transparent transparent rgba(255, 255, 255, 0.9) !important;
     }
 
     .nav-link:hover .nav-tooltip,
@@ -361,14 +367,14 @@ body {
     }
   }
 
-  /* Active circular badge matching Pierre Sù reference (White circle, dark icon) */
+  /* Active circular badge with soft golden-yellow portfolio accent */
   .nav-link.active,
   .nav-menu .gooey-nav__item[data-active] .nav-link,
   .nav-menu .gooey-nav__item[data-active] .gooey-nav__link {
-    background: #FFFFFF !important;
-    color: #16171A !important;
-    transform: scale(1.06) !important;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+    background: linear-gradient(135deg, #FFE500 0%, #FFBD12 100%) !important;
+    color: #222428 !important;
+    transform: scale(1.05) !important;
+    box-shadow: 0 4px 12px rgba(255, 189, 18, 0.32) !important;
   }
 
   .nav-link.active .nav-icon,
@@ -376,8 +382,8 @@ body {
   .nav-menu .gooey-nav__item[data-active] .gooey-nav__icon {
     background: transparent !important;
     border: none !important;
-    color: #16171A !important;
-    transform: scale(1.04) !important;
+    color: #222428 !important;
+    transform: scale(1.03) !important;
   }
 
 

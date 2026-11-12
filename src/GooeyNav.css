@@ -97,293 +97,302 @@
   font-size: 0.92rem;
   letter-spacing: -0.01em;
   text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
 
+.gooey-nav__list--active .gooey-nav__link {
+  color: inherit;
+}
 
+.gooey-nav__item[data-active] .gooey-nav__link {
+  color: var(--gn-active-ink);
+}
 
-  .gooey-nav__list--active .gooey-nav__link {
-    color: inherit;
+.gooey-nav--ready .gooey-nav__list:not(.gooey-nav__list--active) .gooey-nav__item[data-active] .gooey-nav__link {
+  color: var(--gn-muted);
+}
+
+@media (min-width: 769px) {
+  .gooey-nav__list {
+    flex-wrap: nowrap;
   }
-
-  .gooey-nav__item[data-active] .gooey-nav__link {
-    color: var(--gn-active-ink);
-  }
-
-  .gooey-nav--ready .gooey-nav__list:not(.gooey-nav__list--active) .gooey-nav__item[data-active] .gooey-nav__link {
-    color: var(--gn-muted);
-  }
-
-  @media (min-width: 769px) {
-    .gooey-nav__list {
-      flex-wrap: nowrap;
-    }
-
-    .gooey-nav__icon {
-      display: none !important;
-    }
-
-    .gooey-nav__tooltip {
-      display: none !important;
-    }
-  }
-
-  @media (min-width: 769px) and (max-width: 1120px) {
-    .gooey-nav {
-      --gn-pad: 5px;
-      --gn-gap: 2px;
-      --gn-x: 11px;
-      --gn-y: 7px;
-    }
-
-    .gooey-nav__link {
-      font-size: 0.85rem;
-    }
-  }
-
-  .gooey-nav__link:focus-visible {
-    outline: 2px solid var(--gn-ink);
-    outline-offset: 2px;
-  }
-
   .gooey-nav__icon {
-    display: inline-flex;
-    flex: none;
+    display: none !important;
+  }
+  .gooey-nav__tooltip {
+    display: none !important;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1120px) {
+  .gooey-nav {
+    --gn-pad: 5px;
+    --gn-gap: 2px;
+    --gn-x: 11px;
+    --gn-y: 7px;
   }
 
-  .gooey-nav__icon svg {
-    width: 1.15em;
-    height: 1.15em;
+  .gooey-nav__link {
+    font-size: 0.85rem;
   }
+}
 
-  .gooey-nav__rim {
-    position: absolute;
-    inset: 0;
-    border-radius: inherit;
-    box-shadow:
-      inset 0 0 0 1px var(--gn-frame-edge),
-      inset 0 1px 0 var(--gn-frame-highlight);
-    pointer-events: none;
-  }
+.gooey-nav__link:focus-visible {
+  outline: 2px solid var(--gn-ink);
+  outline-offset: 2px;
+}
 
-  /* ==========================================================================
-   MOBILE HAMBURGER EXPANDED MENU — PIERRE SÙ DAY #14 SIDE NAVIGATION PILL
+.gooey-nav__icon {
+  display: inline-flex;
+  flex: none;
+}
+
+.gooey-nav__icon svg {
+  width: 1.15em;
+  height: 1.15em;
+}
+
+.gooey-nav__rim {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow:
+    inset 0 0 0 1px var(--gn-frame-edge),
+    inset 0 1px 0 var(--gn-frame-highlight);
+  pointer-events: none;
+}
+
+/* ==========================================================================
+   MOBILE HAMBURGER EXPANDED MENU — LIGHT GLASSMORPHISM SIDE PILL
    ========================================================================== */
-  @media (max-width: 768px) {
+@media (max-width: 768px) {
+  /* Transparent click-outside catcher — NO dark overlay, NO blur, NO border/oval */
+  .nav-menu {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100dvh !important;
+    background: transparent !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-radius: 0 !important;
+    z-index: 10000 !important;
+    pointer-events: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    transition: opacity 0.25s ease, visibility 0.25s ease !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+    display: block !important;
+    overflow: hidden !important;
+  }
 
-    /* Translucent backdrop overlay that subtly blurs and dims the background */
-    .nav-menu {
-      position: fixed !important;
-      inset: 0 !important;
-      width: 100vw !important;
-      height: 100dvh !important;
-      background: rgba(12, 13, 16, 0.48) !important;
-      backdrop-filter: blur(8px) !important;
-      -webkit-backdrop-filter: blur(8px) !important;
-      z-index: 10000 !important;
-      pointer-events: none !important;
-      opacity: 0 !important;
-      visibility: hidden !important;
-      transition: opacity 0.28s ease, visibility 0.28s ease !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      border: none !important;
-      box-shadow: none !important;
-      display: block !important;
-      overflow: hidden !important;
+  .nav-menu.active {
+    pointer-events: auto !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+
+  .nav-menu #nav-gooey-root {
+    position: fixed !important;
+    top: calc(env(safe-area-inset-top, 0px) + 76px) !important;
+    right: 16px !important;
+    z-index: 10001 !important;
+    pointer-events: none !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+
+  .nav-menu.active #nav-gooey-root {
+    pointer-events: auto !important;
+  }
+
+  /* Light frosted-glass vertical side-navigation pill sliding from right */
+  .nav-menu .gooey-nav {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 64px !important;
+    min-width: 64px !important;
+    max-width: 64px !important;
+    height: auto !important;
+    box-sizing: border-box !important;
+    background: rgba(255, 255, 255, 0.72) !important;
+    backdrop-filter: blur(20px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+    border: none !important;
+    outline: none !important;
+    border-radius: 999px !important;
+    padding: 12px 6px !important;
+    box-shadow:
+      0 12px 32px rgba(34, 36, 40, 0.08),
+      0 2px 8px rgba(34, 36, 40, 0.04) !important;
+    transform: translateX(110px) !important;
+    opacity: 0 !important;
+    pointer-events: auto !important;
+    transition: transform 0.34s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease !important;
+    margin: 0 !important;
+  }
+
+  .nav-menu.active .gooey-nav {
+    transform: translateX(0) !important;
+    opacity: 1 !important;
+  }
+
+  .nav-menu .gooey-nav__stage {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+  }
+
+  .nav-menu .gooey-nav__canvas,
+  .nav-menu .gooey-nav__fallback,
+  .nav-menu .gooey-nav__list--active,
+  .nav-menu .gooey-nav__rim {
+    display: none !important;
+  }
+
+  .nav-menu .gooey-nav__list {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    list-style: none !important;
+  }
+
+  .nav-menu .gooey-nav__item {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .nav-menu .gooey-nav__link {
+    position: relative !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 46px !important;
+    height: 46px !important;
+    min-width: 46px !important;
+    min-height: 46px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    background: transparent !important;
+    color: #4A4D55 !important;
+    text-decoration: none !important;
+    border: none !important;
+    outline: none !important;
+    cursor: pointer !important;
+    transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.22s ease, color 0.22s ease !important;
+    -webkit-tap-highlight-color: transparent !important;
+    box-sizing: border-box !important;
+  }
+
+  .nav-menu .gooey-nav__label {
+    display: none !important;
+  }
+
+  .nav-menu .gooey-nav__icon {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-size: 1.1rem !important;
+    line-height: 1 !important;
+    color: #4A4D55 !important;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease !important;
+  }
+
+  /* Active circular badge with soft golden-yellow portfolio accent */
+  .nav-menu .gooey-nav__item[data-active] .gooey-nav__link {
+    background: linear-gradient(135deg, #FFE500 0%, #FFBD12 100%) !important;
+    color: #222428 !important;
+    box-shadow: 0 4px 12px rgba(255, 189, 18, 0.32) !important;
+    transform: scale(1.05) !important;
+  }
+
+  .nav-menu .gooey-nav__item[data-active] .gooey-nav__icon {
+    color: #222428 !important;
+    transform: scale(1.03) !important;
+  }
+
+  /* Hover state on pointer devices */
+  @media (hover: hover) and (pointer: fine) {
+    .nav-menu .gooey-nav__link:hover {
+      background: rgba(34, 36, 40, 0.06) !important;
+      color: #222428 !important;
+      transform: scale(1.05) !important;
     }
 
-    .nav-menu.active {
-      pointer-events: auto !important;
-      opacity: 1 !important;
-      visibility: visible !important;
-    }
-
-    .nav-menu #nav-gooey-root {
-      position: fixed !important;
-      top: calc(env(safe-area-inset-top, 0px) + 74px) !important;
-      right: 16px !important;
-      z-index: 10001 !important;
-      pointer-events: none !important;
-    }
-
-    .nav-menu.active #nav-gooey-root {
-      pointer-events: auto !important;
-    }
-
-    /* Compact solid vertical side-navigation pill sliding from right (Pierre Sù Reference) */
-    .nav-menu .gooey-nav {
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: center !important;
-      width: 66px !important;
-      min-width: 66px !important;
-      max-width: 66px !important;
-      height: auto !important;
-      box-sizing: border-box !important;
-      background: #18191D !important;
-      border: 1.5px solid rgba(255, 255, 255, 0.12) !important;
-      border-radius: 999px !important;
-      padding: 14px 6px !important;
-      box-shadow:
-        0 20px 48px -10px rgba(0, 0, 0, 0.65),
-        0 4px 16px rgba(0, 0, 0, 0.35),
-        inset 0 1px 1px rgba(255, 255, 255, 0.18) !important;
-      transform: translateX(120px) !important;
-      opacity: 0 !important;
-      pointer-events: auto !important;
-      transition: transform 0.34s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease !important;
-      margin: 0 !important;
-    }
-
-    .nav-menu.active .gooey-nav {
-      transform: translateX(0) !important;
-      opacity: 1 !important;
-    }
-
-    .nav-menu .gooey-nav__stage {
-      width: 100% !important;
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: center !important;
-    }
-
-    .nav-menu .gooey-nav__canvas,
-    .nav-menu .gooey-nav__fallback,
-    .nav-menu .gooey-nav__list--active,
-    .nav-menu .gooey-nav__rim {
-      display: none !important;
-    }
-
-    .nav-menu .gooey-nav__list {
-      display: flex !important;
-      flex-direction: column !important;
-      align-items: center !important;
-      justify-content: center !important;
-      gap: 8px !important;
-      width: 100% !important;
-      padding: 0 !important;
-      margin: 0 !important;
-      list-style: none !important;
-    }
-
-    .nav-menu .gooey-nav__item {
-      width: 100% !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      padding: 0 !important;
-      margin: 0 !important;
-    }
-
-    .nav-menu .gooey-nav__link {
-      position: relative !important;
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      width: 48px !important;
-      height: 48px !important;
-      min-width: 48px !important;
-      min-height: 48px !important;
-      padding: 0 !important;
-      border-radius: 50% !important;
-      background: transparent !important;
-      color: rgba(255, 255, 255, 0.65) !important;
-      text-decoration: none !important;
-      border: none !important;
-      outline: none !important;
-      cursor: pointer !important;
-      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
-      -webkit-tap-highlight-color: transparent !important;
-      box-sizing: border-box !important;
-    }
-
-    .nav-menu .gooey-nav__label {
-      display: none !important;
-    }
-
-    .nav-menu .gooey-nav__icon {
-      display: flex !important;
-      align-items: center !important;
-      justify-content: center !important;
-      font-size: 1.15rem !important;
-      line-height: 1 !important;
-      color: rgba(255, 255, 255, 0.65) !important;
-      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s ease !important;
-    }
-
-    /* Active circular badge matching Pierre Sù reference (White circle, dark icon) */
-    .nav-menu .gooey-nav__item[data-active] .gooey-nav__link {
-      background: #FFFFFF !important;
-      color: #16171A !important;
-      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
-      transform: scale(1.06) !important;
-    }
-
-    .nav-menu .gooey-nav__item[data-active] .gooey-nav__icon {
-      color: #16171A !important;
-      transform: scale(1.04) !important;
-    }
-
-    /* Desktop hover state on the side pill */
-    @media (hover: hover) and (pointer: fine) {
-      .nav-menu .gooey-nav__link:hover {
-        background: rgba(255, 255, 255, 0.1) !important;
-        color: #FFFFFF !important;
-      }
-
-      .nav-menu .gooey-nav__link:hover .gooey-nav__icon {
-        color: #FFFFFF !important;
-      }
-
-      .nav-menu .gooey-nav__tooltip {
-        display: block !important;
-        position: absolute !important;
-        right: calc(100% + 14px) !important;
-        top: 50% !important;
-        transform: translateY(-50%) translateX(6px) !important;
-        background: #111215 !important;
-        color: #FFFFFF !important;
-        font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif) !important;
-        font-size: 0.78rem !important;
-        font-weight: 700 !important;
-        letter-spacing: 0.04em !important;
-        padding: 5px 12px !important;
-        border-radius: 999px !important;
-        white-space: nowrap !important;
-        pointer-events: none !important;
-        opacity: 0 !important;
-        visibility: hidden !important;
-        transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35) !important;
-        border: 1px solid rgba(255, 255, 255, 0.14) !important;
-        z-index: 10003 !important;
-      }
-
-      .nav-menu .gooey-nav__tooltip::after {
-        content: '' !important;
-        position: absolute !important;
-        left: 100% !important;
-        top: 50% !important;
-        transform: translateY(-50%) !important;
-        border-width: 4px !important;
-        border-style: solid !important;
-        border-color: transparent transparent transparent #111215 !important;
-      }
-
-      .nav-menu .gooey-nav__link:hover .gooey-nav__tooltip {
-        opacity: 1 !important;
-        visibility: visible !important;
-        transform: translateY(-50%) translateX(0) !important;
-      }
+    .nav-menu .gooey-nav__link:hover .gooey-nav__icon {
+      color: #222428 !important;
     }
 
     .nav-menu .gooey-nav__tooltip {
-      display: none;
+      display: block !important;
+      position: absolute !important;
+      right: calc(100% + 14px) !important;
+      top: 50% !important;
+      transform: translateY(-50%) translateX(6px) !important;
+      background: rgba(255, 255, 255, 0.9) !important;
+      backdrop-filter: blur(12px) !important;
+      -webkit-backdrop-filter: blur(12px) !important;
+      color: #222428 !important;
+      font-family: var(--font-body, 'Plus Jakarta Sans', sans-serif) !important;
+      font-size: 0.78rem !important;
+      font-weight: 700 !important;
+      letter-spacing: 0.04em !important;
+      padding: 5px 12px !important;
+      border-radius: 999px !important;
+      white-space: nowrap !important;
+      pointer-events: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1), transform 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+      box-shadow: 0 6px 18px rgba(34, 36, 40, 0.1) !important;
+      border: none !important;
+      z-index: 10003 !important;
+    }
+
+    .nav-menu .gooey-nav__tooltip::after {
+      content: '' !important;
+      position: absolute !important;
+      left: 100% !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      border-width: 4px !important;
+      border-style: solid !important;
+      border-color: transparent transparent transparent rgba(255, 255, 255, 0.9) !important;
+    }
+
+    .nav-menu .gooey-nav__link:hover .gooey-nav__tooltip {
+      opacity: 1 !important;
+      visibility: visible !important;
+      transform: translateY(-50%) translateX(0) !important;
     }
   }
 
-  @media (hover: hover) {
-    .gooey-nav__link:hover {
-      color: var(--gn-ink);
-    }
+  .nav-menu .gooey-nav__tooltip {
+    display: none;
+  }
+}
+
+@media (hover: hover) {
+  .gooey-nav__link:hover {
+    color: var(--gn-ink);
   }
 }
