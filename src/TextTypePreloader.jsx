@@ -389,26 +389,15 @@ export default function TextTypePreloader() {
             <span>SRINJOYEE DEY • PORTFOLIO</span>
           </div>
 
-          <div
-            className={`tt-preloader__lang-pill ${
-              phase === 'masked' ? 'tt-preloader__lang-pill--masked' : ''
-            }`}
-          >
-            {phase === 'typing' ? (
-              <>
-                <span className="tt-preloader__lang-index">
-                  {String(currentIndex + 1).padStart(2, '0')}/{String(GREETINGS.length).padStart(2, '0')}
-                </span>
-                <span>•</span>
-                <span>{activeGreeting.lang}</span>
-              </>
-            ) : (
-              <>
-                <span className="tt-preloader__lang-index">✦</span>
-                <span>HERO PORTAL • SRINJOYEE DEY</span>
-              </>
-            )}
-          </div>
+          {phase === 'typing' && (
+            <div className="tt-preloader__lang-pill">
+              <span className="tt-preloader__lang-index">
+                {String(currentIndex + 1).padStart(2, '0')}/{String(GREETINGS.length).padStart(2, '0')}
+              </span>
+              <span>•</span>
+              <span>{activeGreeting.lang}</span>
+            </div>
+          )}
         </header>
 
         {/* Center Stage: Unified Composition */}
