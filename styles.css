@@ -2041,9 +2041,27 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
 
 .about-main-grid {
   display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
-  gap: clamp(28px, 3.5vw, 50px);
+  grid-template-columns: minmax(360px, 470px) 1fr;
+  gap: clamp(24px, 3vw, 44px);
   align-items: flex-start;
+  max-width: 1240px;
+  margin: 0 auto;
+}
+
+.about-left-col {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-self: end;
+  width: 100%;
+  max-width: 486px;
+  transform: translateX(-24px);
+}
+
+.about-left-col .sub-section-box {
+  width: 100%;
+  padding-left: 32px;
+  box-sizing: border-box;
 }
 
 /* ==========================================================================
@@ -2383,11 +2401,15 @@ body[data-active-section="contact"] .bg-studio-glass-scrim {
   backdrop-filter: blur(12px);
   border: 2.5px solid var(--color-charcoal);
   border-radius: 20px;
-  padding: 24px;
-  display: flex;
+  padding: 20px 22px;
+  display: inline-flex;
   align-items: center;
   gap: 20px;
   box-shadow: var(--shadow-sm);
+  width: fit-content;
+  max-width: calc(100% - 32px);
+  margin-left: 32px;
+  box-sizing: border-box;
 }
 
 .qr-col {

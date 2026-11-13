@@ -757,6 +757,7 @@ body {
     width: 100% !important;
     max-width: 100% !important;
     box-sizing: border-box !important;
+    transform: none !important;
   }
 
   /* Frosted Glass Profile Card */
@@ -863,8 +864,15 @@ body {
     text-align: center !important;
     padding: 20px 16px !important;
     width: 100% !important;
+    max-width: 100% !important;
+    margin-left: 0 !important;
     box-sizing: border-box !important;
     gap: 16px !important;
+  }
+
+  .about-left-col .sub-section-box {
+    padding-left: 0 !important;
+    max-width: 100% !important;
   }
 
   .qr-code-box {
